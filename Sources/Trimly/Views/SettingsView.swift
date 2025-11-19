@@ -69,31 +69,45 @@ struct SettingsView: View {
                 
                 // Reminders
                 Section("Reminders") {
-                    Toggle("Daily Reminder", isOn: Binding(
-                        get: { dataManager.settings?.reminderTime != nil },
-                        set: { enabled in
-                            if enabled {
-                                dataManager.updateSettings { settings in
-                                    // Set to 9 AM
-                                    let calendar = Calendar.current
-                                    var components = calendar.dateComponents([.year, .month, .day], from: Date())
-                                    components.hour = 9
-                                    components.minute = 0
-                                    settings.reminderTime = calendar.date(from: components)
-                                }
-                            } else {
-                                dataManager.updateSettings { settings in
-                                    settings.reminderTime = nil
-                                }
+                    NavigationLink {
+                        RemindersView()
+                    } label: {
+                        HStack {
+                            Label("Manage Reminders", systemImage: "bell.fill")
+                            
+                            Spacer()
+                            
+                            if dataManager.settings?.reminderTime != nil {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundStyle(.green)
+                                    .font(.caption)
                             }
                         }
-                    ))
-                    
-                    if dataManager.settings?.reminderTime != nil {
-                        DatePicker("Time", selection: binding(\.reminderTime, default: Date()), displayedComponents: .hourAndMinute)
-                        
-                        Toggle("Adaptive Reminders", isOn: binding(\.adaptiveRemindersEnabled))
                     }
+                }
+                
+                // HealthKit Integration
+                Section {
+                    NavigationLink {
+                        HealthKitView()
+                    } label: {
+                        HStack {
+                            Label("HealthKit", systemImage: "heart.fill")
+                                .foregroundStyle(.pink)
+                            
+                            Spacer()
+                            
+                            if dataManager.settings?.healthKitEnabled == true {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundStyle(.green)
+                                    .font(.caption)
+                            }
+                        }
+                    }
+                } header: {
+                    Text("Integrations")
+                } footer: {
+                    Text("Import and sync weight data from Apple Health.")
                 }
                 
                 // Consistency Score

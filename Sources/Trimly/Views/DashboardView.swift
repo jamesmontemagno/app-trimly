@@ -10,6 +10,8 @@ import Charts
 
 struct DashboardView: View {
     @EnvironmentObject var dataManager: DataManager
+    @StateObject private var celebrationService = CelebrationService()
+    @StateObject private var plateauService = PlateauDetectionService()
     @State private var showingAddEntry = false
     @State private var showingCelebration = false
     @State private var celebrationMessage = ""
@@ -35,9 +37,14 @@ struct DashboardView: View {
                     // Trend Summary
                     trendSummaryCard
                     
-                    // Goal Projection
+                     // Goal Projection
                     if let projection = dataManager.getGoalProjection() {
                         projectionCard(projection)
+                    }
+                    
+                    // Plateau Detection
+                    if let plateau = plateauService.currentPlateau {
+                        plateauCard(plateau)
                     }
                 }
                 .padding()
@@ -57,10 +64,23 @@ struct DashboardView: View {
                 AddWeightEntryView()
             }
             .overlay {
-                if showingCelebration {
-                    CelebrationView(message: celebrationMessage)
+                // Celebration overlay
+                if let celebration = celebrationService.currentCelebration {
+                    CelebrationOverlayView(celebration: celebration)
                         .transition(.scale.combined(with: .opacity))
+                        .onTapGesture {
+                            celebrationService.dismissCelebration()
+                        }
                 }
+            }
+            .onAppear {
+                // Check for celebrations
+                if let celebration = celebrationService.checkForCelebrations(dataManager: dataManager) {
+                    celebrationService.showCelebration(celebration)
+                }
+                
+                // Check for plateau
+                plateauService.checkForPlateau(dataManager: dataManager)
             }
         }
     }
@@ -354,6 +374,67 @@ struct DashboardView: View {
         let value = unit.convert(fromKg: kg)
         let precision = dataManager.settings?.decimalPrecision ?? 1
         return String(format: "%.\(precision)f \(unit.symbol)", value)
+    }
+    
+    // MARK: - Plateau Card
+    
+    private func plateauCard(_ plateau: PlateauDetectionService.PlateauDetection) -> some View {
+        VStack(spacing: 12) {
+            HStack {
+                Image(systemName: "info.circle.fill")
+                    .foregroundStyle(.blue)
+                
+                Text("Plateau Detected")
+                    .font(.headline)
+                
+                Spacer()
+                
+                Button {
+                    plateauService.dismissPlateau()
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundStyle(.secondary)
+                }
+            }
+            
+            Text(plateau.message)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+            
+            Text(plateau.hint)
+                .font(.caption)
+                .foregroundStyle(.tertiary)
+                .multilineTextAlignment(.center)
+                .padding(.top, 4)
+        }
+        .padding()
+        .background(.blue.opacity(0.1))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+    }
+}
+
+// MARK: - Celebration Overlay View
+
+struct CelebrationOverlayView: View {
+    let celebration: CelebrationService.Celebration
+    
+    var body: some View {
+        VStack(spacing: 16) {
+            Image(systemName: celebration.iconName)
+                .font(.system(size: 60))
+                .foregroundStyle(.yellow)
+                .symbolEffect(.bounce)
+            
+            Text(celebration.message)
+                .font(.title2.bold())
+                .multilineTextAlignment(.center)
+                .foregroundStyle(.primary)
+        }
+        .padding(32)
+        .background(.ultraThinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .shadow(radius: 10)
     }
 }
 

@@ -22,17 +22,17 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --primary: #0A84FF;
-    --primary-dark: #409CFF;
-    --secondary: #5E5CE6;
-    --background: #000000;
-    --surface: #1c1c1e;
-    --text: #f5f5f7;
-    --text-secondary: #86868b;
-    --border: #38383a;
-  }
+:root.dark {
+  --primary: #0A84FF;
+  --primary-dark: #409CFF;
+  --secondary: #5E5CE6;
+  --background: #000000;
+  --surface: #1c1c1e;
+  --text: #f5f5f7;
+  --text-secondary: #86868b;
+  --border: #38383a;
+  
+  color-scheme: dark;
 }
 
 * {

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { 
   Scale, 
@@ -6,14 +7,44 @@ import {
   Cloud, 
   Activity, 
   Bell, 
-  Trophy, 
   ArrowRight,
   Download,
-  ChevronRight
+  Sun,
+  Moon,
+  Monitor
 } from 'lucide-react'
 import './App.css'
 
+type Theme = 'light' | 'dark' | 'system'
+
 function App() {
+  const [theme, setTheme] = useState<Theme>(() => {
+    const saved = localStorage.getItem('theme')
+    return (saved as Theme) || 'system'
+  })
+
+  useEffect(() => {
+    const root = window.document.documentElement
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)')
+
+    const applyTheme = () => {
+      const isDark = theme === 'dark' || (theme === 'system' && systemDark.matches)
+      if (isDark) {
+        root.classList.add('dark')
+      } else {
+        root.classList.remove('dark')
+      }
+    }
+
+    applyTheme()
+    localStorage.setItem('theme', theme)
+
+    if (theme === 'system') {
+      systemDark.addEventListener('change', applyTheme)
+      return () => systemDark.removeEventListener('change', applyTheme)
+    }
+  }, [theme])
+
   const features = [
     {
       icon: <Scale className="w-6 h-6" />,
@@ -71,12 +102,36 @@ function App() {
       <header className="header">
         <div className="container header-content">
           <div className="logo">
-            <Scale className="logo-icon" />
+            <img src={`${import.meta.env.BASE_URL}app-icon.png`} className="logo-icon" alt="TrimTally Logo" />
             <span className="logo-text">TrimTally</span>
           </div>
           <nav className="nav">
             <a href="#features">Features</a>
             <a href="https://www.refractored.com/about#privacy-policy" target="_blank" rel="noopener noreferrer">Privacy</a>
+            
+            <div className="theme-toggle">
+              <button 
+                className={`theme-btn ${theme === 'light' ? 'active' : ''}`} 
+                onClick={() => setTheme('light')}
+                title="Light Mode"
+              >
+                <Sun size={18} />
+              </button>
+              <button 
+                className={`theme-btn ${theme === 'dark' ? 'active' : ''}`} 
+                onClick={() => setTheme('dark')}
+                title="Dark Mode"
+              >
+                <Moon size={18} />
+              </button>
+              <button 
+                className={`theme-btn ${theme === 'system' ? 'active' : ''}`} 
+                onClick={() => setTheme('system')}
+                title="System Default"
+              >
+                <Monitor size={18} />
+              </button>
+            </div>
           </nav>
         </div>
       </header>
@@ -136,15 +191,24 @@ function App() {
         </div>
       </section>
 
-      {/* Coming Soon Section */}
-      <section className="coming-soon section">
+      {/* App Screenshots Section */}
+      <section className="screenshots section">
         <div className="container">
-          <div className="coming-soon-card">
-            <div className="coming-soon-content">
-              <Trophy className="coming-soon-icon" />
-              <h2>Coming Soon in v1.2</h2>
-              <p>We're working on exciting new features including Celebrations, Plateau Detection, and Home Screen Widgets.</p>
-            </div>
+          <div className="section-header">
+            <h2>Beautifully Designed</h2>
+            <p>Clean, modern interface that feels right at home on your device.</p>
+          </div>
+          
+          <div className="screenshots-grid">
+             <div className="screenshot-placeholder">
+               <span>Dashboard</span>
+             </div>
+             <div className="screenshot-placeholder">
+               <span>Analytics</span>
+             </div>
+             <div className="screenshot-placeholder">
+               <span>Add Entry</span>
+             </div>
           </div>
         </div>
       </section>
@@ -155,7 +219,7 @@ function App() {
           <div className="footer-content">
             <div className="footer-brand">
               <div className="logo">
-                <Scale className="logo-icon-sm" />
+                <img src={`${import.meta.env.BASE_URL}app-icon.png`} className="logo-icon-sm" alt="TrimTally Logo" />
                 <span>TrimTally</span>
               </div>
               <p>© {new Date().getFullYear()} Refractored. All rights reserved.</p>

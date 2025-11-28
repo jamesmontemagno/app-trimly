@@ -9,10 +9,8 @@
   border-bottom: 1px solid var(--border);
 }
 
-@media (prefers-color-scheme: dark) {
-  .header {
-    background-color: rgba(0, 0, 0, 0.8);
-  }
+:root.dark .header {
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 .header-content {
@@ -32,14 +30,15 @@
 }
 
 .logo-icon {
-  color: var(--primary);
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
 }
 
 .nav {
   display: flex;
   gap: 24px;
+  align-items: center;
 }
 
 .nav a {
@@ -50,6 +49,38 @@
 
 .nav a:hover {
   color: var(--primary);
+}
+
+.theme-toggle {
+  display: flex;
+  background-color: var(--surface);
+  padding: 4px;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+}
+
+.theme-btn {
+  background: none;
+  border: none;
+  padding: 6px;
+  border-radius: 50%;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.theme-btn:hover {
+  color: var(--text);
+  background-color: var(--background);
+}
+
+.theme-btn.active {
+  color: var(--primary);
+  background-color: var(--background);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* Hero */
@@ -143,30 +174,32 @@
   line-height: 1.6;
 }
 
-/* Coming Soon */
-.coming-soon-card {
-  background: linear-gradient(135deg, var(--surface) 0%, var(--background) 100%);
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 48px;
-  text-align: center;
+/* Screenshots */
+.screenshots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 32px;
+  justify-items: center;
 }
 
-.coming-soon-icon {
-  width: 48px;
-  height: 48px;
-  color: var(--secondary);
-  margin-bottom: 24px;
-}
-
-.coming-soon-content h2 {
-  margin-bottom: 16px;
-}
-
-.coming-soon-content p {
+.screenshot-placeholder {
+  width: 100%;
+  max-width: 280px;
+  aspect-ratio: 9/19.5;
+  background-color: var(--surface);
+  border-radius: 32px;
+  border: 4px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
   color: var(--text-secondary);
-  max-width: 600px;
-  margin: 0 auto;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.screenshot-placeholder:hover {
+  transform: translateY(-8px);
 }
 
 /* Footer */
@@ -191,9 +224,9 @@
 }
 
 .logo-icon-sm {
-  width: 20px;
-  height: 20px;
-  color: var(--primary);
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
 }
 
 .footer-links {

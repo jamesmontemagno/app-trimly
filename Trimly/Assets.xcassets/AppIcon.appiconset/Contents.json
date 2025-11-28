@@ -55,7 +55,7 @@
       "size" : "20x20"
     },
     {
-      "filename" : "AppIcon-29@2x 1.png",
+      "filename" : "AppIcon-29@2x.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "29x29"
@@ -79,7 +79,7 @@
       "size" : "83.5x83.5"
     },
     {
-      "filename" : "AppIcon-mac-512@2x 1.png",
+      "filename" : "AppIcon-1024.png",
       "idiom" : "ios-marketing",
       "scale" : "1x",
       "size" : "1024x1024"
@@ -143,11 +143,6 @@
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "512x512"
-    },
-    {
-      "filename" : "AppIcon-1024.png",
-      "idiom" : "ios-marketing",
-      "size" : "1024x1024"
     }
   ],
   "info" : {

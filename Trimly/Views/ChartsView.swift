@@ -278,6 +278,24 @@ struct AnalyticsDashboardView: View {
 					)
 				}
 				
+				// Check-ins
+				FunStatCard(
+					icon: "checkmark.circle.fill",
+					title: "Check-ins",
+					value: "\(data.count)",
+					color: .blue
+				)
+				
+				// Consistency
+				if let consistency = calculateConsistency() {
+					FunStatCard(
+						icon: "chart.bar.fill",
+						title: "Consistency",
+						value: consistency,
+						color: .indigo
+					)
+				}
+				
 				// Range Info
 				FunStatCard(
 					icon: "calendar",
@@ -336,6 +354,29 @@ struct AnalyticsDashboardView: View {
 			return formatter.string(from: date)
 		}
 		return nil
+	}
+	
+	private func calculateConsistency() -> String? {
+		let calendar = Calendar.current
+		let now = Date()
+		let startDate: Date
+		
+		switch range {
+		case .week:
+			startDate = calendar.date(byAdding: .day, value: -7, to: now) ?? now
+		case .month:
+			startDate = calendar.date(byAdding: .month, value: -1, to: now) ?? now
+		case .quarter:
+			startDate = calendar.date(byAdding: .month, value: -3, to: now) ?? now
+		case .year:
+			startDate = calendar.date(byAdding: .year, value: -1, to: now) ?? now
+		}
+		
+		let days = calendar.dateComponents([.day], from: startDate, to: now).day ?? 1
+		// Cap percentage at 100%
+		let score = min(Double(data.count) / Double(days), 1.0)
+		let percentage = Int(score * 100)
+		return "\(percentage)%"
 	}
 }
 

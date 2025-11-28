@@ -14,20 +14,33 @@ struct OnboardingView: View {
 	@State private var startingWeightText = ""
 	@State private var goalWeightText = ""
 	@State private var enableReminders = false
+	private let onboardingSteps: [(title: String, symbol: String)] = [
+		("Welcome", "figure.arms.open"),
+		("Units", "scalemass"),
+		("Start", "figure.stand"),
+		("Goal", "flag.checkered"),
+		("Reminders", "bell.badge"),
+		("Finish", "checkmark.seal")
+	]
+    
+	private var bottomContentPadding: CGFloat {
+		#if os(iOS)
+		return 44
+		#else
+		return 0
+		#endif
+	}
     
 	var body: some View {
-		VStack(spacing: 16) {
-			// Step indicator along the top for clarity
-			HStack(spacing: 8) {
-				stepLabel("Welcome", index: 0)
-				stepLabel("Units", index: 1)
-				stepLabel("Start", index: 2)
-				stepLabel("Goal", index: 3)
-				stepLabel("Reminders", index: 4)
-				stepLabel("Finish", index: 5)
+		VStack(spacing: 20) {
+			HStack(spacing: 12) {
+				ForEach(Array(onboardingSteps.enumerated()), id: \.offset) { index, step in
+					stepIcon(step, index: index)
+				}
 			}
 			.padding(.horizontal)
 			
+#if os(iOS)
 			TabView(selection: $currentPage) {
 				welcomePage.tag(0)
 				unitSelectionPage.tag(1)
@@ -36,10 +49,25 @@ struct OnboardingView: View {
 				remindersPage.tag(4)
 				eulaPage.tag(5)
 			}
+			.tabViewStyle(.page(indexDisplayMode: .never))
+#else
+			TabView(selection: $currentPage) {
+				welcomePage.tag(0)
+				unitSelectionPage.tag(1)
+				startingWeightPage.tag(2)
+				goalPage.tag(3)
+				remindersPage.tag(4)
+				eulaPage.tag(5)
+			}
+#endif
+
+			pageIndicator
 		}
+		.padding(.bottom, bottomContentPadding)
 		#if os(iOS)
-		.tabViewStyle(.page)
-		.indexViewStyle(.page(backgroundDisplayMode: .always))
+		.safeAreaInset(edge: .bottom) {
+			Color.clear.frame(height: 12)
+		}
 		#endif
 	}
 
@@ -63,16 +91,34 @@ struct OnboardingView: View {
 		}
 	}
 
-	private func stepLabel(_ title: String, index: Int) -> some View {
-		Text(title)
-			.font(.caption.bold())
-			.foregroundStyle(currentPage == index ? Color.accentColor : .secondary)
-			.padding(.vertical, 4)
-			.frame(maxWidth: .infinity)
-			.background(
-				RoundedRectangle(cornerRadius: 8)
-					.fill(currentPage == index ? Color.accentColor.opacity(0.1) : Color.clear)
-			)
+	private func stepIcon(_ step: (title: String, symbol: String), index: Int) -> some View {
+		VStack(spacing: 6) {
+			Image(systemName: step.symbol)
+				.font(.system(size: 14, weight: .semibold))
+				.foregroundStyle(currentPage == index ? Color.white : .primary)
+				.padding(10)
+				.background(
+					RoundedRectangle(cornerRadius: 12, style: .continuous)
+						.fill(currentPage == index ? Color.accentColor : Color.accentColor.opacity(0.12))
+				)
+			Circle()
+				.fill(currentPage == index ? Color.accentColor : Color.secondary.opacity(0.3))
+				.frame(width: 6, height: 6)
+		}
+		.frame(maxWidth: .infinity)
+		.accessibilityElement(children: .ignore)
+		.accessibilityLabel(step.title)
+	}
+
+	private var pageIndicator: some View {
+		HStack(spacing: 8) {
+			ForEach(onboardingSteps.indices, id: \.self) { index in
+				Capsule()
+					.fill(index == currentPage ? Color.accentColor : Color.accentColor.opacity(0.2))
+					.frame(width: index == currentPage ? 20 : 8, height: 8)
+			}
+		}
+		.padding(.bottom, 8)
 	}
     
 	private var welcomePage: some View {

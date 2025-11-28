@@ -29,14 +29,14 @@ struct SettingsView: View {
 						settingsRow(
 							icon: "scalemass",
 							title: "Weight Unit",
-							subtitle: "Display entries in your preferred unit."
+							subtitle: "Display entries in your preferred unit.",
+							accessoryPlacement: .below
 						) {
 							Picker("Weight Unit", selection: binding(\.preferredUnit)) {
 								Text("Pounds").tag(WeightUnit.pounds)
 								Text("Kilograms").tag(WeightUnit.kilograms)
 							}
 							.labelsHidden()
-							.frame(maxWidth: 220)
 							.pickerStyle(.segmented)
 						}
 						
@@ -45,14 +45,14 @@ struct SettingsView: View {
 						settingsRow(
 							icon: "number",
 							title: "Decimal Precision",
-							subtitle: "Control the number of decimal places you see."
+							subtitle: "Control the number of decimal places you see.",
+							accessoryPlacement: .below
 						) {
 							Picker("Decimal Precision", selection: binding(\.decimalPrecision)) {
 								Text("1 place").tag(1)
 								Text("2 places").tag(2)
 							}
 							.labelsHidden()
-							.frame(maxWidth: 200)
 							.pickerStyle(.segmented)
 						}
 						
@@ -61,7 +61,8 @@ struct SettingsView: View {
 						settingsRow(
 							icon: "circle.lefthalf.filled",
 							title: "Theme",
-							subtitle: "Choose Trimly's appearance."
+							subtitle: "Choose Trimly's appearance.",
+							accessoryPlacement: .below
 						) {
 							Picker("Theme", selection: binding(\.appearance)) {
 								ForEach(AppAppearance.allCases) { option in
@@ -69,7 +70,6 @@ struct SettingsView: View {
 								}
 							}
 							.labelsHidden()
-							.frame(maxWidth: 260)
 							.pickerStyle(.segmented)
 						}
 					}
@@ -123,14 +123,14 @@ struct SettingsView: View {
 						settingsRow(
 							icon: "calendar.day.timeline.left",
 							title: "Daily Calculation",
-							subtitle: "Latest entry or daily average."
+							subtitle: "Latest entry or daily average.",
+							accessoryPlacement: .below
 						) {
 							Picker("Daily Value", selection: binding(\.dailyAggregationMode)) {
 								Text("Latest").tag(DailyAggregationMode.latest)
 								Text("Average").tag(DailyAggregationMode.average)
 							}
 							.labelsHidden()
-							.frame(maxWidth: 220)
 							.pickerStyle(.segmented)
 						}
 					}
@@ -300,6 +300,11 @@ struct SettingsView: View {
 			.overlay(Color.primary.opacity(0.08))
 			.padding(.vertical, 8)
 	}
+
+	private enum SettingsAccessoryPlacement {
+		case trailing
+		case below
+	}
 	
 	private func settingsRow<Accessory: View>(
 		icon: String,
@@ -307,9 +312,11 @@ struct SettingsView: View {
 		subtitle: String? = nil,
 		showChevron: Bool = false,
 		iconTint: Color = Color.accentColor,
+		accessoryPlacement: SettingsAccessoryPlacement = .trailing,
 		@ViewBuilder accessory: () -> Accessory = { EmptyView() }
 	) -> some View {
-		HStack(spacing: 16) {
+		let needsTrailingSpacer = accessoryPlacement == .trailing || showChevron
+		return HStack(alignment: .top, spacing: 16) {
 			RoundedRectangle(cornerRadius: 14, style: .continuous)
 				.fill(iconTint.opacity(0.15))
 				.frame(width: 52, height: 52)
@@ -318,7 +325,7 @@ struct SettingsView: View {
 						.font(.title3)
 						.foregroundStyle(iconTint)
 				)
-			VStack(alignment: .leading, spacing: 2) {
+			VStack(alignment: .leading, spacing: accessoryPlacement == .below ? 10 : 2) {
 				Text(title)
 					.font(.body.weight(.semibold))
 				if let subtitle {
@@ -326,16 +333,23 @@ struct SettingsView: View {
 						.font(.caption)
 						.foregroundStyle(.secondary)
 				}
+				if accessoryPlacement == .below {
+					accessory()
+				}
 			}
-			Spacer()
-			accessory()
+			if needsTrailingSpacer {
+				Spacer(minLength: 0)
+			}
+			if accessoryPlacement == .trailing {
+				accessory()
+			}
 			if showChevron {
 				Image(systemName: "chevron.right")
 					.font(.footnote.weight(.semibold))
 					.foregroundStyle(.tertiary)
 			}
 		}
-		.padding(.vertical, 6)
+		.padding(.vertical, accessoryPlacement == .below ? 10 : 6)
 	}
 	
 	private func statusPill(text: String, color: Color) -> some View {

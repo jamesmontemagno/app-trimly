@@ -236,9 +236,9 @@ git clone https://github.com/jamesmontemagno/app-trimly.git
 cd app-trimly
 
 # 2. Open in Xcode
-open Trimly.xcodeproj
+open TrimTally.xcodeproj
 
-# 3. Select platform (iOS/macOS) via the Trimly scheme
+# 3. Select platform (iOS/macOS) via the TrimTally scheme
 # 4. Press ⌘R to build and run
 ```
 
@@ -249,7 +249,7 @@ open Trimly.xcodeproj
 ⌘U
 
 # Or from command line (CI)
-xcodebuild -scheme Trimly -destination 'platform=iOS Simulator,name=iPhone 15 Pro' test
+xcodebuild -scheme TrimTally -destination 'platform=iOS Simulator,name=iPhone 15 Pro' test
 ```
 
 ## Project Statistics

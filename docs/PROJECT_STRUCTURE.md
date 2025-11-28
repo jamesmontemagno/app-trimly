@@ -321,7 +321,7 @@ Swift Package Manager
     │
     ├─────────────┬──────────────┐
     ▼             ▼              ▼
- Trimly.app   Tests Build    Documentation
+ TrimTally.app   Tests Build    Documentation
     │             │
     │             ▼
     │        XCTest Runner

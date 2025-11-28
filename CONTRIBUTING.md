@@ -130,7 +130,7 @@ Please open an issue to discuss new features before starting work on them.
 
 When reporting bugs, please include:
 - iOS/macOS version
-- Trimly version
+- TrimTally version
 - Steps to reproduce
 - Expected vs actual behavior
 - Screenshots if applicable
@@ -139,4 +139,4 @@ When reporting bugs, please include:
 
 Feel free to open an issue for any questions about contributing.
 
-Thank you for contributing to Trimly! 🎉
+Thank you for contributing to TrimTally! 🎉

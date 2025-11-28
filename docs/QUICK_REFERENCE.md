@@ -6,7 +6,7 @@
 # Clone and open
 git clone https://github.com/jamesmontemagno/app-trimly.git
 cd app-trimly
-open Trimly.xcodeproj
+open TrimTally.xcodeproj
 
 # Build and run in Xcode
 ⌘R
@@ -128,7 +128,7 @@ let trend = WeightAnalytics.classifyTrend(
 ⌘U
 
 # From command line (CI)
-xcodebuild -scheme Trimly -destination 'platform=iOS Simulator,name=iPhone 15 Pro' test
+xcodebuild -scheme TrimTally -destination 'platform=iOS Simulator,name=iPhone 15 Pro' test
 ```
 
 ## 📚 Documentation

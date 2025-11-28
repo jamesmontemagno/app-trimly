@@ -47,8 +47,8 @@ All data operations flow through `DataManager` (singleton, `@MainActor`-bound):
 - Example: `try? dataManager.addWeightEntry(...)` for non-critical operations
 
 ## Build & Run
-- **Xcode**: Open `Trimly.xcodeproj`, select the `Trimly` scheme for iOS or macOS, `⌘R`
-- **CLI/CI**: Use `xcodebuild -scheme Trimly -destination 'platform=iOS Simulator,name=iPhone 15 Pro' test` for automated testing
+- **Xcode**: Open `TrimTally.xcodeproj`, select the `TrimTally` scheme for iOS or macOS, `⌘R`
+- **CLI/CI**: Use `xcodebuild -scheme TrimTally -destination 'platform=iOS Simulator,name=iPhone 15 Pro' test` for automated testing
 - **Platforms**: Requires macOS for development (SwiftUI/SwiftData dependency)
 
 ## File Organization
@@ -58,7 +58,7 @@ Trimly/
 ├── Models/           # SwiftData @Model classes only
 ├── Services/         # Business logic (DataManager, WeightAnalytics, HealthKit, Notifications, Celebrations, Plateau)
 ├── Views/            # SwiftUI views—keep presentation logic minimal
-└── Widget/           # WidgetKit extension (Trimly widgets)
+└── Widget/           # WidgetKit extension (TrimTally widgets)
 
 TrimlyTests/          # Unit tests (DataManager, WeightAnalytics, etc.)
 ```

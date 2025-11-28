@@ -211,7 +211,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Allow Trimly to securely read your Health app weight data."
+            "value" : "Allow TrimTally to securely read your Health app weight data."
           }
         }
       }
@@ -244,7 +244,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Connect to Health so Trimly can keep everything in one place."
+            "value" : "Connect to Health so TrimTally can keep everything in one place."
           }
         }
       }
@@ -343,7 +343,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choose a range and pull past weights into Trimly. Duplicates are automatically skipped."
+            "value" : "Choose a range and pull past weights into TrimTally. Duplicates are automatically skipped."
           }
         }
       }
@@ -486,7 +486,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Let Trimly watch for new Health weight samples and keep things tidy."
+            "value" : "Let TrimTally watch for new Health weight samples and keep things tidy."
           }
         }
       }

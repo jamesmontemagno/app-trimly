@@ -20,15 +20,15 @@ Before building TrimTally, ensure you have:
 
 2. Open the Xcode project or workspace:
    ```bash
-   open Trimly.xcodeproj
+   open TrimTally.xcodeproj
    ```
-   or double-click `Trimly.xcodeproj` in Finder.
+   or double-click `TrimTally.xcodeproj` in Finder.
 
 3. Wait for Xcode to finish indexing and resolving packages.
 
 4. Select your scheme and destination:
-   - **iOS**: `Trimly` scheme with an iOS simulator or connected device
-   - **macOS**: `Trimly` scheme with "My Mac"
+   - **iOS**: `TrimTally` scheme with an iOS simulator or connected device
+   - **macOS**: `TrimTally` scheme with "My Mac"
 
 5. Build and run: Press `⌘R`.
 
@@ -40,7 +40,7 @@ For most development, use Xcode directly. For CI or scripted builds you can use 
 git clone https://github.com/jamesmontemagno/app-trimly.git
 cd app-trimly
 
-xcodebuild -scheme Trimly \
+xcodebuild -scheme TrimTally \
            -destination 'platform=iOS Simulator,name=iPhone 15 Pro' \
            clean build
 ```
@@ -49,7 +49,7 @@ xcodebuild -scheme Trimly \
 
 ```
 app-trimly/
-├── Trimly.xcodeproj          # Xcode project
+├── TrimTally.xcodeproj          # Xcode project
 ├── Trimly/                   # App sources (iOS + macOS)
 │   ├── TrimlyApp.swift       # App entry point
 │   ├── Models/               # SwiftData models
@@ -63,15 +63,15 @@ app-trimly/
 
 ### iOS
 
-1. Open `Trimly.xcodeproj` in Xcode.
-2. Select the `Trimly` scheme.
+1. Open `TrimTally.xcodeproj` in Xcode.
+2. Select the `TrimTally` scheme.
 3. Choose an iOS Simulator (e.g., iPhone 15 Pro) or a physical device.
 4. Press `⌘R` to build and run.
 
 ### macOS
 
-1. Open `Trimly.xcodeproj` in Xcode.
-2. Select the `Trimly` scheme.
+1. Open `TrimTally.xcodeproj` in Xcode.
+2. Select the `TrimTally` scheme.
 3. Choose "My Mac" as the destination.
 4. Press `⌘R` to build and run.
 
@@ -83,7 +83,7 @@ app-trimly/
 
 ### Command Line (CI)
 ```bash
-xcodebuild -scheme Trimly -destination 'platform=iOS Simulator,name=iPhone 15 Pro' test
+xcodebuild -scheme TrimTally -destination 'platform=iOS Simulator,name=iPhone 15 Pro' test
 ```
 
 ## Common Issues
@@ -155,7 +155,7 @@ For automated builds (GitHub Actions, etc.), prefer `xcodebuild`:
 ```yaml
 - name: Build
    run: |
-      xcodebuild -scheme Trimly \
+      xcodebuild -scheme TrimTally \
                       -destination 'platform=iOS Simulator,name=iPhone 15 Pro' \
                       clean build
 ```

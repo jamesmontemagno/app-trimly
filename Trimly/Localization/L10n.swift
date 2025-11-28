@@ -173,16 +173,16 @@ enum L10n {
 		static let eveningLabel = LocalizedStringResource("reminders.secondary.timeLabel", defaultValue: "Evening Time")
 	}
 
-	enum Health {
-		static let navigationTitle = LocalizedStringResource("health.navigation.title", defaultValue: "HealthKit Integration")
-		static let authorizationTitle = LocalizedStringResource("health.authorization.title", defaultValue: "Authorization")
-		static let authorizationDescription = LocalizedStringResource("health.authorization.description", defaultValue: "Allow Trimly to securely read your Health app weight data.")
-		static let statusEnabled = LocalizedStringResource("health.authorization.enabled", defaultValue: "HealthKit Enabled")
-		static let statusEnabledDescription = LocalizedStringResource("health.authorization.enabledDescription", defaultValue: "You can now import history and sync future entries.")
-		static let connectPrompt = LocalizedStringResource("health.authorization.prompt", defaultValue: "Connect to Health so Trimly can keep everything in one place.")
+		enum Health {
+			static let navigationTitle = LocalizedStringResource("health.navigation.title", defaultValue: "HealthKit Integration")
+			static let authorizationTitle = LocalizedStringResource("health.authorization.title", defaultValue: "Authorization")
+			static let authorizationDescription = LocalizedStringResource("health.authorization.description", defaultValue: "Allow TrimTally to securely read your Health app weight data.")
+			static let statusEnabled = LocalizedStringResource("health.authorization.enabled", defaultValue: "HealthKit Enabled")
+			static let statusEnabledDescription = LocalizedStringResource("health.authorization.enabledDescription", defaultValue: "You can now import history and sync future entries.")
+			static let connectPrompt = LocalizedStringResource("health.authorization.prompt", defaultValue: "Connect to Health so TrimTally can keep everything in one place.")
 		static let requestAccessButton = LocalizedStringResource("health.authorization.requestAccess", defaultValue: "Request Access")
 		static let historicalImportTitle = LocalizedStringResource("health.import.title", defaultValue: "Historical Import")
-		static let historicalImportDescription = LocalizedStringResource("health.import.description", defaultValue: "Choose a range and pull past weights into Trimly. Duplicates are automatically skipped.")
+			static let historicalImportDescription = LocalizedStringResource("health.import.description", defaultValue: "Choose a range and pull past weights into TrimTally. Duplicates are automatically skipped.")
 		static let startDateLabel = LocalizedStringResource("health.import.startDate", defaultValue: "Start")
 		static let endDateLabel = LocalizedStringResource("health.import.endDate", defaultValue: "End")
 		static let countingSamples = LocalizedStringResource("health.import.counting", defaultValue: "Counting samples")
@@ -199,7 +199,7 @@ enum L10n {
 		}
 		static let recentImportHint = LocalizedStringResource("health.import.recent.hint", defaultValue: "You can rerun imports at any time—duplicates stay hidden.")
 		static let backgroundSyncTitle = LocalizedStringResource("health.sync.title", defaultValue: "Background Sync")
-		static let backgroundSyncDescription = LocalizedStringResource("health.sync.description", defaultValue: "Let Trimly watch for new Health weight samples and keep things tidy.")
+			static let backgroundSyncDescription = LocalizedStringResource("health.sync.description", defaultValue: "Let TrimTally watch for new Health weight samples and keep things tidy.")
 		static let backgroundSyncToggle = LocalizedStringResource("health.sync.toggle", defaultValue: "Enable Background Sync")
 		static let autoHideToggle = LocalizedStringResource("health.sync.autoHide", defaultValue: "Auto-hide Duplicates")
 		static let genericErrorMessage = LocalizedStringResource("health.error.generic", defaultValue: "An error occurred")

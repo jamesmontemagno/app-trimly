@@ -60,3 +60,10 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+
+# SwiftPM
+.swiftpm/
+*.swiftpm
+
+# Mac
+.DS_Store

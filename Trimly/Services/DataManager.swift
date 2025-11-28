@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import Combine
 
 /// Central data management service
 @MainActor

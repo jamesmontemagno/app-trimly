@@ -10,7 +10,7 @@ Before building Trimly, ensure you have:
 
 ## Quick Start
 
-### Option 1: Open in Xcode (Recommended)
+### Open in Xcode (Recommended)
 
 1. Clone the repository:
    ```bash
@@ -18,75 +18,72 @@ Before building Trimly, ensure you have:
    cd app-trimly
    ```
 
-2. Double-click `Package.swift` in Finder, or run:
+2. Open the Xcode project or workspace:
    ```bash
-   open Package.swift
+   open Trimly.xcodeproj
    ```
+   or double-click `Trimly.xcodeproj` in Finder.
 
-3. Wait for Xcode to resolve Swift packages (automatic)
+3. Wait for Xcode to finish indexing and resolving packages.
 
-4. Select your target:
-   - **iOS**: Choose an iOS simulator or connected device
-   - **macOS**: Choose "My Mac"
+4. Select your scheme and destination:
+   - **iOS**: `Trimly` scheme with an iOS simulator or connected device
+   - **macOS**: `Trimly` scheme with "My Mac"
 
-5. Build and run: Press `⌘R`
+5. Build and run: Press `⌘R`.
 
-### Option 2: Command Line Build (macOS only)
+### Command Line (CI / advanced)
+
+For most development, use Xcode directly. For CI or scripted builds you can use `xcodebuild`:
 
 ```bash
-# Clone repository
 git clone https://github.com/jamesmontemagno/app-trimly.git
 cd app-trimly
 
-# Build
-swift build -c release
-
-# Run tests
-swift test
+xcodebuild -scheme Trimly \
+           -destination 'platform=iOS Simulator,name=iPhone 15 Pro' \
+           clean build
 ```
-
-**Note**: Command line builds work on macOS only, as SwiftUI and SwiftData require Apple platforms.
 
 ## Project Structure
 
 ```
 app-trimly/
-├── Package.swift              # Swift Package Manager manifest
-├── Sources/
-│   └── Trimly/
-│       ├── Models/            # SwiftData models
-│       ├── Services/          # Business logic
-│       ├── Views/             # SwiftUI views
-│       └── TrimlyApp.swift    # App entry point
-└── Tests/
-    └── TrimlyTests/           # Unit tests
+├── Trimly.xcodeproj          # Xcode project
+├── Trimly/                   # App sources (iOS + macOS)
+│   ├── TrimlyApp.swift       # App entry point
+│   ├── Models/               # SwiftData models
+│   ├── Services/             # Business logic
+│   ├── Views/                # SwiftUI views
+│   └── Widget/               # Widget extension sources
+└── TrimlyTests/              # Unit tests
 ```
 
 ## Running on Different Platforms
 
 ### iOS
 
-1. Open `Package.swift` in Xcode
-2. Select a target from the scheme selector:
-   - iOS Simulator (iPhone 15 Pro recommended)
-   - Physical iOS device (requires provisioning)
-3. Press `⌘R` to build and run
+1. Open `Trimly.xcodeproj` in Xcode.
+2. Select the `Trimly` scheme.
+3. Choose an iOS Simulator (e.g., iPhone 15 Pro) or a physical device.
+4. Press `⌘R` to build and run.
 
 ### macOS
 
-1. Open `Package.swift` in Xcode
-2. Select "My Mac" from the scheme selector
-3. Press `⌘R` to build and run
+1. Open `Trimly.xcodeproj` in Xcode.
+2. Select the `Trimly` scheme.
+3. Choose "My Mac" as the destination.
+4. Press `⌘R` to build and run.
 
 ## Running Tests
 
 ### In Xcode
-- Press `⌘U` to run all tests
-- Or use Product → Test from the menu
+- Press `⌘U` to run all tests.
+- Or use Product → Test from the menu.
 
-### Command Line
+### Command Line (CI)
 ```bash
-swift test
+xcodebuild -scheme Trimly -destination 'platform=iOS Simulator,name=iPhone 15 Pro' test
 ```
 
 ## Common Issues
@@ -153,14 +150,14 @@ Configure in Xcode:
 
 ## CI/CD
 
-For automated builds (GitHub Actions, etc.):
+For automated builds (GitHub Actions, etc.), prefer `xcodebuild`:
 
 ```yaml
 - name: Build
-  run: |
-    xcodebuild -scheme Trimly \
-               -destination 'platform=iOS Simulator,name=iPhone 15 Pro' \
-               clean build
+   run: |
+      xcodebuild -scheme Trimly \
+                      -destination 'platform=iOS Simulator,name=iPhone 15 Pro' \
+                      clean build
 ```
 
 ## Additional Resources

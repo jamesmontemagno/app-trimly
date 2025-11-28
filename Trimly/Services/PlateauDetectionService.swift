@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 /// Service for detecting weight loss/gain plateaus
 @MainActor

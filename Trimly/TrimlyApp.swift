@@ -2,13 +2,13 @@
 //  TrimlyApp.swift
 //  Trimly
 //
-//  Created by Trimly on 11/19/2025.
+//  Created by James Montemagno on 11/27/25.
 //
 
 import SwiftUI
 import SwiftData
 
-//@main
+@main
 struct TrimlyApp: App {
     @StateObject private var dataManager = DataManager()
     

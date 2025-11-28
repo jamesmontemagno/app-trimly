@@ -6,7 +6,7 @@
 # Clone and open
 git clone https://github.com/jamesmontemagno/app-trimly.git
 cd app-trimly
-open Package.swift
+open Trimly.xcodeproj
 
 # Build and run in Xcode
 ⌘R
@@ -15,12 +15,13 @@ open Package.swift
 ## 📂 File Organization
 
 ```
-Sources/Trimly/
-├── Models/         # Data models (3 files)
-├── Services/       # Business logic (2 files)
-└── Views/          # UI components (7 files)
+Trimly/             # App sources (iOS + macOS)
+├── Models/         # SwiftData models
+├── Services/       # Business logic & analytics
+├── Views/          # SwiftUI views
+└── Widget/         # WidgetKit extension
 
-Tests/TrimlyTests/  # Unit tests (2 files)
+TrimlyTests/        # Unit tests
 ```
 
 ## 🎯 Core Concepts
@@ -123,11 +124,11 @@ let trend = WeightAnalytics.classifyTrend(
 ## 🧪 Testing
 
 ```bash
-# Run all tests
-swift test
-
 # In Xcode
 ⌘U
+
+# From command line (CI)
+xcodebuild -scheme Trimly -destination 'platform=iOS Simulator,name=iPhone 15 Pro' test
 ```
 
 ## 📚 Documentation

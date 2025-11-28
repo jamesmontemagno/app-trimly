@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 import HealthKit
 
 /// Service for HealthKit integration (weight data import and sync)

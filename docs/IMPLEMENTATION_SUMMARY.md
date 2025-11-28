@@ -8,7 +8,7 @@
 
 ### ✅ Complete Application Structure
 
-A production-ready Swift Package with:
+An Xcode app project with:
 - 20+ source files
 - ~4,300 lines of Swift code
 - Comprehensive documentation
@@ -105,8 +105,8 @@ SQLite + iCloud (Storage)
 - **SwiftUI**: Declarative UI framework
 - **SwiftData**: Modern persistence with iCloud
 - **Swift Charts**: Beautiful data visualization
-- **Swift Package Manager**: Dependency management
 - **XCTest**: Unit testing framework
+ - **Swift Package Manager**: Used for initial development; project is now organized as an Xcode app target.
 
 ### Code Quality
 
@@ -236,9 +236,9 @@ git clone https://github.com/jamesmontemagno/app-trimly.git
 cd app-trimly
 
 # 2. Open in Xcode
-open Package.swift
+open Trimly.xcodeproj
 
-# 3. Select platform (iOS/macOS)
+# 3. Select platform (iOS/macOS) via the Trimly scheme
 # 4. Press ⌘R to build and run
 ```
 
@@ -248,8 +248,8 @@ open Package.swift
 # In Xcode
 ⌘U
 
-# Or command line
-swift test
+# Or from command line (CI)
+xcodebuild -scheme Trimly -destination 'platform=iOS Simulator,name=iPhone 15 Pro' test
 ```
 
 ## Project Statistics

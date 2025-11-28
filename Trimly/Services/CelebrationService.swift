@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 /// Service for detecting and managing micro celebrations
 @MainActor

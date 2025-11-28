@@ -42,17 +42,20 @@ All data operations flow through `DataManager` (singleton, `@MainActor`-bound):
 - Example: `try? dataManager.addWeightEntry(...)` for non-critical operations
 
 ## Build & Run
-- **Xcode**: Open `Package.swift`, select iOS/macOS scheme, `⌘R`
-- **CLI**: `swift build` (macOS only), `swift test` for tests
+- **Xcode**: Open `Trimly.xcodeproj`, select the `Trimly` scheme for iOS or macOS, `⌘R`
+- **CLI/CI**: Use `xcodebuild -scheme Trimly -destination 'platform=iOS Simulator,name=iPhone 15 Pro' test` for automated testing
 - **Platforms**: Requires macOS for development (SwiftUI/SwiftData dependency)
 
 ## File Organization
 ```
-Sources/Trimly/
-├── Models/          # SwiftData @Model classes only
-├── Services/        # Business logic (DataManager, WeightAnalytics, future HealthKit/Notifications)
-├── Views/           # SwiftUI views—keep presentation logic minimal
-└── Widget/          # Future WidgetKit extension
+Trimly/
+├── TrimlyApp.swift   # App entry point (iOS + macOS)
+├── Models/           # SwiftData @Model classes only
+├── Services/         # Business logic (DataManager, WeightAnalytics, HealthKit, Notifications, Celebrations, Plateau)
+├── Views/            # SwiftUI views—keep presentation logic minimal
+└── Widget/           # WidgetKit extension (Trimly widgets)
+
+TrimlyTests/          # Unit tests (DataManager, WeightAnalytics, etc.)
 ```
 
 ## Analytics Implementation Notes
@@ -62,10 +65,8 @@ Sources/Trimly/
 - **Trend Thresholds**: Slope < -0.02 kg/day = downward, > 0.02 = upward, else stable
 
 ## Current Limitations & Future Work
-- HealthKit integration incomplete (models/service exist, views pending)
-- Reminder notifications not implemented (placeholders in AppSettings)
-- Widget extension stubbed but non-functional
-- See `docs/DESIGN_DOCUMENT.md` v1.1+ roadmap for planned features
+- Core HealthKit import/sync, reminders, celebrations, plateau detection, and widgets are implemented for v1.2; see `docs/FEATURE_IMPLEMENTATION_V1.2.md` for details.
+- Future ideas (not yet implemented) still live in the roadmap section of `docs/DESIGN_DOCUMENT.md` (e.g., Apple Watch app, more widget sizes, Siri Shortcuts, social features).
 
 ## Code Style
 - Use Swift naming conventions (camelCase for properties/methods)

@@ -306,6 +306,28 @@ Trimly is a modern weight tracking application for iOS and macOS that provides a
 - **Chart Transition**: Smooth interpolation
 - **Data Refresh**: Subtle fade
 
+### Key Screens & Components (Visual Overview)
+
+This section summarizes the most important new v1.1/v1.2 surfaces; see the app for exact visuals.
+
+- **HealthKit Integration Screen**
+  - Authorization status row (checkmark when enabled).
+  - Historical import section with date range, sample count, and "Import Historical Data" button.
+  - Background sync and "Auto-hide duplicates" toggles.
+
+- **Reminders Screen**
+  - Notification authorization status row.
+  - Primary daily reminder time picker and optional secondary reminder.
+  - "Smart time suggestions" area showing a suggested time based on logging patterns and an "Apply suggestion" action.
+
+- **Dashboard Enhancements**
+  - Celebration overlay: transient, centered card with icon and supportive message (e.g., "Halfway to your goal—keep it up!"), auto-dismissed after a short delay.
+  - Plateau card: dismissible info card embedded in the dashboard, explaining that weight has stabilized over ~14 days with gentle guidance.
+
+- **Widgets (iOS)**
+  - Small widget: current weight, unit, and delta with arrow indicator.
+  - Medium widget: current weight and delta on the left, trend label on the right (e.g., "Gradual decrease"), designed to match the in-app dashboard tone.
+
 ### Accessibility
 - Dynamic Type support
 - VoiceOver labels for all controls

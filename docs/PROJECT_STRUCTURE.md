@@ -106,24 +106,24 @@ User Input
 ┌─────────────────┐
 │   SwiftData     │ (Persistence)
 │  ModelContext   │
-└────────┬────────┘
-         │
-         ├──────────────┐
-         ▼              ▼
-┌──────────────┐  ┌─────────────┐
-│ Local SQLite │  │ iCloud Sync │
-└──────────────┘  └─────────────┘
-```
+## Code Layout
 
-## View Hierarchy
+### Xcode App Project (current)
 
+```text
+Trimly/               # App target sources (iOS + macOS)
+    Trimly.swift
+    TrimlyApp.swift
+    Models/
+    Services/
+    Views/
+    Widget/
+
+TrimlyTests/          # XCTest target
+    DataManagerTests.swift
+    TrimlyTests.swift
+    WeightAnalyticsTests.swift
 ```
-TrimlyApp (@main)
-│
-└── ContentView
-    │
-    ├── OnboardingView (if first run)
-    │   ├── Welcome Page
     │   ├── Unit Selection Page
     │   ├── Starting Weight Page
     │   ├── Goal Setting Page

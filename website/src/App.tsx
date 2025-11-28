@@ -22,6 +22,8 @@ function App() {
     const saved = localStorage.getItem('theme')
     return (saved as Theme) || 'system'
   })
+  
+  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light')
 
   useEffect(() => {
     const root = window.document.documentElement
@@ -29,6 +31,7 @@ function App() {
 
     const applyTheme = () => {
       const isDark = theme === 'dark' || (theme === 'system' && systemDark.matches)
+      setResolvedTheme(isDark ? 'dark' : 'light')
       if (isDark) {
         root.classList.add('dark')
       } else {
@@ -200,14 +203,41 @@ function App() {
           </div>
           
           <div className="screenshots-grid">
-             <div className="screenshot-placeholder">
-               <span>Dashboard</span>
+             <div className="screenshot-frame">
+               <img 
+                 key={`dashboard-${resolvedTheme}`}
+                 src={`${import.meta.env.BASE_URL}screenshots/${resolvedTheme}/dashboard.png`} 
+                 alt="Dashboard Screen" 
+                 onError={(e) => {
+                   e.currentTarget.style.display = 'none';
+                   e.currentTarget.parentElement!.classList.add('placeholder');
+                   e.currentTarget.parentElement!.innerHTML = '<span>Dashboard</span>';
+                 }} 
+               />
              </div>
-             <div className="screenshot-placeholder">
-               <span>Analytics</span>
+             <div className="screenshot-frame">
+               <img 
+                 key={`analytics-${resolvedTheme}`}
+                 src={`${import.meta.env.BASE_URL}screenshots/${resolvedTheme}/analytics.png`} 
+                 alt="Analytics Screen" 
+                 onError={(e) => {
+                   e.currentTarget.style.display = 'none';
+                   e.currentTarget.parentElement!.classList.add('placeholder');
+                   e.currentTarget.parentElement!.innerHTML = '<span>Analytics</span>';
+                 }} 
+               />
              </div>
-             <div className="screenshot-placeholder">
-               <span>Add Entry</span>
+             <div className="screenshot-frame">
+               <img 
+                 key={`add-entry-${resolvedTheme}`}
+                 src={`${import.meta.env.BASE_URL}screenshots/${resolvedTheme}/add-entry.png`} 
+                 alt="Add Entry Screen" 
+                 onError={(e) => {
+                   e.currentTarget.style.display = 'none';
+                   e.currentTarget.parentElement!.classList.add('placeholder');
+                   e.currentTarget.parentElement!.innerHTML = '<span>Add Entry</span>';
+                 }} 
+               />
              </div>
           </div>
         </div>

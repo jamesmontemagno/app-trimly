@@ -252,7 +252,7 @@ final class WeightAnalytics {
         // Calculate regression
         let regression = calculateLinearRegression(dailyWeights: workingData)
         guard let slope = regression.slope,
-              let intercept = regression.intercept,
+              let _ = regression.intercept,
               abs(slope) >= stabilityThreshold else {
             return nil
         }

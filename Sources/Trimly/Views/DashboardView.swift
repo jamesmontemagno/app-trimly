@@ -421,10 +421,16 @@ struct CelebrationOverlayView: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            Image(systemName: celebration.iconName)
-                .font(.system(size: 60))
-                .foregroundStyle(.yellow)
-                .symbolEffect(.bounce)
+            if #available(macOS 15.0, *) {
+                Image(systemName: celebration.iconName)
+                    .font(.system(size: 60))
+                    .foregroundStyle(.yellow)
+                    .symbolEffect(.bounce)
+            } else {
+                Image(systemName: celebration.iconName)
+                    .font(.system(size: 60))
+                    .foregroundStyle(.yellow)
+            }
             
             Text(celebration.message)
                 .font(.title2.bold())
@@ -445,10 +451,16 @@ struct CelebrationView: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            Image(systemName: "star.fill")
-                .font(.system(size: 60))
-                .foregroundStyle(.yellow)
-                .symbolEffect(.bounce)
+            if #available(macOS 15.0, *) {
+                Image(systemName: "star.fill")
+                    .font(.system(size: 60))
+                    .foregroundStyle(.yellow)
+                    .symbolEffect(.bounce)
+            } else {
+                Image(systemName: "star.fill")
+                    .font(.system(size: 60))
+                    .foregroundStyle(.yellow)
+            }
             
             Text(message)
                 .font(.title2.bold())

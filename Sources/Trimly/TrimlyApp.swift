@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-@main
+//@main
 struct TrimlyApp: App {
     @StateObject private var dataManager = DataManager()
     

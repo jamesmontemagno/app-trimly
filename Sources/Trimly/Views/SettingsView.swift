@@ -225,7 +225,9 @@ struct GoalSetupView: View {
                 Section {
                     HStack {
                         TextField("Target Weight", text: $targetWeightText)
+                            #if os(iOS)
                             .keyboardType(.decimalPad)
+                            #endif
                         
                         Text(dataManager.settings?.preferredUnit.symbol ?? "kg")
                             .foregroundStyle(.secondary)
@@ -238,7 +240,9 @@ struct GoalSetupView: View {
                 }
             }
             .navigationTitle("Set Goal")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
@@ -345,7 +349,9 @@ struct GoalHistoryView: View {
                 }
             }
             .navigationTitle("Goal History")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") {
@@ -391,7 +397,9 @@ struct ExportView: View {
                     .padding()
             }
             .navigationTitle("Export Data")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") {

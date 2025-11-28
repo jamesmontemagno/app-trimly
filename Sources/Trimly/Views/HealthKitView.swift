@@ -126,7 +126,9 @@ struct HealthKitView: View {
                 }
             }
             .navigationTitle("HealthKit Integration")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") {

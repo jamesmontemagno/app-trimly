@@ -140,7 +140,9 @@ final class WeightAnalyticsTests: XCTestCase {
         var weights: [(date: Date, weight: Double)] = []
         for i in 0..<15 {
             let date = Calendar.current.date(byAdding: .day, value: -i, to: Date())!
-            let weight = 85.0 - (Double(i) * 0.2) // Losing 0.2 kg per day
+            // Fix: weight should decrease as we go back in time (i increases)
+            // So older entries (larger i) should have higher weights
+            let weight = 85.0 + (Double(i) * 0.2) // Started at higher weight, losing 0.2 kg per day
             weights.insert((date: date, weight: weight), at: 0)
         }
         

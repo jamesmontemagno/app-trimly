@@ -170,15 +170,18 @@ final class HealthKitService: ObservableObject {
     func enableBackgroundDelivery(dataManager: DataManager, unit: WeightUnit) {
         guard isAuthorized else { return }
         
-        healthStore.enableBackgroundDelivery(for: weightType, frequency: .immediate) { success, error in
+        healthStore.enableBackgroundDelivery(for: weightType, frequency: .immediate) { [weak self] success, error in
             if success {
-                self.observeWeightChanges(dataManager: dataManager, unit: unit)
+                Task { @MainActor in
+                    await self?.observeWeightChanges(dataManager: dataManager, unit: unit)
+                }
             }
         }
     }
     
     /// Observe weight changes and sync new samples
-    private func observeWeightChanges(dataManager: DataManager, unit: WeightUnit) {
+    @MainActor
+    private func observeWeightChanges(dataManager: DataManager, unit: WeightUnit) async {
         let query = HKObserverQuery(sampleType: weightType, predicate: nil) { [weak self] _, completionHandler, error in
             guard error == nil else {
                 completionHandler()

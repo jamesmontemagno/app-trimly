@@ -41,8 +41,10 @@ struct OnboardingView: View {
             eulaPage
                 .tag(5)
         }
+        #if os(iOS)
         .tabViewStyle(.page)
         .indexViewStyle(.page(backgroundDisplayMode: .always))
+        #endif
     }
     
     // MARK: - Welcome Page
@@ -156,8 +158,10 @@ struct OnboardingView: View {
             
             HStack {
                 TextField("Weight", text: $startingWeightText)
+                    #if os(iOS)
                     .keyboardType(.decimalPad)
-                    .font(.title.bold())
+                    #endif
+                    .font(.system(.title).bold())
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: 200)
                 
@@ -218,8 +222,10 @@ struct OnboardingView: View {
             
             HStack {
                 TextField("Goal", text: $goalWeightText)
+                    #if os(iOS)
                     .keyboardType(.decimalPad)
-                    .font(.title.bold())
+                    #endif
+                    .font(.system(.title).bold())
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: 200)
                 

@@ -154,7 +154,7 @@ final class NotificationService: ObservableObject {
     
     /// Handle reminder dismissal
     func handleReminderDismissal(dataManager: DataManager, didLogWithinWindow: Bool) {
-        guard let settings = dataManager.settings else { return }
+        guard dataManager.settings != nil else { return }
         
         if didLogWithinWindow {
             // User logged weight within 2 hours of reminder - reset counter

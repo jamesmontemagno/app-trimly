@@ -69,9 +69,9 @@ final class DataManager: ObservableObject {
         }
     }
     
-    func updateSettings(_ update: (AppSettings) -> Void) {
-        guard let settings = settings else { return }
-        update(settings)
+    func updateSettings(_ update: (inout AppSettings) -> Void) {
+        guard var settings = settings else { return }
+        update(&settings)
         settings.updatedAt = Date()
         try? modelContext.save()
     }

@@ -23,8 +23,10 @@ struct AddWeightEntryView: View {
                 Section {
                     HStack {
                         TextField("Weight", text: $weightText)
+                            #if os(iOS)
                             .keyboardType(.decimalPad)
-                            .font(.title.bold())
+                            #endif
+                            .font(.system(.title).bold())
                         
                         Text(dataManager.settings?.preferredUnit.symbol ?? "kg")
                             .font(.title3)
@@ -44,7 +46,9 @@ struct AddWeightEntryView: View {
                 }
             }
             .navigationTitle("Add Weight")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {

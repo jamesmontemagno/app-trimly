@@ -26,8 +26,8 @@ struct TrimlyWidget: Widget {
 
 struct WeightProvider: TimelineProvider {
     
-    func placeholder(in context: Context) -> WeightEntry {
-        WeightEntry(
+    func placeholder(in context: Context) -> WidgetTimelineEntry {
+        WidgetTimelineEntry(
             date: Date(),
             weight: 180.0,
             unit: .pounds,
@@ -36,8 +36,8 @@ struct WeightProvider: TimelineProvider {
         )
     }
     
-    func getSnapshot(in context: Context, completion: @escaping (WeightEntry) -> Void) {
-        let entry = WeightEntry(
+    func getSnapshot(in context: Context, completion: @escaping (WidgetTimelineEntry) -> Void) {
+        let entry = WidgetTimelineEntry(
             date: Date(),
             weight: 180.0,
             unit: .pounds,
@@ -47,11 +47,11 @@ struct WeightProvider: TimelineProvider {
         completion(entry)
     }
     
-    func getTimeline(in context: Context, completion: @escaping (Timeline<WeightEntry>) -> Void) {
+    func getTimeline(in context: Context, completion: @escaping (Timeline<WidgetTimelineEntry>) -> Void) {
         // In a real implementation, fetch data from DataManager
         let currentDate = Date()
         
-        let entry = WeightEntry(
+        let entry = WidgetTimelineEntry(
             date: currentDate,
             weight: 180.0,
             unit: .pounds,
@@ -69,7 +69,7 @@ struct WeightProvider: TimelineProvider {
 
 // MARK: - Timeline Entry
 
-struct WeightEntry: TimelineEntry {
+struct WidgetTimelineEntry: TimelineEntry {
     let date: Date
     let weight: Double
     let unit: WeightUnit
@@ -98,7 +98,7 @@ struct WeightWidgetEntryView: View {
 // MARK: - Small Widget
 
 struct SmallWidgetView: View {
-    let entry: WeightEntry
+    let entry: WidgetTimelineEntry
     
     var body: some View {
         VStack(spacing: 8) {
@@ -168,7 +168,7 @@ struct SmallWidgetView: View {
 // MARK: - Medium Widget
 
 struct MediumWidgetView: View {
-    let entry: WeightEntry
+    let entry: WidgetTimelineEntry
     
     var body: some View {
         HStack(spacing: 16) {
@@ -274,7 +274,7 @@ struct MediumWidgetView: View {
 #Preview(as: .systemSmall) {
     TrimlyWidget()
 } timeline: {
-    WeightEntry(
+    WidgetTimelineEntry(
         date: Date(),
         weight: 180.0,
         unit: .pounds,
@@ -286,7 +286,7 @@ struct MediumWidgetView: View {
 #Preview(as: .systemMedium) {
     TrimlyWidget()
 } timeline: {
-    WeightEntry(
+    WidgetTimelineEntry(
         date: Date(),
         weight: 180.0,
         unit: .pounds,

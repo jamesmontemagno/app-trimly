@@ -1,6 +1,6 @@
 //
 //  DashboardView.swift
-//  Trimly
+//  TrimTally
 //
 //  Created by Trimly on 11/19/2025.
 //
@@ -38,7 +38,7 @@ struct DashboardView: View {
 				}
 				.padding()
 			}
-			.navigationTitle("Today")
+			.navigationTitle(Text(L10n.Dashboard.navigationTitle))
 			.toolbar {
 				ToolbarItem(placement: .primaryAction) {
 					Button {
@@ -73,7 +73,7 @@ struct DashboardView: View {
     
 	private var todayWeightCard: some View {
 		VStack(spacing: 12) {
-			Text("Current Weight")
+			Text(L10n.Dashboard.currentWeight)
 				.font(.subheadline)
 				.foregroundStyle(.secondary)
             
@@ -87,11 +87,11 @@ struct DashboardView: View {
 					primaryValueIndicator(entries: todayEntries)
 				}
 			} else {
-				Text("--")
+				Text(L10n.Dashboard.placeholder)
 					.font(.system(size: 56, weight: .bold, design: .rounded))
 					.foregroundStyle(.secondary)
                 
-				Text("No entries yet")
+				Text(L10n.Dashboard.noEntries)
 					.font(.caption)
 					.foregroundStyle(.tertiary)
 			}
@@ -108,12 +108,12 @@ struct DashboardView: View {
 				switch mode {
 				case .latest:
 					if let latest = entries.max(by: { $0.timestamp < $1.timestamp }) {
-						Text("Latest: \(latest.timestamp.formatted(date: .omitted, time: .shortened))")
+						Text(L10n.Dashboard.latestEntry(latest.timestamp.formatted(date: .omitted, time: .shortened)))
 							.font(.caption)
 							.foregroundStyle(.secondary)
 					}
 				case .average:
-					Text("Average of \(entries.count) \(entries.count == 1 ? "entry" : "entries")")
+					Text(L10n.Dashboard.averageEntries(entries.count))
 						.font(.caption)
 						.foregroundStyle(.secondary)
 				}
@@ -123,7 +123,7 @@ struct DashboardView: View {
     
 	private var miniSparklineCard: some View {
 		VStack(alignment: .leading, spacing: 8) {
-			Text("Last 7 Days")
+			Text(L10n.Dashboard.lastSevenDays)
 				.font(.subheadline)
 				.foregroundStyle(.secondary)
             
@@ -149,7 +149,7 @@ struct DashboardView: View {
 				.chartYAxis(.hidden)
 				.frame(height: 80)
 			} else {
-				Text("Not enough data")
+				Text(L10n.Dashboard.notEnoughData)
 					.font(.caption)
 					.foregroundStyle(.tertiary)
 					.frame(height: 80)
@@ -169,7 +169,7 @@ struct DashboardView: View {
                 
 				HStack(spacing: 20) {
 					VStack(alignment: .leading, spacing: 4) {
-						Text("From Start")
+						Text(L10n.Dashboard.fromStart)
 							.font(.caption)
 							.foregroundStyle(.secondary)
                         
@@ -183,7 +183,7 @@ struct DashboardView: View {
 					Divider()
                     
 					VStack(alignment: .leading, spacing: 4) {
-						Text("To Goal")
+						Text(L10n.Dashboard.toGoal)
 							.font(.caption)
 							.foregroundStyle(.secondary)
                         
@@ -197,7 +197,7 @@ struct DashboardView: View {
 					Divider()
                     
 					VStack(alignment: .leading, spacing: 4) {
-						Text("Progress")
+						Text(L10n.Dashboard.progress)
 							.font(.caption)
 							.foregroundStyle(.secondary)
                         
@@ -212,7 +212,7 @@ struct DashboardView: View {
 				}
 				.frame(maxWidth: .infinity)
 			} else {
-				Text("Set a goal to track progress")
+				Text(L10n.Dashboard.setGoalPrompt)
 					.font(.subheadline)
 					.foregroundStyle(.secondary)
 			}
@@ -230,7 +230,7 @@ struct DashboardView: View {
     
 	private var consistencyScoreCard: some View {
 		VStack(spacing: 8) {
-			Text("Consistency Score")
+			Text(L10n.Dashboard.consistencyScore)
 				.font(.subheadline)
 				.foregroundStyle(.secondary)
             
@@ -259,15 +259,15 @@ struct DashboardView: View {
 	}
     
 	private func consistencyLabel(_ score: Double) -> String {
-		if score >= 0.85 { return "Very consistent" }
-		if score >= 0.70 { return "Consistent" }
-		if score >= 0.50 { return "Moderate" }
-		return "Building consistency"
+		if score >= 0.85 { return String(localized: L10n.Dashboard.consistencyVery) }
+		if score >= 0.70 { return String(localized: L10n.Dashboard.consistencyConsistent) }
+		if score >= 0.50 { return String(localized: L10n.Dashboard.consistencyModerate) }
+		return String(localized: L10n.Dashboard.consistencyBuilding)
 	}
     
 	private var trendSummaryCard: some View {
 		VStack(spacing: 8) {
-			Text("Trend")
+			Text(L10n.Dashboard.trendTitle)
 				.font(.subheadline)
 				.foregroundStyle(.secondary)
             
@@ -292,7 +292,7 @@ struct DashboardView: View {
     
 	private func projectionCard(_ date: Date) -> some View {
 		VStack(spacing: 8) {
-			Text("Estimated Goal Date")
+			Text(L10n.Dashboard.estimatedGoalDate)
 				.font(.subheadline)
 				.foregroundStyle(.secondary)
             
@@ -301,7 +301,7 @@ struct DashboardView: View {
 				.foregroundStyle(.purple)
             
 			let daysUntil = Calendar.current.dateComponents([.day], from: Date(), to: date).day ?? 0
-			Text("in \(daysUntil) days")
+			Text(L10n.Dashboard.goalArrival(daysUntil))
 				.font(.caption)
 				.foregroundStyle(.secondary)
 		}
@@ -349,7 +349,7 @@ struct DashboardView: View {
 				Image(systemName: "info.circle.fill")
 					.foregroundStyle(.blue)
                 
-				Text("Plateau Detected")
+				Text(L10n.Dashboard.plateauDetected)
 					.font(.headline)
                 
 				Spacer()

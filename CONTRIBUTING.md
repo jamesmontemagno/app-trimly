@@ -1,6 +1,6 @@
-# Contributing to Trimly
+# Contributing to TrimTally
 
-Thank you for your interest in contributing to Trimly!
+Thank you for your interest in contributing to TrTrimTallyimly!
 
 ## Development Environment
 
@@ -10,7 +10,7 @@ Thank you for your interest in contributing to Trimly!
 - Xcode 15.0 or later
 - Swift 5.9 or later
 
-**Note**: Trimly uses Apple-platform specific frameworks (SwiftUI, SwiftData) and cannot be built on Linux. Development and building must be done on macOS with Xcode.
+**Note**: TrimTally uses Apple-platform specific frameworks (SwiftUI, SwiftData) and cannot be built on Linux. Development and building must be done on macOS with Xcode.
 
 ## Building the Project
 

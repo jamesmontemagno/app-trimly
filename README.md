@@ -1,10 +1,10 @@
-# Trimly
+# TrimTally
 
 A modern, supportive weight tracking app for iOS and macOS built with SwiftUI and SwiftData.
 
 ## Overview
 
-Trimly is designed to be your mindful companion for weight tracking, featuring:
+TrimTally is designed to be your mindful companion for weight tracking, featuring:
 
 - **Multi-entry per day** with flexible daily aggregation (latest or average)
 - **Comprehensive analytics** including moving averages, EMA, and trend analysis
@@ -51,7 +51,7 @@ All data is stored using SwiftData with iCloud sync enabled:
 
 ## Architecture
 
-Trimly follows modern iOS/macOS development best practices:
+TrimTally follows modern iOS/macOS development best practices:
 
 - **SwiftUI** for declarative UI
 - **SwiftData** for persistent storage with iCloud sync
@@ -141,7 +141,7 @@ swift test
 
 ## Data Privacy
 
-Trimly respects your privacy:
+TrimTally respects your privacy:
 
 - All data stored locally with optional iCloud sync
 - No third-party analytics or tracking
@@ -180,4 +180,4 @@ Built with modern Apple technologies:
 
 ---
 
-**Trimly** - Your supportive companion for mindful weight tracking.
+**TrimTally** - Your supportive companion for mindful weight tracking.

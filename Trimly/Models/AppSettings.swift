@@ -1,12 +1,13 @@
 //
 //  AppSettings.swift
-//  Trimly
+//  TrimTally
 //
 //  Created by Trimly on 11/19/2025.
 //
 
 import Foundation
 import SwiftData
+import SwiftUI
 
 /// Application settings and preferences
 @Model
@@ -141,9 +142,9 @@ enum AppAppearance: String, Codable, CaseIterable, Identifiable {
     
     var displayName: String {
         switch self {
-        case .system: return "System"
-        case .light: return "Light"
-        case .dark: return "Dark"
+        case .system: return String(localized: L10n.Settings.themeSystem)
+        case .light: return String(localized: L10n.Settings.themeLight)
+        case .dark: return String(localized: L10n.Settings.themeDark)
         }
     }
 }

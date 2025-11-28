@@ -28,9 +28,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		B39227562ED9703A00C14B08 /* Trimly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Trimly.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		B39227652ED9703D00C14B08 /* TrimlyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrimlyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		B392276F2ED9703D00C14B08 /* TrimlyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrimlyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B39227562ED9703A00C14B08 /* TrimTally.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrimTally.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B39227652ED9703D00C14B08 /* TrimTallyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrimTallyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B392276F2ED9703D00C14B08 /* TrimTallyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrimTallyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3F3F5B12F0C3C0600F43F26 /* Trimly/LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Trimly/LaunchScreen.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -99,9 +99,9 @@
 		B39227572ED9703A00C14B08 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B39227562ED9703A00C14B08 /* Trimly.app */,
-				B39227652ED9703D00C14B08 /* TrimlyTests.xctest */,
-				B392276F2ED9703D00C14B08 /* TrimlyUITests.xctest */,
+				B39227562ED9703A00C14B08 /* TrimTally.app */,
+				B39227652ED9703D00C14B08 /* TrimTallyTests.xctest */,
+				B392276F2ED9703D00C14B08 /* TrimTallyUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -109,9 +109,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B39227552ED9703A00C14B08 /* Trimly */ = {
+		B39227552ED9703A00C14B08 /* TrimTally */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B39227792ED9703D00C14B08 /* Build configuration list for PBXNativeTarget "Trimly" */;
+			buildConfigurationList = B39227792ED9703D00C14B08 /* Build configuration list for PBXNativeTarget "TrimTally" */;
 			buildPhases = (
 				B39227522ED9703A00C14B08 /* Sources */,
 				B39227532ED9703A00C14B08 /* Frameworks */,
@@ -124,16 +124,16 @@
 			fileSystemSynchronizedGroups = (
 				B39227582ED9703A00C14B08 /* Trimly */,
 			);
-			name = Trimly;
+			name = TrimTally;
 			packageProductDependencies = (
 			);
 			productName = Trimly;
-			productReference = B39227562ED9703A00C14B08 /* Trimly.app */;
+			productReference = B39227562ED9703A00C14B08 /* TrimTally.app */;
 			productType = "com.apple.product-type.application";
 		};
-		B39227642ED9703D00C14B08 /* TrimlyTests */ = {
+		B39227642ED9703D00C14B08 /* TrimTallyTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B392277C2ED9703D00C14B08 /* Build configuration list for PBXNativeTarget "TrimlyTests" */;
+			buildConfigurationList = B392277C2ED9703D00C14B08 /* Build configuration list for PBXNativeTarget "TrimTallyTests" */;
 			buildPhases = (
 				B39227612ED9703D00C14B08 /* Sources */,
 				B39227622ED9703D00C14B08 /* Frameworks */,
@@ -147,16 +147,16 @@
 			fileSystemSynchronizedGroups = (
 				B39227682ED9703D00C14B08 /* TrimlyTests */,
 			);
-			name = TrimlyTests;
+			name = TrimTallyTests;
 			packageProductDependencies = (
 			);
 			productName = TrimlyTests;
-			productReference = B39227652ED9703D00C14B08 /* TrimlyTests.xctest */;
+			productReference = B39227652ED9703D00C14B08 /* TrimTallyTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		B392276E2ED9703D00C14B08 /* TrimlyUITests */ = {
+		B392276E2ED9703D00C14B08 /* TrimTallyUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B392277F2ED9703D00C14B08 /* Build configuration list for PBXNativeTarget "TrimlyUITests" */;
+			buildConfigurationList = B392277F2ED9703D00C14B08 /* Build configuration list for PBXNativeTarget "TrimTallyUITests" */;
 			buildPhases = (
 				B392276B2ED9703D00C14B08 /* Sources */,
 				B392276C2ED9703D00C14B08 /* Frameworks */,
@@ -170,11 +170,11 @@
 			fileSystemSynchronizedGroups = (
 				B39227722ED9703D00C14B08 /* TrimlyUITests */,
 			);
-			name = TrimlyUITests;
+			name = TrimTallyUITests;
 			packageProductDependencies = (
 			);
 			productName = TrimlyUITests;
-			productReference = B392276F2ED9703D00C14B08 /* TrimlyUITests.xctest */;
+			productReference = B392276F2ED9703D00C14B08 /* TrimTallyUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -200,7 +200,7 @@
 					};
 				};
 			};
-			buildConfigurationList = B39227512ED9703A00C14B08 /* Build configuration list for PBXProject "Trimly" */;
+			buildConfigurationList = B39227512ED9703A00C14B08 /* Build configuration list for PBXProject "TrimTally" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -214,9 +214,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B39227552ED9703A00C14B08 /* Trimly */,
-				B39227642ED9703D00C14B08 /* TrimlyTests */,
-				B392276E2ED9703D00C14B08 /* TrimlyUITests */,
+				B39227552ED9703A00C14B08 /* TrimTally */,
+				B39227642ED9703D00C14B08 /* TrimTallyTests */,
+				B392276E2ED9703D00C14B08 /* TrimTallyUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -273,12 +273,12 @@
 /* Begin PBXTargetDependency section */
 		B39227672ED9703D00C14B08 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B39227552ED9703A00C14B08 /* Trimly */;
+			target = B39227552ED9703A00C14B08 /* TrimTally */;
 			targetProxy = B39227662ED9703D00C14B08 /* PBXContainerItemProxy */;
 		};
 		B39227712ED9703D00C14B08 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B39227552ED9703A00C14B08 /* Trimly */;
+			target = B39227552ED9703A00C14B08 /* TrimTally */;
 			targetProxy = B39227702ED9703D00C14B08 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -415,7 +415,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = Trimly;
+				INFOPLIST_KEY_CFBundleDisplayName = TrimTally;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Read weight records with HealthKit.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Allow Trimly to update weight records in Health for accurate syncing.";
@@ -464,7 +464,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = Trimly;
+				INFOPLIST_KEY_CFBundleDisplayName = TrimTally;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Read weight records with HealthKit.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Allow Trimly to update weight records in Health for accurate syncing.";
@@ -519,7 +519,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Trimly.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Trimly";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TrimTally.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TrimTally";
 				XROS_DEPLOYMENT_TARGET = 26.0;
 			};
 			name = Debug;
@@ -545,7 +545,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Trimly.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Trimly";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TrimTally.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TrimTally";
 				XROS_DEPLOYMENT_TARGET = 26.0;
 			};
 			name = Release;
@@ -603,7 +603,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B39227512ED9703A00C14B08 /* Build configuration list for PBXProject "Trimly" */ = {
+		B39227512ED9703A00C14B08 /* Build configuration list for PBXProject "TrimTally" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B39227772ED9703D00C14B08 /* Debug */,
@@ -612,7 +612,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B39227792ED9703D00C14B08 /* Build configuration list for PBXNativeTarget "Trimly" */ = {
+		B39227792ED9703D00C14B08 /* Build configuration list for PBXNativeTarget "TrimTally" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B392277A2ED9703D00C14B08 /* Debug */,
@@ -621,7 +621,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B392277C2ED9703D00C14B08 /* Build configuration list for PBXNativeTarget "TrimlyTests" */ = {
+		B392277C2ED9703D00C14B08 /* Build configuration list for PBXNativeTarget "TrimTallyTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B392277D2ED9703D00C14B08 /* Debug */,
@@ -630,7 +630,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B392277F2ED9703D00C14B08 /* Build configuration list for PBXNativeTarget "TrimlyUITests" */ = {
+		B392277F2ED9703D00C14B08 /* Build configuration list for PBXNativeTarget "TrimTallyUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B39227802ED9703D00C14B08 /* Debug */,

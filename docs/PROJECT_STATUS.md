@@ -1,4 +1,4 @@
-# Trimly - Project Status
+# TrimTally - Project Status
 
 **Version:** 1.2  
 **Status:** ✅ Feature-complete & production-ready

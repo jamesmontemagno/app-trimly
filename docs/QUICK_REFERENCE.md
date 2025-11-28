@@ -1,4 +1,4 @@
-# Trimly Quick Reference
+# TrimTally Quick Reference
 
 ## 🚀 Quick Start
 
@@ -244,6 +244,6 @@ See LICENSE file
 
 ---
 
-**Trimly** - Your supportive companion for mindful weight tracking
+**TrimTally** - Your supportive companion for mindful weight tracking
 
 Version 1.0.0 | Built with SwiftUI & SwiftData

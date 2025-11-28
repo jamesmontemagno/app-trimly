@@ -1,38 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
-    <device id="retina6_7" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24128" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24063"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Launch Screen View Controller-->
+        <!--View Controller-->
         <scene sceneID="EHf-IW-A2E">
             <objects>
                 <viewController id="01J-lp-oVM" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="iW0-uj-nIu"/>
+                        <viewControllerLayoutGuide type="bottom" id="aou-7B-dsF"/>
+                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
-                        <rect key="frame" x="0.0" y="0.0" width="428" height="926"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="LaunchLogo" translatesAutoresizingMaskIntoConstraints="NO" id="logo-image">
-                                <rect key="frame" x="134" y="303" width="160" height="160"/>
+                                <rect key="frame" x="220" y="196" width="160" height="160"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Trimly" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="brand-label">
-                                <rect key="frame" x="164" y="479" width="100" height="41"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TrimTally" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="brand-label">
+                                <rect key="frame" x="234" y="376" width="133" height="41"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="34"/>
                                 <color key="textColor" red="0.247" green="0.498" blue="0.996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="0.941" green="0.964" blue="0.996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.94099999999999995" green="0.96399999999999997" blue="0.996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="logo-image" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="centerX-logo"/>
                             <constraint firstItem="logo-image" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="-24" id="centerY-logo"/>
-                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="640" id="min-height"/>
+                            <constraint firstItem="brand-label" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="label-center"/>
+                            <constraint firstItem="brand-label" firstAttribute="top" secondItem="logo-image" secondAttribute="bottom" constant="20" id="label-top"/>
                             <constraint firstItem="logo-image" firstAttribute="height" constant="160" id="logo-height"/>
                             <constraint firstItem="logo-image" firstAttribute="width" constant="160" id="logo-width"/>
-                            <constraint firstItem="brand-label" firstAttribute="top" secondItem="logo-image" secondAttribute="bottom" constant="20" id="label-top"/>
-                            <constraint firstItem="brand-label" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="label-center"/>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="640" id="min-height"/>
                         </constraints>
                     </view>
                 </viewController>

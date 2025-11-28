@@ -1,6 +1,6 @@
 //
 //  PlateauDetectionService.swift
-//  Trimly
+//  TrimTally
 //
 //  Created by Trimly on 11/19/2025.
 //
@@ -23,14 +23,14 @@ final class PlateauDetectionService: ObservableObject {
         let changePercentage: Double
         
         var message: String {
-            "Weight stabilized for \(duration) days—consider adjusting your routine if needed"
+            String(localized: L10n.Plateau.message(duration))
         }
         
         var hint: String {
             if changePercentage < 0.5 {
-                return "Your weight has remained stable. This is normal—bodies adapt. Consider reviewing your goals or routine."
+                return String(localized: L10n.Plateau.hintStable)
             } else {
-                return "Small fluctuations are normal. Keep up your consistent logging!"
+                return String(localized: L10n.Plateau.hintFluctuation)
             }
         }
     }

@@ -1,7 +1,7 @@
-# Trimly Project Structure
+# TrimTally Project Structure
 
 ```
-app-trimly/
+app-TrimTally/
 │
 ├── Package.swift                      # Swift Package Manager manifest
 ├── .gitignore                         # Git ignore rules

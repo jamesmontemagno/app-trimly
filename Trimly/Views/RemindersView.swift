@@ -15,20 +15,20 @@ struct RemindersView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
-                    TrimlyCardSection(title: "Authorization") {
+                    TrimlyCardSection(title: String(localized: L10n.Reminders.authorizationTitle)) {
                         if notificationService.isAuthorized {
-                            Label("Notifications Enabled", systemImage: "checkmark.circle.fill")
+                            Label(String(localized: L10n.Reminders.notificationsEnabled), systemImage: "checkmark.circle.fill")
                                 .font(.headline)
                                 .foregroundStyle(.green)
-                            Text("Trimly can send you reminders on this device.")
+                            Text(L10n.Reminders.authorizedDescription)
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         } else {
                             VStack(alignment: .leading, spacing: 8) {
-                                Text("Stay on track with gentle nudges. Enable notifications so we can remind you when it counts.")
+                                Text(L10n.Reminders.enablePrompt)
                                     .font(.callout)
                                     .foregroundStyle(.secondary)
-                                Button("Grant Access") {
+                                Button(String(localized: L10n.Reminders.grantAccess)) {
                                     requestAuthorization()
                                 }
                                 .buttonStyle(.borderedProminent)
@@ -37,18 +37,18 @@ struct RemindersView: View {
                     }
 
                     if notificationService.isAuthorized {
-                        TrimlyCardSection(title: "Daily Reminder", description: "Choose the best time for Trimly to nudge you to log your weight.") {
-                            Toggle("Enable Daily Reminder", isOn: $primaryReminderEnabled)
+                        TrimlyCardSection(title: String(localized: L10n.Reminders.dailyTitle), description: String(localized: L10n.Reminders.dailyDescription)) {
+                            Toggle(L10n.Reminders.dailyToggle, isOn: $primaryReminderEnabled)
                                 .onChange(of: primaryReminderEnabled) { _, enabled in
                                     handlePrimaryReminderToggle(enabled: enabled)
                                 }
                             if primaryReminderEnabled {
                                 Divider().padding(.vertical, 8)
                                 HStack {
-                                    Text("Reminder Time")
+                                    Text(L10n.Reminders.reminderTimeLabel)
                                         .font(.subheadline.weight(.semibold))
                                     Spacer()
-                                    DatePicker("Time", selection: $primaryReminderTime, displayedComponents: .hourAndMinute)
+                                    DatePicker(String(localized: L10n.Reminders.reminderTimeLabel), selection: $primaryReminderTime, displayedComponents: .hourAndMinute)
                                         .labelsHidden()
                                         .onChange(of: primaryReminderTime) { _, newTime in
                                             scheduleReminder(time: newTime)
@@ -58,8 +58,8 @@ struct RemindersView: View {
                         }
 
                         if primaryReminderEnabled {
-                            TrimlyCardSection(title: "Adaptive Suggestions", description: "Let Trimly learn your habits and recommend smarter reminder times.") {
-                                Toggle("Smart Time Suggestions", isOn: $adaptiveEnabled)
+                            TrimlyCardSection(title: String(localized: L10n.Reminders.adaptiveTitle), description: String(localized: L10n.Reminders.adaptiveDescription)) {
+                                Toggle(L10n.Reminders.smartToggle, isOn: $adaptiveEnabled)
                                     .onChange(of: adaptiveEnabled) { _, enabled in
                                         dataManager.updateSettings { settings in
                                             settings.adaptiveRemindersEnabled = enabled
@@ -77,11 +77,11 @@ struct RemindersView: View {
                                     } label: {
                                         HStack {
                                             VStack(alignment: .leading, spacing: 4) {
-                                                Text("Suggested time")
+                                                Text(L10n.Reminders.suggestionTitle)
                                                     .font(.caption)
                                                 Text("\(suggested, style: .time)")
                                                     .font(.headline)
-                                                Text("Based on your recent logging")
+                                                Text(L10n.Reminders.suggestionHint)
                                                     .font(.caption)
                                                     .foregroundStyle(.secondary)
                                             }
@@ -95,18 +95,18 @@ struct RemindersView: View {
                             }
                         }
 
-                        TrimlyCardSection(title: "Secondary Reminder", description: "Optional evening nudge for an extra check-in.") {
-                            Toggle("Enable Evening Reminder", isOn: $secondaryReminderEnabled)
+                        TrimlyCardSection(title: String(localized: L10n.Reminders.secondaryTitle), description: String(localized: L10n.Reminders.secondaryDescription)) {
+                            Toggle(L10n.Reminders.secondaryToggle, isOn: $secondaryReminderEnabled)
                                 .onChange(of: secondaryReminderEnabled) { _, enabled in
                                     handleSecondaryReminderToggle(enabled: enabled)
                                 }
                             if secondaryReminderEnabled {
                                 Divider().padding(.vertical, 8)
                                 HStack {
-                                    Text("Evening Time")
+                                    Text(L10n.Reminders.eveningLabel)
                                         .font(.subheadline.weight(.semibold))
                                     Spacer()
-                                    DatePicker("Time", selection: $secondaryReminderTime, displayedComponents: .hourAndMinute)
+                                    DatePicker(String(localized: L10n.Reminders.eveningLabel), selection: $secondaryReminderTime, displayedComponents: .hourAndMinute)
                                         .labelsHidden()
                                         .onChange(of: secondaryReminderTime) { _, newTime in
                                             scheduleSecondaryReminder(time: newTime)
@@ -118,13 +118,13 @@ struct RemindersView: View {
                 }
             }
             .padding(24)
-            .navigationTitle("Reminders")
+            .navigationTitle(Text(L10n.Reminders.navigationTitle))
 #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
 #endif
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") {
+                    Button(String(localized: L10n.Common.doneButton)) {
                         dismiss()
                     }
                 }

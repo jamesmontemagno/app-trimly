@@ -1,6 +1,6 @@
 //
 //  AddWeightEntryView.swift
-//  Trimly
+//  TrimTally
 //
 //  Created by Trimly on 11/19/2025.
 //
@@ -21,10 +21,14 @@ struct AddWeightEntryView: View {
 		NavigationStack {
 			ScrollView {
 				VStack(spacing: 20) {
-					TrimlyCardSection(title: "Log Weight", description: "Enter today's reading in \(unitSymbol).", style: .popup) {
+					TrimlyCardSection(
+						title: String(localized: L10n.AddEntry.weightCardTitle),
+						description: String(localized: L10n.AddEntry.weightDescription(unitSymbol)),
+						style: .popup
+					) {
 						VStack(alignment: .leading, spacing: 12) {
 							HStack(alignment: .firstTextBaseline, spacing: 12) {
-								TextField("0.0", text: $weightText)
+								TextField(String(localized: L10n.AddEntry.weightPlaceholder), text: $weightText)
 									.textFieldStyle(.plain)
 								#if os(iOS)
 									.keyboardType(.decimalPad)
@@ -41,21 +45,29 @@ struct AddWeightEntryView: View {
 							.background(inputBackgroundColor)
 							.clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
 
-							Text("Stored internally as kilograms so your analytics stay precise.")
+								Text(L10n.AddEntry.storageNote)
 								.font(.caption)
 								.foregroundStyle(.secondary)
 						}
 					}
 
-					TrimlyCardSection(title: "Date & Time", description: "We normalize to your local day for charts.", style: .popup) {
-						DatePicker("Date & Time", selection: $selectedDate)
+						TrimlyCardSection(
+							title: String(localized: L10n.AddEntry.dateTitle),
+							description: String(localized: L10n.AddEntry.dateDescription),
+							style: .popup
+						) {
+							DatePicker(String(localized: L10n.AddEntry.dateTitle), selection: $selectedDate)
 						#if os(iOS)
 							.datePickerStyle(.compact)
 						#endif
 					}
 
-					TrimlyCardSection(title: "Notes", description: "Optional reflections or context.", style: .popup) {
-						TextField("Morning weigh-in after run", text: $notes, axis: .vertical)
+						TrimlyCardSection(
+							title: String(localized: L10n.AddEntry.notesTitle),
+							description: String(localized: L10n.AddEntry.notesDescription),
+							style: .popup
+						) {
+							TextField(String(localized: L10n.AddEntry.notesPlaceholder), text: $notes, axis: .vertical)
 							.textFieldStyle(.plain)
 							.lineLimit(3...6)
 							.padding(.vertical, 10)
@@ -66,26 +78,26 @@ struct AddWeightEntryView: View {
 				}
 				.padding(24)
 			}
-			.navigationTitle("Add Weight")
+				.navigationTitle(Text(L10n.AddEntry.navigationTitle))
 			#if os(iOS)
 			.navigationBarTitleDisplayMode(.inline)
 			#endif
 			.toolbar {
 				ToolbarItem(placement: .cancellationAction) {
-					Button("Cancel") {
+						Button(String(localized: L10n.Common.cancelButton)) {
 						dismiss()
 					}
 				}
                 
 				ToolbarItem(placement: .confirmationAction) {
-					Button("Save") {
+						Button(String(localized: L10n.Common.saveButton)) {
 						saveEntry()
 					}
 					.disabled(weightText.isEmpty)
 				}
 			}
-			.alert("Error", isPresented: $showingError) {
-				Button("OK", role: .cancel) { }
+				.alert(L10n.Common.errorTitle, isPresented: $showingError) {
+					Button(String(localized: L10n.Common.okButton), role: .cancel) { }
 			} message: {
 				Text(errorMessage)
 			}
@@ -106,19 +118,19 @@ struct AddWeightEntryView: View {
     
 	private func saveEntry() {
 		guard let weight = Double(weightText) else {
-			errorMessage = "Please enter a valid weight"
+			errorMessage = String(localized: L10n.AddEntry.errorInvalidWeight)
 			showingError = true
 			return
 		}
         
 		guard weight > 0 else {
-			errorMessage = "Weight must be greater than zero"
+			errorMessage = String(localized: L10n.AddEntry.errorNonPositiveWeight)
 			showingError = true
 			return
 		}
         
 		guard let unit = dataManager.settings?.preferredUnit else {
-			errorMessage = "Settings not available"
+			errorMessage = String(localized: L10n.AddEntry.errorMissingSettings)
 			showingError = true
 			return
 		}
@@ -134,7 +146,7 @@ struct AddWeightEntryView: View {
 			)
 			dismiss()
 		} catch {
-			errorMessage = "Failed to save entry: \(error.localizedDescription)"
+			errorMessage = String(localized: L10n.AddEntry.errorSaveFailure(error.localizedDescription))
 			showingError = true
 		}
 	}

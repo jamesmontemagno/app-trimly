@@ -1,6 +1,82 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
+    "--" : {
+
+    },
+    "%@" : {
+
+    },
+    "%lld days" : {
+
+    },
+    "%lld samples imported" : {
+
+    },
+    "%lld%%" : {
+
+    },
+    "0.0" : {
+
+    },
+    "1 place" : {
+
+    },
+    "1.0.0" : {
+
+    },
+    "2 places" : {
+
+    },
+    "145" : {
+
+    },
+    "Add Weight" : {
+
+    },
+    "Add weight entries to see your chart" : {
+
+    },
+    "Add your first weight entry to get started" : {
+
+    },
+    "Analytical" : {
+
+    },
+    "Auto-hide Duplicates" : {
+
+    },
+    "Average" : {
+
+    },
+    "Average of %lld %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Average of %1$lld %2$@"
+          }
+        }
+      }
+    },
+    "Based on your recent logging" : {
+
+    },
+    "Both overlays respect your date filter so weekly views stay clean." : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Chart Settings" : {
+
+    },
+    "Charts" : {
+
+    },
     "common.button.accept" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -44,6 +120,153 @@
           }
         }
       }
+    },
+    "Completed on %@" : {
+
+    },
+    "Connect to Health so TrimTally can keep everything in one place." : {
+
+    },
+    "Consistency Score" : {
+
+    },
+    "Copy or share your data export. Each row includes a timestamp, normalized date, and weight in kilograms." : {
+
+    },
+    "Counting samples" : {
+
+    },
+    "Current" : {
+
+    },
+    "Current Weight" : {
+
+    },
+    "Daily Value" : {
+
+    },
+    "Daily: %@" : {
+
+    },
+    "Date" : {
+
+    },
+    "Date & Time" : {
+
+    },
+    "Decimal Precision" : {
+
+    },
+    "Delete All Data" : {
+
+    },
+    "Display Mode" : {
+
+    },
+    "Done" : {
+
+    },
+    "EMA" : {
+
+    },
+    "Enable Background Sync" : {
+
+    },
+    "Enable Daily Reminder" : {
+
+    },
+    "Enable Evening Reminder" : {
+
+    },
+    "Error" : {
+
+    },
+    "Estimated Goal Date" : {
+
+    },
+    "Evening Time" : {
+
+    },
+    "Exponential Moving Average" : {
+
+    },
+    "Export Data" : {
+
+    },
+    "From Start" : {
+
+    },
+    "Goal" : {
+
+    },
+    "Goal History" : {
+
+    },
+    "Grant Access" : {
+
+    },
+    "HealthKit" : {
+
+    },
+    "HealthKit Enabled" : {
+
+    },
+    "HealthKit Integration" : {
+
+    },
+    "Import data" : {
+
+    },
+    "Importing... %lld%%" : {
+
+    },
+    "in %lld days" : {
+
+    },
+    "Kilograms" : {
+
+    },
+    "Last 7 Days" : {
+
+    },
+    "Latest" : {
+
+    },
+    "Latest: %@" : {
+
+    },
+    "MA" : {
+
+    },
+    "Minimalist" : {
+
+    },
+    "Morning weigh-in after run" : {
+
+    },
+    "Moving Average" : {
+
+    },
+    "No Data" : {
+
+    },
+    "No entries yet" : {
+
+    },
+    "No Entries Yet" : {
+
+    },
+    "No Goal History" : {
+
+    },
+    "Not enough data" : {
+
+    },
+    "Notifications Enabled" : {
+
+    },
+    "OK" : {
+
     },
     "onboarding.eula.privacy" : {
       "extractionState" : "manual",
@@ -89,17 +312,6 @@
         }
       }
     },
-    "onboarding.goal.placeholder" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Goal"
-          }
-        }
-      }
-    },
     "onboarding.goal.fieldLabel" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -107,6 +319,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Goal weight entry"
+          }
+        }
+      }
+    },
+    "onboarding.goal.placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Goal"
           }
         }
       }
@@ -177,17 +400,6 @@
         }
       }
     },
-    "onboarding.start.placeholder" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Weight"
-          }
-        }
-      }
-    },
     "onboarding.start.fieldLabel" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -195,6 +407,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Starting weight entry"
+          }
+        }
+      }
+    },
+    "onboarding.start.placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weight"
           }
         }
       }
@@ -298,17 +521,6 @@
         }
       }
     },
-    "onboarding.unit.pickerLabel" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Preferred unit"
-          }
-        }
-      }
-    },
     "onboarding.unit.option.pounds" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -316,6 +528,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pounds (lb)"
+          }
+        }
+      }
+    },
+    "onboarding.unit.pickerLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preferred unit"
           }
         }
       }
@@ -359,10 +582,127 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Welcome to Trimly"
+            "value" : "Welcome to TrimTally"
           }
         }
       }
+    },
+    "Past goals will appear here" : {
+
+    },
+    "Plateau Detected" : {
+
+    },
+    "Pounds" : {
+
+    },
+    "Privacy Policy" : {
+
+    },
+    "Progress" : {
+
+    },
+    "Range" : {
+
+    },
+    "Reminder Time" : {
+
+    },
+    "Reminders" : {
+
+    },
+    "Request Access" : {
+
+    },
+    "Save" : {
+
+    },
+    "See your current weight at a glance" : {
+
+    },
+    "Select a range to preview available entries." : {
+
+    },
+    "Set a goal to track progress" : {
+
+    },
+    "Set Goal" : {
+
+    },
+    "Set on %@" : {
+
+    },
+    "Settings" : {
+
+    },
+    "Show EMA" : {
+
+    },
+    "Show Moving Average" : {
+
+    },
+    "Smart Time Suggestions" : {
+
+    },
+    "Stay on track with gentle nudges. Enable notifications so we can remind you when it counts." : {
+
+    },
+    "Stored internally as kilograms so your analytics stay precise." : {
+
+    },
+    "Suggested time" : {
+
+    },
+    "Terms of Service" : {
+
+    },
+    "Theme" : {
+
+    },
+    "This will permanently delete all your weight entries and goals. This action cannot be undone." : {
+
+    },
+    "Time" : {
+
+    },
+    "Timeline" : {
+
+    },
+    "To Goal" : {
+
+    },
+    "Today" : {
+
+    },
+    "Trend" : {
+
+    },
+    "TrimTally can send you reminders on this device." : {
+
+    },
+    "Version" : {
+
+    },
+    "We use your preferred units and precision settings to track progress and estimate timelines." : {
+
+    },
+    "Weight" : {
+
+    },
+    "Weight Tracker" : {
+
+    },
+    "Weight Unit" : {
+
+    },
+    "Why this goal matters" : {
+
+    },
+    "You can now import history and sync future entries." : {
+
+    },
+    "You can rerun imports at any time—duplicates stay hidden." : {
+
     }
   },
   "version" : "1.0"

@@ -1,8 +1,8 @@
-# Trimly v1.1/v1.2 Feature Implementation Summary
+# TrimTally v1.1/v1.2 Feature Implementation Summary
 
 ## Overview
 
-This document summarizes the implementation of all requested v1.1 and v1.2 features for the Trimly weight tracking app.
+This document summarizes the implementation of all requested v1.1 and v1.2 features for the TrimTally weight tracking app.
 
 ## Features Implemented
 

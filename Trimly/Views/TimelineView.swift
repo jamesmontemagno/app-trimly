@@ -1,6 +1,6 @@
 //
 //  TimelineView.swift
-//  Trimly
+//  TrimTally
 //
 //  Created by Trimly on 11/19/2025.
 //
@@ -27,7 +27,7 @@ struct TimelineView: View {
 					}
 				}
 			}
-			.navigationTitle("Timeline")
+			.navigationTitle(Text(L10n.Timeline.navigationTitle))
 			.toolbar {
 				ToolbarItem(placement: .primaryAction) {
 					Button {
@@ -42,9 +42,11 @@ struct TimelineView: View {
 			}
 			.overlay {
 				if groupedEntries.isEmpty {
-					ContentUnavailableView("No Entries Yet",
-										   systemImage: "chart.line.uptrend.xyaxis",
-										   description: Text("Add your first weight entry to get started"))
+					ContentUnavailableView(
+						String(localized: L10n.Timeline.emptyTitle),
+						systemImage: "chart.line.uptrend.xyaxis",
+						description: Text(L10n.Timeline.emptyDescription)
+					)
 				}
 			}
 		}
@@ -84,7 +86,7 @@ struct DayHeader: View {
 				.font(.headline)
 			if let aggregatedWeight = aggregatedWeight {
 				let displayWeight = displayValue(aggregatedWeight)
-				Text("Daily: \(displayWeight)")
+				Text(L10n.Timeline.dailyValue(displayWeight))
 					.font(.subheadline)
 					.foregroundStyle(.secondary)
 			}
@@ -130,7 +132,7 @@ struct EntryRow: View {
             
 			HStack {
 				if entry.source == .healthKit {
-					Label("HealthKit", systemImage: "heart.fill")
+					Label(String(localized: L10n.Timeline.healthKitLabel), systemImage: "heart.fill")
 						.font(.caption)
 						.foregroundStyle(.pink)
 				}

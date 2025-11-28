@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  Trimly
+//  TrimTally
 //
 //  Created by Trimly on 11/19/2025.
 //
@@ -28,22 +28,38 @@ struct MainTabView: View {
         TabView {
             DashboardView()
                 .tabItem {
-                    Label("Today", systemImage: "house.fill")
+                    Label {
+                        Text(L10n.Tabs.today)
+                    } icon: {
+                        Image(systemName: "house.fill")
+                    }
                 }
             
             TimelineView()
                 .tabItem {
-                    Label("Timeline", systemImage: "list.bullet")
+                    Label {
+                        Text(L10n.Tabs.timeline)
+                    } icon: {
+                        Image(systemName: "list.bullet")
+                    }
                 }
             
             ChartsView()
                 .tabItem {
-                    Label("Charts", systemImage: "chart.xyaxis.line")
+                    Label {
+                        Text(L10n.Tabs.charts)
+                    } icon: {
+                        Image(systemName: "chart.xyaxis.line")
+                    }
                 }
             
             SettingsView()
                 .tabItem {
-                    Label("Settings", systemImage: "gear")
+                    Label {
+                        Text(L10n.Tabs.settings)
+                    } icon: {
+                        Image(systemName: "gear")
+                    }
                 }
         }
     }

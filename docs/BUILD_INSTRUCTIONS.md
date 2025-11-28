@@ -1,8 +1,8 @@
-# Build Instructions for Trimly
+# Build Instructions for TrimTally
 
 ## Prerequisites
 
-Before building Trimly, ensure you have:
+Before building TrimTally, ensure you have:
 
 - **macOS 14.0 or later** (Sonoma or newer)
 - **Xcode 15.0 or later**

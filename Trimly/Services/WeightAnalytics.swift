@@ -1,6 +1,6 @@
 //
 //  WeightAnalytics.swift
-//  Trimly
+//  TrimTally
 //
 //  Created by Trimly on 11/19/2025.
 //
@@ -135,9 +135,9 @@ final class WeightAnalytics {
         
         var description: String {
             switch self {
-            case .downward: return "Gradual decrease"
-            case .upward: return "Slight gain trend"
-            case .stable: return "Steady"
+            case .downward: return String(localized: L10n.Analytics.trendDecrease)
+            case .upward: return String(localized: L10n.Analytics.trendIncrease)
+            case .stable: return String(localized: L10n.Analytics.trendStable)
             }
         }
     }

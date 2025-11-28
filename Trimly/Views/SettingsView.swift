@@ -1,6 +1,6 @@
 //
 //  SettingsView.swift
-//  Trimly
+//  TrimTally
 //
 //  Created by Trimly on 11/19/2025.
 //
@@ -23,18 +23,18 @@ struct SettingsView: View {
 			ScrollView {
 				VStack(alignment: .leading, spacing: 32) {
 					settingsSection(
-						title: "Personalization",
-						description: "Fine-tune how Trimly displays your weight, decimals, and appearance."
+						title: String(localized: L10n.Settings.personalizationTitle),
+						description: String(localized: L10n.Settings.personalizationDescription)
 					) {
 						settingsRow(
 							icon: "scalemass",
-							title: "Weight Unit",
-							subtitle: "Display entries in your preferred unit.",
+							title: String(localized: L10n.Settings.weightUnitTitle),
+							subtitle: String(localized: L10n.Settings.weightUnitSubtitle),
 							accessoryPlacement: .below
 						) {
-							Picker("Weight Unit", selection: binding(\.preferredUnit)) {
-								Text("Pounds").tag(WeightUnit.pounds)
-								Text("Kilograms").tag(WeightUnit.kilograms)
+							Picker(String(localized: L10n.Settings.weightUnitTitle), selection: binding(\.preferredUnit)) {
+								Text(L10n.Onboarding.unitOptionPounds).tag(WeightUnit.pounds)
+								Text(L10n.Onboarding.unitOptionKilograms).tag(WeightUnit.kilograms)
 							}
 							.labelsHidden()
 							.pickerStyle(.segmented)
@@ -44,13 +44,13 @@ struct SettingsView: View {
 						
 						settingsRow(
 							icon: "number",
-							title: "Decimal Precision",
-							subtitle: "Control the number of decimal places you see.",
+							title: String(localized: L10n.Settings.decimalPrecisionTitle),
+							subtitle: String(localized: L10n.Settings.decimalPrecisionSubtitle),
 							accessoryPlacement: .below
 						) {
-							Picker("Decimal Precision", selection: binding(\.decimalPrecision)) {
-								Text("1 place").tag(1)
-								Text("2 places").tag(2)
+							Picker(String(localized: L10n.Settings.decimalPrecisionTitle), selection: binding(\.decimalPrecision)) {
+								Text(L10n.Settings.decimalPrecisionOne).tag(1)
+								Text(L10n.Settings.decimalPrecisionTwo).tag(2)
 							}
 							.labelsHidden()
 							.pickerStyle(.segmented)
@@ -60,11 +60,11 @@ struct SettingsView: View {
 						
 						settingsRow(
 							icon: "circle.lefthalf.filled",
-							title: "Theme",
-							subtitle: "Choose Trimly's appearance.",
+							title: String(localized: L10n.Settings.themeTitle),
+							subtitle: String(localized: L10n.Settings.themeSubtitle),
 							accessoryPlacement: .below
 						) {
-							Picker("Theme", selection: binding(\.appearance)) {
+							Picker(String(localized: L10n.Settings.themeTitle), selection: binding(\.appearance)) {
 								ForEach(AppAppearance.allCases) { option in
 									Text(option.displayName).tag(option)
 								}
@@ -74,14 +74,14 @@ struct SettingsView: View {
 						}
 					}
 					
-					settingsSection(title: "Goals") {
+					settingsSection(title: String(localized: L10n.Settings.goalsTitle)) {
 						if let goal = dataManager.fetchActiveGoal() {
 							Button {
 								showingGoalSheet = true
 							} label: {
 								settingsRow(
 									icon: "flag.checkered",
-									title: "Current Goal",
+									title: String(localized: L10n.Settings.currentGoalTitle),
 									subtitle: displayValue(goal.targetWeightKg),
 									showChevron: true
 								)
@@ -95,8 +95,8 @@ struct SettingsView: View {
 							} label: {
 								settingsRow(
 									icon: "clock.arrow.circlepath",
-									title: "Goal History",
-									subtitle: "See past targets and outcomes.",
+									title: String(localized: L10n.Settings.goalHistoryTitle),
+									subtitle: String(localized: L10n.Settings.goalHistorySubtitle),
 									showChevron: true
 								)
 							}
@@ -107,8 +107,8 @@ struct SettingsView: View {
 							} label: {
 								settingsRow(
 									icon: "flag",
-									title: "Set Goal",
-									subtitle: "Track progress toward a target weight.",
+									title: String(localized: L10n.Settings.setGoalTitle),
+									subtitle: String(localized: L10n.Settings.setGoalSubtitle),
 									showChevron: true
 								)
 							}
@@ -117,82 +117,82 @@ struct SettingsView: View {
 					}
 					
 					settingsSection(
-						title: "Daily Value",
-						description: "Choose how Trimly treats multiple entries recorded in the same day."
+						title: String(localized: L10n.Settings.dailyValueTitle),
+						description: String(localized: L10n.Settings.dailyValueDescription)
 					) {
 						settingsRow(
 							icon: "calendar.day.timeline.left",
-							title: "Daily Calculation",
-							subtitle: "Latest entry or daily average.",
+							title: String(localized: L10n.Settings.dailyCalculationTitle),
+							subtitle: String(localized: L10n.Settings.dailyCalculationSubtitle),
 							accessoryPlacement: .below
 						) {
-							Picker("Daily Value", selection: binding(\.dailyAggregationMode)) {
-								Text("Latest").tag(DailyAggregationMode.latest)
-								Text("Average").tag(DailyAggregationMode.average)
+							Picker(String(localized: L10n.Settings.dailyCalculationTitle), selection: binding(\.dailyAggregationMode)) {
+								Text(L10n.Settings.dailyLatest).tag(DailyAggregationMode.latest)
+								Text(L10n.Settings.dailyAverage).tag(DailyAggregationMode.average)
 							}
 							.labelsHidden()
 							.pickerStyle(.segmented)
 						}
 					}
 					
-					settingsSection(title: "Habits & Reminders") {
+					settingsSection(title: String(localized: L10n.Settings.habitsTitle)) {
 						NavigationLink {
 							RemindersView()
 						} label: {
 							settingsRow(
 								icon: "bell.badge.fill",
-								title: "Reminders",
-								subtitle: dataManager.settings?.reminderTime != nil ? "Daily nudges to log your weight." : "Set a daily reminder to stay consistent.",
+								title: String(localized: L10n.Reminders.navigationTitle),
+								subtitle: dataManager.settings?.reminderTime != nil ? String(localized: L10n.Settings.remindersSubtitleOn) : String(localized: L10n.Settings.remindersSubtitleOff),
 								showChevron: true
 							) {
 								if dataManager.settings?.reminderTime != nil {
-									statusPill(text: "On", color: .green)
+									statusPill(text: String(localized: L10n.Settings.remindersStatusOn), color: .green)
 								} else {
-									statusPill(text: "Off", color: .secondary)
+									statusPill(text: String(localized: L10n.Settings.remindersStatusOff), color: .secondary)
 								}
 							}
 						}
 						.buttonStyle(.plain)
 					}
 					
-					settingsSection(title: "Integrations") {
+					settingsSection(title: String(localized: L10n.Settings.integrationsTitle)) {
 						NavigationLink {
 							HealthKitView()
 						} label: {
 							settingsRow(
 								icon: "heart.fill",
-								title: "Apple Health",
-								subtitle: "Import and sync weight data.",
+								title: String(localized: L10n.Settings.healthTitle),
+								subtitle: String(localized: L10n.Settings.healthSubtitle),
 								showChevron: true,
 								iconTint: .pink
 							) {
 								if dataManager.settings?.healthKitEnabled == true {
-									statusPill(text: "Connected", color: .green)
+									statusPill(text: String(localized: L10n.Settings.healthConnected), color: .green)
 								}
 							}
 						}
 						.buttonStyle(.plain)
 					}
 					
-					settingsSection(title: "Consistency Score") {
+					settingsSection(title: String(localized: L10n.Settings.consistencyTitle)) {
 						settingsRow(
 							icon: "chart.bar.fill",
-							title: "Window Length",
-							subtitle: "Currently \(dataManager.settings?.consistencyScoreWindow ?? 30) days."
+							title: String(localized: L10n.Settings.consistencyWindowTitle),
+							subtitle: String(localized: L10n.Settings.consistencyWindowSubtitle(dataManager.settings?.consistencyScoreWindow ?? 30))
 						) {
 							Stepper("", value: binding(\.consistencyScoreWindow), in: 7...90, step: 1)
 								.labelsHidden()
 						}
 					}
 					
-					settingsSection(title: "Data & Privacy") {
+					settingsSection(title: String(localized: L10n.Settings.dataPrivacyTitle)) {
 						Button {
 							exportData()
 						} label: {
 							settingsRow(
 								icon: "square.and.arrow.up",
-								title: "Export Data",
-								subtitle: "Create a CSV copy of your entries.",
+								title: String(localized: L10n.Settings.exportTitle),
+								subtitle: String(localized: L10n.Settings.exportSubtitle),
 								showChevron: true
 							)
 						}
@@ -205,8 +205,8 @@ struct SettingsView: View {
 						} label: {
 							settingsRow(
 								icon: "trash",
-								title: "Delete All Data",
-								subtitle: "Remove every entry from this device.",
+								title: String(localized: L10n.Settings.deleteAllTitle),
+								subtitle: String(localized: L10n.Settings.deleteAllSubtitle),
 								showChevron: true,
 								iconTint: .red
 							)
@@ -214,9 +214,9 @@ struct SettingsView: View {
 						.buttonStyle(.plain)
 					}
 					
-					settingsSection(title: "About Trimly") {
+					settingsSection(title: String(localized: L10n.Settings.aboutTitle)) {
 						HStack {
-							Text("Version")
+							Text(L10n.Settings.versionLabel)
 							Spacer()
 							Text("1.0.0")
 								.foregroundStyle(.secondary)
@@ -224,9 +224,9 @@ struct SettingsView: View {
 						
 						sectionDivider()
 						
-						Link("Privacy Policy", destination: URL(string: "https://example.com/privacy")!)
+						Link(String(localized: L10n.Settings.privacyPolicy), destination: URL(string: "https://example.com/privacy")!)
 							.font(.body.weight(.semibold))
-						Link("Terms of Service", destination: URL(string: "https://example.com/terms")!)
+						Link(String(localized: L10n.Settings.termsOfService), destination: URL(string: "https://example.com/terms")!)
 							.font(.body.weight(.semibold))
 					}
 				}
@@ -236,15 +236,15 @@ struct SettingsView: View {
 			}
 			.scrollIndicators(.hidden)
 			.background(Color.clear)
-			.navigationTitle("Settings")
+			.navigationTitle(Text(L10n.Settings.navigationTitle))
 			.sheet(isPresented: $showingGoalSheet) { GoalSetupView() }
 			.sheet(isPresented: $showingGoalHistory) { GoalHistoryView() }
 			.sheet(isPresented: $showingExport) { ExportView(csvData: exportedData) }
-			.confirmationDialog("Delete All Data", isPresented: $showingDeleteConfirmation, titleVisibility: .visible) {
-				Button("Delete All Data", role: .destructive) { deleteAllData() }
-				Button("Cancel", role: .cancel) { }
+			.confirmationDialog(String(localized: L10n.Common.deleteAllDataTitle), isPresented: $showingDeleteConfirmation, titleVisibility: .visible) {
+				Button(String(localized: L10n.Settings.deleteAllTitle), role: .destructive) { deleteAllData() }
+				Button(String(localized: L10n.Common.cancelButton), role: .cancel) { }
 			} message: {
-				Text("This will permanently delete all your weight entries and goals. This action cannot be undone.")
+				Text(L10n.Settings.deleteWarning)
 			}
 		}
 	}
@@ -378,9 +378,13 @@ struct GoalSetupView: View {
 		NavigationStack {
 			ScrollView {
 				VStack(spacing: 24) {
-					TrimlyCardSection(title: "Target Weight", description: "Enter a value in \(dataManager.settings?.preferredUnit.symbol ?? "kg").", style: .popup) {
+					TrimlyCardSection(
+						title: String(localized: L10n.Goals.targetTitle),
+						description: String(localized: L10n.Goals.targetDescription(dataManager.settings?.preferredUnit.symbol ?? "kg")),
+						style: .popup
+					) {
 						HStack(spacing: 12) {
-							TextField("145", text: $targetWeightText)
+							TextField(String(localized: L10n.Goals.targetPlaceholder), text: $targetWeightText)
 								#if os(iOS)
 								.keyboardType(.decimalPad)
 								#endif
@@ -389,32 +393,36 @@ struct GoalSetupView: View {
 						}
 					}
 					
-					TrimlyCardSection(title: "Notes", description: "Optional context you'll revisit later.", style: .popup) {
-						TextField("Why this goal matters", text: $notes, axis: .vertical)
+					TrimlyCardSection(
+						title: String(localized: L10n.Goals.notesTitle),
+						description: String(localized: L10n.Goals.notesDescription),
+						style: .popup
+					) {
+						TextField(String(localized: L10n.Goals.notesPlaceholder), text: $notes, axis: .vertical)
 							.lineLimit(3...6)
 					}
 					
-					Text("We use your preferred units and precision settings to track progress and estimate timelines.")
+					Text(L10n.Goals.unitHint)
 						.font(.callout)
 						.foregroundStyle(.secondary)
 				}
 				.padding(24)
 			}
-			.navigationTitle("Set Goal")
+			.navigationTitle(Text(L10n.Goals.setupTitle))
 			#if os(iOS)
 			.navigationBarTitleDisplayMode(.inline)
 			#endif
 			.toolbar {
 				ToolbarItem(placement: .cancellationAction) {
-					Button("Cancel") { dismiss() }
+					Button(String(localized: L10n.Common.cancelButton)) { dismiss() }
 				}
 				ToolbarItem(placement: .confirmationAction) {
-					Button("Save") { saveGoal() }
+					Button(String(localized: L10n.Common.saveButton)) { saveGoal() }
 						.disabled(targetWeightText.isEmpty)
 				}
 			}
-			.alert("Error", isPresented: $showingError) {
-				Button("OK", role: .cancel) { }
+			.alert(L10n.Common.errorTitle, isPresented: $showingError) {
+				Button(String(localized: L10n.Common.okButton), role: .cancel) { }
 			} message: {
 				Text(errorMessage)
 			}
@@ -423,17 +431,17 @@ struct GoalSetupView: View {
     
 	private func saveGoal() {
 		guard let weight = Double(targetWeightText) else {
-			errorMessage = "Please enter a valid weight"
+			errorMessage = String(localized: L10n.Goals.errorInvalidWeight)
 			showingError = true
 			return
 		}
 		guard weight > 0 else {
-			errorMessage = "Weight must be greater than zero"
+			errorMessage = String(localized: L10n.Goals.errorNonPositiveWeight)
 			showingError = true
 			return
 		}
 		guard let unit = dataManager.settings?.preferredUnit else {
-			errorMessage = "Settings not available"
+			errorMessage = String(localized: L10n.Goals.errorMissingSettings)
 			showingError = true
 			return
 		}
@@ -445,7 +453,7 @@ struct GoalSetupView: View {
 									notes: notes.isEmpty ? nil : notes)
 			dismiss()
 		} catch {
-			errorMessage = "Failed to save goal: \(error.localizedDescription)"
+			errorMessage = String(localized: L10n.Goals.errorSaveFailure(error.localizedDescription))
 			showingError = true
 		}
 	}
@@ -466,20 +474,22 @@ struct GoalHistoryView: View {
 				}
 				.padding(24)
 			}
-			.navigationTitle("Goal History")
+			.navigationTitle(Text(L10n.Goals.historyTitle))
 			#if os(iOS)
 			.navigationBarTitleDisplayMode(.inline)
 			#endif
 			.toolbar {
 				ToolbarItem(placement: .confirmationAction) {
-					Button("Done") { dismiss() }
+					Button(String(localized: L10n.Common.doneButton)) { dismiss() }
 				}
 			}
 			.overlay {
 				if history.isEmpty {
-					ContentUnavailableView("No Goal History",
-											 systemImage: "flag",
-											 description: Text("Past goals will appear here"))
+					ContentUnavailableView(
+						String(localized: L10n.Goals.noHistoryTitle),
+						systemImage: "flag",
+						description: Text(L10n.Goals.noHistoryDescription)
+					)
 				}
 			}
 		}
@@ -494,7 +504,7 @@ struct GoalHistoryView: View {
 					Spacer()
 					if let reason = goal.completionReason {
 						let pill = completionPillColors(for: reason)
-						Text(reason.rawValue.capitalized)
+						Text(completionLabel(for: reason))
 							.font(.caption.weight(.semibold))
 							.padding(.horizontal, 10)
 							.padding(.vertical, 4)
@@ -503,11 +513,11 @@ struct GoalHistoryView: View {
 							.clipShape(Capsule())
 					}
 				}
-				Text("Set on \(goal.startDate.formatted(date: .abbreviated, time: .omitted))")
+				Text(L10n.Goals.setOn(goal.startDate.formatted(date: .abbreviated, time: .omitted)))
 					.font(.caption)
 					.foregroundStyle(.secondary)
 				if let completedDate = goal.completedDate {
-					Text("Completed on \(completedDate.formatted(date: .abbreviated, time: .omitted))")
+					Text(L10n.Goals.completedOn(completedDate.formatted(date: .abbreviated, time: .omitted)))
 						.font(.caption)
 						.foregroundStyle(.secondary)
 				}
@@ -530,6 +540,17 @@ struct GoalHistoryView: View {
 			return (Color.orange, Color.orange.opacity(0.15))
 		}
 	}
+
+	private func completionLabel(for reason: CompletionReason) -> String {
+		switch reason {
+		case .achieved:
+			return String(localized: L10n.Goals.completionAchieved)
+		case .changed:
+			return String(localized: L10n.Goals.completionChanged)
+		case .abandoned:
+			return String(localized: L10n.Goals.completionAbandoned)
+		}
+	}
 	
 	private func displayValue(_ kg: Double) -> String {
 		guard let unit = dataManager.settings?.preferredUnit else {
@@ -549,7 +570,7 @@ struct ExportView: View {
 		NavigationStack {
 			ScrollView {
 				VStack(spacing: 24) {
-					Text("Copy or share your data export. Each row includes a timestamp, normalized date, and weight in kilograms.")
+					Text(L10n.Export.hint)
 						.font(.callout)
 						.foregroundStyle(.secondary)
 						.multilineTextAlignment(.leading)
@@ -563,13 +584,13 @@ struct ExportView: View {
 				}
 				.padding(24)
 			}
-			.navigationTitle("Export Data")
+			.navigationTitle(Text(L10n.Export.navigationTitle))
 			#if os(iOS)
 			.navigationBarTitleDisplayMode(.inline)
 			#endif
 			.toolbar {
 				ToolbarItem(placement: .confirmationAction) {
-					Button("Done") { dismiss() }
+					Button(String(localized: L10n.Common.doneButton)) { dismiss() }
 				}
 				ToolbarItem(placement: .primaryAction) {
 					ShareLink(item: csvData)

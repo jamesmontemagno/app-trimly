@@ -1,6 +1,6 @@
 //
 //  ChartsView.swift
-//  Trimly
+//  TrimTally
 //
 //  Created by Trimly on 11/19/2025.
 //
@@ -16,9 +16,9 @@ struct ChartsView: View {
 	var body: some View {
 		NavigationStack {
 			VStack(spacing: 0) {
-				Picker("Range", selection: $selectedRange) {
+				Picker(String(localized: L10n.Charts.rangePicker), selection: $selectedRange) {
 					ForEach(ChartRange.allCases, id: \.self) { range in
-						Text(range.rawValue).tag(range)
+						Text(range.displayName).tag(range)
 					}
 				}
 				.pickerStyle(.segmented)
@@ -31,15 +31,15 @@ struct ChartsView: View {
 								.padding()
 						} else {
 							ContentUnavailableView(
-								"No Data",
+								String(localized: L10n.Charts.noDataTitle),
 								systemImage: "chart.xyaxis.line",
-								description: Text("Add weight entries to see your chart")
+								description: Text(L10n.Charts.noDataDescription)
 							)
 						}
 					}
 				}
 			}
-			.navigationTitle("Charts")
+			.navigationTitle(Text(L10n.Charts.navigationTitle))
 			.toolbar {
 				ToolbarItem(placement: .primaryAction) {
 					Button {
@@ -111,7 +111,7 @@ struct ChartsView: View {
 					.foregroundStyle(.green)
 					.lineStyle(StrokeStyle(lineWidth: 2, dash: [10, 5]))
 					.annotation(position: .top, alignment: .trailing) {
-						Text("Goal")
+						Text(L10n.Charts.goalLabel)
 							.font(.caption)
 							.foregroundStyle(.green)
 							.padding(4)
@@ -139,14 +139,14 @@ struct ChartsView: View {
     
 	private var legend: some View {
 		HStack(spacing: 16) {
-			LegendItem(color: .blue, label: "Weight", style: .solid)
+			LegendItem(color: .blue, label: String(localized: L10n.Charts.legendWeight), style: .solid)
             
 			if dataManager.settings?.showMovingAverage == true {
-				LegendItem(color: .orange, label: "MA", style: .dashed)
+				LegendItem(color: .orange, label: String(localized: L10n.Charts.legendMovingAverage), style: .dashed)
 			}
             
 			if dataManager.settings?.showEMA == true {
-				LegendItem(color: .purple, label: "EMA", style: .dotted)
+				LegendItem(color: .purple, label: String(localized: L10n.Charts.legendEMA), style: .dotted)
 			}
 		}
 		.font(.caption)
@@ -157,10 +157,10 @@ struct ChartsView: View {
 			Divider()
             
 			HStack(spacing: 20) {
-				StatItem(label: "Min", value: displayValue(stats.min), color: .green)
-				StatItem(label: "Max", value: displayValue(stats.max), color: .red)
-				StatItem(label: "Avg", value: displayValue(stats.average), color: .blue)
-				StatItem(label: "Range", value: displayValue(stats.range), color: .orange)
+				StatItem(label: String(localized: L10n.Charts.statMin), value: displayValue(stats.min), color: .green)
+				StatItem(label: String(localized: L10n.Charts.statMax), value: displayValue(stats.max), color: .red)
+				StatItem(label: String(localized: L10n.Charts.statAvg), value: displayValue(stats.average), color: .blue)
+				StatItem(label: String(localized: L10n.Charts.statRange), value: displayValue(stats.range), color: .orange)
 			}
 		}
 	}
@@ -239,6 +239,19 @@ enum ChartRange: String, CaseIterable {
 	case month = "Month"
 	case quarter = "Quarter"
 	case year = "Year"
+
+	var displayName: String {
+		switch self {
+		case .week:
+			return String(localized: L10n.Charts.rangeWeek)
+		case .month:
+			return String(localized: L10n.Charts.rangeMonth)
+		case .quarter:
+			return String(localized: L10n.Charts.rangeQuarter)
+		case .year:
+			return String(localized: L10n.Charts.rangeYear)
+		}
+	}
 }
 
 struct ChartDataPoint: Identifiable {
@@ -303,24 +316,32 @@ struct ChartSettingsView: View {
 		NavigationStack {
 			ScrollView {
 				VStack(spacing: 20) {
-					TrimlyCardSection(title: "Display Mode", description: "Choose how much chart chrome you want to see.", style: .popup) {
-						Picker("Display Mode", selection: binding(\.chartMode)) {
-							Text("Minimalist").tag(ChartMode.minimalist)
-							Text("Analytical").tag(ChartMode.analytical)
+					TrimlyCardSection(
+						title: String(localized: L10n.ChartSettings.displayModeTitle),
+						description: String(localized: L10n.ChartSettings.displayModeDescription),
+						style: .popup
+					) {
+						Picker(String(localized: L10n.ChartSettings.displayModeTitle), selection: binding(\.chartMode)) {
+							Text(L10n.ChartSettings.displayMinimalist).tag(ChartMode.minimalist)
+							Text(L10n.ChartSettings.displayAnalytical).tag(ChartMode.analytical)
 						}
 						.pickerStyle(.segmented)
 					}
 
-					TrimlyCardSection(title: "Trend Layers", description: "Overlay smoothed lines to better see direction without noise.", style: .popup) {
-						Toggle("Show Moving Average", isOn: binding(\.showMovingAverage))
+					TrimlyCardSection(
+						title: String(localized: L10n.ChartSettings.trendLayersTitle),
+						description: String(localized: L10n.ChartSettings.trendLayersDescription),
+						style: .popup
+					) {
+						Toggle(L10n.ChartSettings.movingAverageToggle, isOn: binding(\.showMovingAverage))
 
 						if dataManager.settings?.showMovingAverage == true {
 							Divider().padding(.vertical, 10)
 							Stepper(value: binding(\.movingAveragePeriod), in: 3...30) {
 								VStack(alignment: .leading, spacing: 2) {
-									Label("Moving Average", systemImage: "chart.xyaxis.line")
+									Label(String(localized: L10n.ChartSettings.movingAverageLabel), systemImage: "chart.xyaxis.line")
 										.font(.subheadline.weight(.semibold))
-									Text("\(dataManager.settings?.movingAveragePeriod ?? 7) days")
+									Text(L10n.ChartSettings.daysLabel(dataManager.settings?.movingAveragePeriod ?? 7))
 										.font(.caption)
 										.foregroundStyle(.secondary)
 								}
@@ -329,35 +350,35 @@ struct ChartSettingsView: View {
 
 						Divider().padding(.vertical, 10)
 
-						Toggle("Show EMA", isOn: binding(\.showEMA))
+						Toggle(L10n.ChartSettings.emaToggle, isOn: binding(\.showEMA))
 
 						if dataManager.settings?.showEMA == true {
 							Divider().padding(.vertical, 10)
 							Stepper(value: binding(\.emaPeriod), in: 3...30) {
 								VStack(alignment: .leading, spacing: 2) {
-									Label("Exponential Moving Average", systemImage: "chart.line.flattrend.xyaxis")
+									Label(String(localized: L10n.ChartSettings.emaLabel), systemImage: "chart.line.flattrend.xyaxis")
 										.font(.subheadline.weight(.semibold))
-									Text("\(dataManager.settings?.emaPeriod ?? 7) days")
+									Text(L10n.ChartSettings.daysLabel(dataManager.settings?.emaPeriod ?? 7))
 										.font(.caption)
 										.foregroundStyle(.secondary)
 								}
 							}
 						}
 
-						Text("Both overlays respect your date filter so weekly views stay clean.")
+						Text(L10n.ChartSettings.overlaysHint)
 							.font(.caption)
 							.foregroundStyle(.secondary)
 					}
 				}
 				.padding(24)
 			}
-			.navigationTitle("Chart Settings")
+			.navigationTitle(Text(L10n.ChartSettings.navigationTitle))
 			#if os(iOS)
 			.navigationBarTitleDisplayMode(.inline)
 			#endif
 			.toolbar {
 				ToolbarItem(placement: .confirmationAction) {
-					Button("Done") {
+					Button(String(localized: L10n.Common.doneButton)) {
 						dismiss()
 					}
 				}

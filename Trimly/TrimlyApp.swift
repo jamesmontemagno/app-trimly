@@ -1,6 +1,6 @@
 //
 //  TrimlyApp.swift
-//  Trimly
+//  TrimTally
 //
 //  Created by James Montemagno on 11/27/25.
 //

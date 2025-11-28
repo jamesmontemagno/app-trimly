@@ -1,6 +1,6 @@
 //
 //  NotificationService.swift
-//  Trimly
+//  TrimTally
 //
 //  Created by Trimly on 11/19/2025.
 //
@@ -49,8 +49,8 @@ final class NotificationService: ObservableObject {
         
         // Create notification content
         let content = UNMutableNotificationContent()
-        content.title = "Time to log your weight"
-        content.body = "Keep your streak going! Log today's weight."
+        content.title = String(localized: L10n.Notifications.primaryTitle)
+        content.body = String(localized: L10n.Notifications.primaryBody)
         content.sound = .default
         content.categoryIdentifier = "WEIGHT_REMINDER"
         
@@ -79,8 +79,8 @@ final class NotificationService: ObservableObject {
         
         // Create notification content
         let content = UNMutableNotificationContent()
-        content.title = "Evening check-in"
-        content.body = "Don't forget to log your weight for today."
+        content.title = String(localized: L10n.Notifications.secondaryTitle)
+        content.body = String(localized: L10n.Notifications.secondaryBody)
         content.sound = .default
         content.categoryIdentifier = "WEIGHT_REMINDER"
         
@@ -191,13 +191,13 @@ extension NotificationService {
     func setupNotificationCategories() {
         let quickLogAction = UNNotificationAction(
             identifier: "QUICK_LOG",
-            title: "Log Weight",
+            title: String(localized: L10n.Notifications.actionQuickLog),
             options: .foreground
         )
         
         let dismissAction = UNNotificationAction(
             identifier: "DISMISS",
-            title: "Dismiss",
+            title: String(localized: L10n.Notifications.actionDismiss),
             options: []
         )
         
@@ -220,10 +220,10 @@ enum NotificationError: LocalizedError {
     
     var errorDescription: String? {
         switch self {
-        case .notAuthorized:
-            return "Notification permission not granted"
-        case .schedulingFailed(let error):
-            return "Failed to schedule notification: \(error.localizedDescription)"
+            case .notAuthorized:
+                return String(localized: L10n.Notifications.errorNotAuthorized)
+            case .schedulingFailed(let error):
+                return String(localized: L10n.Notifications.schedulingFailed(error.localizedDescription))
         }
     }
 }

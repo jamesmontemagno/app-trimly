@@ -1,6 +1,6 @@
 //
 //  HealthKitView.swift
-//  Trimly
+//  TrimTally
 //
 //  Created by Trimly on 11/19/2025.
 //
@@ -17,27 +17,30 @@ struct HealthKitView: View {
 	@State private var sampleCount: Int?
 	@State private var isLoadingSampleCount = false
 	@State private var importedCount: Int?
-	@State private var errorMessage: String?
+	@State private var errorMessage: LocalizedStringResource?
 	@State private var showingError = false
     
 	var body: some View {
 		NavigationStack {
 			ScrollView {
 				VStack(spacing: 24) {
-					TrimlyCardSection(title: "Authorization", description: "Allow Trimly to securely read your Health app weight data.") {
+					TrimlyCardSection(
+						title: String(localized: L10n.Health.authorizationTitle),
+						description: String(localized: L10n.Health.authorizationDescription)
+					) {
 						if healthKitService.isAuthorized {
-							Label("HealthKit Enabled", systemImage: "checkmark.circle.fill")
+							Label(String(localized: L10n.Health.statusEnabled), systemImage: "checkmark.circle.fill")
 								.font(.headline)
 								.foregroundStyle(.green)
-							Text("You can now import history and sync future entries.")
+							Text(L10n.Health.statusEnabledDescription)
 								.font(.caption)
 								.foregroundStyle(.secondary)
 						} else {
 							VStack(alignment: .leading, spacing: 12) {
-								Text("Connect to Health so Trimly can keep everything in one place.")
+								Text(L10n.Health.connectPrompt)
 									.font(.callout)
 									.foregroundStyle(.secondary)
-								Button("Request Access") {
+								Button(String(localized: L10n.Health.requestAccessButton)) {
 									requestAuthorization()
 								}
 								.buttonStyle(.borderedProminent)
@@ -46,35 +49,38 @@ struct HealthKitView: View {
 					}
 					
 					if healthKitService.isAuthorized {
-						TrimlyCardSection(title: "Historical Import", description: "Choose a range and pull past weights into Trimly. Duplicates are automatically skipped.") {
-							datePickerRow(title: "Start", date: $startDate)
+						TrimlyCardSection(
+							title: String(localized: L10n.Health.historicalImportTitle),
+							description: String(localized: L10n.Health.historicalImportDescription)
+						) {
+							datePickerRow(title: L10n.Health.startDateLabel, date: $startDate)
 								.onChange(of: startDate) { _, _ in
 									loadSampleCount()
 								}
 							Divider()
-							datePickerRow(title: "End", date: $endDate)
+							datePickerRow(title: L10n.Health.endDateLabel, date: $endDate)
 								.onChange(of: endDate) { _, _ in
 									loadSampleCount()
 								}
 							Divider()
 							if isLoadingSampleCount {
 								HStack {
-									Text("Counting samples")
+									Text(L10n.Health.countingSamples)
 										.font(.subheadline)
 									Spacer()
 									ProgressView()
 								}
 							} else if let count = sampleCount {
-								metricRow(label: "Samples Found", value: "\(count)")
+								metricRow(label: L10n.Health.samplesFoundLabel, value: "\(count)")
 							} else {
-								Text("Select a range to preview available entries.")
+								Text(L10n.Health.selectRangeHint)
 									.font(.caption)
 									.foregroundStyle(.secondary)
 							}
 							Button {
 								importData()
 							} label: {
-								Label("Import data", systemImage: "square.and.arrow.down")
+								Label(String(localized: L10n.Health.importButton), systemImage: "square.and.arrow.down")
 									.font(.headline)
 							}
 							.disabled(sampleCount == nil || sampleCount == 0 || healthKitService.isImporting)
@@ -82,10 +88,10 @@ struct HealthKitView: View {
 						}
 						
 						if healthKitService.isImporting {
-							TrimlyCardSection(title: "Import Progress") {
+							TrimlyCardSection(title: String(localized: L10n.Health.importProgressTitle)) {
 								VStack(alignment: .leading, spacing: 8) {
 									ProgressView(value: healthKitService.importProgress)
-									Text("Importing... \(Int(healthKitService.importProgress * 100))%")
+									Text(L10n.Health.importProgressStatus(Int(healthKitService.importProgress * 100)))
 										.font(.caption)
 										.foregroundStyle(.secondary)
 								}
@@ -93,17 +99,20 @@ struct HealthKitView: View {
 						}
 						
 						if let count = importedCount {
-							TrimlyCardSection(title: "Recent Import") {
-								Label("\(count) samples imported", systemImage: "checkmark.circle.fill")
+							TrimlyCardSection(title: String(localized: L10n.Health.recentImportTitle)) {
+								Label(String(localized: L10n.Health.recentImportStatus(count)), systemImage: "checkmark.circle.fill")
 									.foregroundStyle(.green)
-								Text("You can rerun imports at any time—duplicates stay hidden.")
+								Text(L10n.Health.recentImportHint)
 									.font(.caption)
 									.foregroundStyle(.secondary)
 							}
 						}
 						
-						TrimlyCardSection(title: "Background Sync", description: "Let Trimly watch for new Health weight samples and keep things tidy.") {
-							Toggle("Enable Background Sync", isOn: Binding(
+						TrimlyCardSection(
+							title: String(localized: L10n.Health.backgroundSyncTitle),
+							description: String(localized: L10n.Health.backgroundSyncDescription)
+						) {
+							Toggle(String(localized: L10n.Health.backgroundSyncToggle), isOn: Binding(
 								get: { dataManager.settings?.healthKitEnabled ?? false },
 								set: { enabled in
 									dataManager.updateSettings { settings in
@@ -115,7 +124,7 @@ struct HealthKitView: View {
 								}
 							))
 							Divider().padding(.vertical, 8)
-							Toggle("Auto-hide Duplicates", isOn: Binding(
+							Toggle(String(localized: L10n.Health.autoHideToggle), isOn: Binding(
 								get: { dataManager.settings?.autoHideHealthKitDuplicates ?? true },
 								set: { enabled in
 									dataManager.updateSettings { settings in
@@ -128,21 +137,21 @@ struct HealthKitView: View {
 				}
 				.padding(24)
 			}
-			.navigationTitle("HealthKit Integration")
+			.navigationTitle(String(localized: L10n.Health.navigationTitle))
 			#if os(iOS)
 			.navigationBarTitleDisplayMode(.inline)
 			#endif
 			.toolbar {
 				ToolbarItem(placement: .confirmationAction) {
-					Button("Done") {
+					Button(String(localized: L10n.Common.doneButton)) {
 						dismiss()
 					}
 				}
 			}
-			.alert("Error", isPresented: $showingError) {
-				Button("OK", role: .cancel) { }
+			.alert(String(localized: L10n.Common.errorTitle), isPresented: $showingError) {
+				Button(String(localized: L10n.Common.okButton), role: .cancel) { }
 			} message: {
-				Text(errorMessage ?? "An error occurred")
+				Text(errorMessage ?? L10n.Health.genericErrorMessage)
 			}
 			.onAppear {
 				healthKitService.checkAuthorizationStatus()
@@ -161,7 +170,7 @@ struct HealthKitView: View {
 					loadSampleCount()
 				}
 			} catch {
-				errorMessage = "Failed to authorize HealthKit: \(error.localizedDescription)"
+				errorMessage = L10n.Health.authorizationFailed(error.localizedDescription)
 				showingError = true
 			}
 		}
@@ -178,7 +187,7 @@ struct HealthKitView: View {
 				let count = try await healthKitService.getSampleCount(from: startDate, to: endDate)
 				sampleCount = count
 			} catch {
-				errorMessage = "Failed to load sample count: \(error.localizedDescription)"
+				errorMessage = L10n.Health.sampleCountFailed(error.localizedDescription)
 				showingError = true
 			}
 			isLoadingSampleCount = false
@@ -198,7 +207,7 @@ struct HealthKitView: View {
 				)
 				importedCount = count
 			} catch {
-				errorMessage = "Failed to import data: \(error.localizedDescription)"
+				errorMessage = L10n.Health.importFailed(error.localizedDescription)
 				showingError = true
 			}
 		}
@@ -213,8 +222,9 @@ struct HealthKitView: View {
 // MARK: - UI Helpers
 
 
+
 extension HealthKitView {
-	private func metricRow(label: String, value: String) -> some View {
+	private func metricRow(label: LocalizedStringResource, value: String) -> some View {
 		HStack {
 			Text(label)
 				.font(.subheadline)
@@ -224,12 +234,12 @@ extension HealthKitView {
 		}
 	}
 
-	private func datePickerRow(title: String, date: Binding<Date>) -> some View {
+	private func datePickerRow(title: LocalizedStringResource, date: Binding<Date>) -> some View {
 		HStack {
 			Text(title)
 				.font(.subheadline.weight(.semibold))
 			Spacer()
-			DatePicker(title, selection: date, displayedComponents: .date)
+			DatePicker(String(localized: title), selection: date, displayedComponents: .date)
 				.labelsHidden()
 		}
 	}

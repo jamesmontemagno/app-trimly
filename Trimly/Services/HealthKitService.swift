@@ -1,6 +1,6 @@
 //
 //  HealthKitService.swift
-//  Trimly
+//  TrimTally
 //
 //  Created by Trimly on 11/19/2025.
 //

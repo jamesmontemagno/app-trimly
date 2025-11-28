@@ -1,6 +1,6 @@
-# Trimly API Documentation
+# TrimTally API Documentation
 
-This document describes the internal APIs and architecture of Trimly.
+This document describes the internal APIs and architecture of TrimTally.
 
 ## Table of Contents
 

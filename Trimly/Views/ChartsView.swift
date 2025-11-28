@@ -123,13 +123,14 @@ struct ChartsView: View {
 			.frame(height: 300)
 			.chartXAxis(chartMode == .minimalist ? .hidden : .automatic)
 			.chartYAxis(chartMode == .minimalist ? .hidden : .automatic)
+			.chartYScale(domain: .automatic(includesZero: false))
             
 			if dataManager.settings?.showMovingAverage == true || dataManager.settings?.showEMA == true {
 				legend
 			}
             
 			if let stats = calculateStats(data: data) {
-				statsView(stats: stats)
+				AnalyticsDashboardView(stats: stats, data: data, range: selectedRange)
 			}
 		}
 		.padding()
@@ -153,16 +154,8 @@ struct ChartsView: View {
 	}
     
 	private func statsView(stats: ChartStats) -> some View {
-		VStack(spacing: 8) {
-			Divider()
-            
-			HStack(spacing: 20) {
-				StatItem(label: String(localized: L10n.Charts.statMin), value: displayValue(stats.min), color: .green)
-				StatItem(label: String(localized: L10n.Charts.statMax), value: displayValue(stats.max), color: .red)
-				StatItem(label: String(localized: L10n.Charts.statAvg), value: displayValue(stats.average), color: .blue)
-				StatItem(label: String(localized: L10n.Charts.statRange), value: displayValue(stats.range), color: .orange)
-			}
-		}
+		// Deprecated: Replaced by AnalyticsDashboardView
+		EmptyView()
 	}
     
 	private var chartData: [ChartDataPoint]? {
@@ -231,6 +224,151 @@ struct ChartsView: View {
 		let value = unit.convert(fromKg: kg)
 		let precision = dataManager.settings?.decimalPrecision ?? 1
 		return String(format: "%.*f", precision, value)
+	}
+}
+
+struct AnalyticsDashboardView: View {
+	let stats: ChartStats
+	let data: [ChartDataPoint]
+	let range: ChartRange
+	@EnvironmentObject var dataManager: DataManager
+
+	var body: some View {
+		VStack(spacing: 16) {
+			Divider()
+			
+			// Row 1: Basic Stats (Min/Max/Avg)
+			HStack(spacing: 20) {
+				StatItem(label: String(localized: L10n.Charts.statMin), value: displayValue(stats.min), color: .green)
+				StatItem(label: String(localized: L10n.Charts.statMax), value: displayValue(stats.max), color: .red)
+				StatItem(label: String(localized: L10n.Charts.statAvg), value: displayValue(stats.average), color: .blue)
+			}
+			
+			Divider()
+			
+			// Row 2: Fun Analytics
+			LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
+				// Trend
+				if let trend = calculateTrend() {
+					FunStatCard(
+						icon: trend.icon,
+						title: String(localized: L10n.Dashboard.trendTitle),
+						value: trend.text,
+						color: trend.color
+					)
+				}
+				
+				// Total Change
+				if let change = calculateChange() {
+					FunStatCard(
+						icon: change.value < 0 ? "arrow.down.right.circle.fill" : "arrow.up.right.circle.fill",
+						title: "Total Change",
+						value: change.text,
+						color: change.value < 0 ? .green : .red
+					)
+				}
+				
+				// Goal Projection
+				if let projection = calculateProjection() {
+					FunStatCard(
+						icon: "calendar.badge.clock",
+						title: String(localized: L10n.Dashboard.estimatedGoalDate),
+						value: projection,
+						color: .purple
+					)
+				}
+				
+				// Range Info
+				FunStatCard(
+					icon: "calendar",
+					title: "Timeframe",
+					value: range.displayName,
+					color: .orange
+				)
+			}
+		}
+	}
+	
+	private func displayValue(_ kg: Double) -> String {
+		guard let unit = dataManager.settings?.preferredUnit else {
+			return String(format: "%.1f", kg)
+		}
+		let value = unit.convert(fromKg: kg)
+		return String(format: "%.1f", value)
+	}
+	
+	private func calculateTrend() -> (text: String, icon: String, color: Color)? {
+		let tuples = data.map { (date: $0.date, weight: $0.weight) }
+		let trend = WeightAnalytics.classifyTrend(dailyWeights: tuples)
+		
+		switch trend {
+		case .downward:
+			return (trend.description, "chart.line.downtrend.xyaxis", .green)
+		case .upward:
+			return (trend.description, "chart.line.uptrend.xyaxis", .red)
+		case .stable:
+			return (trend.description, "arrow.right", .blue)
+		}
+	}
+	
+	private func calculateChange() -> (text: String, value: Double)? {
+		guard let first = data.first, let last = data.last else { return nil }
+		let diff = last.weight - first.weight
+		let absDiff = abs(diff)
+		let displayDiff = displayValue(absDiff)
+		let sign = diff < 0 ? "-" : "+"
+		
+		guard let unit = dataManager.settings?.preferredUnit else { return nil }
+		return ("\(sign)\(displayDiff) \(unit.symbol)", diff)
+	}
+	
+	private func calculateProjection() -> String? {
+		guard let goal = dataManager.fetchActiveGoal() else { return nil }
+		let tuples = data.map { (date: $0.date, weight: $0.weight) }
+		
+		if let date = WeightAnalytics.calculateGoalProjection(
+			dailyWeights: tuples,
+			targetWeightKg: goal.targetWeightKg
+		) {
+			let formatter = DateFormatter()
+			formatter.dateStyle = .medium
+			formatter.timeStyle = .none
+			return formatter.string(from: date)
+		}
+		return nil
+	}
+}
+
+struct FunStatCard: View {
+	let icon: String
+	let title: String
+	let value: String
+	let color: Color
+	
+	var body: some View {
+		HStack(spacing: 12) {
+			Image(systemName: icon)
+				.font(.title2)
+				.foregroundStyle(color)
+				.frame(width: 40, height: 40)
+				.background(color.opacity(0.1))
+				.clipShape(Circle())
+			
+			VStack(alignment: .leading, spacing: 2) {
+				Text(title)
+					.font(.caption)
+					.foregroundStyle(.secondary)
+					.lineLimit(1)
+				Text(value)
+					.font(.subheadline.bold())
+					.lineLimit(1)
+					.minimumScaleFactor(0.8)
+			}
+		}
+		.frame(maxWidth: .infinity, alignment: .leading)
+		.padding(12)
+		.background(Color.secondary.opacity(0.1))
+		.clipShape(RoundedRectangle(cornerRadius: 12))
 	}
 }
 

@@ -34,9 +34,22 @@
 		B3F3F5B12F0C3C0600F43F26 /* Trimly/LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Trimly/LaunchScreen.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B37935DD2EDA544E00F0BEB1 /* Exceptions for "Trimly" folder in "TrimTally" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			platformFiltersByRelativePath = {
+				LaunchScreen.storyboard = (ios, );
+			};
+			target = B39227552ED9703A00C14B08 /* TrimTally */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		B39227582ED9703A00C14B08 /* Trimly */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B37935DD2EDA544E00F0BEB1 /* Exceptions for "Trimly" folder in "TrimTally" target */,
+			);
 			path = Trimly;
 			sourceTree = "<group>";
 		};

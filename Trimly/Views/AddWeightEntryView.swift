@@ -19,31 +19,52 @@ struct AddWeightEntryView: View {
     
 	var body: some View {
 		NavigationStack {
-			Form {
-				Section {
-					HStack {
-						TextField("Weight", text: $weightText)
-							#if os(iOS)
-							.keyboardType(.decimalPad)
-							#endif
-							.font(.system(.title).bold())
-                        
-						Text(dataManager.settings?.preferredUnit.symbol ?? "kg")
-							.font(.title3)
-							.foregroundStyle(.secondary)
+			ScrollView {
+				VStack(spacing: 20) {
+					TrimlyCardSection(title: "Log Weight", description: "Enter today's reading in \(unitSymbol).", style: .popup) {
+						VStack(alignment: .leading, spacing: 12) {
+							HStack(alignment: .firstTextBaseline, spacing: 12) {
+								TextField("0.0", text: $weightText)
+									.textFieldStyle(.plain)
+								#if os(iOS)
+									.keyboardType(.decimalPad)
+								#endif
+									.font(.system(size: 46, weight: .bold, design: .rounded))
+									.frame(maxWidth: .infinity, alignment: .leading)
+
+								Text(unitSymbol)
+									.font(.title2.weight(.semibold))
+									.foregroundStyle(.secondary)
+							}
+							.padding(.vertical, 6)
+							.padding(.horizontal, 12)
+							.background(inputBackgroundColor)
+							.clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+
+							Text("Stored internally as kilograms so your analytics stay precise.")
+								.font(.caption)
+								.foregroundStyle(.secondary)
+						}
+					}
+
+					TrimlyCardSection(title: "Date & Time", description: "We normalize to your local day for charts.", style: .popup) {
+						DatePicker("Date & Time", selection: $selectedDate)
+						#if os(iOS)
+							.datePickerStyle(.compact)
+						#endif
+					}
+
+					TrimlyCardSection(title: "Notes", description: "Optional reflections or context.", style: .popup) {
+						TextField("Morning weigh-in after run", text: $notes, axis: .vertical)
+							.textFieldStyle(.plain)
+							.lineLimit(3...6)
+							.padding(.vertical, 10)
+							.padding(.horizontal, 12)
+							.background(inputBackgroundColor)
+							.clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
 					}
 				}
-                
-				Section {
-					DatePicker("Date & Time", selection: $selectedDate)
-				}
-                
-				Section {
-					TextField("Notes (optional)", text: $notes, axis: .vertical)
-						.lineLimit(3...6)
-				} header: {
-					Text("Notes")
-				}
+				.padding(24)
 			}
 			.navigationTitle("Add Weight")
 			#if os(iOS)
@@ -69,6 +90,18 @@ struct AddWeightEntryView: View {
 				Text(errorMessage)
 			}
 		}
+	}
+
+	private var unitSymbol: String {
+		dataManager.settings?.preferredUnit.symbol ?? "kg"
+	}
+
+	private var inputBackgroundColor: Color {
+		#if os(macOS)
+		return Color(nsColor: .textBackgroundColor).opacity(0.9)
+		#else
+		return Color(.tertiarySystemBackground)
+		#endif
 	}
     
 	private func saveEntry() {

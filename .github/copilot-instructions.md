@@ -31,6 +31,11 @@ All data operations flow through `DataManager` (singleton, `@MainActor`-bound):
 - **New settings**: Add properties to `AppSettings` model, update via `dataManager.updateSettings { ... }`
 - **New views**: Inject DataManager via `.environmentObject(dataManager)`, use `@EnvironmentObject` to access
 
+### Appearance / Theming
+- Store theme choice (`system`/`light`/`dark`) in `AppSettings.appearance` (enum `AppAppearance`).
+- Read the current value in `TrimlyApp` and map it to `.preferredColorScheme(...)` on the root `ContentView`.
+- Always default to `.system` so the app follows the OS when the user has not made an explicit choice.
+
 ### Testing
 - Use `@MainActor` decorator on test methods accessing DataManager
 - Create in-memory DataManager in `setUp()`: `dataManager = await DataManager(inMemory: true)`
@@ -74,6 +79,7 @@ TrimlyTests/          # Unit tests (DataManager, WeightAnalytics, etc.)
 - Use `// MARK: -` to organize code sections
 - Add doc comments (`///`) for public APIs
 - Keep views under 300 lines—extract subviews when needed
+ - Prefer small helper views (e.g., status pills, labeled rows) for repeated UI patterns instead of duplicating layout logic.
 
 ## Critical Gotchas
 - **MainActor isolation**: DataManager must be accessed on main thread—use `@MainActor` or `Task { @MainActor in ... }`

@@ -16,18 +16,63 @@ struct OnboardingView: View {
 	@State private var enableReminders = false
     
 	var body: some View {
-		TabView(selection: $currentPage) {
-			welcomePage.tag(0)
-			unitSelectionPage.tag(1)
-			startingWeightPage.tag(2)
-			goalPage.tag(3)
-			remindersPage.tag(4)
-			eulaPage.tag(5)
+		VStack(spacing: 16) {
+			// Step indicator along the top for clarity
+			HStack(spacing: 8) {
+				stepLabel("Welcome", index: 0)
+				stepLabel("Units", index: 1)
+				stepLabel("Start", index: 2)
+				stepLabel("Goal", index: 3)
+				stepLabel("Reminders", index: 4)
+				stepLabel("Finish", index: 5)
+			}
+			.padding(.horizontal)
+			
+			TabView(selection: $currentPage) {
+				welcomePage.tag(0)
+				unitSelectionPage.tag(1)
+				startingWeightPage.tag(2)
+				goalPage.tag(3)
+				remindersPage.tag(4)
+				eulaPage.tag(5)
+			}
 		}
 		#if os(iOS)
 		.tabViewStyle(.page)
 		.indexViewStyle(.page(backgroundDisplayMode: .always))
 		#endif
+	}
+
+	private func primaryButton(title: String, action: @escaping () -> Void) -> some View {
+		Button(action: action) {
+			Text(title)
+				.font(.headline)
+				.foregroundColor(.white)
+				.frame(maxWidth: .infinity)
+				.padding()
+				.background(Color.accentColor)
+				.clipShape(RoundedRectangle(cornerRadius: 12))
+		}
+	}
+
+	private func secondaryButton(title: String, action: @escaping () -> Void) -> some View {
+		Button(action: action) {
+			Text(title)
+				.font(.subheadline)
+				.foregroundStyle(.secondary)
+		}
+	}
+
+	private func stepLabel(_ title: String, index: Int) -> some View {
+		Text(title)
+			.font(.caption.bold())
+			.foregroundStyle(currentPage == index ? Color.accentColor : .secondary)
+			.padding(.vertical, 4)
+			.frame(maxWidth: .infinity)
+			.background(
+				RoundedRectangle(cornerRadius: 8)
+					.fill(currentPage == index ? Color.accentColor.opacity(0.1) : Color.clear)
+			)
 	}
     
 	private var welcomePage: some View {
@@ -51,16 +96,8 @@ struct OnboardingView: View {
             
 			Spacer()
             
-			Button {
+			primaryButton(title: "Get Started") {
 				withAnimation { currentPage = 1 }
-			} label: {
-				Text("Get Started")
-					.font(.headline)
-					.foregroundColor(.white)
-					.frame(maxWidth: .infinity)
-					.padding()
-					.background(.blue)
-					.clipShape(RoundedRectangle(cornerRadius: 12))
 			}
 			.padding(.horizontal)
 		}
@@ -93,19 +130,11 @@ struct OnboardingView: View {
             
 			Spacer()
             
-			Button {
+			primaryButton(title: "Continue") {
 				dataManager.updateSettings { settings in
 					settings.preferredUnit = selectedUnit
 				}
 				withAnimation { currentPage = 2 }
-			} label: {
-				Text("Continue")
-					.font(.headline)
-					.foregroundColor(.white)
-					.frame(maxWidth: .infinity)
-					.padding()
-					.background(.blue)
-					.clipShape(RoundedRectangle(cornerRadius: 12))
 			}
 			.padding(.horizontal)
 		}
@@ -149,21 +178,14 @@ struct OnboardingView: View {
 			Spacer()
             
 			VStack(spacing: 12) {
-				Button { saveStartingWeight() } label: {
-					Text("Continue")
-						.font(.headline)
-						.foregroundColor(.white)
-						.frame(maxWidth: .infinity)
-						.padding()
-						.background(.blue)
-						.clipShape(RoundedRectangle(cornerRadius: 12))
+				primaryButton(title: "Continue") {
+					saveStartingWeight()
 				}
 				.disabled(startingWeightText.isEmpty)
                 
-				Button("Skip for now") {
+				secondaryButton(title: "Skip for now") {
 					withAnimation { currentPage = 3 }
 				}
-				.foregroundStyle(.secondary)
 			}
 			.padding(.horizontal)
 		}
@@ -207,21 +229,14 @@ struct OnboardingView: View {
 			Spacer()
             
 			VStack(spacing: 12) {
-				Button { saveGoal() } label: {
-					Text("Continue")
-						.font(.headline)
-						.foregroundColor(.white)
-						.frame(maxWidth: .infinity)
-						.padding()
-						.background(.blue)
-						.clipShape(RoundedRectangle(cornerRadius: 12))
+				primaryButton(title: "Continue") {
+					saveGoal()
 				}
 				.disabled(goalWeightText.isEmpty)
                 
-				Button("Skip for now") {
+				secondaryButton(title: "Skip for now") {
 					withAnimation { currentPage = 4 }
 				}
-				.foregroundStyle(.secondary)
 			}
 			.padding(.horizontal)
 		}
@@ -260,14 +275,8 @@ struct OnboardingView: View {
             
 			Spacer()
             
-			Button { saveReminders() } label: {
-				Text("Continue")
-					.font(.headline)
-					.foregroundColor(.white)
-					.frame(maxWidth: .infinity)
-					.padding()
-					.background(.blue)
-					.clipShape(RoundedRectangle(cornerRadius: 12))
+			primaryButton(title: "Continue") {
+				saveReminders()
 			}
 			.padding(.horizontal)
 		}
@@ -301,14 +310,8 @@ struct OnboardingView: View {
             
 			Spacer()
             
-			Button { completeOnboarding() } label: {
-				Text("Accept & Continue")
-					.font(.headline)
-					.foregroundColor(.white)
-					.frame(maxWidth: .infinity)
-					.padding()
-					.background(.blue)
-					.clipShape(RoundedRectangle(cornerRadius: 12))
+			primaryButton(title: "Accept & Continue") {
+				completeOnboarding()
 			}
 			.padding(.horizontal)
 		}

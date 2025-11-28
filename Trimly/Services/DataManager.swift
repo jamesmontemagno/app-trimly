@@ -254,8 +254,10 @@ final class DataManager: ObservableObject {
             modelContext.delete(goal)
         }
         
-        // Reset settings but keep preferences
+        // Reset onboarding-related settings so the setup wizard runs again
         if let settings = settings {
+            settings.hasCompletedOnboarding = false
+            settings.eulaAcceptedDate = nil
             settings.consecutiveReminderDismissals = 0
             settings.updatedAt = Date()
         }

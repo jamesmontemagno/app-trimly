@@ -58,6 +58,9 @@ final class AppSettings {
     
     /// Consistency score window (days)
     var consistencyScoreWindow: Int
+
+    /// Preferred app appearance
+    var appearance: AppAppearance
     
     /// Whether user has completed onboarding
     var hasCompletedOnboarding: Bool
@@ -94,6 +97,7 @@ final class AppSettings {
         autoHideHealthKitDuplicates: Bool = true,
         healthKitDuplicateToleranceKg: Double = 0.1,
         consistencyScoreWindow: Int = 30,
+        appearance: AppAppearance = .system,
         hasCompletedOnboarding: Bool = false,
         eulaAcceptedDate: Date? = nil,
         decimalPrecision: Int = 1,
@@ -117,12 +121,30 @@ final class AppSettings {
         self.autoHideHealthKitDuplicates = autoHideHealthKitDuplicates
         self.healthKitDuplicateToleranceKg = healthKitDuplicateToleranceKg
         self.consistencyScoreWindow = consistencyScoreWindow
+        self.appearance = appearance
         self.hasCompletedOnboarding = hasCompletedOnboarding
         self.eulaAcceptedDate = eulaAcceptedDate
         self.decimalPrecision = decimalPrecision
         self.projectionMethod = projectionMethod
         self.minDaysForProjection = minDaysForProjection
         self.updatedAt = updatedAt
+    }
+}
+
+/// App-wide appearance preference
+enum AppAppearance: String, Codable, CaseIterable, Identifiable {
+    case system
+    case light
+    case dark
+    
+    var id: String { rawValue }
+    
+    var displayName: String {
+        switch self {
+        case .system: return "System"
+        case .light: return "Light"
+        case .dark: return "Dark"
+        }
     }
 }
 

@@ -17,6 +17,7 @@ struct TrimlyApp: App {
             ContentView()
                 .environment(\.modelContext, dataManager.modelContext)
                 .environmentObject(dataManager)
+                .preferredColorScheme(colorScheme(for: dataManager.settings?.appearance))
         }
         .modelContainer(dataManager.modelContainer)
         
@@ -26,5 +27,16 @@ struct TrimlyApp: App {
                 .environmentObject(dataManager)
         }
         #endif
+    }
+
+    private func colorScheme(for appearance: AppAppearance?) -> ColorScheme? {
+        switch appearance ?? .system {
+        case .system:
+            return nil
+        case .light:
+            return .light
+        case .dark:
+            return .dark
+        }
     }
 }

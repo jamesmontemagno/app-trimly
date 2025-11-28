@@ -301,31 +301,55 @@ struct ChartSettingsView: View {
     
 	var body: some View {
 		NavigationStack {
-			Form {
-				Section {
-					Picker("Display Mode", selection: binding(\.chartMode)) {
-						Text("Minimalist").tag(ChartMode.minimalist)
-						Text("Analytical").tag(ChartMode.analytical)
+			ScrollView {
+				VStack(spacing: 20) {
+					TrimlyCardSection(title: "Display Mode", description: "Choose how much chart chrome you want to see.", style: .popup) {
+						Picker("Display Mode", selection: binding(\.chartMode)) {
+							Text("Minimalist").tag(ChartMode.minimalist)
+							Text("Analytical").tag(ChartMode.analytical)
+						}
+						.pickerStyle(.segmented)
+					}
+
+					TrimlyCardSection(title: "Trend Layers", description: "Overlay smoothed lines to better see direction without noise.", style: .popup) {
+						Toggle("Show Moving Average", isOn: binding(\.showMovingAverage))
+
+						if dataManager.settings?.showMovingAverage == true {
+							Divider().padding(.vertical, 10)
+							Stepper(value: binding(\.movingAveragePeriod), in: 3...30) {
+								VStack(alignment: .leading, spacing: 2) {
+									Label("Moving Average", systemImage: "chart.xyaxis.line")
+										.font(.subheadline.weight(.semibold))
+									Text("\(dataManager.settings?.movingAveragePeriod ?? 7) days")
+										.font(.caption)
+										.foregroundStyle(.secondary)
+								}
+							}
+						}
+
+						Divider().padding(.vertical, 10)
+
+						Toggle("Show EMA", isOn: binding(\.showEMA))
+
+						if dataManager.settings?.showEMA == true {
+							Divider().padding(.vertical, 10)
+							Stepper(value: binding(\.emaPeriod), in: 3...30) {
+								VStack(alignment: .leading, spacing: 2) {
+									Label("Exponential Moving Average", systemImage: "chart.line.flattrend.xyaxis")
+										.font(.subheadline.weight(.semibold))
+									Text("\(dataManager.settings?.emaPeriod ?? 7) days")
+										.font(.caption)
+										.foregroundStyle(.secondary)
+								}
+							}
+						}
+
+						Text("Both overlays respect your date filter so weekly views stay clean.")
+							.font(.caption)
+							.foregroundStyle(.secondary)
 					}
 				}
-                
-				Section {
-					Toggle("Show Moving Average", isOn: binding(\.showMovingAverage))
-                    
-					if dataManager.settings?.showMovingAverage == true {
-						Stepper("Period: \(dataManager.settings?.movingAveragePeriod ?? 7) days",
-								value: binding(\.movingAveragePeriod),
-								in: 3...30)
-					}
-                    
-					Toggle("Show EMA", isOn: binding(\.showEMA))
-                    
-					if dataManager.settings?.showEMA == true {
-						Stepper("Period: \(dataManager.settings?.emaPeriod ?? 7) days",
-								value: binding(\.emaPeriod),
-								in: 3...30)
-					}
-				}
+				.padding(24)
 			}
 			.navigationTitle("Chart Settings")
 			#if os(iOS)

@@ -1,46 +1,62 @@
 # TrimTally Project Structure
 
 ```
-app-TrimTally/
+app-trimly/
 │
-├── Package.swift                      # Swift Package Manager manifest
 ├── .gitignore                         # Git ignore rules
 ├── LICENSE                            # Project license
-│
 ├── README.md                          # Project overview and quick start
 ├── CONTRIBUTING.md                    # Contribution guidelines
-├── BUILD_INSTRUCTIONS.md              # Detailed build instructions
-├── API_DOCUMENTATION.md               # Complete API reference
-└── DESIGN_DOCUMENT.md                 # Design specifications and decisions
+├── docs/                              # Detailed project documentation
+│   ├── BUILD_INSTRUCTIONS.md          # Build guidance
+│   ├── DESIGN_DOCUMENT.md             # Design specifications
+│   └── ...
 │
-├── Sources/
-│   └── Trimly/                        # Main application module
-│       │
-│       ├── TrimlyApp.swift            # App entry point (@main)
-│       ├── Trimly.swift               # Library entry point
-│       │
-│       ├── Models/                    # SwiftData models
-│       │   ├── WeightEntry.swift      # Weight measurement model
-│       │   ├── Goal.swift             # Goal tracking model
-│       │   └── AppSettings.swift      # User preferences model
-│       │
-│       ├── Services/                  # Business logic layer
-│       │   ├── DataManager.swift      # Data operations service
-│       │   └── WeightAnalytics.swift  # Analytics calculations
-│       │
-│       └── Views/                     # SwiftUI views
-│           ├── ContentView.swift      # Root navigation view
-│           ├── DashboardView.swift    # Today's summary
-│           ├── TimelineView.swift     # Entry history
-│           ├── ChartsView.swift       # Data visualization
-│           ├── SettingsView.swift     # App settings
-│           ├── OnboardingView.swift   # First-run experience
-│           └── AddWeightEntryView.swift # Entry creation
+├── TrimTally.xcodeproj/               # Shared iOS + macOS project
 │
-└── Tests/
-    └── TrimlyTests/                   # Unit tests
-        ├── WeightAnalyticsTests.swift # Analytics tests
-        └── DataManagerTests.swift     # Data manager tests
+├── Trimly/                            # Main application target
+│   │
+│   ├── TrimlyApp.swift                # App entry point (@main)
+│   ├── Trimly.swift                   # Shared app scene wiring
+│   │
+│   ├── Models/                        # SwiftData @Model types
+│   │   ├── WeightEntry.swift
+│   │   ├── Goal.swift
+│   │   └── AppSettings.swift
+│   │
+│   ├── Services/                      # Business logic + integrations
+│   │   ├── DataManager.swift          # Central data/service hub
+│   │   ├── WeightAnalytics.swift      # Analytics utilities
+│   │   ├── HealthKitService.swift     # Health import + sync
+│   │   ├── NotificationService.swift  # Reminder scheduling
+│   │   ├── CelebrationService.swift   # Celebration badge logic
+│   │   └── PlateauDetectionService.swift # Plateau detection
+│   │
+│   ├── Views/                         # SwiftUI screens
+│   │   ├── ContentView.swift          # Root navigation
+│   │   ├── DashboardView.swift
+│   │   ├── TimelineView.swift
+│   │   ├── ChartsView.swift
+│   │   ├── SettingsView.swift
+│   │   ├── AddWeightEntryView.swift
+│   │   ├── HealthKitView.swift
+│   │   └── Components/                # Shared UI elements
+│   │
+│   ├── Localization/                  # L10n helpers + xcstrings
+│   ├── Widget/                        # WidgetKit extension
+│   ├── Assets.xcassets                # Shared asset catalog
+│   ├── LaunchScreen.storyboard        # Launch UI
+│   ├── Trimly.entitlements            # Debug entitlements
+│   └── TrimlyRelease.entitlements     # Release entitlements
+│
+├── TrimlyTests/                       # Unit test target
+│   ├── TrimlyTests.swift
+│   ├── DataManagerTests.swift
+│   └── WeightAnalyticsTests.swift
+│
+└── TrimlyUITests/                     # UI test target
+    ├── TrimlyUITests.swift
+    └── TrimlyUITestsLaunchTests.swift
 ```
 
 ## Component Relationships
@@ -106,65 +122,44 @@ User Input
 ┌─────────────────┐
 │   SwiftData     │ (Persistence)
 │  ModelContext   │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  SQLite Store   │ (Local) + iCloud sync via CloudKit
+└─────────────────┘
+```
+
 ## Code Layout
 
-### Xcode App Project (current)
+### Targets & Directories
 
 ```text
-Trimly/               # App target sources (iOS + macOS)
-    Trimly.swift
-    TrimlyApp.swift
-    Models/
-    Services/
-    Views/
-    Widget/
+Trimly/                      # Shared iOS + macOS target
+├── TrimlyApp.swift          # App entry point
+├── Trimly.swift             # Scene + environment wiring
+├── Models/                  # SwiftData models
+├── Services/                # Data + analytics + integrations
+├── Views/                   # SwiftUI views + Components/
+├── Localization/            # L10n.swift and xcstrings catalog
+├── Widget/                  # WidgetKit extension
+├── Assets.xcassets          # Shared assets
+└── *.entitlements           # Debug/Release entitlements
 
-TrimlyTests/          # XCTest target
-    DataManagerTests.swift
-    TrimlyTests.swift
-    WeightAnalyticsTests.swift
+TrimlyTests/                 # XCTest unit target
+TrimlyUITests/               # UITest target
+docs/                        # Architecture + build documentation
 ```
-    │   ├── Unit Selection Page
-    │   ├── Starting Weight Page
-    │   ├── Goal Setting Page
-    │   ├── Reminders Page
-    │   └── EULA Page
-    │
-    └── MainTabView
-        │
-        ├── DashboardView
-        │   ├── Today Weight Card
-        │   ├── Mini Sparkline Card
-        │   ├── Progress Summary Card
-        │   ├── Consistency Score Card
-        │   ├── Trend Summary Card
-        │   └── Projection Card
-        │
-        ├── TimelineView
-        │   └── List
-        │       └── ForEach (Day Groups)
-        │           ├── Section Header (Daily Aggregate)
-        │           └── Entry Rows
-        │
-        ├── ChartsView
-        │   ├── Range Picker
-        │   ├── Chart
-        │   │   ├── Weight Line
-        │   │   ├── Moving Average Line
-        │   │   ├── EMA Line
-        │   │   └── Goal Line
-        │   ├── Legend
-        │   └── Statistics
-        │
-        └── SettingsView
-            ├── Units Section
-            ├── Goal Section
-            ├── Aggregation Section
-            ├── Reminders Section
-            ├── Consistency Section
-            ├── Data Section
-            └── About Section
-```
+
+### Navigation Outline
+
+- **OnboardingFlow**: Unit selection → Starting weight → Goal → Reminders → EULA.
+- **ContentView**: Switches between onboarding and the authenticated experience.
+- **MainTabView**: Hosts Dashboard, Timeline, Charts, and Settings tabs.
+  - **DashboardView**: Today card, sparkline, metrics, consistency, trend, projection, celebrations.
+  - **TimelineView**: Sectioned list grouped by normalized day, with entry rows + contextual notes.
+  - **ChartsView**: Range picker, Swift Charts stack (weight, SMA, EMA, goal), analytics summary.
+  - **SettingsView**: Units, aggregation, goals, HealthKit, reminders, data management, about pane.
 
 ## Service Layer Architecture
 
@@ -181,32 +176,35 @@ TrimlyTests/          # XCTest target
 │ Weight Entry Methods:                                   │
 │  • addWeightEntry(...)                                  │
 │  • fetchAllEntries() -> [WeightEntry]                   │
-│  • fetchEntriesForDate(_:) -> [WeightEntry]             │
+│  • fetchEntries(for:) -> [WeightEntry]                  │
 │  • deleteEntry(_:)                                      │
-│  • updateEntry(_:notes:)                                │
+│  • updateEntry(_:notes:isHidden:)                       │
 ├─────────────────────────────────────────────────────────┤
-│ Goal Methods:                                           │
+│ Goal & Settings:                                        │
 │  • setGoal(...)                                         │
 │  • fetchActiveGoal() -> Goal?                           │
 │  • fetchGoalHistory() -> [Goal]                         │
 │  • completeGoal(reason:)                                │
+│  • updateSettings(transform:)                           │
 ├─────────────────────────────────────────────────────────┤
-│ Analytics Methods:                                      │
-│  • getDailyWeights() -> [(Date, Double)]                │
-│  • getCurrentWeight() -> Double?                        │
-│  • getStartWeight() -> Double?                          │
-│  • getConsistencyScore() -> Double?                     │
-│  • getTrend() -> TrendDirection                         │
+│ Analytics Helpers:                                      │
+│  • getDailyWeights(mode:) -> [(Date, Double)]           │
+│  • getConsistencyScore(windowDays:) -> Double?          │
+│  • getTrendSummary() -> TrendDirection                  │
 │  • getGoalProjection() -> Date?                         │
 ├─────────────────────────────────────────────────────────┤
-│ Data Management:                                        │
+│ Integrations & Utilities:                               │
+│  • importHealthData(range:)                             │
+│  • enableBackgroundSync(_:)                             │
+│  • refreshHealthSamples()                               │
+│  • scheduleReminders()                                  │
 │  • exportToCSV() -> String                              │
 │  • deleteAllData()                                      │
 └─────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────┐
 │                 WeightAnalytics                         │
-│                  (Static Service)                        │
+│                  (Static Service)                       │
 ├─────────────────────────────────────────────────────────┤
 │ Aggregation:                                            │
 │  • aggregateByDay(entries:mode:)                        │
@@ -224,6 +222,39 @@ TrimlyTests/          # XCTest target
 ├─────────────────────────────────────────────────────────┤
 │ Projections:                                            │
 │  • calculateGoalProjection(...)                         │
+└─────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────┐
+│                HealthKitService                         │
+├─────────────────────────────────────────────────────────┤
+│  • requestAuthorization()                               │
+│  • fetchSampleCount(range:) -> Int                      │
+│  • importSamples(range:)                                │
+│  • startBackgroundDelivery()                            │
+│  • handleNewSamples(_:)                                 │
+└─────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────┐
+│              NotificationService                        │
+├─────────────────────────────────────────────────────────┤
+│  • requestAuthorizationIfNeeded()                       │
+│  • scheduleReminder(hour:minute:type:)                  │
+│  • cancelReminder(type:)                                │
+│  • refreshScheduledReminders(settings:)                 │
+└─────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────┐
+│             CelebrationService                          │
+├─────────────────────────────────────────────────────────┤
+│  • recentWins(entries:) -> Celebration?                 │
+│  • milestoneMessage(for:) -> String                     │
+└─────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────┐
+│         PlateauDetectionService                         │
+├─────────────────────────────────────────────────────────┤
+│  • detectPlateau(dailyWeights:) -> PlateauState         │
+│  • recentSlopeInfo(dailyWeights:)                       │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -301,41 +332,34 @@ TrimlyTests/          # XCTest target
 └─────────────────────────────────────────────┘
 
 Supporting Frameworks:
-  • Foundation (Core utilities)
-  • Swift Charts (Visualization)
-  • HealthKit (Future - health data)
-  • UserNotifications (Future - reminders)
-  • WidgetKit (Future - widgets)
+    • Foundation (Core utilities)
+    • Swift Charts (Visualization)
+    • HealthKit (Import + sync)
+    • UserNotifications (Adaptive reminders)
+    • WidgetKit (TrimTally widgets)
+    • CloudKit (SwiftData sync)
 ```
 
 ## Build & Test Flow
 
 ```
-Source Code
-    │
-    ▼
-Swift Compiler
-    │
-    ▼
-Swift Package Manager
-    │
-    ├─────────────┬──────────────┐
-    ▼             ▼              ▼
- TrimTally.app   Tests Build    Documentation
-    │             │
-    │             ▼
-    │        XCTest Runner
-    │             │
-    │             ▼
-    │        Test Results
-    │
-    ▼
-Xcode / Command Line
-    │
-    ├──────────┬──────────┐
-    ▼          ▼          ▼
-  iOS        macOS     Simulator
- Device       App
+Source Code (Trimly target / Widget)
+        │
+        ▼
+   Swift Compiler
+        │
+        ▼
+   Xcode Build System / xcodebuild
+        │
+        ├─────────────┬──────────────┐
+        ▼             ▼              ▼
+  TrimTally.app   Widget Extension   XCTest Bundles
+        │                              │
+        │                              ▼
+        │                          XCTest Runner (⌘U / xcodebuild test)
+        │
+        ▼
+  Simulator / Device / macOS App
 ```
 
 ## Deployment Targets

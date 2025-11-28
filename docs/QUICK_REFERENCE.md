@@ -15,13 +15,19 @@ open TrimTally.xcodeproj
 ## 📂 File Organization
 
 ```
-Trimly/             # App sources (iOS + macOS)
+Trimly/             # Shared iOS + macOS target
+├── TrimlyApp.swift # Entry point
 ├── Models/         # SwiftData models
-├── Services/       # Business logic & analytics
-├── Views/          # SwiftUI views
-└── Widget/         # WidgetKit extension
+├── Services/       # DataManager, analytics, HealthKit, reminders
+├── Views/          # SwiftUI screens + Components/
+├── Localization/   # L10n helpers + xcstrings
+├── Widget/         # WidgetKit extension
+├── Assets.xcassets # Shared assets
+└── *.entitlements  # Debug/Release entitlements
 
 TrimlyTests/        # Unit tests
+TrimlyUITests/      # UI tests
+docs/               # Detailed documentation set
 ```
 
 ## 🎯 Core Concepts
@@ -168,6 +174,8 @@ xcodebuild -scheme TrimTally -destination 'platform=iOS Simulator,name=iPhone 15
 ✅ Goal projections
 ✅ CSV export
 ✅ iCloud sync
+✅ HealthKit import + sync
+✅ Adaptive reminders & celebrations
 
 ## 📱 Platforms
 
@@ -246,4 +254,4 @@ See LICENSE file
 
 **TrimTally** - Your supportive companion for mindful weight tracking
 
-Version 1.0.0 | Built with SwiftUI & SwiftData
+Version 1.2.0 | Built with SwiftUI & SwiftData

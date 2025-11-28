@@ -49,14 +49,20 @@ xcodebuild -scheme TrimTally \
 
 ```
 app-trimly/
-├── TrimTally.xcodeproj          # Xcode project
-├── Trimly/                   # App sources (iOS + macOS)
-│   ├── TrimlyApp.swift       # App entry point
-│   ├── Models/               # SwiftData models
-│   ├── Services/             # Business logic
-│   ├── Views/                # SwiftUI views
-│   └── Widget/               # Widget extension sources
-└── TrimlyTests/              # Unit tests
+├── TrimTally.xcodeproj/         # Xcode project + schemes
+├── Trimly/                      # Shared iOS + macOS sources
+│   ├── TrimlyApp.swift          # App entry point
+│   ├── Trimly.swift             # Scene wiring
+│   ├── Models/                  # SwiftData models
+│   ├── Services/                # DataManager, analytics, integrations
+│   ├── Views/                   # SwiftUI screens + Components/
+│   ├── Localization/            # L10n helpers + xcstrings
+│   ├── Widget/                  # WidgetKit extension
+│   ├── Assets.xcassets          # Shared assets
+│   └── *.entitlements           # Debug/Release entitlements
+├── TrimlyTests/                 # Unit tests
+├── TrimlyUITests/               # UI tests
+└── docs/                        # Supplemental documentation
 ```
 
 ## Running on Different Platforms

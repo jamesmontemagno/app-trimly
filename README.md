@@ -62,82 +62,83 @@ TrimTally follows modern iOS/macOS development best practices:
 ## Project Structure
 
 ```
-Sources/Trimly/
-├── Models/
-│   ├── WeightEntry.swift       # Weight measurement model
-│   ├── Goal.swift              # Goal tracking model
-│   └── AppSettings.swift       # App settings model
-├── Services/
-│   ├── WeightAnalytics.swift   # Analytics calculations
-│   └── DataManager.swift       # Data management service
-├── Views/
-│   ├── ContentView.swift       # Main app navigation
-│   ├── DashboardView.swift     # Today's summary
-│   ├── TimelineView.swift      # Entry list
-│   ├── ChartsView.swift        # Data visualization
-│   ├── SettingsView.swift      # Settings & preferences
-│   ├── OnboardingView.swift    # First-run experience
-│   └── AddWeightEntryView.swift # Entry creation
-└── TrimlyApp.swift             # App entry point
-
-Tests/TrimlyTests/
-├── WeightAnalyticsTests.swift  # Analytics tests
-└── DataManagerTests.swift      # Data management tests
+app-trimly/
+├── TrimTally.xcodeproj/                # Shared iOS + macOS project
+├── Trimly/                             # App sources
+│   ├── TrimlyApp.swift                 # App entry point (@main)
+│   ├── Trimly.swift                    # Shared scene setup
+│   ├── Models/                         # SwiftData @Model types
+│   ├── Services/                       # DataManager, analytics, HealthKit, reminders
+│   ├── Views/                          # SwiftUI screens + Components/
+│   ├── Localization/                   # L10n helpers + xcstrings catalog
+│   ├── Widget/                         # WidgetKit extension sources
+│   ├── Assets.xcassets                 # Shared asset catalog
+│   ├── LaunchScreen.storyboard         # Launch experience
+│   ├── Trimly.entitlements             # Debug entitlements
+│   └── TrimlyRelease.entitlements      # Release entitlements
+├── TrimlyTests/                        # XCTest target (unit tests)
+│   ├── TrimlyTests.swift
+│   ├── DataManagerTests.swift
+│   └── WeightAnalyticsTests.swift
+├── TrimlyUITests/                      # UI test target
+│   ├── TrimlyUITests.swift
+│   └── TrimlyUITestsLaunchTests.swift
+├── docs/                               # Project documentation set
+└── README.md, CONTRIBUTING.md, etc.    # Repo-level docs
 ```
 
 ## Getting Started
 
-### Building
+### Build & Run in Xcode (Recommended)
+
+1. Clone the repository:
+	```bash
+	git clone https://github.com/jamesmontemagno/app-trimly.git
+	cd app-trimly
+	```
+2. Open the project:
+	```bash
+	open TrimTally.xcodeproj
+	```
+	or launch Xcode and select **File → Open...**.
+3. Choose the `TrimTally` scheme and a destination:
+	- **iOS**: Any simulator or connected device
+	- **macOS**: `My Mac`
+4. Press `⌘R` to build and run, `⌘U` to run unit tests.
+
+### Command-Line Builds (CI / automation)
 
 ```bash
-# Clone the repository
 git clone https://github.com/jamesmontemagno/app-trimly.git
 cd app-trimly
 
-# Build with Swift Package Manager
-swift build
-
-# Run tests
-swift test
+xcodebuild -scheme TrimTally \
+			  -destination 'platform=iOS Simulator,name=iPhone 15 Pro' \
+			  clean test
 ```
-
-### Opening in Xcode
-
-1. Open `Package.swift` in Xcode
-2. Select the desired scheme (iOS or macOS)
-3. Build and run (⌘R)
 
 ## Features Implementation Status
 
-### Version 1.0 (Current)
+### Version 1.2 (Current)
 
-- [x] Core data models (WeightEntry, Goal, AppSettings)
-- [x] Multi-entry per day support
-- [x] Daily aggregation (latest/average)
-- [x] Dashboard with metrics
-- [x] Timeline view
-- [x] Charts with multiple ranges
-- [x] Moving average & EMA smoothing
-- [x] Goal management
-- [x] Consistency score
-- [x] Goal projection
-- [x] Trend analysis
-- [x] Data export (CSV)
-- [x] Onboarding flow
-- [x] Settings management
-- [x] iCloud sync via SwiftData
+- [x] Core SwiftData models (WeightEntry, Goal, AppSettings)
+- [x] Multi-entry per day logging with daily aggregation controls
+- [x] Dashboard, Timeline, Charts, and Settings experiences
+- [x] Moving average, EMA, and regression analytics
+- [x] Goal tracking with projections and consistency scoring
+- [x] CSV export plus full data management tooling
+- [x] HealthKit import, historical backfill, and background sync
+- [x] Adaptive reminders and notification scheduling
+- [x] Micro celebrations, plateau detection, and contextual notes
+- [x] Widgets (small + medium), localization, and iCloud sync
 
 ### Future Enhancements
 
-- [ ] HealthKit integration (import & sync)
-- [ ] Reminder notifications with adaptive behavior
-- [ ] Micro celebrations for milestones
-- [ ] Home Screen widget
-- [ ] Plateau detection hints
-- [ ] Manual daily value override
-- [ ] Goal history visualization
-- [ ] Additional chart customization
-- [ ] Localization
+- [ ] Apple Watch companion + complications
+- [ ] Expanded widget sizes and lock screen support
+- [ ] Siri Shortcuts and Spotlight integration
+- [ ] Manual daily override tooling
+- [ ] Goal history visualization and sharing options
 
 ## Data Privacy
 

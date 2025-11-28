@@ -224,9 +224,9 @@ struct SettingsView: View {
 						
 						sectionDivider()
 						
-						Link(String(localized: L10n.Settings.privacyPolicy), destination: URL(string: "https://example.com/privacy")!)
+						Link(String(localized: L10n.Settings.privacyPolicy), destination: URL(string: "https://www.refractored.com/about#privacy-policy")!)
 							.font(.body.weight(.semibold))
-						Link(String(localized: L10n.Settings.termsOfService), destination: URL(string: "https://example.com/terms")!)
+						Link(String(localized: L10n.Settings.termsOfService), destination: URL(string: "https://www.refractored.com/terms")!)
 							.font(.body.weight(.semibold))
 					}
 				}

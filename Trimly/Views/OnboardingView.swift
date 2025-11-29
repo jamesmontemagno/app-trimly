@@ -1,4 +1,7 @@
 import SwiftUI
+#if canImport(UIKit)
+import UIKit
+#endif
 
 struct OnboardingView: View {
     @EnvironmentObject var dataManager: DataManager
@@ -61,6 +64,14 @@ struct OnboardingView: View {
         #if os(iOS)
         .safeAreaInset(edge: .bottom) {
             Color.clear.frame(height: 12)
+        }
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button(L10n.Common.doneButton) {
+                    hideKeyboard()
+                }
+            }
         }
         #endif
     }
@@ -213,6 +224,14 @@ struct OnboardingView: View {
                 Text(selectedUnit.symbol)
                     .font(.title3)
                     .foregroundStyle(.secondary)
+                
+                if !startingWeightText.isEmpty {
+                    Button(action: saveStartingWeight) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.title2)
+                            .foregroundStyle(Color.accentColor)
+                    }
+                }
             }
             .padding()
             .background(.thinMaterial)
@@ -265,6 +284,14 @@ struct OnboardingView: View {
                 Text(selectedUnit.symbol)
                     .font(.title3)
                     .foregroundStyle(.secondary)
+                
+                if !goalWeightText.isEmpty {
+                    Button(action: saveGoal) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.title2)
+                            .foregroundStyle(Color.accentColor)
+                    }
+                }
             }
             .padding()
             .background(.thinMaterial)
@@ -367,6 +394,9 @@ struct OnboardingView: View {
     }
 
     private func saveStartingWeight() {
+        #if canImport(UIKit)
+        hideKeyboard()
+        #endif
         guard let weight = Double(startingWeightText), weight > 0 else {
             withAnimation { currentPage = 3 }
             return
@@ -378,6 +408,9 @@ struct OnboardingView: View {
     }
 
     private func saveGoal() {
+        #if canImport(UIKit)
+        hideKeyboard()
+        #endif
         guard let weight = Double(goalWeightText), weight > 0 else {
             withAnimation { currentPage = 4 }
             return
@@ -414,3 +447,11 @@ struct OnboardingView: View {
     OnboardingView()
         .environmentObject(DataManager(inMemory: true))
 }
+
+#if canImport(UIKit)
+private extension OnboardingView {
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+#endif

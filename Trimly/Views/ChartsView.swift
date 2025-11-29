@@ -77,6 +77,16 @@ struct ChartsView: View {
 		let chartMode = dataManager.settings?.chartMode ?? .minimalist
         
 		VStack(alignment: .leading, spacing: 16) {
+			Group {
+				if let selectedPoint {
+					selectionSummaryView(for: selectedPoint)
+						.transition(.opacity.combined(with: .move(edge: .top)))
+				} else {
+					selectionHintView
+				}
+			}
+			.animation(.easeInOut, value: selectedPoint?.id)
+
 			Chart {
 				ForEach(data) { point in
 					LineMark(
@@ -276,6 +286,43 @@ struct ChartsView: View {
 		let value = unit.convert(fromKg: kg)
 		let precision = dataManager.settings?.decimalPrecision ?? 1
 		return String(format: "%.*f", precision, value)
+	}
+
+	@ViewBuilder
+	private func selectionSummaryView(for point: ChartDataPoint) -> some View {
+		let unitSymbol = dataManager.settings?.preferredUnit.symbol ?? "kg"
+		let dateText = tooltipFormatter.string(from: point.date)
+
+		HStack(alignment: .top) {
+			VStack(alignment: .leading, spacing: 4) {
+				Text(L10n.Charts.selectionTitle)
+					.font(.caption)
+					.foregroundStyle(.secondary)
+				Text(dateText)
+					.font(.headline)
+			}
+			Spacer()
+			Text("\(displayValue(point.weight)) \(unitSymbol)")
+				.font(.title3.weight(.semibold))
+				.multilineTextAlignment(.trailing)
+		}
+		.padding(12)
+		.background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+		.accessibilityElement(children: .combine)
+		.accessibilityLabel(Text("\(dateText), \(displayValue(point.weight)) \(unitSymbol)"))
+	}
+
+	private var selectionHintView: some View {
+		HStack(spacing: 8) {
+			Image(systemName: "hand.tap")
+				.font(.subheadline)
+				.foregroundStyle(.secondary)
+			Text(L10n.Charts.selectionHint)
+				.font(.footnote)
+				.foregroundStyle(.secondary)
+		}
+		.padding(12)
+		.background(Color.secondary.opacity(0.08), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
 	}
 
 	private var weightLineColor: Color { .accentColor }

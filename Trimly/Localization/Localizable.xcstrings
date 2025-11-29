@@ -536,6 +536,28 @@
         }
       }
     },
+    "charts.selection.hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Tap a point to see the exact weight."
+          }
+        }
+      }
+    },
+    "charts.selection.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Selected Entry"
+          }
+        }
+      }
+    },
     "charts.legend.ema" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {

@@ -12,23 +12,23 @@ import SwiftData
 @Model
 final class Achievement {
 	/// Stable identifier for the achievement definition (e.g., "streak.7")
-	var key: String
+	var key: String = ""
 	/// Timestamp when the achievement was first unlocked
 	var unlockedAt: Date?
 	/// Latest normalized progress value in range 0...1
-	var progressValue: Double
+	var progressValue: Double = 0
 	/// Last time the achievement was evaluated
-	var evaluatedAt: Date
+	var evaluatedAt: Date = Date()
 	/// Whether the unlock animation/celebration has been presented
-	var didCelebrateUnlock: Bool
+	var didCelebrateUnlock: Bool = false
 	/// Whether this achievement is reserved for TrimTally Pro subscribers
-	var isPremium: Bool
+	var isPremium: Bool = false
 	/// Optional custom data payload (e.g., last threshold hit) for future expansion
 	var metadata: Data?
 	/// Creation timestamp
-	var createdAt: Date
+	var createdAt: Date = Date()
 	/// Last mutation timestamp
-	var updatedAt: Date
+	var updatedAt: Date = Date()
 
 	init(
 		key: String,

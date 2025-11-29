@@ -221,9 +221,9 @@ enum NotificationError: LocalizedError {
     var errorDescription: String? {
         switch self {
             case .notAuthorized:
-                return String(localized: L10n.Notifications.errorNotAuthorized)
+                return String(localized: "notifications.error.notAuthorized", defaultValue: "Notification permission not granted")
             case .schedulingFailed(let error):
-                return String(localized: L10n.Notifications.schedulingFailed(error.localizedDescription))
+                return String(localized: "notifications.error.schedulingFailed", defaultValue: "Failed to schedule notification: \(error.localizedDescription)")
         }
     }
 }

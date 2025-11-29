@@ -1,7 +1,7 @@
 # Copilot Instructions for TrimTally
 
 ## Project Overview
-TrimTally is a weight tracking app for iOS 17+ and macOS 14+ built with SwiftUI and SwiftData. It supports multi-entry-per-day logging, analytics (SMA, EMA, linear regression), goal tracking, and iCloud sync.
+TrimTally is a weight tracking app for iOS 17+ and macOS 14+ built with Swift 6, SwiftUI, and SwiftData. It supports multi-entry-per-day logging, analytics (SMA, EMA, linear regression), goal tracking, and iCloud sync.
 
 ## Core Architecture
 

@@ -71,7 +71,7 @@ final class WeightEntry {
     }
     
     /// Get display value in the original unit
-    var displayValue: Double {
+    @MainActor var displayValue: Double {
         displayUnitAtEntry.convert(fromKg: weightKg)
     }
 }

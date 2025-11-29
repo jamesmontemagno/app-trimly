@@ -37,9 +37,9 @@
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
 		B37935DD2EDA544E00F0BEB1 /* Exceptions for "Trimly" folder in "TrimTally" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			platformFiltersByRelativePath = {
-				LaunchScreen.storyboard = (ios, );
-			};
+			membershipExceptions = (
+				LaunchScreen.storyboard,
+			);
 			target = B39227552ED9703A00C14B08 /* TrimTally */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -456,7 +456,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 26.0;
 			};
@@ -505,7 +505,7 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 26.0;
 			};

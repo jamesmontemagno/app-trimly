@@ -1,4 +1,4 @@
-import SwiftUI
+import Foundation
 
 enum L10n {
 	enum Common {

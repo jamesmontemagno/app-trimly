@@ -191,8 +191,9 @@ final class HealthKitService: ObservableObject {
             
             Task { @MainActor [weak self] in
                 await self?.syncRecentSamples(dataManager: dataManager, unit: unit)
-                completionHandler()
             }
+            
+            completionHandler()
         }
         
         healthStore.execute(query)
@@ -264,3 +265,4 @@ enum HealthKitError: LocalizedError {
         }
     }
 }
+

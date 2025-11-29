@@ -1,11 +1,6 @@
 //
 //  AddWeightEntryView.swift
 //  TrimTally
-			.alert(L10n.Common.errorTitle, isPresented: $showingError) {
-				Button(String(localized: L10n.Common.okButton), role: .cancel) { }
-			} message: {
-				Text(errorMessage)
-			}
 //
 //  Created by Trimly on 11/19/2025.
 //
@@ -23,6 +18,12 @@ struct AddWeightEntryView: View {
 	@State private var showingError = false
 	@State private var errorMessage = ""
 	@State private var showHealthKitSuccess = false
+	@FocusState private var focusedField: Field?
+
+	private enum Field: Hashable {
+		case weight
+		case notes
+	}
     
 	var body: some View {
 		NavigationStack {
@@ -42,6 +43,7 @@ struct AddWeightEntryView: View {
 								#endif
 									.font(.system(size: 46, weight: .bold, design: .rounded))
 									.frame(maxWidth: .infinity, alignment: .leading)
+									.focused($focusedField, equals: .weight)
 
 								Text(unitSymbol)
 									.font(.title2.weight(.semibold))
@@ -81,10 +83,14 @@ struct AddWeightEntryView: View {
 							.padding(.horizontal, 12)
 							.background(inputBackgroundColor)
 							.clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+							.focused($focusedField, equals: .notes)
 					}
 				}
 				.padding(24)
 			}
+#if os(iOS)
+			.scrollDismissesKeyboard(.interactively)
+#endif
 				.navigationTitle(Text(L10n.AddEntry.navigationTitle))
 			#if os(iOS)
 			.navigationBarTitleDisplayMode(.inline)
@@ -98,10 +104,18 @@ struct AddWeightEntryView: View {
                 
 				ToolbarItem(placement: .confirmationAction) {
 						Button(String(localized: L10n.Common.saveButton)) {
-							saveEntry()
+						saveEntry()
 					}
 					.disabled(weightText.isEmpty)
 				}
+#if os(iOS)
+				ToolbarItemGroup(placement: .keyboard) {
+					Spacer()
+					Button(String(localized: L10n.Common.doneButton)) {
+						focusedField = nil
+					}
+				}
+#endif
 			}
 				.alert(L10n.Common.errorTitle, isPresented: $showingError) {
 					Button(String(localized: L10n.Common.okButton), role: .cancel) { }
@@ -145,6 +159,7 @@ struct AddWeightEntryView: View {
 		let weightKg = unit.convertToKg(weight)
 		
 		do {
+			focusedField = nil
 			try dataManager.addWeightEntry(
 				weightKg: weightKg,
 				timestamp: selectedDate,

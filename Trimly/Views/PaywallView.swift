@@ -42,10 +42,19 @@ struct PaywallView: View {
                     // Purchase Button
                     VStack(spacing: 16) {
                         if let product = storeManager.products.first(where: { $0.id == "trimtallypro" }) {
-                            ProductView(product) {
-                                Image(systemName: "crown.fill")
+                            Button {
+                                Task {
+                                    try? await storeManager.purchase(product)
+                                }
+                            } label: {
+                                Text("Upgrade - \(product.displayPrice)")
+                                    .font(.headline.bold())
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(Color.blue)
+                                    .foregroundStyle(.white)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
                             }
-                            .productViewStyle(.large)
                             .padding(.horizontal)
                         } else {
                             ProgressView()

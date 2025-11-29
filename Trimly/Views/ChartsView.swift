@@ -288,16 +288,28 @@ struct ChartsView: View {
 	}
 
 	private func tooltip(for point: ChartDataPoint) -> some View {
-		VStack(alignment: .leading, spacing: 4) {
+		let entries = dataManager.fetchEntriesForDate(point.date)
+		let note = entries.last?.notes
+
+		return VStack(alignment: .leading, spacing: 4) {
 			Text(tooltipFormatter.string(from: point.date))
 				.font(.caption2)
 				.foregroundStyle(.secondary)
 			Text("\(displayValue(point.weight)) \(dataManager.settings?.preferredUnit.symbol ?? "kg")")
-				.font(.caption.bold())
+				.font(.headline)
+			
+			if let note = note, !note.isEmpty {
+				Divider()
+				Text(note)
+					.font(.caption)
+					.foregroundStyle(.secondary)
+					.lineLimit(3)
+					.frame(maxWidth: 200, alignment: .leading)
+			}
 		}
-		.padding(8)
-		.background(.thinMaterial, in: RoundedRectangle(cornerRadius: 8))
-		.shadow(radius: 2)
+		.padding(12)
+		.background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
+		.shadow(radius: 4, y: 2)
 	}
 
 	private func pointAccessibilityLabel(_ point: ChartDataPoint) -> Text {

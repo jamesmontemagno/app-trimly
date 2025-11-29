@@ -13,13 +13,13 @@ import SwiftUI
 @Model
 final class AppSettings {
     /// Unique identifier (singleton)
-    var id: UUID
+    var id: UUID = UUID()
     
     /// Preferred weight unit
-    var preferredUnit: WeightUnit
+    var preferredUnit: WeightUnit = .pounds
     
     /// Daily aggregation mode (latest vs average)
-    var dailyAggregationMode: DailyAggregationMode
+    var dailyAggregationMode: DailyAggregationMode = .latest
     
     /// Reminder time (nil if disabled)
     var reminderTime: Date?
@@ -28,58 +28,58 @@ final class AppSettings {
     var secondReminderTime: Date?
     
     /// Whether adaptive reminder suggestions are enabled
-    var adaptiveRemindersEnabled: Bool
+    var adaptiveRemindersEnabled: Bool = true
     
     /// Count of consecutive reminder dismissals
-    var consecutiveReminderDismissals: Int
+    var consecutiveReminderDismissals: Int = 0
     
     /// Chart display mode
-    var chartMode: ChartMode
+    var chartMode: ChartMode = .minimalist
     
     /// Whether to show moving average on charts
-    var showMovingAverage: Bool
+    var showMovingAverage: Bool = true
     
     /// Whether to show EMA on charts
-    var showEMA: Bool
+    var showEMA: Bool = true
     
     /// Moving average period (days)
-    var movingAveragePeriod: Int
+    var movingAveragePeriod: Int = 7
     
     /// EMA period (days)
-    var emaPeriod: Int
+    var emaPeriod: Int = 7
     
     /// HealthKit integration enabled
-    var healthKitEnabled: Bool
+    var healthKitEnabled: Bool = false
     
     /// Auto-hide HealthKit duplicates
-    var autoHideHealthKitDuplicates: Bool
+    var autoHideHealthKitDuplicates: Bool = true
     
     /// HealthKit duplicate tolerance in kg
-    var healthKitDuplicateToleranceKg: Double
+    var healthKitDuplicateToleranceKg: Double = 0.1
     
     /// Consistency score window (days)
-    var consistencyScoreWindow: Int
+    var consistencyScoreWindow: Int = 30
 
     /// Preferred app appearance
-    var appearance: AppAppearance
+    var appearance: AppAppearance = .system
     
     /// Whether user has completed onboarding
-    var hasCompletedOnboarding: Bool
+    var hasCompletedOnboarding: Bool = false
     
     /// EULA acceptance date
     var eulaAcceptedDate: Date?
     
     /// Weight decimal precision (1 or 2 decimal places)
-    var decimalPrecision: Int
+    var decimalPrecision: Int = 1
     
     /// Projection method
-    var projectionMethod: ProjectionMethod
+    var projectionMethod: ProjectionMethod = .linear
     
     /// Minimum days required for projection
-    var minDaysForProjection: Int
+    var minDaysForProjection: Int = 10
     
     /// Last time settings were updated
-    var updatedAt: Date
+    var updatedAt: Date = Date()
     
     init(
         id: UUID = UUID(),

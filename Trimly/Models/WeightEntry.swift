@@ -12,34 +12,34 @@ import SwiftData
 @Model
 final class WeightEntry {
     /// Unique identifier
-    var id: UUID
+    var id: UUID = UUID()
     
     /// The exact timestamp when the weight was recorded
-    var timestamp: Date
+    var timestamp: Date = Date()
     
     /// Normalized date (day boundary in local timezone) for daily aggregation
-    var normalizedDate: Date
+    var normalizedDate: Date = Date()
     
     /// Weight value stored internally in kilograms
-    var weightKg: Double
+    var weightKg: Double = 0
     
     /// The unit that was displayed at entry time (for historical accuracy)
-    var displayUnitAtEntry: WeightUnit
+    var displayUnitAtEntry: WeightUnit = .kilograms
     
     /// Source of the entry (manual or HealthKit)
-    var source: EntrySource
+    var source: EntrySource = .manual
     
     /// Optional user notes for this entry
     var notes: String?
     
     /// When the entry was created (for conflict resolution)
-    var createdAt: Date
+    var createdAt: Date = Date()
     
     /// When the entry was last updated
-    var updatedAt: Date
+    var updatedAt: Date = Date()
     
     /// Whether this entry is hidden (e.g., HealthKit duplicate)
-    var isHidden: Bool
+    var isHidden: Bool = false
     
     init(
         id: UUID = UUID(),

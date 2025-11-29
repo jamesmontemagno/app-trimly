@@ -12,19 +12,19 @@ import SwiftData
 @Model
 final class Goal {
     /// Unique identifier
-    var id: UUID
+    var id: UUID = UUID()
     
     /// Target weight in kilograms
-    var targetWeightKg: Double
+    var targetWeightKg: Double = 0
     
     /// Date when the goal was set
-    var startDate: Date
+    var startDate: Date = Date()
     
     /// Optional target date to achieve the goal
     var targetDate: Date?
     
     /// Whether this is the currently active goal
-    var isActive: Bool
+    var isActive: Bool = true
     
     /// Date when the goal was completed or archived
     var completedDate: Date?
@@ -39,10 +39,10 @@ final class Goal {
     var notes: String?
     
     /// Creation timestamp
-    var createdAt: Date
+    var createdAt: Date = Date()
     
     /// Last update timestamp
-    var updatedAt: Date
+    var updatedAt: Date = Date()
     
     init(
         id: UUID = UUID(),

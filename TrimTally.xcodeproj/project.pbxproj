@@ -432,6 +432,9 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Read weight records with HealthKit.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Allow TrimTally to update weight records in Health for accurate syncing.";
+				INFOPLIST_KEY_UIBackgroundModes = (
+					remote-notification,
+				);
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -481,6 +484,9 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Read weight records with HealthKit.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Allow TrimTally to update weight records in Health for accurate syncing.";
+				INFOPLIST_KEY_UIBackgroundModes = (
+					remote-notification,
+				);
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;

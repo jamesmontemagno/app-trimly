@@ -33,6 +33,9 @@
         }
       }
     },
+    "%lld" : {
+
+    },
     "%lld%%" : {
       "localizations" : {
         "es" : {
@@ -1794,52 +1797,6 @@
         }
       }
     },
-    "dashboard.syncedToHealthKit" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Also saved to Health"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "También guardado en Salud"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Également enregistré dans Santé"
-          }
-        }
-      }
-    },
-    "dashboard.syncedToHealthKit" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Also saved to Health"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "También guardado en Salud"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Également enregistré dans Santé"
-          }
-        }
-      }
-    },
     "dashboard.progress" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -1882,6 +1839,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Définissez un objectif pour suivre les progrès"
+          }
+        }
+      }
+    },
+    "dashboard.syncedToHealthKit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Also saved to Health"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "También guardado en Salud"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Également enregistré dans Santé"
           }
         }
       }
@@ -2716,6 +2696,29 @@
         }
       }
     },
+    "health.error.writeFailedHint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saved in TrimTally, but couldn't write to Health. Check Health permissions if you want syncing."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se guardó en TrimTally, pero no se pudo escribir en Salud. Revisa los permisos de Salud si quieres sincronización."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enregistré dans TrimTally, mais impossible d’écrire dans Santé. Vérifiez les autorisations Santé si vous souhaitez la synchronisation."
+          }
+        }
+      }
+    },
     "health.import.button" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3061,6 +3064,75 @@
         }
       }
     },
+    "health.summary.lastImport" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last manual import: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Última importación manual: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dernière importation manuelle : %@"
+          }
+        }
+      }
+    },
+    "health.summary.range" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From %@ to %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De %@ a %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De %@ à %@"
+          }
+        }
+      }
+    },
+    "health.summary.syncedEntries" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entries from Health"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entradas desde Salud"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entrées depuis Santé"
+          }
+        }
+      }
+    },
     "health.sync.autoHide" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3103,6 +3175,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Permettez à TrimTally de surveiller les nouveaux échantillons de poids Health et de garder tout propre."
+          }
+        }
+      }
+    },
+    "health.sync.lastBackground" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last background sync: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Última sincronización en segundo plano: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dernière synchronisation en arrière-plan : %@"
           }
         }
       }
@@ -3176,98 +3271,6 @@
         }
       }
     },
-    "health.summary.range" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "From %@ to %@"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "De %@ a %@"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "De %@ à %@"
-          }
-        }
-      }
-    },
-    "health.summary.syncedEntries" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entries from Health"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entradas desde Salud"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entrées depuis Santé"
-          }
-        }
-      }
-    },
-    "health.summary.lastImport" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Last manual import: %@"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Última importación manual: %@"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dernière importation manuelle : %@"
-          }
-        }
-      }
-    },
-    "health.syncDirection.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "How sync works"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cómo funciona la sincronización"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Comment fonctionne la synchronisation"
-          }
-        }
-      }
-    },
     "health.syncDirection.description" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3314,6 +3317,29 @@
         }
       }
     },
+    "health.syncDirection.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How sync works"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cómo funciona la sincronización"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comment fonctionne la synchronisation"
+          }
+        }
+      }
+    },
     "health.syncDirection.write" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3333,121 +3359,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lorsque cette option est activée, enregistre les nouvelles entrées manuelles dans Santé."
-          }
-        }
-      }
-    },
-    "health.sync.lastBackground" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Last background sync: %@"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Última sincronización en segundo plano: %@"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dernière synchronisation en arrière-plan : %@"
-          }
-        }
-      }
-    },
-    "health.error.writeFailedHint" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Saved in TrimTally, but couldn't write to Health. Check Health permissions if you want syncing."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se guardó en TrimTally, pero no se pudo escribir en Salud. Revisa los permisos de Salud si quieres sincronización."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enregistré dans TrimTally, mais impossible d’écrire dans Santé. Vérifiez les autorisations Santé si vous souhaitez la synchronisation."
-          }
-        }
-      }
-    },
-    "health.sync.writeToHealth" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Write new entries to Health"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Guardar nuevas entradas en Salud"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enregistrer les nouvelles entrées dans Santé"
-          }
-        }
-      }
-    },
-    "health.summary.range" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "From %@ to %@"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "De %@ a %@"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "De %@ à %@"
-          }
-        }
-      }
-    },
-    "health.summary.syncedEntries" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entries from Health"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entradas desde Salud"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entrées depuis Santé"
           }
         }
       }

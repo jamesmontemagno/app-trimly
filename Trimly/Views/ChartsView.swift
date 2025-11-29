@@ -92,13 +92,13 @@ struct ChartsView: View {
 					)
 					.symbol {
 						Circle()
-							.strokeBorder(weightLineColor, lineWidth: point.id == selectedPoint?.id ? 3 : 1)
+							.strokeBorder(weightLineColor, lineWidth: point.id == selectedPoint?.id ? 4 : 2)
 							.background(
 								Circle()
-									.fill(point.id == selectedPoint?.id ? pointFillColor : weightLineColor.opacity(0.2))
+									.fill(point.id == selectedPoint?.id ? pointFillColor : weightLineColor)
 							)
 					}
-					.symbolSize(point.id == selectedPoint?.id ? 120 : 60)
+					.symbolSize(point.id == selectedPoint?.id ? 100 : 30)
 					.foregroundStyle(weightLineColor)
 					.accessibilityLabel(pointAccessibilityLabel(point))
 					.annotation(position: .top, alignment: .leading) {
@@ -150,9 +150,6 @@ struct ChartsView: View {
 						Text(L10n.Charts.goalLabel)
 							.font(.caption)
 							.foregroundStyle(goalLineColor)
-							.padding(4)
-							.background(.thinMaterial)
-							.clipShape(Capsule())
 					}
 				}
 			}
@@ -452,24 +449,20 @@ struct AnalyticsDashboardView: View {
 	}
 	
 	private func calculateConsistency() -> String? {
-		let calendar = Calendar.current
-		let now = Date()
-		let startDate: Date
+		let entries = dataManager.fetchAllEntries()
+		let windowDays: Int
 		
 		switch range {
-		case .week:
-			startDate = calendar.date(byAdding: .day, value: -7, to: now) ?? now
-		case .month:
-			startDate = calendar.date(byAdding: .month, value: -1, to: now) ?? now
-		case .quarter:
-			startDate = calendar.date(byAdding: .month, value: -3, to: now) ?? now
-		case .year:
-			startDate = calendar.date(byAdding: .year, value: -1, to: now) ?? now
+		case .week: windowDays = 7
+		case .month: windowDays = 30
+		case .quarter: windowDays = 90
+		case .year: windowDays = 365
 		}
 		
-		let days = calendar.dateComponents([.day], from: startDate, to: now).day ?? 1
-		// Cap percentage at 100%
-		let score = min(Double(data.count) / Double(days), 1.0)
+		guard let score = WeightAnalytics.calculateConsistencyScore(entries: entries, windowDays: windowDays) else {
+			return nil
+		}
+		
 		let percentage = Int(score * 100)
 		return "\(percentage)%"
 	}

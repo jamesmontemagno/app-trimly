@@ -241,10 +241,8 @@ final class HealthKitService: ObservableObject {
                 dataManager: dataManager,
                 unit: unit
             )
-            if let settings = dataManager.settings {
-                dataManager.updateSettings { current in
-                    current.healthKitLastBackgroundSyncAt = Date()
-                }
+            dataManager.updateSettings { current in
+                current.healthKitLastBackgroundSyncAt = Date()
             }
         } catch {
             print("Failed to sync recent samples: \(error)")

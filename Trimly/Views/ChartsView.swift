@@ -307,7 +307,8 @@ struct ChartsView: View {
 	}
 
 	private func updateSelection(at location: CGPoint, proxy: ChartProxy, geometry: GeometryProxy, data: [ChartDataPoint]) {
-		let plotFrame = geometry[proxy.plotFrame]
+		guard let plotFrameAnchor = proxy.plotFrame else { return }
+		let plotFrame = geometry[plotFrameAnchor]
 		let xPosition = location.x - plotFrame.origin.x
 		guard xPosition >= 0, xPosition <= plotFrame.size.width else { return }
 		guard let date: Date = proxy.value(atX: xPosition) else { return }

@@ -46,7 +46,6 @@ struct DashboardView: View {
 						showingAddEntry = true
 					} label: {
 						Image(systemName: "plus")
-							.font(.title2)
 					}
 				}
 			}

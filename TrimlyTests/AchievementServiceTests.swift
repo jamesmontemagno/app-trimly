@@ -24,6 +24,23 @@ final class AchievementServiceTests: XCTestCase {
 		XCTAssertNotNil(newcomer?.unlockedAt)
 		XCTAssertGreaterThanOrEqual(newcomer?.progressValue ?? 0, 1)
 	}
+
+	func testConsistencyAchievementsRequireMinimumDays() throws {
+		// Simulate high consistency over only 5 unique days: should not unlock
+		try logSequentialEntries(count: 5)
+		achievementService.refresh(using: dataManager, isPro: true)
+		let habitBuilderEarly = dataManager.achievement(forKey: "consistency.solid", createIfMissing: false)
+		let consistencyIconEarly = dataManager.achievement(forKey: "consistency.excellent", createIfMissing: false)
+		XCTAssertNil(habitBuilderEarly?.unlockedAt)
+		XCTAssertNil(consistencyIconEarly?.unlockedAt)
+
+		// Add more days to reach the 10-day minimum
+		try logSequentialEntries(count: 5, startOffset: 5)
+		achievementService.refresh(using: dataManager, isPro: true)
+		let habitBuilder = dataManager.achievement(forKey: "consistency.solid", createIfMissing: false)
+		XCTAssertNotNil(habitBuilder)
+		XCTAssertNotNil(habitBuilder?.unlockedAt)
+	}
 	
 	func testPremiumAchievementRequiresProUnlock() throws {
 		try logSequentialEntries(count: 370)
@@ -39,10 +56,11 @@ final class AchievementServiceTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func logSequentialEntries(count: Int) throws {
+	private func logSequentialEntries(count: Int, startOffset: Int = 0) throws {
 		let poundsUnit = WeightUnit.pounds
 		let calendar = Calendar.current
-		for dayOffset in 0..<count {
+		for index in 0..<count {
+			let dayOffset = startOffset + index
 			let timestamp = calendar.date(byAdding: .day, value: -dayOffset, to: Date()) ?? Date()
 			let kg = poundsUnit.convertToKg(170 - Double(dayOffset % 5))
 			try dataManager.addWeightEntry(weightKg: kg, timestamp: timestamp, unit: poundsUnit)

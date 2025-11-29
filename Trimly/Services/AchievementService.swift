@@ -47,8 +47,12 @@ final class AchievementService: ObservableObject {
 		case .streakDays(let target):
 			return progressMetric(current: Double(context.longestStreak), target: Double(target))
 		case .consistency(let threshold):
-			let progress = context.consistencyScore / threshold
-			return AchievementEvaluation(progress: min(max(progress, 0), 1), unlocked: context.consistencyScore >= threshold && context.consistencyScore > 0)
+			// Require at least 10 unique days of logging before unlocking
+			let rawProgress = context.consistencyScore / threshold
+			let progress = min(max(rawProgress, 0), 1)
+			let hasEnoughHistory = context.uniqueDayCount >= 10
+			let unlocked = hasEnoughHistory && context.consistencyScore >= threshold && context.consistencyScore > 0
+			return AchievementEvaluation(progress: progress, unlocked: unlocked)
 		case .goalsAchieved(let target):
 			return progressMetric(current: Double(context.goalsAchieved), target: Double(target))
 		case .remindersEnabled:

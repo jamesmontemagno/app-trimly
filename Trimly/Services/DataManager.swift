@@ -251,19 +251,9 @@ final class DataManager: ObservableObject {
     // MARK: - Data Deletion
     
     func deleteAllData() throws {
-        // Delete all entries
-        let entryDescriptor = FetchDescriptor<WeightEntry>()
-        let entries = try modelContext.fetch(entryDescriptor)
-        for entry in entries {
-            modelContext.delete(entry)
-        }
-        
-        // Delete all goals
-        let goalDescriptor = FetchDescriptor<Goal>()
-        let goals = try modelContext.fetch(goalDescriptor)
-        for goal in goals {
-            modelContext.delete(goal)
-        }
+        // Delete all entries and goals using batch delete
+        try modelContext.delete(model: WeightEntry.self)
+        try modelContext.delete(model: Goal.self)
         
         // Reset onboarding-related settings so the setup wizard runs again
         if let settings = settings {

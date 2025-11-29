@@ -73,7 +73,9 @@ struct PaywallView: View {
                 }
                 .padding(.bottom, 32)
             }
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Close") {

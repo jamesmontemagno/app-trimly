@@ -403,6 +403,7 @@ struct SettingsView: View {
 				}
 				if accessoryPlacement == .below {
 					accessory()
+						.frame(maxWidth: .infinity)
 				}
 			}
 			if needsTrailingSpacer {

@@ -19,13 +19,23 @@ struct TimelineView: View {
 				ForEach(groupedEntries, id: \.date) { group in
 					Section {
 						ForEach(group.entries) { entry in
-							EntryRow(entry: entry)
+							EntryRow(
+								entry: entry,
+								preferredUnit: dataManager.settings?.preferredUnit ?? .kilograms,
+								decimalPrecision: dataManager.settings?.decimalPrecision ?? 1
+							)
 						}
 						.onDelete { indexSet in
 							deleteEntries(at: indexSet, in: group.entries)
 						}
 					} header: {
-						DayHeader(date: group.date, entries: group.entries)
+						DayHeader(
+							date: group.date,
+							entries: group.entries,
+							preferredUnit: dataManager.settings?.preferredUnit ?? .kilograms,
+							decimalPrecision: dataManager.settings?.decimalPrecision ?? 1,
+							dailyAggregationMode: dataManager.settings?.dailyAggregationMode ?? .latest
+						)
 					}
 				}
 			}
@@ -120,7 +130,9 @@ struct DayGroup {
 struct DayHeader: View {
 	let date: Date
 	let entries: [WeightEntry]
-	@EnvironmentObject var dataManager: DataManager
+	let preferredUnit: WeightUnit
+	let decimalPrecision: Int
+	let dailyAggregationMode: DailyAggregationMode
     
 	var body: some View {
 		VStack(alignment: .leading, spacing: 4) {
@@ -137,8 +149,7 @@ struct DayHeader: View {
     
 	private var aggregatedWeight: Double? {
 		guard !entries.isEmpty else { return nil }
-		let mode = dataManager.settings?.dailyAggregationMode ?? .latest
-		switch mode {
+		switch dailyAggregationMode {
 		case .latest:
 			return entries.first?.weightKg
 		case .average:
@@ -148,18 +159,15 @@ struct DayHeader: View {
 	}
     
 	private func displayValue(_ kg: Double) -> String {
-		guard let unit = dataManager.settings?.preferredUnit else {
-			return String(format: "%.1f kg", kg)
-		}
-		let value = unit.convert(fromKg: kg)
-		let precision = dataManager.settings?.decimalPrecision ?? 1
-		return String(format: "%.*f %@", precision, value, unit.symbol as NSString)
+		let value = preferredUnit.convert(fromKg: kg)
+		return String(format: "%.*f %@", decimalPrecision, value, preferredUnit.symbol as NSString)
 	}
 }
 
 struct EntryRow: View {
 	let entry: WeightEntry
-	@EnvironmentObject var dataManager: DataManager
+	let preferredUnit: WeightUnit
+	let decimalPrecision: Int
     
 	var body: some View {
 		VStack(alignment: .leading, spacing: 4) {
@@ -190,12 +198,8 @@ struct EntryRow: View {
 	}
     
 	private var displayValue: String {
-		guard let unit = dataManager.settings?.preferredUnit else {
-			return String(format: "%.1f kg", entry.weightKg)
-		}
-		let value = unit.convert(fromKg: entry.weightKg)
-		let precision = dataManager.settings?.decimalPrecision ?? 1
-		return String(format: "%.*f %@", precision, value, unit.symbol as NSString)
+		let value = preferredUnit.convert(fromKg: entry.weightKg)
+		return String(format: "%.*f %@", decimalPrecision, value, preferredUnit.symbol as NSString)
 	}
 }
 

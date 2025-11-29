@@ -171,6 +171,9 @@ struct ChartsView: View {
 								}
 								.onEnded { _ in }
 						)
+						.onTapGesture { location in
+							updateSelection(at: location, proxy: proxy, geometry: geo, data: data)
+						}
 				}
 			}
             

@@ -48,14 +48,20 @@ struct OnboardingView: View {
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             #else
-            TabView(selection: $currentPage) {
-                welcomePage.tag(0)
-                unitSelectionPage.tag(1)
-                startingWeightPage.tag(2)
-                goalPage.tag(3)
-                remindersPage.tag(4)
-                eulaPage.tag(5)
+            
+            ZStack {
+                switch currentPage {
+                case 0: welcomePage
+                case 1: unitSelectionPage
+                case 2: startingWeightPage
+                case 3: goalPage
+                case 4: remindersPage
+                case 5: eulaPage
+                default: EmptyView()
+                }
             }
+            .transition(.opacity)
+            .animation(.easeInOut, value: currentPage)
             #endif
 
             pageIndicator

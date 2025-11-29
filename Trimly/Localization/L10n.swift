@@ -354,6 +354,22 @@ enum L10n {
 		static let trendStable = LocalizedStringResource("analytics.trend.stable", defaultValue: "Steady")
 	}
 
+	enum Celebrations {
+		static let streak7 = LocalizedStringResource("celebrations.streak.7", defaultValue: "Nice streak forming—7 days of consistency!")
+		static let streak30 = LocalizedStringResource("celebrations.streak.30", defaultValue: "30-day streak—phenomenal commitment!")
+		static let entries10 = LocalizedStringResource("celebrations.entries.10", defaultValue: "Great progress—10 entries logged!")
+		static let entries25 = LocalizedStringResource("celebrations.entries.25", defaultValue: "25 entries logged—momentum building!")
+		static let entries50 = LocalizedStringResource("celebrations.entries.50", defaultValue: "50 entries logged—you're unstoppable!")
+		static let entries100 = LocalizedStringResource("celebrations.entries.100", defaultValue: "100 entries logged—the century club!")
+		static let goal25 = LocalizedStringResource("celebrations.goal.25", defaultValue: "Quarter way there—steady progress!")
+		static let goal50 = LocalizedStringResource("celebrations.goal.50", defaultValue: "Halfway to your goal—keep it up!")
+		static let goal75 = LocalizedStringResource("celebrations.goal.75", defaultValue: "Three quarters there—you're doing great!")
+		static let goal100 = LocalizedStringResource("celebrations.goal.100", defaultValue: "Goal achieved—congratulations!")
+		static let consistency70 = LocalizedStringResource("celebrations.consistency.70", defaultValue: "70% consistency—building a solid habit!")
+		static let consistency85 = LocalizedStringResource("celebrations.consistency.85", defaultValue: "85% consistency—excellent dedication!")
+		static let consistencyPercentTemplate = LocalizedStringResource("celebrations.consistency.percent", defaultValue: "Consistency at %d%% — keep it going!")
+	}
+
 	enum Notifications {
 		static let primaryTitle = LocalizedStringResource("notifications.primary.title", defaultValue: "Time to log your weight")
 		static let primaryBody = LocalizedStringResource("notifications.primary.body", defaultValue: "Keep your streak going! Log today's weight.")

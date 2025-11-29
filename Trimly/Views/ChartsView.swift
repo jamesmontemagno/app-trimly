@@ -67,9 +67,9 @@ struct ChartsView: View {
 				ChartSettingsView()
 			}
 		}
-	}
-	.onChange(of: selectedRange) { _ in
-		selectedPoint = nil
+		.onChange(of: selectedRange) { _ in
+			selectedPoint = nil
+		}
 	}
     
 	@ViewBuilder
@@ -293,7 +293,7 @@ struct ChartsView: View {
 			Text(tooltipFormatter.string(from: point.date))
 				.font(.caption2)
 				.foregroundStyle(.secondary)
-			Text("\(displayValue(point.weight)) \(dataManager.settings?.preferredUnit?.symbol ?? "kg")")
+			Text("\(displayValue(point.weight)) \(dataManager.settings?.preferredUnit.symbol ?? "kg")")
 				.font(.caption.bold())
 		}
 		.padding(8)
@@ -303,7 +303,7 @@ struct ChartsView: View {
 
 	private func pointAccessibilityLabel(_ point: ChartDataPoint) -> Text {
 		let dateText = tooltipFormatter.string(from: point.date)
-		return Text("\(dateText), \(displayValue(point.weight)) \(dataManager.settings?.preferredUnit?.symbol ?? "kg")")
+		return Text("\(dateText), \(displayValue(point.weight)) \(dataManager.settings?.preferredUnit.symbol ?? "kg")")
 	}
 
 	private func updateSelection(at location: CGPoint, proxy: ChartProxy, geometry: GeometryProxy, data: [ChartDataPoint]) {

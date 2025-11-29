@@ -18,6 +18,20 @@ struct SettingsView: View {
 	@State private var showingDeleteConfirmation = false
 	@State private var exportedData = ""
 	
+	private var appVersion: String {
+		let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+		let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""
+		if !version.isEmpty && !build.isEmpty {
+			return "\(version) (\(build))"
+		} else if !version.isEmpty {
+			return version
+		} else if !build.isEmpty {
+			return build
+		} else {
+			return "-"
+		}
+	}
+	
 	var body: some View {
 		NavigationStack {
 			ScrollView {
@@ -218,7 +232,7 @@ struct SettingsView: View {
 						HStack {
 							Text(L10n.Settings.versionLabel)
 							Spacer()
-							Text("1.0.0")
+							Text(appVersion)
 								.foregroundStyle(.secondary)
 						}
 						

@@ -6,19 +6,20 @@
 Effortless Weight Tracking & Analytics
 
 ### Description
-TrimTally is your modern companion for tracking weight and reaching your health goals. Designed for iOS 17+ and macOS 14+, TrimTally makes logging, analyzing, and understanding your weight journey simple and motivating.
+TrimTally keeps your weight journey simple, focused, and encouraging. Log your weight in seconds, see clear trends instead of daily noise, and stay on track with gentle reminders and smart insights.
 
 **Features:**
-- Fast, intuitive weight entry (multiple times per day)
-- Smart analytics: moving averages, trends, and projections
-- Goal setting and progress tracking
-- Beautiful charts and daily summaries
-- iCloud sync across iPhone, iPad, and Mac
-- HealthKit integration for seamless data import
-- Custom reminders and motivational celebrations
-- Privacy-first: your data stays on your devices and iCloud
+- Fast weight logging, multiple times per day
+- Moving averages that smooth out daily fluctuations
+- Clear trendlines and projections to show where you’re heading
+- Flexible goals with progress tracking that actually feels motivating
+- Clean charts and daily summaries that highlight what matters
+- Seamless sync across iPhone, iPad, and Mac with iCloud
+- HealthKit integration for automatic import of existing data
+- Custom reminders and small celebrations when you hit milestones
+- Private by design: your data lives on your devices and iCloud
 
-Whether you’re aiming to lose, gain, or maintain weight, TrimTally gives you the insights and encouragement you need—without the clutter. Start your journey today!
+TrimTally helps you focus on habits and long‑term progress, not just the number on the scale—whether your goal is to lose, gain, or maintain weight.
 
 ---
 
@@ -28,19 +29,20 @@ Whether you’re aiming to lose, gain, or maintain weight, TrimTally gives you t
 Seguimiento y análisis de peso sin esfuerzo
 
 ### Descripción
-TrimTally es tu compañero moderno para registrar el peso y alcanzar tus objetivos de salud. Diseñado para iOS 17+ y macOS 14+, TrimTally facilita el registro, análisis y comprensión de tu progreso de peso de forma sencilla y motivadora.
+TrimTally mantiene tu progreso de peso simple, claro y motivador. Registra tu peso en segundos, ve tendencias nítidas en lugar de ruido diario y mantente en rumbo con recordatorios suaves e información inteligente.
 
 **Características:**
-- Registro rápido e intuitivo del peso (varias veces al día)
-- Analíticas inteligentes: promedios móviles, tendencias y proyecciones
-- Establecimiento de metas y seguimiento del progreso
-- Gráficas atractivas y resúmenes diarios
-- Sincronización iCloud entre iPhone, iPad y Mac
-- Integración con HealthKit para importar datos fácilmente
-- Recordatorios personalizados y celebraciones motivacionales
-- Privacidad ante todo: tus datos permanecen en tus dispositivos y iCloud
+- Registro de peso rápido, varias veces al día
+- Promedios móviles que suavizan las fluctuaciones diarias
+- Líneas de tendencia y proyecciones claras que muestran hacia dónde vas
+- Metas flexibles con seguimiento del progreso que realmente motiva
+- Gráficas limpias y resúmenes diarios que destacan lo importante
+- Sincronización fluida entre iPhone, iPad y Mac con iCloud
+- Integración con HealthKit para importar automáticamente tus datos
+- Recordatorios personalizados y pequeñas celebraciones al alcanzar hitos
+- Privacidad por diseño: tus datos viven en tus dispositivos y en iCloud
 
-Ya sea que quieras perder, ganar o mantener tu peso, TrimTally te brinda los conocimientos y la motivación que necesitas, sin complicaciones. ¡Comienza tu viaje hoy!
+TrimTally te ayuda a centrarte en los hábitos y el progreso a largo plazo, no solo en el número de la balanza, tanto si quieres perder, ganar o mantener tu peso.
 
 ---
 
@@ -50,16 +52,17 @@ Ya sea que quieras perder, ganar o mantener tu peso, TrimTally te brinda los con
 Suivi et analyse du poids sans effort
 
 ### Description
-TrimTally est votre compagnon moderne pour suivre votre poids et atteindre vos objectifs de santé. Conçu pour iOS 17+ et macOS 14+, TrimTally rend l’enregistrement, l’analyse et la compréhension de votre parcours de poids simples et motivants.
+TrimTally rend votre suivi de poids simple, clair et motivant. Enregistrez votre poids en quelques secondes, visualisez des tendances nettes plutôt que des variations quotidiennes, et restez sur la bonne voie grâce à des rappels doux et des analyses intelligentes.
 
 **Fonctionnalités :**
-- Saisie du poids rapide et intuitive (plusieurs fois par jour)
-- Analyses intelligentes : moyennes mobiles, tendances et projections
-- Définition d’objectifs et suivi des progrès
-- Graphiques élégants et résumés quotidiens
-- Synchronisation iCloud sur iPhone, iPad et Mac
-- Intégration HealthKit pour importer facilement vos données
-- Rappels personnalisés et célébrations motivantes
-- Confidentialité totale : vos données restent sur vos appareils et iCloud
+- Enregistrement du poids rapide, plusieurs fois par jour
+- Moyennes mobiles qui lissent les fluctuations quotidiennes
+- Courbes de tendance et projections claires pour voir où vous allez
+- Objectifs flexibles avec suivi des progrès réellement motivant
+- Graphiques épurés et résumés quotidiens qui mettent en avant l’essentiel
+- Synchronisation fluide entre iPhone, iPad et Mac via iCloud
+- Intégration HealthKit pour importer automatiquement vos données
+- Rappels personnalisés et petites célébrations lorsque vous atteignez des étapes clés
+- Confidentialité intégrée : vos données restent sur vos appareils et dans iCloud
 
-Que vous souhaitiez perdre, prendre ou maintenir votre poids, TrimTally vous offre les informations et la motivation dont vous avez besoin, sans superflu. Commencez votre parcours dès aujourd’hui !
+TrimTally vous aide à vous concentrer sur les habitudes et les progrès à long terme, et pas seulement sur le chiffre sur la balance, que vous cherchiez à perdre, prendre ou stabiliser votre poids.

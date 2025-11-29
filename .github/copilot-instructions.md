@@ -106,6 +106,8 @@ TrimlyTests/          # Unit tests (DataManager, WeightAnalytics, etc.)
 - **Date comparisons**: Always normalize dates for daily logic using `Calendar.current.startOfDay(for:)`
 - **Unit conversions**: Double-check kg ↔ lb conversions use `WeightUnit` enum, not hardcoded constants
 - **iCloud sync**: Test multi-device scenarios—SwiftData handles conflicts but verify merge behavior
+- **StoreKit & ObservableObject**: Always `import SwiftUI` or `import Combine` in `StoreManager` or similar classes. `ObservableObject` and `@Published` are not available in `Foundation` alone.
+- **Concurrency & Listeners**: When using `Task.detached` for long-running listeners (e.g., `Transaction.updates`), ensure called methods are `nonisolated` if they don't touch `@MainActor` state, or use `await MainActor.run { ... }`.
 
 ## Translations
 Never hard code strings in views. Use `Localizable.strings` and `NSLocalizedString` for all user-facing text. Follow existing keys for consistency. Make sure to add new keys to all supported languages.

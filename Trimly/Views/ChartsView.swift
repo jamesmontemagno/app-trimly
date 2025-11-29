@@ -91,14 +91,16 @@ struct ChartsView: View {
 						y: .value("Weight", point.weight)
 					)
 					.symbol {
+						let isSelected = point.id == selectedPoint?.id
+						let size: CGFloat = isSelected ? 24 : 12
 						Circle()
-							.strokeBorder(weightLineColor, lineWidth: point.id == selectedPoint?.id ? 4 : 2)
+							.strokeBorder(weightLineColor, lineWidth: isSelected ? 3 : 2)
 							.background(
 								Circle()
-									.fill(point.id == selectedPoint?.id ? pointFillColor : weightLineColor)
+									.fill(isSelected ? pointFillColor : weightLineColor)
 							)
+							.frame(width: size, height: size)
 					}
-					.symbolSize(point.id == selectedPoint?.id ? 100 : 30)
 					.foregroundStyle(weightLineColor)
 					.accessibilityLabel(pointAccessibilityLabel(point))
 					.annotation(position: .top, alignment: .leading) {

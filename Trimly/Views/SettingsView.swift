@@ -12,9 +12,12 @@ import AppKit
 
 struct SettingsView: View {
 	@EnvironmentObject var dataManager: DataManager
+	@EnvironmentObject var storeManager: StoreManager
 	@State private var showingGoalSheet = false
 	@State private var showingGoalHistory = false
 	@State private var showingExport = false
+	@State private var showingPaywall = false
+	@State private var navigateToHealthKit = false
 	@State private var showingDeleteConfirmation = false
 	@State private var exportedData = ""
 	
@@ -36,6 +39,29 @@ struct SettingsView: View {
 		NavigationStack {
 			ScrollView {
 				VStack(alignment: .leading, spacing: 32) {
+					if !storeManager.isPro {
+						Button {
+							showingPaywall = true
+						} label: {
+							TrimlyCardContainer(style: .elevated) {
+								HStack {
+									VStack(alignment: .leading, spacing: 4) {
+										Text("Upgrade to Pro")
+											.font(.headline)
+										Text("Unlock HealthKit sync, data export, and more.")
+											.font(.subheadline)
+											.foregroundStyle(.secondary)
+									}
+									Spacer()
+									Image(systemName: "chevron.right")
+										.foregroundStyle(.secondary)
+								}
+								.padding(.vertical, 4)
+							}
+						}
+						.buttonStyle(.plain)
+					}
+
 					settingsSection(
 						title: String(localized: L10n.Settings.personalizationTitle),
 						description: String(localized: L10n.Settings.personalizationDescription)
@@ -170,8 +196,12 @@ struct SettingsView: View {
 					}
 					
 					settingsSection(title: String(localized: L10n.Settings.integrationsTitle)) {
-						NavigationLink {
-							HealthKitView()
+						Button {
+							if storeManager.isPro {
+								navigateToHealthKit = true
+							} else {
+								showingPaywall = true
+							}
 						} label: {
 							settingsRow(
 								icon: "heart.fill",
@@ -180,7 +210,10 @@ struct SettingsView: View {
 								showChevron: true,
 								iconTint: .pink
 							) {
-								if dataManager.settings?.healthKitEnabled == true {
+								if !storeManager.isPro {
+									Image(systemName: "lock.fill")
+										.foregroundStyle(.secondary)
+								} else if dataManager.settings?.healthKitEnabled == true {
 									statusPill(text: String(localized: L10n.Settings.healthConnected), color: .green)
 								}
 							}
@@ -201,14 +234,23 @@ struct SettingsView: View {
 					
 					settingsSection(title: String(localized: L10n.Settings.dataPrivacyTitle)) {
 						Button {
-							exportData()
+							if storeManager.isPro {
+								exportData()
+							} else {
+								showingPaywall = true
+							}
 						} label: {
 							settingsRow(
 								icon: "square.and.arrow.up",
 								title: String(localized: L10n.Settings.exportTitle),
 								subtitle: String(localized: L10n.Settings.exportSubtitle),
 								showChevron: true
-							)
+							) {
+								if !storeManager.isPro {
+									Image(systemName: "lock.fill")
+										.foregroundStyle(.secondary)
+								}
+							}
 						}
 						.buttonStyle(.plain)
 						
@@ -229,6 +271,16 @@ struct SettingsView: View {
 					}
 					
 					settingsSection(title: String(localized: L10n.Settings.aboutTitle)) {
+						Button("Restore Purchases") {
+							Task {
+								await storeManager.restore()
+							}
+						}
+						.buttonStyle(.plain)
+						.foregroundStyle(.primary)
+						
+						sectionDivider()
+
 						HStack {
 							Text(L10n.Settings.versionLabel)
 							Spacer()
@@ -251,9 +303,11 @@ struct SettingsView: View {
 			.scrollIndicators(.hidden)
 			.background(Color.clear)
 			.navigationTitle(Text(L10n.Settings.navigationTitle))
+			.navigationDestination(isPresented: $navigateToHealthKit) { HealthKitView() }
 			.sheet(isPresented: $showingGoalSheet) { GoalSetupView() }
 			.sheet(isPresented: $showingGoalHistory) { GoalHistoryView() }
 			.sheet(isPresented: $showingExport) { ExportView(csvData: exportedData) }
+			.sheet(isPresented: $showingPaywall) { PaywallView() }
 			.confirmationDialog(String(localized: L10n.Common.deleteAllDataTitle), isPresented: $showingDeleteConfirmation, titleVisibility: .visible) {
 				Button(String(localized: L10n.Settings.deleteAllTitle), role: .destructive) { deleteAllData() }
 				Button(String(localized: L10n.Common.cancelButton), role: .cancel) { }

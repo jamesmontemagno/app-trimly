@@ -11,6 +11,7 @@ import SwiftData
 @main
 struct TrimlyApp: App {
     @StateObject private var dataManager = DataManager()
+    @StateObject private var storeManager = StoreManager()
     #if os(iOS)
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     #elseif os(macOS)
@@ -22,6 +23,7 @@ struct TrimlyApp: App {
             ContentView()
                 .environment(\.modelContext, dataManager.modelContext)
                 .environmentObject(dataManager)
+                .environmentObject(storeManager)
                 .preferredColorScheme(colorScheme(for: dataManager.settings?.appearance))
         }
         .modelContainer(dataManager.modelContainer)
@@ -30,6 +32,7 @@ struct TrimlyApp: App {
         Settings {
             SettingsView()
                 .environmentObject(dataManager)
+                .environmentObject(storeManager)
         }
         #endif
     }

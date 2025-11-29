@@ -1134,6 +1134,9 @@
         }
       }
     },
+    "Close" : {
+
+    },
     "common.alert.deleteAllDataTitle" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -4802,6 +4805,9 @@
         }
       }
     },
+    "Restore Purchases" : {
+
+    },
     "See your current weight at a glance" : {
       "localizations" : {
         "es" : {
@@ -6017,6 +6023,9 @@
         }
       }
     },
+    "Take your weight tracking to the next level with advanced features." : {
+
+    },
     "timeline.alert.deleteError.fallback" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -6262,6 +6271,15 @@
           }
         }
       }
+    },
+    "Unlock HealthKit sync, data export, and more." : {
+
+    },
+    "Unlock TrimTally Pro" : {
+
+    },
+    "Upgrade to Pro" : {
+
     },
     "Weight" : {
       "localizations" : {

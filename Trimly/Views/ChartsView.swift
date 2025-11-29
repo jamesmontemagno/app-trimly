@@ -7,11 +7,25 @@
 
 import SwiftUI
 import Charts
+#if os(macOS)
+import AppKit
+#endif
+#if canImport(UIKit)
+import UIKit
+#endif
 
 struct ChartsView: View {
 	@EnvironmentObject var dataManager: DataManager
 	@State private var selectedRange: ChartRange = .week
 	@State private var showingSettings = false
+	@State private var selectedPoint: ChartDataPoint?
+
+	private let tooltipFormatter: DateFormatter = {
+		let formatter = DateFormatter()
+		formatter.dateStyle = .medium
+		formatter.timeStyle = .none
+		return formatter
+	}()
     
 	var body: some View {
 		NavigationStack {
@@ -54,6 +68,9 @@ struct ChartsView: View {
 			}
 		}
 	}
+	.onChange(of: selectedRange) { _ in
+		selectedPoint = nil
+	}
     
 	@ViewBuilder
 	private func weightChart(data: [ChartDataPoint]) -> some View {
@@ -66,16 +83,35 @@ struct ChartsView: View {
 						x: .value("Date", point.date),
 						y: .value("Weight", point.weight)
 					)
-					.foregroundStyle(.blue)
+					.foregroundStyle(weightLineColor)
 					.interpolationMethod(.catmullRom)
                     
-					if chartMode == .analytical {
-						PointMark(
-							x: .value("Date", point.date),
-							y: .value("Weight", point.weight)
-						)
-						.foregroundStyle(.blue)
+					PointMark(
+						x: .value("Date", point.date),
+						y: .value("Weight", point.weight)
+					)
+					.symbol {
+						Circle()
+							.strokeBorder(weightLineColor, lineWidth: point.id == selectedPoint?.id ? 3 : 1)
+							.background(
+								Circle()
+									.fill(point.id == selectedPoint?.id ? pointFillColor : weightLineColor.opacity(0.2))
+							)
 					}
+					.symbolSize(point.id == selectedPoint?.id ? 120 : 60)
+					.foregroundStyle(weightLineColor)
+					.accessibilityLabel(pointAccessibilityLabel(point))
+					.annotation(position: .top, alignment: .leading) {
+						if selectedPoint?.id == point.id {
+							tooltip(for: point)
+						}
+					}
+				}
+
+				if let selectedPoint {
+					RuleMark(x: .value("Selected Date", selectedPoint.date))
+						.foregroundStyle(weightLineColor.opacity(0.3))
+						.lineStyle(StrokeStyle(lineWidth: 1, dash: [2]))
 				}
                 
 				if dataManager.settings?.showMovingAverage == true,
@@ -85,7 +121,7 @@ struct ChartsView: View {
 							x: .value("Date", point.date),
 							y: .value("MA", point.weight)
 						)
-						.foregroundStyle(.orange)
+						.foregroundStyle(movingAverageColor)
 						.lineStyle(StrokeStyle(lineWidth: 2, dash: [5, 5]))
 						.interpolationMethod(.catmullRom)
 					}
@@ -98,7 +134,7 @@ struct ChartsView: View {
 							x: .value("Date", point.date),
 							y: .value("EMA", point.weight)
 						)
-						.foregroundStyle(.purple)
+						.foregroundStyle(emaLineColor)
 						.lineStyle(StrokeStyle(lineWidth: 2, dash: [2, 2]))
 						.interpolationMethod(.catmullRom)
 					}
@@ -108,12 +144,12 @@ struct ChartsView: View {
 					RuleMark(
 						y: .value("Goal", goal.targetWeightKg)
 					)
-					.foregroundStyle(.green)
+					.foregroundStyle(goalLineColor)
 					.lineStyle(StrokeStyle(lineWidth: 2, dash: [10, 5]))
 					.annotation(position: .top, alignment: .trailing) {
 						Text(L10n.Charts.goalLabel)
 							.font(.caption)
-							.foregroundStyle(.green)
+							.foregroundStyle(goalLineColor)
 							.padding(4)
 							.background(.thinMaterial)
 							.clipShape(Capsule())
@@ -124,6 +160,20 @@ struct ChartsView: View {
 			.chartXAxis(chartMode == .minimalist ? .hidden : .automatic)
 			.chartYAxis(chartMode == .minimalist ? .hidden : .automatic)
 			.chartYScale(domain: .automatic(includesZero: false))
+			.chartOverlay { proxy in
+				GeometryReader { geo in
+					Rectangle()
+						.fill(.clear)
+						.contentShape(Rectangle())
+						.gesture(
+							DragGesture(minimumDistance: 0)
+								.onChanged { value in
+									updateSelection(at: value.location, proxy: proxy, geometry: geo, data: data)
+								}
+								.onEnded { _ in }
+						)
+				}
+			}
             
 			if dataManager.settings?.showMovingAverage == true || dataManager.settings?.showEMA == true {
 				legend
@@ -140,14 +190,14 @@ struct ChartsView: View {
     
 	private var legend: some View {
 		HStack(spacing: 16) {
-			LegendItem(color: .blue, label: String(localized: L10n.Charts.legendWeight), style: .solid)
+			LegendItem(color: weightLineColor, label: String(localized: L10n.Charts.legendWeight), style: .solid)
             
 			if dataManager.settings?.showMovingAverage == true {
-				LegendItem(color: .orange, label: String(localized: L10n.Charts.legendMovingAverage), style: .dashed)
+				LegendItem(color: movingAverageColor, label: String(localized: L10n.Charts.legendMovingAverage), style: .dashed)
 			}
             
 			if dataManager.settings?.showEMA == true {
-				LegendItem(color: .purple, label: String(localized: L10n.Charts.legendEMA), style: .dotted)
+				LegendItem(color: emaLineColor, label: String(localized: L10n.Charts.legendEMA), style: .dotted)
 			}
 		}
 		.font(.caption)
@@ -224,6 +274,50 @@ struct ChartsView: View {
 		let value = unit.convert(fromKg: kg)
 		let precision = dataManager.settings?.decimalPrecision ?? 1
 		return String(format: "%.*f", precision, value)
+	}
+
+	private var weightLineColor: Color { .accentColor }
+	private var movingAverageColor: Color { .orange }
+	private var emaLineColor: Color { .purple }
+	private var goalLineColor: Color { .green }
+	private var pointFillColor: Color {
+#if os(macOS)
+		Color(nsColor: .windowBackgroundColor)
+#else
+		Color(uiColor: .systemBackground)
+#endif
+	}
+
+	private func tooltip(for point: ChartDataPoint) -> some View {
+		VStack(alignment: .leading, spacing: 4) {
+			Text(tooltipFormatter.string(from: point.date))
+				.font(.caption2)
+				.foregroundStyle(.secondary)
+			Text("\(displayValue(point.weight)) \(dataManager.settings?.preferredUnit?.symbol ?? "kg")")
+				.font(.caption.bold())
+		}
+		.padding(8)
+		.background(.thinMaterial, in: RoundedRectangle(cornerRadius: 8))
+		.shadow(radius: 2)
+	}
+
+	private func pointAccessibilityLabel(_ point: ChartDataPoint) -> Text {
+		let dateText = tooltipFormatter.string(from: point.date)
+		return Text("\(dateText), \(displayValue(point.weight)) \(dataManager.settings?.preferredUnit?.symbol ?? "kg")")
+	}
+
+	private func updateSelection(at location: CGPoint, proxy: ChartProxy, geometry: GeometryProxy, data: [ChartDataPoint]) {
+		let plotFrame = geometry[proxy.plotAreaFrame]
+		let xPosition = location.x - plotFrame.origin.x
+		guard xPosition >= 0, xPosition <= plotFrame.size.width else { return }
+		guard let date: Date = proxy.value(atX: xPosition) else { return }
+		if let nearest = nearestPoint(to: date, in: data) {
+			selectedPoint = nearest
+		}
+	}
+
+	private func nearestPoint(to date: Date, in data: [ChartDataPoint]) -> ChartDataPoint? {
+		data.min(by: { abs($0.date.timeIntervalSince(date)) < abs($1.date.timeIntervalSince(date)) })
 	}
 }
 
@@ -459,12 +553,23 @@ struct LegendItem: View {
     
 	var body: some View {
 		HStack(spacing: 4) {
-			Rectangle()
-				.fill(color)
-				.frame(width: 20, height: 2)
+			Capsule()
+				.stroke(color, style: legendStroke)
+				.frame(width: 24, height: 4)
             
 			Text(label)
 				.foregroundStyle(.secondary)
+		}
+	}
+
+	private var legendStroke: StrokeStyle {
+		switch style {
+		case .solid:
+			return StrokeStyle(lineWidth: 2)
+		case .dashed:
+			return StrokeStyle(lineWidth: 2, dash: [5, 3])
+		case .dotted:
+			return StrokeStyle(lineWidth: 2, dash: [1, 4])
 		}
 	}
 }

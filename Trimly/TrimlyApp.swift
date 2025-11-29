@@ -11,6 +11,11 @@ import SwiftData
 @main
 struct TrimlyApp: App {
     @StateObject private var dataManager = DataManager()
+    #if os(iOS)
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    #elseif os(macOS)
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    #endif
     
     var body: some Scene {
         WindowGroup {

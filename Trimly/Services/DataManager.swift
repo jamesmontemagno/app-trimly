@@ -26,7 +26,8 @@ final class DataManager: ObservableObject {
         let schema = Schema([
             WeightEntry.self,
             Goal.self,
-            AppSettings.self
+            AppSettings.self,
+            Achievement.self
         ])
         
         let modelConfiguration = ModelConfiguration(
@@ -219,6 +220,102 @@ final class DataManager: ObservableObject {
             minDays: settings.minDaysForProjection
         )
     }
+
+    // MARK: - Achievement Persistence
+
+    func fetchAllAchievements() -> [Achievement] {
+        let descriptor = FetchDescriptor<Achievement>(
+            sortBy: [SortDescriptor(\.createdAt, order: .forward)]
+        )
+        return (try? modelContext.fetch(descriptor)) ?? []
+    }
+
+    func fetchUncelebratedAchievements() -> [Achievement] {
+        let descriptor = FetchDescriptor<Achievement>(
+            predicate: #Predicate { $0.unlockedAt != nil && $0.didCelebrateUnlock == false },
+            sortBy: [SortDescriptor(\.unlockedAt, order: .forward)]
+        )
+        return (try? modelContext.fetch(descriptor)) ?? []
+    }
+    
+    func achievement(forKey key: String, createIfMissing: Bool = true, isPremium: Bool = false) -> Achievement? {
+        achievementRecord(forKey: key, createIfMissing: createIfMissing, isPremium: isPremium)?.achievement
+    }
+    
+    @discardableResult
+    func updateAchievement(
+        key: String,
+        isPremium: Bool = false,
+        progress: Double = 0,
+        unlocked: Bool = false,
+        metadata: Data? = nil,
+        markCelebrated: Bool? = nil
+    ) -> Achievement {
+        let record = achievementRecord(forKey: key, createIfMissing: true, isPremium: isPremium)!
+        let achievement = record.achievement
+        let clampedProgress = min(max(progress, 0), 1)
+        let now = Date()
+        var didChange = record.isNew
+        if achievement.isPremium != isPremium {
+            achievement.isPremium = isPremium
+            didChange = true
+        }
+        if achievement.progressValue != clampedProgress {
+            achievement.progressValue = clampedProgress
+            didChange = true
+        }
+        if achievement.metadata != metadata {
+            achievement.metadata = metadata
+            didChange = true
+        }
+        if unlocked && achievement.unlockedAt == nil {
+            achievement.unlockedAt = now
+            didChange = true
+        }
+        if let markCelebrated, achievement.didCelebrateUnlock != markCelebrated {
+            achievement.didCelebrateUnlock = markCelebrated
+            didChange = true
+        }
+        if didChange {
+            achievement.evaluatedAt = now
+            achievement.updatedAt = now
+            try? modelContext.save()
+            publishChange()
+        }
+        return achievement
+    }
+
+    func markAchievementCelebrated(_ key: String) {
+        guard let achievement = achievement(forKey: key, createIfMissing: false) else { return }
+        guard achievement.didCelebrateUnlock == false else { return }
+        achievement.didCelebrateUnlock = true
+        achievement.updatedAt = Date()
+        try? modelContext.save()
+        publishChange()
+    }
+
+    private func achievementRecord(
+        forKey key: String,
+        createIfMissing: Bool,
+        isPremium: Bool
+    ) -> (achievement: Achievement, isNew: Bool)? {
+        var descriptor = FetchDescriptor<Achievement>(
+            predicate: #Predicate { $0.key == key }
+        )
+        descriptor.fetchLimit = 1
+        if let existing = (try? modelContext.fetch(descriptor))?.first {
+            if existing.isPremium != isPremium {
+                existing.isPremium = isPremium
+                existing.updatedAt = Date()
+                try? modelContext.save()
+            }
+            return (existing, false)
+        }
+        guard createIfMissing else { return nil }
+        let achievement = Achievement(key: key, isPremium: isPremium)
+        modelContext.insert(achievement)
+        return (achievement, true)
+    }
     
     // MARK: - Data Export
     
@@ -254,6 +351,7 @@ final class DataManager: ObservableObject {
         // Delete all entries and goals using batch delete
         try modelContext.delete(model: WeightEntry.self)
         try modelContext.delete(model: Goal.self)
+        try modelContext.delete(model: Achievement.self)
         
         // Reset onboarding-related settings so the setup wizard runs again
         if let settings = settings {

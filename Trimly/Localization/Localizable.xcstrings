@@ -88,6 +88,490 @@
         }
       }
     },
+    "achievements.category.goals" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Goals"
+          }
+        }
+      }
+    },
+    "achievements.category.habits" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Habits"
+          }
+        }
+      }
+    },
+    "achievements.category.health" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Health"
+          }
+        }
+      }
+    },
+    "achievements.category.logging" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Logging"
+          }
+        }
+      }
+    },
+    "achievements.category.streaks" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Streaks"
+          }
+        }
+      }
+    },
+    "achievements.celebration.unlocked" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%@ unlocked!"
+          }
+        }
+      }
+    },
+    "achievements.consistency.excellent.detail" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Reach a 90% consistency score"
+          }
+        }
+      }
+    },
+    "achievements.consistency.excellent.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Consistency Icon"
+          }
+        }
+      }
+    },
+    "achievements.consistency.solid.detail" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Reach a 70% consistency score"
+          }
+        }
+      }
+    },
+    "achievements.consistency.solid.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Habit Builder"
+          }
+        }
+      }
+    },
+    "achievements.goal.first.detail" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Complete your first goal"
+          }
+        }
+      }
+    },
+    "achievements.goal.first.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Goal Finisher"
+          }
+        }
+      }
+    },
+    "achievements.goal.major.detail" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Complete five goals"
+          }
+        }
+      }
+    },
+    "achievements.goal.major.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Goal Grandmaster"
+          }
+        }
+      }
+    },
+    "achievements.goal.triple.detail" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Complete three goals"
+          }
+        }
+      }
+    },
+    "achievements.goal.triple.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Goal Hat Trick"
+          }
+        }
+      }
+    },
+    "achievements.habits.month.detail" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Log on 30 unique days"
+          }
+        }
+      }
+    },
+    "achievements.habits.month.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Month of Mindfulness"
+          }
+        }
+      }
+    },
+    "achievements.habits.season.detail" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Log on 90 unique days"
+          }
+        }
+      }
+    },
+    "achievements.habits.season.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Season of Focus"
+          }
+        }
+      }
+    },
+    "achievements.habits.year.detail" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Log on 365 unique days"
+          }
+        }
+      }
+    },
+    "achievements.habits.year.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Year of You"
+          }
+        }
+      }
+    },
+    "achievements.locked.badge" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Locked"
+          }
+        }
+      }
+    },
+    "achievements.logging.ledger.detail" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Log 365 weight entries"
+          }
+        }
+      }
+    },
+    "achievements.logging.ledger.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Data Devotee"
+          }
+        }
+      }
+    },
+    "achievements.logging.newcomer.detail" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Log 10 weight entries"
+          }
+        }
+      }
+    },
+    "achievements.logging.newcomer.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "First Steps"
+          }
+        }
+      }
+    },
+    "achievements.logging.regular.detail" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Log 50 weight entries"
+          }
+        }
+      }
+    },
+    "achievements.logging.regular.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Routine Recorder"
+          }
+        }
+      }
+    },
+    "achievements.navigation.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Achievements"
+          }
+        }
+      }
+    },
+    "achievements.pro.badge" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Pro"
+          }
+        }
+      }
+    },
+    "achievements.progress.label" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Progress"
+          }
+        }
+      }
+    },
+    "achievements.reminders.enabled.detail" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Enable reminders"
+          }
+        }
+      }
+    },
+    "achievements.reminders.enabled.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Gentle Nudges"
+          }
+        }
+      }
+    },
+    "achievements.reminders.routine.detail" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Log on 85% of the last 21 days"
+          }
+        }
+      }
+    },
+    "achievements.reminders.routine.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Routine Keeper"
+          }
+        }
+      }
+    },
+    "achievements.section.premiumHint" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Upgrade to TrimTally Pro to unlock premium achievements."
+          }
+        }
+      }
+    },
+    "achievements.pro.unlockLine" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Unlock this achievement with TrimTally Pro."
+          }
+        }
+      }
+    },
+    "achievements.streak.month.detail" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Log 30 days in a row"
+          }
+        }
+      }
+    },
+    "achievements.streak.month.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Momentum Builder"
+          }
+        }
+      }
+    },
+    "achievements.streak.quarter.detail" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Log 90 days in a row"
+          }
+        }
+      }
+    },
+    "achievements.streak.quarter.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Unstoppable Quarter"
+          }
+        }
+      }
+    },
+    "achievements.streak.week.detail" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Log 7 days in a row"
+          }
+        }
+      }
+    },
+    "achievements.streak.week.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "One-Week Streak"
+          }
+        }
+      }
+    },
     "addEntry.card.date.description" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -1661,6 +2145,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "OK"
+          }
+        }
+      }
+    },
+    "common.button.refresh" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Refresh"
           }
         }
       }
@@ -6328,6 +6823,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Personnalisation"
+          }
+        }
+      }
+    },
+    "tabs.achievements" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Achievements"
           }
         }
       }

@@ -52,6 +52,15 @@ struct MainTabView: View {
                         Image(systemName: "chart.xyaxis.line")
                     }
                 }
+
+            AchievementsView()
+                .tabItem {
+                    Label {
+                        Text(L10n.Tabs.achievements)
+                    } icon: {
+                        Image(systemName: "rosette")
+                    }
+                }
             
             SettingsView()
                 .tabItem {

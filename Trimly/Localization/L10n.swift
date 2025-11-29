@@ -11,6 +11,7 @@ enum L10n {
 		static let doneButton = LocalizedStringResource("common.button.done", defaultValue: "Done")
 		static let okButton = LocalizedStringResource("common.button.ok", defaultValue: "OK")
 		static let deleteButton = LocalizedStringResource("common.button.delete", defaultValue: "Delete")
+		static let refresh = LocalizedStringResource("common.button.refresh", defaultValue: "Refresh")
 		static let errorTitle = LocalizedStringResource("common.alert.errorTitle", defaultValue: "Error")
 		static let deleteAllDataTitle = LocalizedStringResource("common.alert.deleteAllDataTitle", defaultValue: "Delete All Data")
 		static func days(_ count: Int) -> LocalizedStringResource {
@@ -22,6 +23,7 @@ enum L10n {
 		static let today = LocalizedStringResource("tabs.today", defaultValue: "Today")
 		static let timeline = LocalizedStringResource("tabs.timeline", defaultValue: "Timeline")
 		static let charts = LocalizedStringResource("tabs.charts", defaultValue: "Charts")
+		static let achievements = LocalizedStringResource("tabs.achievements", defaultValue: "Achievements")
 		static let settings = LocalizedStringResource("tabs.settings", defaultValue: "Settings")
 	}
 
@@ -355,6 +357,55 @@ enum L10n {
 		static let trendIncrease = LocalizedStringResource("analytics.trend.increase", defaultValue: "Slight gain trend")
 		static let trendStable = LocalizedStringResource("analytics.trend.stable", defaultValue: "Steady")
 	}
+
+		enum Achievements {
+			static let navigationTitle = LocalizedStringResource("achievements.navigation.title", defaultValue: "Achievements")
+			static let proBadge = LocalizedStringResource("achievements.pro.badge", defaultValue: "Pro")
+			static let lockedBadge = LocalizedStringResource("achievements.locked.badge", defaultValue: "Locked")
+			static let progressLabel = LocalizedStringResource("achievements.progress.label", defaultValue: "Progress")
+			static let categoryLogging = LocalizedStringResource("achievements.category.logging", defaultValue: "Logging")
+			static let categoryStreaks = LocalizedStringResource("achievements.category.streaks", defaultValue: "Streaks")
+			static let categoryHabits = LocalizedStringResource("achievements.category.habits", defaultValue: "Habits")
+			static let categoryGoals = LocalizedStringResource("achievements.category.goals", defaultValue: "Goals")
+			static let categoryHealth = LocalizedStringResource("achievements.category.health", defaultValue: "Health")
+			static let sectionPremiumHint = LocalizedStringResource("achievements.section.premiumHint", defaultValue: "Upgrade to TrimTally Pro to unlock premium achievements.")
+			static let proUnlockLine = LocalizedStringResource("achievements.pro.unlockLine", defaultValue: "Unlock this achievement with TrimTally Pro.")
+			static let loggingNewcomerTitle = LocalizedStringResource("achievements.logging.newcomer.title", defaultValue: "First Steps")
+			static let loggingNewcomerDetail = LocalizedStringResource("achievements.logging.newcomer.detail", defaultValue: "Log 10 weight entries")
+			static let loggingRegularTitle = LocalizedStringResource("achievements.logging.regular.title", defaultValue: "Routine Recorder")
+			static let loggingRegularDetail = LocalizedStringResource("achievements.logging.regular.detail", defaultValue: "Log 50 weight entries")
+			static let loggingLedgerTitle = LocalizedStringResource("achievements.logging.ledger.title", defaultValue: "Data Devotee")
+			static let loggingLedgerDetail = LocalizedStringResource("achievements.logging.ledger.detail", defaultValue: "Log 365 weight entries")
+			static let streakWeekTitle = LocalizedStringResource("achievements.streak.week.title", defaultValue: "One-Week Streak")
+			static let streakWeekDetail = LocalizedStringResource("achievements.streak.week.detail", defaultValue: "Log 7 days in a row")
+			static let streakMonthTitle = LocalizedStringResource("achievements.streak.month.title", defaultValue: "Momentum Builder")
+			static let streakMonthDetail = LocalizedStringResource("achievements.streak.month.detail", defaultValue: "Log 30 days in a row")
+			static let streakQuarterTitle = LocalizedStringResource("achievements.streak.quarter.title", defaultValue: "Unstoppable Quarter")
+			static let streakQuarterDetail = LocalizedStringResource("achievements.streak.quarter.detail", defaultValue: "Log 90 days in a row")
+			static let habitsMonthTitle = LocalizedStringResource("achievements.habits.month.title", defaultValue: "Month of Mindfulness")
+			static let habitsMonthDetail = LocalizedStringResource("achievements.habits.month.detail", defaultValue: "Log on 30 unique days")
+			static let habitsSeasonTitle = LocalizedStringResource("achievements.habits.season.title", defaultValue: "Season of Focus")
+			static let habitsSeasonDetail = LocalizedStringResource("achievements.habits.season.detail", defaultValue: "Log on 90 unique days")
+			static let habitsYearTitle = LocalizedStringResource("achievements.habits.year.title", defaultValue: "Year of You")
+			static let habitsYearDetail = LocalizedStringResource("achievements.habits.year.detail", defaultValue: "Log on 365 unique days")
+			static let consistencySolidTitle = LocalizedStringResource("achievements.consistency.solid.title", defaultValue: "Habit Builder")
+			static let consistencySolidDetail = LocalizedStringResource("achievements.consistency.solid.detail", defaultValue: "Reach a 70% consistency score")
+			static let consistencyExcellentTitle = LocalizedStringResource("achievements.consistency.excellent.title", defaultValue: "Consistency Icon")
+			static let consistencyExcellentDetail = LocalizedStringResource("achievements.consistency.excellent.detail", defaultValue: "Reach a 90% consistency score")
+			static let goalFirstTitle = LocalizedStringResource("achievements.goal.first.title", defaultValue: "Goal Finisher")
+			static let goalFirstDetail = LocalizedStringResource("achievements.goal.first.detail", defaultValue: "Complete your first goal")
+			static let goalTripleTitle = LocalizedStringResource("achievements.goal.triple.title", defaultValue: "Goal Hat Trick")
+			static let goalTripleDetail = LocalizedStringResource("achievements.goal.triple.detail", defaultValue: "Complete three goals")
+			static let goalMajorTitle = LocalizedStringResource("achievements.goal.major.title", defaultValue: "Goal Grandmaster")
+			static let goalMajorDetail = LocalizedStringResource("achievements.goal.major.detail", defaultValue: "Complete five goals")
+			static let remindersEnabledTitle = LocalizedStringResource("achievements.reminders.enabled.title", defaultValue: "Gentle Nudges")
+			static let remindersEnabledDetail = LocalizedStringResource("achievements.reminders.enabled.detail", defaultValue: "Enable reminders")
+			static let remindersRoutineTitle = LocalizedStringResource("achievements.reminders.routine.title", defaultValue: "Routine Keeper")
+			static let remindersRoutineDetail = LocalizedStringResource("achievements.reminders.routine.detail", defaultValue: "Log on 85% of the last 21 days")
+			static func celebrationUnlocked(_ title: String) -> LocalizedStringResource {
+				LocalizedStringResource("achievements.celebration.unlocked", defaultValue: "\(title) unlocked!")
+			}
+		}
 
 	enum Celebrations {
 		static let streak7 = LocalizedStringResource("celebrations.streak.7", defaultValue: "Nice streak forming—7 days of consistency!")

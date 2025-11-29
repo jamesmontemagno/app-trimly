@@ -29,6 +29,7 @@ final class CelebrationService: ObservableObject {
         case goal100Percent
         case consistency70
         case consistency85
+        case achievement
         
         var persistenceKey: String {
             switch self {
@@ -44,6 +45,7 @@ final class CelebrationService: ObservableObject {
             case .goal100Percent: return "goal100Percent"
             case .consistency70: return "consistency70"
             case .consistency85: return "consistency85"
+            case .achievement: return "achievement"
             }
         }
         
@@ -73,6 +75,8 @@ final class CelebrationService: ObservableObject {
                 return String(localized: L10n.Celebrations.consistency70)
             case .consistency85:
                 return String(localized: L10n.Celebrations.consistency85)
+            case .achievement:
+                return String(localized: L10n.Achievements.navigationTitle)
             }
         }
         
@@ -90,6 +94,8 @@ final class CelebrationService: ObservableObject {
                 return "star.fill"
             case .consistency70, .consistency85:
                 return "calendar.badge.checkmark"
+            case .achievement:
+                return "rosette"
             }
         }
     }
@@ -99,9 +105,10 @@ final class CelebrationService: ObservableObject {
         let type: CelebrationType
         let timestamp: Date
         let customMessage: String?
-        
+        let customIconName: String?
+		
         var message: String { customMessage ?? type.message }
-        var iconName: String { type.iconName }
+        var iconName: String { customIconName ?? type.iconName }
     }
     
     // Track which celebrations have been shown
@@ -119,6 +126,10 @@ final class CelebrationService: ObservableObject {
         // Don't interrupt current celebration
         if currentCelebration != nil { return nil }
         
+        if let celebration = checkAchievementCelebration(dataManager: dataManager) {
+            return celebration
+        }
+
         let entries = dataManager.fetchAllEntries()
         guard entries.count >= 2 else { return nil }
         
@@ -144,6 +155,25 @@ final class CelebrationService: ObservableObject {
     
     // MARK: - Specific Celebration Checks
     
+    /// Check for newly unlocked achievements persisted in SwiftData
+    private func checkAchievementCelebration(dataManager: DataManager) -> Celebration? {
+        let pending = dataManager.fetchUncelebratedAchievements()
+        guard let achievement = pending.first else { return nil }
+        guard let descriptor = AchievementDescriptor.descriptor(for: achievement.key) else {
+            dataManager.markAchievementCelebrated(achievement.key)
+            return nil
+        }
+        let title = String(localized: descriptor.title)
+        let message = String(localized: L10n.Achievements.celebrationUnlocked(title))
+        let celebration = createCelebration(
+            type: .achievement,
+            customMessage: message,
+            iconOverride: descriptor.iconName
+        )
+        dataManager.markAchievementCelebrated(achievement.key)
+        return celebration
+    }
+
     /// Check for goal progress celebrations
     private func checkGoalCelebration(dataManager: DataManager) -> Celebration? {
         guard let goal = dataManager.fetchActiveGoal(),
@@ -281,8 +311,8 @@ final class CelebrationService: ObservableObject {
     // MARK: - Celebration Management
     
     /// Create and track a celebration
-    private func createCelebration(type: CelebrationType, customMessage: String? = nil) -> Celebration {
-        let celebration = Celebration(type: type, timestamp: Date(), customMessage: customMessage)
+    private func createCelebration(type: CelebrationType, customMessage: String? = nil, iconOverride: String? = nil) -> Celebration {
+        let celebration = Celebration(type: type, timestamp: Date(), customMessage: customMessage, customIconName: iconOverride)
         markAsShown(type)
         return celebration
     }

@@ -1,6 +1,11 @@
 //
 //  AddWeightEntryView.swift
 //  TrimTally
+			.alert(L10n.Common.errorTitle, isPresented: $showingError) {
+				Button(String(localized: L10n.Common.okButton), role: .cancel) { }
+			} message: {
+				Text(errorMessage)
+			}
 //
 //  Created by Trimly on 11/19/2025.
 //
@@ -152,7 +157,11 @@ struct AddWeightEntryView: View {
 						try await healthKitService.saveWeightToHealthKit(weightKg: weightKg, timestamp: selectedDate)
 						showHealthKitSuccess = true
 					} catch {
-						// Ignore HealthKit errors for now; entry is already saved locally
+						// Show a gentle, one-time warning if HealthKit write fails
+						if !showHealthKitSuccess {
+							errorMessage = String(localized: L10n.Health.writeFailedHint)
+							showingError = true
+						}
 					}
 				}
 			}

@@ -189,6 +189,7 @@ enum L10n {
 		static let countingSamples = LocalizedStringResource("health.import.counting", defaultValue: "Counting samples")
 		static let samplesFoundLabel = LocalizedStringResource("health.import.samplesFound", defaultValue: "Samples Found")
 		static let selectRangeHint = LocalizedStringResource("health.import.rangeHint", defaultValue: "Select a range to preview available entries.")
+		static let importRecentButton = LocalizedStringResource("health.import.recent.button", defaultValue: "Import recent")
 		static let importButton = LocalizedStringResource("health.import.button", defaultValue: "Import Data")
 		static let importProgressTitle = LocalizedStringResource("health.import.progress.title", defaultValue: "Import Progress")
 		static func importProgressStatus(_ percent: Int) -> LocalizedStringResource {
@@ -208,6 +209,16 @@ enum L10n {
 		static func syncedRangeDescription(_ start: String, _ end: String) -> LocalizedStringResource {
 			LocalizedStringResource("health.summary.range", defaultValue: "From \(start) to \(end)")
 		}
+		static func lastManualImport(_ date: String) -> LocalizedStringResource {
+			LocalizedStringResource("health.summary.lastImport", defaultValue: "Last manual import: \(date)")
+		}
+		static let syncDirectionTitle = LocalizedStringResource("health.syncDirection.title", defaultValue: "How sync works")
+		static let syncDirectionDescription = LocalizedStringResource("health.syncDirection.description", defaultValue: "TrimTally can read your weight from Health, and optionally write new manual entries back.")
+		static let syncDirectionRead = LocalizedStringResource("health.syncDirection.read", defaultValue: "Reads weight entries from the Health app.")
+		static let syncDirectionWrite = LocalizedStringResource("health.syncDirection.write", defaultValue: "When enabled, writes new manual entries to Health.")
+		static func lastBackgroundSync(_ date: String) -> LocalizedStringResource {
+			LocalizedStringResource("health.sync.lastBackground", defaultValue: "Last background sync: \(date)")
+		}
 		static let genericErrorMessage = LocalizedStringResource("health.error.generic", defaultValue: "An error occurred")
 		static func authorizationFailed(_ message: String) -> LocalizedStringResource {
 			LocalizedStringResource("health.error.authorization", defaultValue: "Failed to authorize HealthKit: \(message)")
@@ -218,6 +229,7 @@ enum L10n {
 		static func importFailed(_ message: String) -> LocalizedStringResource {
 			LocalizedStringResource("health.error.import", defaultValue: "Failed to import data: \(message)")
 		}
+		static let writeFailedHint = LocalizedStringResource("health.error.writeFailedHint", defaultValue: "Saved in TrimTally, but couldn't write to Health. Check Health permissions if you want syncing.")
 	}
 
 	enum Timeline {

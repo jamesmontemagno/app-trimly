@@ -22,6 +22,8 @@ struct HealthKitView: View {
 	@State private var healthKitEntryCount: Int = 0
 	@State private var firstHealthKitDate: Date?
 	@State private var lastHealthKitDate: Date?
+	@State private var showWriteWarningOnce = false
+	@State private var isImportingRecent = false
     
 	var body: some View {
 		NavigationStack {
@@ -67,6 +69,20 @@ struct HealthKitView: View {
 							}
 						}
 					}
+
+					TrimlyCardSection(
+						title: String(localized: L10n.Health.syncDirectionTitle),
+						description: String(localized: L10n.Health.syncDirectionDescription)
+					) {
+						VStack(alignment: .leading, spacing: 8) {
+							Label(String(localized: L10n.Health.syncDirectionRead), systemImage: "arrow.down.circle")
+								.font(.subheadline)
+								.foregroundStyle(.primary)
+							Label(String(localized: L10n.Health.syncDirectionWrite), systemImage: "arrow.up.circle")
+								.font(.subheadline)
+								.foregroundStyle(.primary)
+						}
+					}
 					
 					if healthKitService.isAuthorized {
 						TrimlyCardSection(
@@ -98,6 +114,14 @@ struct HealthKitView: View {
 									.foregroundStyle(.secondary)
 							}
 							Button {
+								importRecent()
+							} label: {
+								Label(String(localized: L10n.Health.importRecentButton), systemImage: "clock.arrow.circlepath")
+									.font(.subheadline)
+							}
+							.disabled(healthKitService.isImporting || isImportingRecent)
+							.buttonStyle(.bordered)
+							Button {
 								importData()
 							} label: {
 								Label(String(localized: L10n.Health.importButton), systemImage: "square.and.arrow.down")
@@ -105,6 +129,12 @@ struct HealthKitView: View {
 							}
 							.disabled(sampleCount == nil || sampleCount == 0 || healthKitService.isImporting)
 							.buttonStyle(.borderedProminent)
+							if let lastImport = dataManager.settings?.healthKitLastImportAt {
+								Divider().padding(.vertical, 8)
+								Text(L10n.Health.lastManualImport(lastImport.formatted(date: .abbreviated, time: .shortened)))
+									.font(.caption)
+									.foregroundStyle(.secondary)
+							}
 						}
 						
 						if healthKitService.isImporting {
@@ -132,6 +162,7 @@ struct HealthKitView: View {
 							title: String(localized: L10n.Health.backgroundSyncTitle),
 							description: String(localized: L10n.Health.backgroundSyncDescription)
 						) {
+							Divider().padding(.vertical, 8)
 							Toggle(String(localized: L10n.Health.backgroundSyncToggle), isOn: Binding(
 								get: { dataManager.settings?.healthKitEnabled ?? false },
 								set: { enabled in
@@ -161,6 +192,12 @@ struct HealthKitView: View {
 									}
 								}
 							))
+							if let lastBackground = dataManager.settings?.healthKitLastBackgroundSyncAt {
+								Divider().padding(.vertical, 8)
+								Text(L10n.Health.lastBackgroundSync(lastBackground.formatted(date: .abbreviated, time: .shortened)))
+									.font(.caption)
+									.foregroundStyle(.secondary)
+							}
 						}
 					}
 				}
@@ -236,11 +273,48 @@ struct HealthKitView: View {
 					unit: unit
 				)
 				importedCount = count
+				dataManager.updateSettings { settings in
+					settings.healthKitLastImportAt = Date()
+				}
 				loadHealthKitSummary()
 			} catch {
 				errorMessage = L10n.Health.importFailed(error.localizedDescription)
 				showingError = true
 			}
+		}
+	}
+
+	private func importRecent() {
+		guard let unit = dataManager.settings?.preferredUnit else { return }
+		let now = Date()
+		let calendar = Calendar.current
+		let start: Date
+		if let lastImport = dataManager.settings?.healthKitLastImportAt {
+			start = lastImport
+		} else if let thirtyDaysAgo = calendar.date(byAdding: .day, value: -30, to: now) {
+			start = thirtyDaysAgo
+		} else {
+			start = calendar.date(byAdding: .month, value: -1, to: now) ?? now
+		}
+		isImportingRecent = true
+		Task {
+			do {
+				let count = try await healthKitService.importHistoricalData(
+					from: start,
+					to: now,
+					dataManager: dataManager,
+					unit: unit
+				)
+				importedCount = count
+				dataManager.updateSettings { settings in
+					settings.healthKitLastImportAt = Date()
+				}
+				loadHealthKitSummary()
+			} catch {
+				errorMessage = L10n.Health.importFailed(error.localizedDescription)
+				showingError = true
+			}
+			isImportingRecent = false
 		}
 	}
     

@@ -59,6 +59,12 @@ final class AppSettings {
     
     /// HealthKit duplicate tolerance in kg
     var healthKitDuplicateToleranceKg: Double = 0.1
+
+    /// Last time a manual HealthKit import completed
+    var healthKitLastImportAt: Date?
+
+    /// Last time a background HealthKit sync completed
+    var healthKitLastBackgroundSyncAt: Date?
     
     /// Consistency score window (days)
     var consistencyScoreWindow: Int = 30
@@ -101,6 +107,8 @@ final class AppSettings {
         healthKitWriteEnabled: Bool = false,
         autoHideHealthKitDuplicates: Bool = true,
         healthKitDuplicateToleranceKg: Double = 0.1,
+        healthKitLastImportAt: Date? = nil,
+        healthKitLastBackgroundSyncAt: Date? = nil,
         consistencyScoreWindow: Int = 30,
         appearance: AppAppearance = .system,
         hasCompletedOnboarding: Bool = false,
@@ -126,6 +134,8 @@ final class AppSettings {
         self.healthKitWriteEnabled = healthKitWriteEnabled
         self.autoHideHealthKitDuplicates = autoHideHealthKitDuplicates
         self.healthKitDuplicateToleranceKg = healthKitDuplicateToleranceKg
+        self.healthKitLastImportAt = healthKitLastImportAt
+        self.healthKitLastBackgroundSyncAt = healthKitLastBackgroundSyncAt
         self.consistencyScoreWindow = consistencyScoreWindow
         self.appearance = appearance
         self.hasCompletedOnboarding = hasCompletedOnboarding

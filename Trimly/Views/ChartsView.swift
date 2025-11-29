@@ -174,6 +174,7 @@ struct ChartsView: View {
 				ChartSeries.movingAverage.rawValue: movingAverageGradient,
 				ChartSeries.ema.rawValue: emaLineGradient
 			])
+			.chartLegend(.hidden)
 			.chartOverlay { proxy in
 				GeometryReader { geo in
 					Rectangle()

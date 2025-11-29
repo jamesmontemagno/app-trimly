@@ -7,6 +7,7 @@ import Combine
 class StoreManager: ObservableObject {
     @Published var isPro: Bool = false
     @Published var products: [Product] = []
+    @Published var isPurchasing: Bool = false
     
     private let productIds = ["trimtallypro"]
     private var updates: Task<Void, Never>? = nil
@@ -32,7 +33,10 @@ class StoreManager: ObservableObject {
         }
     }
     
-    func purchase(_ product: Product) async throws {
+    func purchase(_ product: Product) async throws -> Bool {
+        isPurchasing = true
+        defer { isPurchasing = false }
+        
         let result = try await product.purchase()
         
         switch result {
@@ -40,10 +44,11 @@ class StoreManager: ObservableObject {
             let transaction = try checkVerified(verification)
             await updateCustomerProductStatus()
             await transaction.finish()
+            return true
         case .userCancelled, .pending:
-            break
+            return false
         @unknown default:
-            break
+            return false
         }
     }
     

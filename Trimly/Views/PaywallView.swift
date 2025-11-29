@@ -44,18 +44,27 @@ struct PaywallView: View {
                         if let product = storeManager.products.first(where: { $0.id == "trimtallypro" }) {
                             Button {
                                 Task {
-                                    try? await storeManager.purchase(product)
+                                    let success = (try? await storeManager.purchase(product)) ?? false
+                                    if success {
+                                        dismiss()
+                                    }
                                 }
                             } label: {
-                                Text("Upgrade - \(product.displayPrice)")
-                                    .font(.headline.bold())
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(Color.blue)
-                                    .foregroundStyle(.white)
-                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                HStack {
+                                    if storeManager.isPurchasing {
+                                        ProgressView()
+                                    }
+                                    Text("Upgrade - \(product.displayPrice)")
+                                }
+                                .font(.headline.bold())
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.blue)
+                                .foregroundStyle(.white)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
                             }
                             .padding(.horizontal)
+                            .disabled(storeManager.isPurchasing)
                         } else {
                             ProgressView()
                                 .padding()

@@ -28,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B307961F2EDB4C0E008042C8 /* TrimTally.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TrimTally.xctestplan; sourceTree = "<group>"; };
 		B39227562ED9703A00C14B08 /* TrimTally.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrimTally.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B39227652ED9703D00C14B08 /* TrimTallyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrimTallyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B392276F2ED9703D00C14B08 /* TrimTallyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrimTallyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -101,6 +102,7 @@
 		B392274D2ED9703A00C14B08 = {
 			isa = PBXGroup;
 			children = (
+				B307961F2EDB4C0E008042C8 /* TrimTally.xctestplan */,
 				B39227582ED9703A00C14B08 /* Trimly */,
 				B39227682ED9703D00C14B08 /* TrimlyTests */,
 				B39227722ED9703D00C14B08 /* TrimlyUITests */,
@@ -536,7 +538,7 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TrimTally.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TrimTally";
 				XROS_DEPLOYMENT_TARGET = 26.0;
@@ -562,7 +564,7 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TrimTally.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TrimTally";
 				XROS_DEPLOYMENT_TARGET = 26.0;
@@ -587,7 +589,7 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_TARGET_NAME = TrimTally;
 				XROS_DEPLOYMENT_TARGET = 26.0;
@@ -612,7 +614,7 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_TARGET_NAME = TrimTally;
 				XROS_DEPLOYMENT_TARGET = 26.0;

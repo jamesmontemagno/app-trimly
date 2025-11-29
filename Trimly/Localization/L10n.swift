@@ -240,6 +240,13 @@ enum L10n {
 			LocalizedStringResource("timeline.daily.value", defaultValue: "Daily: \(value)")
 		}
 		static let healthKitLabel = LocalizedStringResource("timeline.entry.healthKit", defaultValue: "HealthKit")
+		static let deleteErrorTitle = LocalizedStringResource("timeline.alert.deleteError.title", defaultValue: "Couldn't delete entry")
+		static func deleteErrorMessage(_ message: String) -> LocalizedStringResource {
+			LocalizedStringResource("timeline.alert.deleteError.message", defaultValue: "We couldn't delete this entry: \(message)")
+		}
+		static let deleteErrorFallback = LocalizedStringResource("timeline.alert.deleteError.fallback", defaultValue: "Please try again.")
+		static let lastEntryTitle = LocalizedStringResource("timeline.alert.lastEntry.title", defaultValue: "Keep at least one entry")
+		static let lastEntryMessage = LocalizedStringResource("timeline.alert.lastEntry.message", defaultValue: "You need at least one weight entry. To start over, open Settings and choose Delete All Data.")
 	}
 
 	enum Settings {
@@ -329,6 +336,8 @@ enum L10n {
 	enum Export {
 		static let navigationTitle = LocalizedStringResource("export.navigation.title", defaultValue: "Export Data")
 		static let hint = LocalizedStringResource("export.hint", defaultValue: "Copy or share your data export. Each row includes a timestamp, normalized date, and weight in kilograms.")
+		static let emptyTitle = LocalizedStringResource("export.empty.title", defaultValue: "No data to export")
+		static let emptyDescription = LocalizedStringResource("export.empty.description", defaultValue: "Add at least one weight entry, then try exporting again.")
 	}
 
 	enum Plateau {

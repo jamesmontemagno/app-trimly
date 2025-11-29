@@ -37,9 +37,22 @@ All data operations flow through `DataManager` (singleton, `@MainActor`-bound):
 - Always default to `.system` so the app follows the OS when the user has not made an explicit choice.
 
 ### Testing
-- Use `@MainActor` decorator on test methods accessing DataManager
+- Use `@MainActor` decorator on test methods accessing DataManager or other main-actor APIs
 - Create in-memory DataManager in `setUp()`: `dataManager = await DataManager(inMemory: true)`
-- Tests in `Tests/TrimlyTests/` cover analytics math and CRUD operations—add tests for new calculations
+- Tests in `TrimlyTests/` cover analytics math and CRUD operations—add tests for new calculations
+
+#### Running Tests from CLI / CI
+- Run the full test suite on iOS simulator:
+	- `xcodebuild -scheme TrimTally -destination 'platform=iOS Simulator,name=iPhone 17' test`
+- Run only a specific test case (e.g., consistency score analytics):
+	- `xcodebuild -scheme TrimTally -destination 'platform=iOS Simulator,name=iPhone 17' -only-testing TrimTallyTests/WeightAnalyticsTests test`
+- Run only DataManager tests (macOS or iOS destination):
+	- `xcodebuild -scheme TrimTally -destination 'platform=macOS,arch=arm64' -only-testing TrimTallyTests/DataManagerTests test`
+
+#### Running Unit Tests Without Launching Simulators
+- Prefer running pure unit tests against a macOS destination to avoid booting iOS simulators:
+	- `xcodebuild -scheme TrimTally -destination 'platform=macOS,arch=arm64' test`
+- This runs the same `TrimTallyTests` target on macOS only; UI tests that depend on iOS simulators will be skipped.
 
 ### Error Handling
 - DataManager methods throw for persistence errors—views should wrap in `do-catch` or `try?`
@@ -50,6 +63,13 @@ All data operations flow through `DataManager` (singleton, `@MainActor`-bound):
 - **Xcode**: Open `TrimTally.xcodeproj`, select the `TrimTally` scheme for iOS or macOS, `⌘R`
 - **CLI/CI**: Use `xcodebuild -scheme TrimTally -destination 'platform=iOS Simulator,name=iPhone 15 Pro' test` for automated testing
 - **Platforms**: Requires macOS for development (SwiftUI/SwiftData dependency)
+
+### CLI Quick Reference
+- `xcodebuild -scheme TrimTally -destination 'platform=iOS Simulator,name=iPhone 17' build`
+- `xcodebuild -scheme TrimTally -destination 'platform=iOS Simulator,name=iPhone 17' test`
+- `xcodebuild -scheme TrimTally -destination 'platform=macOS,arch=arm64' build`
+- `xcodebuild -scheme TrimTally -destination 'platform=iOS Simulator,name=iPhone 17' -only-testing TrimTallyTests/WeightAnalyticsTests test`
+ - `xcodebuild -scheme TrimTally -destination 'platform=macOS,arch=arm64' -only-testing TrimTallyTests/DataManagerTests test`
 
 ## File Organization
 ```

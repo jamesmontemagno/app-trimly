@@ -45,7 +45,7 @@ struct DashboardView: View {
 					Button {
 						showingAddEntry = true
 					} label: {
-						Image(systemName: "plus.circle.fill")
+						Image(systemName: "plus")
 							.font(.title2)
 					}
 				}

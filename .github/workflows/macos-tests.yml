@@ -1,0 +1,25 @@
+name: macOS Unit Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  tests-macos:
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '16.0'
+
+      - name: Run macOS unit tests
+        run: |
+          cd app-trimly
+          xcodebuild -scheme TrimTally -destination 'platform=macOS,arch=arm64' test

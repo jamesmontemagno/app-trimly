@@ -566,22 +566,42 @@ struct ExportView: View {
 	let csvData: String
 	@Environment(\.dismiss) var dismiss
 
+	private var trimmedCSV: String {
+		csvData.trimmingCharacters(in: .whitespacesAndNewlines)
+	}
+
+	private var hasContent: Bool {
+		!trimmedCSV.isEmpty
+	}
+
 	var body: some View {
 		NavigationStack {
 			ScrollView {
 				VStack(spacing: 24) {
-					Text(L10n.Export.hint)
+					Text(String(localized: L10n.Export.hint))
 						.font(.callout)
 						.foregroundStyle(.secondary)
 						.multilineTextAlignment(.leading)
 
-					TrimlyCardContainer(style: .popup) {
-						Text(csvData)
-							.font(.system(.caption, design: .monospaced))
-							.textSelection(.enabled)
-							.frame(maxWidth: .infinity, alignment: .leading)
+					if hasContent {
+						TrimlyCardContainer(style: .popup) {
+							ScrollView(.horizontal, showsIndicators: true) {
+								Text(verbatim: csvData)
+									.font(.system(.caption, design: .monospaced))
+									.multilineTextAlignment(.leading)
+									.textSelection(.enabled)
+									.frame(maxWidth: .infinity, alignment: .topLeading)
+							}
+						}
+					} else {
+						ContentUnavailableView(
+							String(localized: L10n.Export.emptyTitle),
+							systemImage: "doc.text.magnifyingglass",
+							description: Text(L10n.Export.emptyDescription)
+						)
 					}
 				}
+				.frame(maxWidth: .infinity, alignment: .leading)
 				.padding(24)
 			}
 			.navigationTitle(Text(L10n.Export.navigationTitle))

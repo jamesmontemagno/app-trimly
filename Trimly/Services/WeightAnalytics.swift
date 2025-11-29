@@ -113,8 +113,9 @@ final class WeightAnalytics {
         let effectiveStart = max(firstDate, windowStart)
         
         // Count days from effective start to today
+        // Note: totalDays is 0 when effectiveStart == today (first day of logging)
         let totalDays = calendar.dateComponents([.day], from: effectiveStart, to: today).day ?? 0
-        guard totalDays > 0 else { return nil }
+        guard totalDays >= 0 else { return nil }
         
         // Count unique days with entries in window
         let daysWithEntries = Set(visibleEntries.lazy
@@ -122,6 +123,8 @@ final class WeightAnalytics {
             .map { $0.normalizedDate }
         ).count
         
+        // Denominator is number of calendar days between effectiveStart and today, inclusive
+        // This means a brand-new user who has logged every available day still sees 100%.
         return Double(daysWithEntries) / Double(totalDays + 1) // +1 to include today
     }
     

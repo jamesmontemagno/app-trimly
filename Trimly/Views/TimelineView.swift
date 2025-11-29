@@ -10,6 +10,8 @@ import SwiftUI
 struct TimelineView: View {
 	@EnvironmentObject var dataManager: DataManager
 	@State private var showingAddEntry = false
+	@State private var pendingDeletionIDs = Set<UUID>()
+	@State private var activeAlert: TimelineAlert?
     
 	var body: some View {
 		NavigationStack {
@@ -50,10 +52,18 @@ struct TimelineView: View {
 				}
 			}
 		}
+		.alert(item: $activeAlert) { alert in
+			Alert(
+				title: Text(alert.title),
+				message: Text(alert.message),
+				dismissButton: .default(Text(L10n.Common.okButton))
+			)
+		}
 	}
     
 	private var groupedEntries: [DayGroup] {
 		let entries = dataManager.fetchAllEntries()
+			.filter { !pendingDeletionIDs.contains($0.id) }
 		let grouped = Dictionary(grouping: entries) { $0.normalizedDate }
 		return grouped.map { date, entries in
 			DayGroup(date: date,
@@ -63,9 +73,41 @@ struct TimelineView: View {
 	}
     
 	private func deleteEntries(at offsets: IndexSet, in entries: [WeightEntry]) {
-		for index in offsets {
-			let entry = entries[index]
-			try? dataManager.deleteEntry(entry)
+		let entriesToDelete = offsets.compactMap { index -> WeightEntry? in
+			guard entries.indices.contains(index) else { return nil }
+			return entries[index]
+		}
+		guard !entriesToDelete.isEmpty else { return }
+
+		let totalEntries = dataManager.fetchAllEntries().count
+		let remainingEntries = max(0, totalEntries - entriesToDelete.count)
+		guard remainingEntries >= 1 else {
+			activeAlert = TimelineAlert(kind: .lastEntryRestriction)
+			return
+		}
+
+		let idsToDelete = Set(entriesToDelete.map(\.id))
+
+		withAnimation {
+			pendingDeletionIDs.formUnion(idsToDelete)
+		}
+
+		var encounteredError: Error?
+		for entry in entriesToDelete {
+			do {
+				try dataManager.deleteEntry(entry)
+			} catch {
+				encounteredError = error
+				break
+			}
+		}
+
+		withAnimation {
+			pendingDeletionIDs.subtract(idsToDelete)
+		}
+
+		if let error = encounteredError {
+			activeAlert = TimelineAlert(kind: .deletionError(message: error.localizedDescription))
 		}
 	}
 }
@@ -154,6 +196,38 @@ struct EntryRow: View {
 		let value = unit.convert(fromKg: entry.weightKg)
 		let precision = dataManager.settings?.decimalPrecision ?? 1
 		return String(format: "%.*f %@", precision, value, unit.symbol as NSString)
+	}
+}
+
+private struct TimelineAlert: Identifiable {
+	enum Kind {
+		case deletionError(message: String)
+		case lastEntryRestriction
+	}
+
+	let id = UUID()
+	let kind: Kind
+
+	var title: LocalizedStringResource {
+		switch kind {
+		case .deletionError:
+			return L10n.Timeline.deleteErrorTitle
+		case .lastEntryRestriction:
+			return L10n.Timeline.lastEntryTitle
+		}
+	}
+
+	var message: LocalizedStringResource {
+		switch kind {
+		case .deletionError(let message):
+			let trimmed = message.trimmingCharacters(in: .whitespacesAndNewlines)
+			if trimmed.isEmpty {
+				return L10n.Timeline.deleteErrorFallback
+			}
+			return L10n.Timeline.deleteErrorMessage(trimmed)
+		case .lastEntryRestriction:
+			return L10n.Timeline.lastEntryMessage
+		}
 	}
 }
 

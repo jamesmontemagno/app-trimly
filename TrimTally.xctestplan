@@ -1,0 +1,30 @@
+{
+  "configurations" : [
+    {
+      "id" : "88F2FEA6-98A1-4D04-B1BA-1600FA99FA4C",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:TrimTally.xcodeproj",
+      "identifier" : "B39227552ED9703A00C14B08",
+      "name" : "TrimTally"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:TrimTally.xcodeproj",
+        "identifier" : "B39227642ED9703D00C14B08",
+        "name" : "TrimTallyTests"
+      }
+    }
+  ],
+  "version" : 1
+}

@@ -21,6 +21,12 @@
             "state" : "new",
             "value" : "We normalize to your local day for charts."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Normalizamos a tu día local para los gráficos."
+          }
         }
       }
     },
@@ -31,6 +37,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Date & Time"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fecha y hora"
           }
         }
       }
@@ -43,6 +55,12 @@
             "state" : "new",
             "value" : "Optional reflections or context."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reflexiones o contexto opcional."
+          }
         }
       }
     },
@@ -53,6 +71,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Morning weigh-in after run"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pesaje matutino después de correr"
           }
         }
       }
@@ -65,6 +89,12 @@
             "state" : "new",
             "value" : "Notes"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notas"
+          }
         }
       }
     },
@@ -75,6 +105,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Enter today's reading in %@."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingresa la medición de hoy en %@."
           }
         }
       }
@@ -87,6 +123,12 @@
             "state" : "new",
             "value" : "Stored internally as kilograms so your analytics stay precise."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Almacenado internamente en kilogramos para mantener precisos tus análisis."
+          }
         }
       }
     },
@@ -97,6 +139,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Log Weight"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrar peso"
           }
         }
       }
@@ -109,6 +157,12 @@
             "state" : "new",
             "value" : "Please enter a valid weight"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por favor ingresa un peso válido"
+          }
         }
       }
     },
@@ -119,6 +173,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Settings not available"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes no disponibles"
           }
         }
       }
@@ -131,6 +191,12 @@
             "state" : "new",
             "value" : "Weight must be greater than zero"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El peso debe ser mayor que cero"
+          }
         }
       }
     },
@@ -142,6 +208,12 @@
             "state" : "new",
             "value" : "Failed to save entry: %@"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error al guardar la entrada: %@"
+          }
         }
       }
     },
@@ -151,6 +223,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "0.0"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "0.0"
           }
         }
@@ -164,6 +242,12 @@
             "state" : "new",
             "value" : "Add Weight"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agregar peso"
+          }
         }
       }
     },
@@ -174,6 +258,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Gradual decrease"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disminución gradual"
           }
         }
       }
@@ -186,6 +276,12 @@
             "state" : "new",
             "value" : "Slight gain trend"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ligera tendencia al aumento"
+          }
         }
       }
     },
@@ -196,6 +292,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Steady"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estable"
           }
         }
       }
@@ -208,6 +310,12 @@
             "state" : "new",
             "value" : "Add weight entries to see your chart"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agrega entradas de peso para ver tu gráfico"
+          }
         }
       }
     },
@@ -218,6 +326,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "No Data"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin datos"
           }
         }
       }
@@ -230,6 +344,12 @@
             "state" : "new",
             "value" : "Goal"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meta"
+          }
         }
       }
     },
@@ -239,6 +359,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "EMA"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "EMA"
           }
         }
@@ -252,6 +378,12 @@
             "state" : "new",
             "value" : "MA"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MA"
+          }
         }
       }
     },
@@ -262,6 +394,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Weight"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peso"
           }
         }
       }
@@ -274,6 +412,12 @@
             "state" : "new",
             "value" : "Charts"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gráficos"
+          }
         }
       }
     },
@@ -284,6 +428,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Range"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rango"
           }
         }
       }
@@ -296,6 +446,12 @@
             "state" : "new",
             "value" : "Month"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mes"
+          }
         }
       }
     },
@@ -306,6 +462,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Quarter"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trimestre"
           }
         }
       }
@@ -318,6 +480,12 @@
             "state" : "new",
             "value" : "Week"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Semana"
+          }
         }
       }
     },
@@ -328,6 +496,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Year"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Año"
           }
         }
       }
@@ -340,6 +514,12 @@
             "state" : "new",
             "value" : "Avg"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prom"
+          }
         }
       }
     },
@@ -350,6 +530,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Max"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Máx"
           }
         }
       }
@@ -362,6 +548,12 @@
             "state" : "new",
             "value" : "Min"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mín"
+          }
         }
       }
     },
@@ -372,6 +564,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Range"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rango"
           }
         }
       }
@@ -384,6 +582,12 @@
             "state" : "new",
             "value" : "Analytical"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analítico"
+          }
         }
       }
     },
@@ -394,6 +598,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Choose how much chart chrome you want to see."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige cuántos detalles del gráfico quieres ver."
           }
         }
       }
@@ -406,6 +616,12 @@
             "state" : "new",
             "value" : "Minimalist"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minimalista"
+          }
         }
       }
     },
@@ -416,6 +632,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Display Mode"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modo de visualización"
           }
         }
       }
@@ -428,6 +650,12 @@
             "state" : "new",
             "value" : "Chart Settings"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes de gráficos"
+          }
         }
       }
     },
@@ -438,6 +666,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "%lld days"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld días"
           }
         }
       }
@@ -450,6 +684,12 @@
             "state" : "new",
             "value" : "Overlay smoothed lines to better see direction without noise."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Superponer líneas suavizadas para ver mejor la dirección sin ruido."
+          }
         }
       }
     },
@@ -460,6 +700,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Both overlays respect your date filter so weekly views stay clean."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ambas superposiciones respetan tu filtro de fecha para que las vistas semanales se mantengan limpias."
           }
         }
       }
@@ -472,6 +718,12 @@
             "state" : "new",
             "value" : "Exponential Moving Average"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Media móvil exponencial"
+          }
         }
       }
     },
@@ -482,6 +734,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Moving Average"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Media móvil"
           }
         }
       }
@@ -494,6 +752,12 @@
             "state" : "new",
             "value" : "Trend Layers"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capas de tendencia"
+          }
         }
       }
     },
@@ -504,6 +768,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Show EMA"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar EMA"
           }
         }
       }
@@ -516,6 +786,12 @@
             "state" : "new",
             "value" : "Show Moving Average"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar media móvil"
+          }
         }
       }
     },
@@ -527,6 +803,12 @@
             "state" : "new",
             "value" : "Delete All Data"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar todos los datos"
+          }
         }
       }
     },
@@ -536,6 +818,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "Error"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Error"
           }
         }
@@ -549,6 +837,12 @@
             "state" : "translated",
             "value" : "Accept & Continue"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aceptar y continuar"
+          }
         }
       }
     },
@@ -559,6 +853,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Cancel"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
           }
         }
       }
@@ -571,6 +871,12 @@
             "state" : "translated",
             "value" : "Continue"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuar"
+          }
         }
       }
     },
@@ -581,6 +887,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Delete"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar"
           }
         }
       }
@@ -593,6 +905,12 @@
             "state" : "new",
             "value" : "Done"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listo"
+          }
         }
       }
     },
@@ -604,6 +922,12 @@
             "state" : "translated",
             "value" : "Get Started"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comenzar"
+          }
         }
       }
     },
@@ -613,6 +937,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "OK"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "OK"
           }
         }
@@ -626,6 +956,12 @@
             "state" : "new",
             "value" : "Save"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guardar"
+          }
         }
       }
     },
@@ -637,6 +973,12 @@
             "state" : "translated",
             "value" : "Skip for now"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saltar por ahora"
+          }
         }
       }
     },
@@ -647,6 +989,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "%lld days"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld días"
           }
         }
       }
@@ -662,6 +1010,12 @@
             "state" : "new",
             "value" : "Average of %lld entries"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Promedio de %lld entradas"
+          }
         }
       }
     },
@@ -672,6 +1026,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Building consistency"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Construyendo consistencia"
           }
         }
       }
@@ -684,6 +1044,12 @@
             "state" : "new",
             "value" : "Consistent"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consistente"
+          }
         }
       }
     },
@@ -694,6 +1060,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Moderate"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moderado"
           }
         }
       }
@@ -706,6 +1078,12 @@
             "state" : "new",
             "value" : "Very consistent"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muy consistente"
+          }
         }
       }
     },
@@ -716,6 +1094,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Consistency Score"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puntuación de consistencia"
           }
         }
       }
@@ -728,6 +1112,12 @@
             "state" : "new",
             "value" : "Current Weight"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peso actual"
+          }
         }
       }
     },
@@ -738,6 +1128,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Estimated Goal Date"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fecha estimada de meta"
           }
         }
       }
@@ -750,6 +1146,12 @@
             "state" : "new",
             "value" : "From Start"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desde el inicio"
+          }
         }
       }
     },
@@ -760,6 +1162,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "in %lld days"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "en %lld días"
           }
         }
       }
@@ -772,6 +1180,12 @@
             "state" : "new",
             "value" : "Last 7 Days"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Últimos 7 días"
+          }
         }
       }
     },
@@ -782,6 +1196,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Latest: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Última: %@"
           }
         }
       }
@@ -794,6 +1214,12 @@
             "state" : "new",
             "value" : "Today"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoy"
+          }
         }
       }
     },
@@ -804,6 +1230,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "No entries yet"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aún no hay entradas"
           }
         }
       }
@@ -816,6 +1248,12 @@
             "state" : "new",
             "value" : "Not enough data"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay suficientes datos"
+          }
         }
       }
     },
@@ -825,6 +1263,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "--"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "--"
           }
         }
@@ -838,6 +1282,12 @@
             "state" : "new",
             "value" : "Plateau Detected"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meseta detectada"
+          }
         }
       }
     },
@@ -848,6 +1298,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Progress"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Progreso"
           }
         }
       }
@@ -860,6 +1316,12 @@
             "state" : "new",
             "value" : "Set a goal to track progress"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Establece una meta para seguir tu progreso"
+          }
         }
       }
     },
@@ -871,6 +1333,12 @@
             "state" : "new",
             "value" : "To Goal"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A la meta"
+          }
         }
       }
     },
@@ -881,6 +1349,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Trend"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tendencia"
           }
         }
       }
@@ -899,6 +1373,12 @@
             "state" : "new",
             "value" : "Copy or share your data export. Each row includes a timestamp, normalized date, and weight in kilograms."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copia o comparte tu exportación de datos. Cada fila incluye una marca de tiempo, fecha normalizada y peso en kilogramos."
+          }
         }
       }
     },
@@ -909,6 +1389,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Export Data"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exportar datos"
           }
         }
       }
@@ -924,6 +1410,12 @@
             "state" : "new",
             "value" : "Completed on %@"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Completado el %@"
+          }
         }
       }
     },
@@ -934,6 +1426,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Abandoned"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abandonado"
           }
         }
       }
@@ -946,6 +1444,12 @@
             "state" : "new",
             "value" : "Achieved"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logrado"
+          }
         }
       }
     },
@@ -956,6 +1460,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Changed"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambiado"
           }
         }
       }
@@ -968,6 +1478,12 @@
             "state" : "new",
             "value" : "Past goals will appear here"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las metas anteriores aparecerán aquí"
+          }
         }
       }
     },
@@ -978,6 +1494,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "No Goal History"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin historial de metas"
           }
         }
       }
@@ -990,6 +1512,12 @@
             "state" : "new",
             "value" : "Set on %@"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Establecido el %@"
+          }
         }
       }
     },
@@ -1000,6 +1528,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Goal History"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Historial de metas"
           }
         }
       }
@@ -1012,6 +1546,12 @@
             "state" : "new",
             "value" : "Please enter a valid weight"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por favor ingresa un peso válido"
+          }
         }
       }
     },
@@ -1022,6 +1562,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Settings not available"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes no disponibles"
           }
         }
       }
@@ -1034,6 +1580,12 @@
             "state" : "new",
             "value" : "Weight must be greater than zero"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El peso debe ser mayor que cero"
+          }
         }
       }
     },
@@ -1044,6 +1596,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Failed to save goal: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error al guardar la meta: %@"
           }
         }
       }
@@ -1056,6 +1614,12 @@
             "state" : "new",
             "value" : "Optional context you'll revisit later."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contexto opcional que podrás revisar más tarde."
+          }
         }
       }
     },
@@ -1066,6 +1630,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Why this goal matters"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por qué esta meta es importante"
           }
         }
       }
@@ -1078,6 +1648,12 @@
             "state" : "new",
             "value" : "Notes"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notas"
+          }
         }
       }
     },
@@ -1089,6 +1665,12 @@
             "state" : "new",
             "value" : "Enter a value in %@."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingresa un valor en %@."
+          }
         }
       }
     },
@@ -1098,6 +1680,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "145"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "145"
           }
         }
@@ -1111,6 +1699,12 @@
             "state" : "new",
             "value" : "Target Weight"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peso objetivo"
+          }
         }
       }
     },
@@ -1121,6 +1715,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Set Goal"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Establecer meta"
           }
         }
       }
@@ -1133,6 +1733,12 @@
             "state" : "new",
             "value" : "We use your preferred units and precision settings to track progress and estimate timelines."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usamos tus unidades y configuración de precisión preferidas para rastrear el progreso y estimar plazos."
+          }
         }
       }
     },
@@ -1143,6 +1749,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Allow TrimTally to securely read your Health app weight data."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permite que TrimTally lea de forma segura los datos de peso de tu app Salud."
           }
         }
       }
@@ -1155,6 +1767,12 @@
             "state" : "translated",
             "value" : "HealthKit Enabled"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HealthKit habilitado"
+          }
         }
       }
     },
@@ -1165,6 +1783,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You can now import history and sync future entries."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ahora puedes importar el historial y sincronizar entradas futuras."
           }
         }
       }
@@ -1177,6 +1801,12 @@
             "state" : "translated",
             "value" : "Connect to Health so TrimTally can keep everything in one place."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conéctate a Salud para que TrimTally pueda mantener todo en un solo lugar."
+          }
         }
       }
     },
@@ -1187,6 +1817,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Request Access"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solicitar acceso"
           }
         }
       }
@@ -1199,6 +1835,12 @@
             "state" : "translated",
             "value" : "Authorization"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autorización"
+          }
         }
       }
     },
@@ -1209,6 +1851,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Failed to authorize HealthKit: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error al autorizar HealthKit: %@"
           }
         }
       }
@@ -1221,6 +1869,12 @@
             "state" : "translated",
             "value" : "An error occurred"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocurrió un error"
+          }
         }
       }
     },
@@ -1231,6 +1885,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Failed to import data: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error al importar datos: %@"
           }
         }
       }
@@ -1243,6 +1903,12 @@
             "state" : "translated",
             "value" : "Failed to load sample count: %@"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error al cargar el recuento de muestras: %@"
+          }
         }
       }
     },
@@ -1253,6 +1919,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Import Data"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar datos"
           }
         }
       }
@@ -1265,6 +1937,12 @@
             "state" : "translated",
             "value" : "Counting samples"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contando muestras"
+          }
         }
       }
     },
@@ -1275,6 +1953,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Choose a range and pull past weights into TrimTally. Duplicates are automatically skipped."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige un rango y trae pesos anteriores a TrimTally. Los duplicados se omiten automáticamente."
           }
         }
       }
@@ -1287,6 +1971,12 @@
             "state" : "translated",
             "value" : "End"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fin"
+          }
         }
       }
     },
@@ -1297,6 +1987,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Importing... %lld%%"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importando... %lld%%"
           }
         }
       }
@@ -1309,6 +2005,12 @@
             "state" : "translated",
             "value" : "Import Progress"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Progreso de importación"
+          }
         }
       }
     },
@@ -1319,6 +2021,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Select a range to preview available entries."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecciona un rango para previsualizar las entradas disponibles."
           }
         }
       }
@@ -1331,6 +2039,12 @@
             "state" : "translated",
             "value" : "You can rerun imports at any time—duplicates stay hidden."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puedes volver a ejecutar importaciones en cualquier momento—los duplicados permanecen ocultos."
+          }
         }
       }
     },
@@ -1341,6 +2055,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld samples imported"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld muestras importadas"
           }
         }
       }
@@ -1353,6 +2073,12 @@
             "state" : "translated",
             "value" : "Recent Import"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importación reciente"
+          }
         }
       }
     },
@@ -1363,6 +2089,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Samples Found"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muestras encontradas"
           }
         }
       }
@@ -1375,6 +2107,12 @@
             "state" : "translated",
             "value" : "Start"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inicio"
+          }
         }
       }
     },
@@ -1385,6 +2123,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Historical Import"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importación histórica"
           }
         }
       }
@@ -1397,6 +2141,12 @@
             "state" : "translated",
             "value" : "HealthKit Integration"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Integración de HealthKit"
+          }
         }
       }
     },
@@ -1407,6 +2157,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Auto-hide Duplicates"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocultar duplicados automáticamente"
           }
         }
       }
@@ -1419,6 +2175,12 @@
             "state" : "translated",
             "value" : "Let TrimTally watch for new Health weight samples and keep things tidy."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permite que TrimTally vigile nuevas muestras de peso de Salud y mantenga todo ordenado."
+          }
         }
       }
     },
@@ -1430,6 +2192,12 @@
             "state" : "translated",
             "value" : "Background Sync"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sincronización en segundo plano"
+          }
         }
       }
     },
@@ -1440,6 +2208,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enable Background Sync"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activar sincronización en segundo plano"
           }
         }
       }
@@ -1455,6 +2229,12 @@
             "state" : "new",
             "value" : "Dismiss"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descartar"
+          }
         }
       }
     },
@@ -1465,6 +2245,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Log Weight"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrar peso"
           }
         }
       }
@@ -1477,6 +2263,12 @@
             "state" : "new",
             "value" : "Notification permission not granted"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permiso de notificación no otorgado"
+          }
         }
       }
     },
@@ -1487,6 +2279,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Failed to schedule notification: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error al programar la notificación: %@"
           }
         }
       }
@@ -1499,6 +2297,12 @@
             "state" : "new",
             "value" : "Keep your streak going! Log today's weight."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Mantén tu racha! Registra el peso de hoy."
+          }
         }
       }
     },
@@ -1509,6 +2313,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Time to log your weight"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hora de registrar tu peso"
           }
         }
       }
@@ -1521,6 +2331,12 @@
             "state" : "new",
             "value" : "Don't forget to log your weight for today."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No olvides registrar tu peso de hoy."
+          }
         }
       }
     },
@@ -1531,6 +2347,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Evening check-in"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registro vespertino"
           }
         }
       }
@@ -1543,6 +2365,12 @@
             "state" : "translated",
             "value" : "Read Privacy Policy"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leer la Política de privacidad"
+          }
         }
       }
     },
@@ -1553,6 +2381,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "By continuing, you agree to our Terms of Service and Privacy Policy"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al continuar, aceptas nuestros Términos de uso y la Política de privacidad"
           }
         }
       }
@@ -1565,6 +2399,12 @@
             "state" : "translated",
             "value" : "Read Terms of Service"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leer los Términos de uso"
+          }
         }
       }
     },
@@ -1575,6 +2415,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Terms & Privacy"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Términos y privacidad"
           }
         }
       }
@@ -1587,6 +2433,12 @@
             "state" : "translated",
             "value" : "Goal weight entry"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entrada de peso objetivo"
+          }
         }
       }
     },
@@ -1597,6 +2449,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Goal"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meta"
           }
         }
       }
@@ -1609,6 +2467,12 @@
             "state" : "translated",
             "value" : "What's your target weight?"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Cuál es tu peso objetivo?"
+          }
         }
       }
     },
@@ -1619,6 +2483,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Set Your Goal"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Define tu meta"
           }
         }
       }
@@ -1631,6 +2501,12 @@
             "state" : "translated",
             "value" : "We'll remind you at 9:00 AM each day"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Te recordaremos cada día a las 9:00 a. m."
+          }
         }
       }
     },
@@ -1641,6 +2517,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Stay consistent with gentle reminders"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mantén la constancia con suaves recordatorios"
           }
         }
       }
@@ -1653,6 +2535,12 @@
             "state" : "translated",
             "value" : "Daily Reminders"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recordatorios diarios"
+          }
         }
       }
     },
@@ -1663,6 +2551,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enable Daily Reminder"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activar recordatorio diario"
           }
         }
       }
@@ -1675,6 +2569,12 @@
             "state" : "translated",
             "value" : "Starting weight entry"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entrada de peso inicial"
+          }
         }
       }
     },
@@ -1685,6 +2585,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Weight"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peso"
           }
         }
       }
@@ -1697,6 +2603,12 @@
             "state" : "translated",
             "value" : "What's your current weight?"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Cuál es tu peso actual?"
+          }
         }
       }
     },
@@ -1707,6 +2619,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Starting Weight"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peso inicial"
           }
         }
       }
@@ -1719,6 +2637,12 @@
             "state" : "translated",
             "value" : "Finish"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finalizar"
+          }
         }
       }
     },
@@ -1729,6 +2653,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Goal"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meta"
           }
         }
       }
@@ -1741,6 +2671,12 @@
             "state" : "translated",
             "value" : "Reminders"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recordatorios"
+          }
         }
       }
     },
@@ -1751,6 +2687,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Start"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comienzo"
           }
         }
       }
@@ -1763,6 +2705,12 @@
             "state" : "translated",
             "value" : "Units"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unidades"
+          }
         }
       }
     },
@@ -1773,6 +2721,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Welcome"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inicio"
           }
         }
       }
@@ -1785,6 +2739,12 @@
             "state" : "translated",
             "value" : "Kilograms (kg)"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kilogramos (kg)"
+          }
         }
       }
     },
@@ -1795,6 +2755,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pounds (lb)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Libras (lb)"
           }
         }
       }
@@ -1807,6 +2773,12 @@
             "state" : "translated",
             "value" : "Preferred unit"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unidad preferida"
+          }
         }
       }
     },
@@ -1817,6 +2789,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Select your preferred weight unit"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecciona tu unidad de peso preferida"
           }
         }
       }
@@ -1829,6 +2807,12 @@
             "state" : "translated",
             "value" : "Choose Your Unit"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige tu unidad"
+          }
         }
       }
     },
@@ -1839,6 +2823,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Your supportive companion for mindful weight tracking"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu compañero de apoyo para un seguimiento consciente del peso"
           }
         }
       }
@@ -1851,6 +2841,12 @@
             "state" : "translated",
             "value" : "Welcome to TrimTally"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenido a TrimTally"
+          }
         }
       }
     },
@@ -1861,6 +2857,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Small fluctuations are normal. Keep up your consistent logging!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las pequeñas fluctuaciones son normales. ¡Mantén tu registro constante!"
           }
         }
       }
@@ -1873,6 +2875,12 @@
             "state" : "new",
             "value" : "Your weight has remained stable. This is normal—bodies adapt. Consider reviewing your goals or routine."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu peso se ha mantenido estable. Esto es normal—los cuerpos se adaptan. Considera revisar tus metas o rutina."
+          }
         }
       }
     },
@@ -1883,6 +2891,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Weight stabilized for %lld days—consider adjusting your routine if needed"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peso estabilizado por %lld días—considera ajustar tu rutina si es necesario"
           }
         }
       }
@@ -1895,6 +2909,12 @@
             "state" : "new",
             "value" : "Let TrimTally learn your habits and recommend smarter reminder times."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permite que TrimTally aprenda tus hábitos y recomiende horarios de recordatorio más inteligentes."
+          }
         }
       }
     },
@@ -1905,6 +2925,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Based on your recent logging"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Basado en tus registros recientes"
           }
         }
       }
@@ -1917,6 +2943,12 @@
             "state" : "new",
             "value" : "Suggested time"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hora sugerida"
+          }
         }
       }
     },
@@ -1927,6 +2959,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Adaptive Suggestions"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sugerencias adaptativas"
           }
         }
       }
@@ -1939,6 +2977,12 @@
             "state" : "new",
             "value" : "Smart Time Suggestions"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sugerencias de hora inteligentes"
+          }
         }
       }
     },
@@ -1949,6 +2993,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "TrimTally can send you reminders on this device."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TrimTally puede enviarte recordatorios en este dispositivo."
           }
         }
       }
@@ -1961,6 +3011,12 @@
             "state" : "new",
             "value" : "Notifications Enabled"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notificaciones habilitadas"
+          }
         }
       }
     },
@@ -1971,6 +3027,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Grant Access"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otorgar acceso"
           }
         }
       }
@@ -1983,6 +3045,12 @@
             "state" : "new",
             "value" : "Stay on track with gentle nudges. Enable notifications so we can remind you when it counts."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mantén el rumbo con suaves recordatorios. Activa las notificaciones para que podamos recordarte cuando sea importante."
+          }
         }
       }
     },
@@ -1993,6 +3061,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Authorization"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autorización"
           }
         }
       }
@@ -2005,6 +3079,12 @@
             "state" : "new",
             "value" : "Choose the best time for TrimTally to nudge you to log your weight."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige el mejor momento para que TrimTally te recuerde registrar tu peso."
+          }
         }
       }
     },
@@ -2015,6 +3095,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Reminder Time"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hora del recordatorio"
           }
         }
       }
@@ -2027,6 +3113,12 @@
             "state" : "new",
             "value" : "Daily Reminder"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recordatorio diario"
+          }
         }
       }
     },
@@ -2037,6 +3129,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Enable Daily Reminder"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activar recordatorio diario"
           }
         }
       }
@@ -2049,6 +3147,12 @@
             "state" : "new",
             "value" : "Reminders"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recordatorios"
+          }
         }
       }
     },
@@ -2059,6 +3163,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Optional evening nudge for an extra check-in."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recordatorio vespertino opcional para un registro adicional."
           }
         }
       }
@@ -2071,6 +3181,12 @@
             "state" : "new",
             "value" : "Evening Time"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hora vespertina"
+          }
         }
       }
     },
@@ -2082,6 +3198,12 @@
             "state" : "new",
             "value" : "Secondary Reminder"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recordatorio secundario"
+          }
         }
       }
     },
@@ -2092,6 +3214,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Enable Evening Reminder"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activar recordatorio vespertino"
           }
         }
       }
@@ -2107,6 +3235,12 @@
             "state" : "new",
             "value" : "Privacy Policy"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Política de privacidad"
+          }
         }
       }
     },
@@ -2117,6 +3251,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Terms of Service"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Términos de uso"
           }
         }
       }
@@ -2129,6 +3269,12 @@
             "state" : "new",
             "value" : "Version"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Versión"
+          }
         }
       }
     },
@@ -2139,6 +3285,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Currently %lld days."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualmente %lld días."
           }
         }
       }
@@ -2151,6 +3303,12 @@
             "state" : "new",
             "value" : "Window Length"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duración de la ventana"
+          }
         }
       }
     },
@@ -2161,6 +3319,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Latest entry or daily average."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Última entrada o promedio diario."
           }
         }
       }
@@ -2173,6 +3337,12 @@
             "state" : "new",
             "value" : "Daily Calculation"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cálculo diario"
+          }
         }
       }
     },
@@ -2183,6 +3353,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Average"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Promedio"
           }
         }
       }
@@ -2195,6 +3371,12 @@
             "state" : "new",
             "value" : "Latest"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Última"
+          }
         }
       }
     },
@@ -2205,6 +3387,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Remove every entry from this device."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar todas las entradas de este dispositivo."
           }
         }
       }
@@ -2217,6 +3405,12 @@
             "state" : "new",
             "value" : "Delete All Data"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar todos los datos"
+          }
         }
       }
     },
@@ -2227,6 +3421,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "This will permanently delete all your weight entries and goals. This action cannot be undone."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto eliminará permanentemente todas tus entradas de peso y metas. Esta acción no se puede deshacer."
           }
         }
       }
@@ -2239,6 +3439,12 @@
             "state" : "new",
             "value" : "Create a CSV copy of your entries."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crear una copia CSV de tus entradas."
+          }
         }
       }
     },
@@ -2249,6 +3455,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Export Data"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exportar datos"
           }
         }
       }
@@ -2261,6 +3473,12 @@
             "state" : "new",
             "value" : "Current Goal"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meta actual"
+          }
         }
       }
     },
@@ -2271,6 +3489,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "See past targets and outcomes."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver objetivos y resultados anteriores."
           }
         }
       }
@@ -2283,6 +3507,12 @@
             "state" : "new",
             "value" : "Goal History"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Historial de metas"
+          }
         }
       }
     },
@@ -2293,6 +3523,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Track progress toward a target weight."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rastrea el progreso hacia un peso objetivo."
           }
         }
       }
@@ -2305,6 +3541,12 @@
             "state" : "new",
             "value" : "Set Goal"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Establecer meta"
+          }
         }
       }
     },
@@ -2315,6 +3557,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Off"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desactivado"
           }
         }
       }
@@ -2327,6 +3575,12 @@
             "state" : "new",
             "value" : "On"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activado"
+          }
         }
       }
     },
@@ -2337,6 +3591,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Set a daily reminder to stay consistent."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Establece un recordatorio diario para mantener la constancia."
           }
         }
       }
@@ -2349,6 +3609,12 @@
             "state" : "new",
             "value" : "Daily nudges to log your weight."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recordatorios diarios para registrar tu peso."
+          }
         }
       }
     },
@@ -2359,6 +3625,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Connected"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conectado"
           }
         }
       }
@@ -2371,6 +3643,12 @@
             "state" : "new",
             "value" : "Import and sync weight data."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar y sincronizar datos de peso."
+          }
         }
       }
     },
@@ -2381,6 +3659,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Apple Health"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Salud"
           }
         }
       }
@@ -2393,6 +3677,12 @@
             "state" : "new",
             "value" : "Settings"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes"
+          }
         }
       }
     },
@@ -2403,6 +3693,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "1 place"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 lugar"
           }
         }
       }
@@ -2415,6 +3711,12 @@
             "state" : "new",
             "value" : "Control the number of decimal places you see."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Controla el número de decimales que ves."
+          }
         }
       }
     },
@@ -2425,6 +3727,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Decimal Precision"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Precisión decimal"
           }
         }
       }
@@ -2437,6 +3745,12 @@
             "state" : "new",
             "value" : "2 places"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2 lugares"
+          }
         }
       }
     },
@@ -2447,6 +3761,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Dark"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oscuro"
           }
         }
       }
@@ -2459,6 +3779,12 @@
             "state" : "new",
             "value" : "Light"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claro"
+          }
         }
       }
     },
@@ -2469,6 +3795,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "System"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistema"
           }
         }
       }
@@ -2481,6 +3813,12 @@
             "state" : "new",
             "value" : "Choose TrimTally's appearance."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige la apariencia de TrimTally."
+          }
         }
       }
     },
@@ -2491,6 +3829,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Theme"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tema"
           }
         }
       }
@@ -2503,6 +3847,12 @@
             "state" : "new",
             "value" : "Display entries in your preferred unit."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muestra las entradas en tu unidad preferida."
+          }
         }
       }
     },
@@ -2513,6 +3863,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Weight Unit"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unidad de peso"
           }
         }
       }
@@ -2525,6 +3881,12 @@
             "state" : "new",
             "value" : "About TrimTally"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acerca de TrimTally"
+          }
         }
       }
     },
@@ -2535,6 +3897,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Consistency Score"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puntuación de consistencia"
           }
         }
       }
@@ -2547,6 +3915,12 @@
             "state" : "new",
             "value" : "Choose how TrimTally treats multiple entries recorded in the same day."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige cómo TrimTally trata múltiples entradas registradas en el mismo día."
+          }
         }
       }
     },
@@ -2557,6 +3931,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Daily Value"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Valor diario"
           }
         }
       }
@@ -2569,6 +3949,12 @@
             "state" : "new",
             "value" : "Data & Privacy"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datos y privacidad"
+          }
         }
       }
     },
@@ -2579,6 +3965,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Goals"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Metas"
           }
         }
       }
@@ -2591,6 +3983,12 @@
             "state" : "new",
             "value" : "Habits & Reminders"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hábitos y recordatorios"
+          }
         }
       }
     },
@@ -2601,6 +3999,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Integrations"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Integraciones"
           }
         }
       }
@@ -2613,6 +4017,12 @@
             "state" : "new",
             "value" : "Fine-tune how TrimTally displays your weight, decimals, and appearance."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajusta cómo TrimTally muestra tu peso, decimales y apariencia."
+          }
         }
       }
     },
@@ -2623,6 +4033,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Personalization"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personalización"
           }
         }
       }
@@ -2635,6 +4051,12 @@
             "state" : "new",
             "value" : "Charts"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gráficos"
+          }
         }
       }
     },
@@ -2645,6 +4067,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Settings"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes"
           }
         }
       }
@@ -2657,6 +4085,12 @@
             "state" : "new",
             "value" : "Timeline"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Línea de tiempo"
+          }
         }
       }
     },
@@ -2667,6 +4101,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Today"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoy"
           }
         }
       }
@@ -2679,6 +4119,12 @@
             "state" : "new",
             "value" : "Daily: %@"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diario: %@"
+          }
         }
       }
     },
@@ -2689,6 +4135,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Add your first weight entry to get started"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agrega tu primera entrada de peso para comenzar"
           }
         }
       }
@@ -2701,6 +4153,12 @@
             "state" : "new",
             "value" : "No Entries Yet"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aún no hay entradas"
+          }
         }
       }
     },
@@ -2710,6 +4168,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "HealthKit"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "HealthKit"
           }
         }
@@ -2722,6 +4186,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Timeline"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Línea de tiempo"
           }
         }
       }

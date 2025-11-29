@@ -86,3 +86,7 @@ TrimlyTests/          # Unit tests (DataManager, WeightAnalytics, etc.)
 - **Date comparisons**: Always normalize dates for daily logic using `Calendar.current.startOfDay(for:)`
 - **Unit conversions**: Double-check kg ↔ lb conversions use `WeightUnit` enum, not hardcoded constants
 - **iCloud sync**: Test multi-device scenarios—SwiftData handles conflicts but verify merge behavior
+
+
+## After Code Changes
+Make sure we build the project to verify there are no errors. Run all unit tests to ensure nothing is broken.

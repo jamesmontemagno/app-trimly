@@ -16,6 +16,11 @@ final class DataManager: ObservableObject {
     let modelContext: ModelContext
     
     @Published var settings: AppSettings?
+
+    /// Ensures SwiftUI views refresh when persisted data changes
+    private func publishChange() {
+        objectWillChange.send()
+    }
     
     init(inMemory: Bool = false) {
         let schema = Schema([
@@ -75,6 +80,7 @@ final class DataManager: ObservableObject {
         update(&settings)
         settings.updatedAt = Date()
         try? modelContext.save()
+        publishChange()
     }
     
     // MARK: - Weight Entry Management
@@ -95,6 +101,7 @@ final class DataManager: ObservableObject {
         )
         modelContext.insert(entry)
         try modelContext.save()
+        publishChange()
     }
     
     func fetchAllEntries() -> [WeightEntry] {
@@ -116,12 +123,14 @@ final class DataManager: ObservableObject {
     func deleteEntry(_ entry: WeightEntry) throws {
         modelContext.delete(entry)
         try modelContext.save()
+        publishChange()
     }
     
     func updateEntry(_ entry: WeightEntry, notes: String?) throws {
         entry.notes = notes
         entry.updatedAt = Date()
         try modelContext.save()
+        publishChange()
     }
     
     // MARK: - Goal Management
@@ -140,6 +149,7 @@ final class DataManager: ObservableObject {
         )
         modelContext.insert(goal)
         try modelContext.save()
+        publishChange()
     }
     
     func fetchActiveGoal() -> Goal? {
@@ -161,6 +171,7 @@ final class DataManager: ObservableObject {
         guard let activeGoal = fetchActiveGoal() else { return }
         activeGoal.archive(reason: reason)
         try modelContext.save()
+        publishChange()
     }
     
     // MARK: - Analytics
@@ -263,5 +274,6 @@ final class DataManager: ObservableObject {
         }
         
         try modelContext.save()
+        publishChange()
     }
 }

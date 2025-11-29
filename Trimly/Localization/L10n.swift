@@ -149,6 +149,7 @@ enum L10n {
 			LocalizedStringResource("dashboard.goal.arrival", defaultValue: "in \(days) days")
 		}
 		static let plateauDetected = LocalizedStringResource("dashboard.plateauDetected", defaultValue: "Plateau Detected")
+		static let syncedToHealthKit = LocalizedStringResource("dashboard.syncedToHealthKit", defaultValue: "Also saved to Health")
 	}
 
 	enum Reminders {
@@ -202,6 +203,11 @@ enum L10n {
 			static let backgroundSyncDescription = LocalizedStringResource("health.sync.description", defaultValue: "Let TrimTally watch for new Health weight samples and keep things tidy.")
 		static let backgroundSyncToggle = LocalizedStringResource("health.sync.toggle", defaultValue: "Enable Background Sync")
 		static let autoHideToggle = LocalizedStringResource("health.sync.autoHide", defaultValue: "Auto-hide Duplicates")
+		static let writeToHealthToggle = LocalizedStringResource("health.sync.writeToHealth", defaultValue: "Write new entries to Health")
+		static let syncedEntriesLabel = LocalizedStringResource("health.summary.syncedEntries", defaultValue: "Entries from Health")
+		static func syncedRangeDescription(_ start: String, _ end: String) -> LocalizedStringResource {
+			LocalizedStringResource("health.summary.range", defaultValue: "From \(start) to \(end)")
+		}
 		static let genericErrorMessage = LocalizedStringResource("health.error.generic", defaultValue: "An error occurred")
 		static func authorizationFailed(_ message: String) -> LocalizedStringResource {
 			LocalizedStringResource("health.error.authorization", defaultValue: "Failed to authorize HealthKit: \(message)")

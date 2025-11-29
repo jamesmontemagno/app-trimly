@@ -13,6 +13,7 @@ struct DashboardView: View {
 	@StateObject private var celebrationService = CelebrationService()
 	@StateObject private var plateauService = PlateauDetectionService()
 	@State private var showingAddEntry = false
+	@State private var recentlySyncedToHealthKit = false
     
 	var body: some View {
 		NavigationStack {
@@ -49,7 +50,14 @@ struct DashboardView: View {
 					}
 				}
 			}
-			.sheet(isPresented: $showingAddEntry) {
+			.sheet(isPresented: $showingAddEntry, onDismiss: {
+				if let latest = todayEntries?.max(by: { $0.timestamp < $1.timestamp }), latest.source == .healthKit {
+					recentlySyncedToHealthKit = true
+					DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+						recentlySyncedToHealthKit = false
+					}
+				}
+			}) {
 				AddWeightEntryView()
 			}
 			.overlay {
@@ -85,6 +93,16 @@ struct DashboardView: View {
                 
 				if let todayEntries = todayEntries, !todayEntries.isEmpty {
 					primaryValueIndicator(entries: todayEntries)
+				}
+				if recentlySyncedToHealthKit {
+					HStack(spacing: 6) {
+						Image(systemName: "heart.fill")
+							.font(.caption)
+							.foregroundStyle(.pink)
+						Text(L10n.Dashboard.syncedToHealthKit)
+							.font(.caption)
+							.foregroundStyle(.secondary)
+					}
 				}
 			} else {
 				Text(L10n.Dashboard.placeholder)

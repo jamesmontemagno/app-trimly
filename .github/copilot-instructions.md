@@ -87,6 +87,9 @@ TrimlyTests/          # Unit tests (DataManager, WeightAnalytics, etc.)
 - **Unit conversions**: Double-check kg ↔ lb conversions use `WeightUnit` enum, not hardcoded constants
 - **iCloud sync**: Test multi-device scenarios—SwiftData handles conflicts but verify merge behavior
 
+## Translations
+Never hard code strings in views. Use `Localizable.strings` and `NSLocalizedString` for all user-facing text. Follow existing keys for consistency. Make sure to add new keys to all supported languages.
+
 
 ## After Code Changes
-Make sure we build the project to verify there are no errors. Run all unit tests to ensure nothing is broken.
+Make sure we build the project to verify there are no errors. 

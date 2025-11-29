@@ -51,6 +51,9 @@ final class AppSettings {
     /// HealthKit integration enabled
     var healthKitEnabled: Bool = false
     
+    /// Write new manual entries to HealthKit
+    var healthKitWriteEnabled: Bool = false
+    
     /// Auto-hide HealthKit duplicates
     var autoHideHealthKitDuplicates: Bool = true
     
@@ -95,6 +98,7 @@ final class AppSettings {
         movingAveragePeriod: Int = 7,
         emaPeriod: Int = 7,
         healthKitEnabled: Bool = false,
+        healthKitWriteEnabled: Bool = false,
         autoHideHealthKitDuplicates: Bool = true,
         healthKitDuplicateToleranceKg: Double = 0.1,
         consistencyScoreWindow: Int = 30,
@@ -119,6 +123,7 @@ final class AppSettings {
         self.movingAveragePeriod = movingAveragePeriod
         self.emaPeriod = emaPeriod
         self.healthKitEnabled = healthKitEnabled
+        self.healthKitWriteEnabled = healthKitWriteEnabled
         self.autoHideHealthKitDuplicates = autoHideHealthKitDuplicates
         self.healthKitDuplicateToleranceKg = healthKitDuplicateToleranceKg
         self.consistencyScoreWindow = consistencyScoreWindow

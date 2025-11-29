@@ -19,6 +19,9 @@ struct HealthKitView: View {
 	@State private var importedCount: Int?
 	@State private var errorMessage: LocalizedStringResource?
 	@State private var showingError = false
+	@State private var healthKitEntryCount: Int = 0
+	@State private var firstHealthKitDate: Date?
+	@State private var lastHealthKitDate: Date?
     
 	var body: some View {
 		NavigationStack {
@@ -35,6 +38,23 @@ struct HealthKitView: View {
 							Text(L10n.Health.statusEnabledDescription)
 								.font(.caption)
 								.foregroundStyle(.secondary)
+							if healthKitEntryCount > 0 {
+								Divider().padding(.vertical, 8)
+								VStack(alignment: .leading, spacing: 6) {
+									HStack {
+										Text(L10n.Health.syncedEntriesLabel)
+											.font(.subheadline)
+										Spacer()
+										Text("\(healthKitEntryCount)")
+											.font(.headline)
+									}
+									if let first = firstHealthKitDate, let last = lastHealthKitDate {
+										Text(L10n.Health.syncedRangeDescription(first.formatted(date: .abbreviated, time: .omitted), last.formatted(date: .abbreviated, time: .omitted)))
+											.font(.caption)
+											.foregroundStyle(.secondary)
+									}
+								}
+							}
 						} else {
 							VStack(alignment: .leading, spacing: 12) {
 								Text(L10n.Health.connectPrompt)
@@ -132,6 +152,15 @@ struct HealthKitView: View {
 									}
 								}
 							))
+							Divider().padding(.vertical, 8)
+							Toggle(String(localized: L10n.Health.writeToHealthToggle), isOn: Binding(
+								get: { dataManager.settings?.healthKitWriteEnabled ?? false },
+								set: { enabled in
+									dataManager.updateSettings { settings in
+										settings.healthKitWriteEnabled = enabled
+									}
+								}
+							))
 						}
 					}
 				}
@@ -157,6 +186,7 @@ struct HealthKitView: View {
 				healthKitService.checkAuthorizationStatus()
 				if healthKitService.isAuthorized {
 					loadSampleCount()
+					loadHealthKitSummary()
 				}
 			}
 		}
@@ -206,6 +236,7 @@ struct HealthKitView: View {
 					unit: unit
 				)
 				importedCount = count
+				loadHealthKitSummary()
 			} catch {
 				errorMessage = L10n.Health.importFailed(error.localizedDescription)
 				showingError = true
@@ -216,6 +247,13 @@ struct HealthKitView: View {
 	private func enableBackgroundSync() {
 		guard let unit = dataManager.settings?.preferredUnit else { return }
 		healthKitService.enableBackgroundDelivery(dataManager: dataManager, unit: unit)
+	}
+
+	private func loadHealthKitSummary() {
+		let entries = dataManager.fetchAllEntries().filter { $0.source == .healthKit && !$0.isHidden }
+		healthKitEntryCount = entries.count
+		firstHealthKitDate = entries.last?.timestamp
+		lastHealthKitDate = entries.first?.timestamp
 	}
 }
 

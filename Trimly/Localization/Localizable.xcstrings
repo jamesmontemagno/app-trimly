@@ -1794,6 +1794,29 @@
         }
       }
     },
+    "dashboard.syncedToHealthKit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Also saved to Health"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "También guardado en Salud"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Également enregistré dans Santé"
+          }
+        }
+      }
+    },
     "dashboard.progress" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -3080,6 +3103,75 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Activer la synchronisation en arrière-plan"
+          }
+        }
+      }
+    },
+    "health.sync.writeToHealth" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Write new entries to Health"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guardar nuevas entradas en Salud"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enregistrer les nouvelles entrées dans Santé"
+          }
+        }
+      }
+    },
+    "health.summary.range" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From %@ to %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De %@ a %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De %@ à %@"
+          }
+        }
+      }
+    },
+    "health.summary.syncedEntries" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entries from Health"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entradas desde Salud"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entrées depuis Santé"
           }
         }
       }

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AddWeightEntryView: View {
 	@EnvironmentObject var dataManager: DataManager
+	@StateObject private var healthKitService = HealthKitService()
 	@Environment(\.dismiss) var dismiss
     
 	@State private var weightText = ""
@@ -16,6 +17,7 @@ struct AddWeightEntryView: View {
 	@State private var notes = ""
 	@State private var showingError = false
 	@State private var errorMessage = ""
+	@State private var showHealthKitSuccess = false
     
 	var body: some View {
 		NavigationStack {
@@ -91,7 +93,7 @@ struct AddWeightEntryView: View {
                 
 				ToolbarItem(placement: .confirmationAction) {
 						Button(String(localized: L10n.Common.saveButton)) {
-						saveEntry()
+							saveEntry()
 					}
 					.disabled(weightText.isEmpty)
 				}
@@ -136,7 +138,7 @@ struct AddWeightEntryView: View {
 		}
         
 		let weightKg = unit.convertToKg(weight)
-        
+		
 		do {
 			try dataManager.addWeightEntry(
 				weightKg: weightKg,
@@ -144,6 +146,16 @@ struct AddWeightEntryView: View {
 				unit: unit,
 				notes: notes.isEmpty ? nil : notes
 			)
+			if dataManager.settings?.healthKitWriteEnabled == true {
+				Task {
+					do {
+						try await healthKitService.saveWeightToHealthKit(weightKg: weightKg, timestamp: selectedDate)
+						showHealthKitSuccess = true
+					} catch {
+						// Ignore HealthKit errors for now; entry is already saved locally
+					}
+				}
+			}
 			dismiss()
 		} catch {
 			errorMessage = String(localized: L10n.AddEntry.errorSaveFailure(error.localizedDescription))

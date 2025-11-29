@@ -27,11 +27,12 @@ final class HealthKitService: ObservableObject {
         return HKHealthStore.isHealthDataAvailable()
     }
     
-    /// Request authorization to read weight data
+    /// Request authorization to read and write weight data
     func requestAuthorization() async throws {
         let typesToRead: Set<HKSampleType> = [weightType]
+        let typesToShare: Set<HKSampleType> = [weightType]
         
-        try await healthStore.requestAuthorization(toShare: [], read: typesToRead)
+        try await healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead)
         
         let status = healthStore.authorizationStatus(for: weightType)
         isAuthorized = (status == .sharingAuthorized)
@@ -41,6 +42,33 @@ final class HealthKitService: ObservableObject {
     func checkAuthorizationStatus() {
         let status = healthStore.authorizationStatus(for: weightType)
         isAuthorized = (status == .sharingAuthorized)
+    }
+
+    /// Save a single weight entry to HealthKit
+    /// - Parameters:
+    ///   - weightKg: Weight in kilograms
+    ///   - timestamp: Date of the measurement
+    func saveWeightToHealthKit(weightKg: Double, timestamp: Date) async throws {
+        guard HealthKitService.isHealthKitAvailable() else {
+            throw HealthKitError.notAvailable
+        }
+        let status = healthStore.authorizationStatus(for: weightType)
+        guard status == .sharingAuthorized else {
+            throw HealthKitError.notAuthorized
+        }
+        let quantity = HKQuantity(unit: .gramUnit(with: .kilo), doubleValue: weightKg)
+        let sample = HKQuantitySample(type: weightType, quantity: quantity, start: timestamp, end: timestamp)
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            healthStore.save(sample) { success, error in
+                if let error = error {
+                    continuation.resume(throwing: HealthKitError.importFailed(error))
+                } else if success {
+                    continuation.resume()
+                } else {
+                    continuation.resume(throwing: HealthKitError.importFailed(NSError(domain: "HealthKit", code: -1)))
+                }
+            }
+        }
     }
     
     // MARK: - Historical Import

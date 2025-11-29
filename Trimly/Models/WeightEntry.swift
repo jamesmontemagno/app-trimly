@@ -24,10 +24,10 @@ final class WeightEntry {
     var weightKg: Double = 0
     
     /// The unit that was displayed at entry time (for historical accuracy)
-    var displayUnitAtEntry: WeightUnit = .kilograms
+    var displayUnitAtEntry: WeightUnit = WeightUnit.kilograms
     
     /// Source of the entry (manual or HealthKit)
-    var source: EntrySource = .manual
+    var source: EntrySource = EntrySource.manual
     
     /// Optional user notes for this entry
     var notes: String?

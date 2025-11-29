@@ -16,10 +16,10 @@ final class AppSettings {
     var id: UUID = UUID()
     
     /// Preferred weight unit
-    var preferredUnit: WeightUnit = .pounds
+    var preferredUnit: WeightUnit = WeightUnit.pounds
     
     /// Daily aggregation mode (latest vs average)
-    var dailyAggregationMode: DailyAggregationMode = .latest
+    var dailyAggregationMode: DailyAggregationMode = DailyAggregationMode.latest
     
     /// Reminder time (nil if disabled)
     var reminderTime: Date?
@@ -34,7 +34,7 @@ final class AppSettings {
     var consecutiveReminderDismissals: Int = 0
     
     /// Chart display mode
-    var chartMode: ChartMode = .minimalist
+    var chartMode: ChartMode = ChartMode.minimalist
     
     /// Whether to show moving average on charts
     var showMovingAverage: Bool = true
@@ -61,7 +61,7 @@ final class AppSettings {
     var consistencyScoreWindow: Int = 30
 
     /// Preferred app appearance
-    var appearance: AppAppearance = .system
+    var appearance: AppAppearance = AppAppearance.system
     
     /// Whether user has completed onboarding
     var hasCompletedOnboarding: Bool = false
@@ -73,7 +73,7 @@ final class AppSettings {
     var decimalPrecision: Int = 1
     
     /// Projection method
-    var projectionMethod: ProjectionMethod = .linear
+    var projectionMethod: ProjectionMethod = ProjectionMethod.linear
     
     /// Minimum days required for projection
     var minDaysForProjection: Int = 10

@@ -788,6 +788,83 @@
         }
       }
     },
+    "debug.tools.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Debug Utilities"
+          }
+        }
+      }
+    },
+    "debug.tools.description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Only available in development builds. Quickly populate your charts with mock data."
+          }
+        }
+      }
+    },
+    "debug.sampleData.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Generate Sample Data"
+          }
+        }
+      }
+    },
+    "debug.sampleData.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Replace existing entries with realistic test weights."
+          }
+        }
+      }
+    },
+    "debug.sampleData.action" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Generate"
+          }
+        }
+      }
+    },
+    "debug.sampleData.success" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Sample data generated."
+          }
+        }
+      }
+    },
+    "debug.sampleData.failure" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Couldn't generate sample data: %1$@"
+          }
+        }
+      }
+    },
     "charts.stats.max" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {

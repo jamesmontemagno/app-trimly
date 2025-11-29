@@ -120,7 +120,7 @@ final class CelebrationService: ObservableObject {
         if currentCelebration != nil { return nil }
         
         let entries = dataManager.fetchAllEntries()
-        guard !entries.isEmpty else { return nil }
+        guard entries.count >= 2 else { return nil }
         
         // Check in order of importance
         if let celebration = checkGoalCelebration(dataManager: dataManager) {

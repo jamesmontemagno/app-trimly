@@ -266,4 +266,58 @@ final class DataManager: ObservableObject {
         try modelContext.save()
         publishChange()
     }
+
+#if DEBUG
+    // MARK: - Debug Helpers
+    /// Removes existing entries and creates a 30-day downward trend (165 lb → 160 lb) for visualization in debug builds.
+    func generateSampleData(days: Int = 30) throws {
+        try modelContext.delete(model: WeightEntry.self)
+        try modelContext.save()
+		
+        let calendar = Calendar.current
+        let baseDate = calendar.startOfDay(for: Date())
+        let preferredUnit = settings?.preferredUnit ?? .kilograms
+        let poundsUnit: WeightUnit = .pounds
+        let startWeightKg = poundsUnit.convertToKg(165)
+        let goalWeightKg = poundsUnit.convertToKg(160)
+        let minClamp = goalWeightKg - poundsUnit.convertToKg(0.5)
+        let maxClamp = startWeightKg + poundsUnit.convertToKg(0.5)
+        let totalDays = max(days, 2)
+        let notePool = [
+            "Post-run weigh-in",
+            "High sodium dinner",
+            "Travel day water retention",
+            "Slept great",
+            "Lift day recovery"
+        ]
+		
+        for dayOffset in 0..<totalDays {
+            guard let day = calendar.date(byAdding: .day, value: -dayOffset, to: baseDate) else { continue }
+            let entriesForDay = Int.random(in: 1...2)
+            for entryIndex in 0..<entriesForDay {
+                var components = calendar.dateComponents([.year, .month, .day], from: day)
+                components.hour = 6 + entryIndex * 3 + Int.random(in: 0...2)
+                components.minute = Int.random(in: 0...55)
+                components.second = Int.random(in: 0...50)
+                let timestamp = calendar.date(from: components) ?? day
+				
+				let progress = Double(totalDays - 1 - dayOffset) / Double(totalDays - 1)
+				let trendKg = startWeightKg - progress * (startWeightKg - goalWeightKg)
+				let rippleKg = poundsUnit.convertToKg(sin(Double(dayOffset) / 5.5) * 0.3)
+				let randomKg = poundsUnit.convertToKg(Double.random(in: -0.6...0.6))
+				let weightKg = min(max(trendKg + rippleKg + randomKg, minClamp), maxClamp)
+                let note = Bool.random() ? notePool.randomElement() : nil
+                let entry = WeightEntry(
+                    timestamp: timestamp,
+                    weightKg: weightKg,
+                    displayUnitAtEntry: preferredUnit,
+                    notes: note
+                )
+                modelContext.insert(entry)
+            }
+        }
+        try modelContext.save()
+        publishChange()
+    }
+#endif
 }

@@ -93,8 +93,8 @@ struct ChartsView: View {
 						x: .value("Date", point.date),
 						y: .value("Weight", point.weight)
 					)
-					.foregroundStyle(weightLineColor)
-					.interpolationMethod(.catmullRom)
+					.foregroundStyle(weightLineGradient)
+					.interpolationMethod(.monotone)
                     
 					PointMark(
 						x: .value("Date", point.date),
@@ -104,14 +104,14 @@ struct ChartsView: View {
 						let isSelected = point.id == selectedPoint?.id
 						let size: CGFloat = isSelected ? 24 : 12
 						Circle()
-							.strokeBorder(weightLineColor, lineWidth: isSelected ? 3 : 2)
+							.strokeBorder(weightLinePrimary, lineWidth: isSelected ? 3 : 2)
 							.background(
 								Circle()
-									.fill(isSelected ? pointFillColor : weightLineColor)
+									.fill(isSelected ? pointFillColor : weightLineSecondary)
 							)
 							.frame(width: size, height: size)
 					}
-					.foregroundStyle(weightLineColor)
+					.foregroundStyle(weightLinePrimary)
 					.accessibilityLabel(pointAccessibilityLabel(point))
 					.annotation(position: .top, alignment: .leading) {
 						if selectedPoint?.id == point.id {
@@ -122,7 +122,7 @@ struct ChartsView: View {
 
 				if let selectedPoint {
 					RuleMark(x: .value("Selected Date", selectedPoint.date))
-						.foregroundStyle(weightLineColor.opacity(0.3))
+						.foregroundStyle(weightLinePrimary.opacity(0.3))
 						.lineStyle(StrokeStyle(lineWidth: 1, dash: [2]))
 				}
                 
@@ -135,7 +135,7 @@ struct ChartsView: View {
 						)
 						.foregroundStyle(movingAverageColor)
 						.lineStyle(StrokeStyle(lineWidth: 2, dash: [5, 5]))
-						.interpolationMethod(.catmullRom)
+						.interpolationMethod(.monotone)
 					}
 				}
                 
@@ -148,7 +148,7 @@ struct ChartsView: View {
 						)
 						.foregroundStyle(emaLineColor)
 						.lineStyle(StrokeStyle(lineWidth: 2, dash: [2, 2]))
-						.interpolationMethod(.catmullRom)
+						.interpolationMethod(.monotone)
 					}
 				}
                 
@@ -202,7 +202,7 @@ struct ChartsView: View {
     
 	private var legend: some View {
 		HStack(spacing: 16) {
-			LegendItem(color: weightLineColor, label: String(localized: L10n.Charts.legendWeight), style: .solid)
+			LegendItem(color: weightLinePrimary, label: String(localized: L10n.Charts.legendWeight), style: .solid)
             
 			if dataManager.settings?.showMovingAverage == true {
 				LegendItem(color: movingAverageColor, label: String(localized: L10n.Charts.legendMovingAverage), style: .dashed)
@@ -325,9 +325,13 @@ struct ChartsView: View {
 		.background(Color.secondary.opacity(0.08), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
 	}
 
-	private var weightLineColor: Color { .accentColor }
-	private var movingAverageColor: Color { .orange }
-	private var emaLineColor: Color { .purple }
+	private var weightLinePrimary: Color { Color(red: 0.31, green: 0.55, blue: 1.0) }
+	private var weightLineSecondary: Color { Color(red: 0.29, green: 0.78, blue: 1.0) }
+	private var weightLineGradient: LinearGradient {
+		LinearGradient(colors: [weightLinePrimary, weightLineSecondary], startPoint: .leading, endPoint: .trailing)
+	}
+	private var movingAverageColor: Color { Color(red: 0.99, green: 0.64, blue: 0.32) }
+	private var emaLineColor: Color { Color(red: 0.74, green: 0.54, blue: 0.96) }
 	private var goalLineColor: Color { .green }
 	private var pointFillColor: Color {
 #if os(macOS)

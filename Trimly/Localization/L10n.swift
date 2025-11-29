@@ -384,4 +384,17 @@ enum L10n {
 			LocalizedStringResource("notifications.error.schedulingFailed", defaultValue: "Failed to schedule notification: \(message)")
 		}
 	}
+
+	enum Debug {
+		static let toolsTitle = LocalizedStringResource("debug.tools.title", defaultValue: "Debug Utilities")
+		static let toolsDescription = LocalizedStringResource("debug.tools.description", defaultValue: "Only available in development builds. Quickly populate your charts with mock data.")
+		static let sampleDataTitle = LocalizedStringResource("debug.sampleData.title", defaultValue: "Generate Sample Data")
+		static let sampleDataSubtitle = LocalizedStringResource("debug.sampleData.subtitle", defaultValue: "Replace existing entries with realistic test weights.")
+		static let sampleDataAction = LocalizedStringResource("debug.sampleData.action", defaultValue: "Generate")
+		static let sampleDataSuccess = LocalizedStringResource("debug.sampleData.success", defaultValue: "Sample data generated.")
+		static func sampleDataFailure(_ message: String) -> LocalizedStringResource {
+			LocalizedStringResource("debug.sampleData.failure", defaultValue: "Couldn't generate sample data: \(message)")
+		}
+	}
+
 }

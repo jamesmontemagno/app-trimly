@@ -20,6 +20,10 @@ struct SettingsView: View {
 	@State private var navigateToHealthKit = false
 	@State private var showingDeleteConfirmation = false
 	@State private var exportedData = ""
+#if DEBUG
+	@State private var showingSampleDataAlert = false
+	@State private var sampleDataAlertMessage = ""
+#endif
 	
 	private var appVersion: String {
 		let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
@@ -269,6 +273,27 @@ struct SettingsView: View {
 						}
 						.buttonStyle(.plain)
 					}
+			
+	#if DEBUG
+					settingsSection(
+						title: String(localized: L10n.Debug.toolsTitle),
+						description: String(localized: L10n.Debug.toolsDescription)
+					) {
+						Button {
+							generateSampleData()
+						} label: {
+							settingsRow(
+								icon: "wand.and.stars",
+								title: String(localized: L10n.Debug.sampleDataTitle),
+								subtitle: String(localized: L10n.Debug.sampleDataSubtitle),
+								iconTint: .indigo
+							) {
+								statusPill(text: String(localized: L10n.Debug.sampleDataAction), color: .indigo)
+							}
+						}
+						.buttonStyle(.plain)
+					}
+	#endif
 					
 					settingsSection(title: String(localized: L10n.Settings.aboutTitle)) {
 						Button("Restore Purchases") {
@@ -314,6 +339,13 @@ struct SettingsView: View {
 			} message: {
 				Text(L10n.Settings.deleteWarning)
 			}
+#if DEBUG
+			.alert(String(localized: L10n.Debug.sampleDataTitle), isPresented: $showingSampleDataAlert) {
+				Button(String(localized: L10n.Common.okButton), role: .cancel) { }
+			} message: {
+				Text(sampleDataAlertMessage)
+			}
+#endif
 		}
 	}
 
@@ -345,6 +377,18 @@ struct SettingsView: View {
 	private func deleteAllData() {
 		try? dataManager.deleteAllData()
 	}
+
+#if DEBUG
+	private func generateSampleData() {
+		do {
+			try dataManager.generateSampleData()
+			sampleDataAlertMessage = String(localized: L10n.Debug.sampleDataSuccess)
+		} catch {
+			sampleDataAlertMessage = String(localized: L10n.Debug.sampleDataFailure(error.localizedDescription))
+		}
+		showingSampleDataAlert = true
+	}
+#endif
 	
 	private func settingsSection<Content: View>(title: String, description: String? = nil, @ViewBuilder content: @escaping () -> Content) -> some View {
 		VStack(alignment: .leading, spacing: 12) {

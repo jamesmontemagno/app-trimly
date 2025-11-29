@@ -67,7 +67,7 @@ struct ChartsView: View {
 				ChartSettingsView()
 			}
 		}
-		.onChange(of: selectedRange) { _ in
+		.onChange(of: selectedRange) { _, _ in
 			selectedPoint = nil
 		}
 	}
@@ -307,7 +307,7 @@ struct ChartsView: View {
 	}
 
 	private func updateSelection(at location: CGPoint, proxy: ChartProxy, geometry: GeometryProxy, data: [ChartDataPoint]) {
-		let plotFrame = geometry[proxy.plotAreaFrame]
+		let plotFrame = geometry[proxy.plotFrame]
 		let xPosition = location.x - plotFrame.origin.x
 		guard xPosition >= 0, xPosition <= plotFrame.size.width else { return }
 		guard let date: Date = proxy.value(atX: xPosition) else { return }

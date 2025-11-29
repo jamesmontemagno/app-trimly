@@ -93,7 +93,7 @@ struct ChartsView: View {
 						x: .value("Date", point.date),
 						y: .value("Weight", point.weight)
 					)
-					.foregroundStyle(weightLineGradient)
+					.foregroundStyle(by: .value("Series", ChartSeries.weight.rawValue))
 					.interpolationMethod(.monotone)
                     
 					PointMark(
@@ -111,7 +111,7 @@ struct ChartsView: View {
 							)
 							.frame(width: size, height: size)
 					}
-					.foregroundStyle(weightLinePrimary)
+					.foregroundStyle(by: .value("Series", ChartSeries.weight.rawValue))
 					.accessibilityLabel(pointAccessibilityLabel(point))
 					.annotation(position: .top, alignment: .leading) {
 						if selectedPoint?.id == point.id {
@@ -133,7 +133,7 @@ struct ChartsView: View {
 							x: .value("Date", point.date),
 							y: .value("MA", point.weight)
 						)
-						.foregroundStyle(movingAverageColor)
+						.foregroundStyle(by: .value("Series", ChartSeries.movingAverage.rawValue))
 						.lineStyle(StrokeStyle(lineWidth: 2, dash: [5, 5]))
 						.interpolationMethod(.monotone)
 					}
@@ -146,7 +146,7 @@ struct ChartsView: View {
 							x: .value("Date", point.date),
 							y: .value("EMA", point.weight)
 						)
-						.foregroundStyle(emaLineColor)
+						.foregroundStyle(by: .value("Series", ChartSeries.ema.rawValue))
 						.lineStyle(StrokeStyle(lineWidth: 2, dash: [2, 2]))
 						.interpolationMethod(.monotone)
 					}
@@ -169,6 +169,11 @@ struct ChartsView: View {
 			.chartXAxis(chartMode == .minimalist ? .hidden : .automatic)
 			.chartYAxis(chartMode == .minimalist ? .hidden : .automatic)
 			.chartYScale(domain: .automatic(includesZero: false))
+			.chartForegroundStyleScale([
+				ChartSeries.weight.rawValue: weightLineGradient,
+				ChartSeries.movingAverage.rawValue: movingAverageGradient,
+				ChartSeries.ema.rawValue: emaLineGradient
+			])
 			.chartOverlay { proxy in
 				GeometryReader { geo in
 					Rectangle()
@@ -331,7 +336,13 @@ struct ChartsView: View {
 		LinearGradient(colors: [weightLinePrimary, weightLineSecondary], startPoint: .leading, endPoint: .trailing)
 	}
 	private var movingAverageColor: Color { Color(red: 0.99, green: 0.64, blue: 0.32) }
+	private var movingAverageGradient: LinearGradient {
+		LinearGradient(colors: [movingAverageColor.opacity(0.9), movingAverageColor], startPoint: .leading, endPoint: .trailing)
+	}
 	private var emaLineColor: Color { Color(red: 0.74, green: 0.54, blue: 0.96) }
+	private var emaLineGradient: LinearGradient {
+		LinearGradient(colors: [emaLineColor.opacity(0.9), emaLineColor], startPoint: .leading, endPoint: .trailing)
+	}
 	private var goalLineColor: Color { .green }
 	private var pointFillColor: Color {
 #if os(macOS)
@@ -384,6 +395,12 @@ struct ChartsView: View {
 
 	private func nearestPoint(to date: Date, in data: [ChartDataPoint]) -> ChartDataPoint? {
 		data.min(by: { abs($0.date.timeIntervalSince(date)) < abs($1.date.timeIntervalSince(date)) })
+	}
+
+	private enum ChartSeries: String {
+		case weight
+		case movingAverage
+		case ema
 	}
 }
 

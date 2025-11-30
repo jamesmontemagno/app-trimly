@@ -447,7 +447,11 @@ struct OnboardingView: View {
                 // Schedule the actual notification if authorized
                 Task {
                     if notificationService.isAuthorized {
-                        try? await notificationService.scheduleDailyReminder(at: reminderTime)
+                        do {
+                            try await notificationService.scheduleDailyReminder(at: reminderTime)
+                        } catch {
+                            print("Failed to schedule reminder during onboarding: \(error)")
+                        }
                     }
                 }
             }
@@ -469,6 +473,7 @@ struct OnboardingView: View {
             } catch {
                 // If authorization fails or is denied, we continue silently.
                 // The user can enable notifications later in Settings.
+                print("Failed to authorize notifications during onboarding: \(error)")
             }
         }
     }

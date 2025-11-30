@@ -28,6 +28,7 @@ extension DataManagerError: LocalizedError {
 final class DataManager: ObservableObject {
     let modelContainer: ModelContainer
     let modelContext: ModelContext
+    let deviceSettings: DeviceSettingsStore
     
     @Published var settings: AppSettings?
     private var pendingGoalAchievementCelebration = false
@@ -39,7 +40,16 @@ final class DataManager: ObservableObject {
         objectWillChange.send()
     }
     
-    init(inMemory: Bool = false) {
+    init(inMemory: Bool = false, deviceSettings: DeviceSettingsStore? = nil) {
+        if let deviceSettings {
+            self.deviceSettings = deviceSettings
+        } else if inMemory {
+            let suiteName = "com.trimly.devicesettings.inmemory.\(UUID().uuidString)"
+            let defaults = UserDefaults(suiteName: suiteName) ?? .standard
+            self.deviceSettings = DeviceSettingsStore(userDefaults: defaults)
+        } else {
+            self.deviceSettings = DeviceSettingsStore()
+        }
         let schema = Schema([
             WeightEntry.self,
             Goal.self,
@@ -488,8 +498,10 @@ final class DataManager: ObservableObject {
         if let settings = settings {
             settings.hasCompletedOnboarding = false
             settings.eulaAcceptedDate = nil
-            settings.consecutiveReminderDismissals = 0
             settings.updatedAt = Date()
+        }
+        deviceSettings.updateReminders { reminders in
+            reminders.consecutiveDismissals = 0
         }
         
         try modelContext.save()

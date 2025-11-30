@@ -303,8 +303,10 @@ docs/                        # Architecture + build documentation
 │ preferredUnit    │
 │ aggregationMode  │
 │ chartMode        │
-│ reminderTime?    │
-│ healthKitEnabled │
+│ appearance       │
+│ decimalPrecision │
+│ projectionMethod │
+│ onboardingFlags  │
 │ ...              │
 └──────────────────┘
         │

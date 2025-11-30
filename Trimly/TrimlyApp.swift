@@ -23,6 +23,7 @@ struct TrimlyApp: App {
             ContentView()
                 .environment(\.modelContext, dataManager.modelContext)
                 .environmentObject(dataManager)
+                .environmentObject(dataManager.deviceSettings)
                 .environmentObject(storeManager)
                 .preferredColorScheme(colorScheme(for: dataManager.settings?.appearance))
         }
@@ -32,6 +33,7 @@ struct TrimlyApp: App {
         Settings {
             SettingsView()
                 .environmentObject(dataManager)
+                .environmentObject(dataManager.deviceSettings)
                 .environmentObject(storeManager)
         }
         #endif

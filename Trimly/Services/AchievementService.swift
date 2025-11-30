@@ -311,7 +311,8 @@ private struct EvaluationContext {
 		let completedGoals = dataManager.fetchGoalHistory().filter { $0.completionReason == .achieved }
 		goalsAchieved = completedGoals.count
 		let settings = dataManager.settings
-		remindersEnabled = (settings?.reminderTime != nil) || (settings?.secondReminderTime != nil)
+		let reminders = dataManager.deviceSettings.reminders
+		remindersEnabled = (reminders.primaryTime != nil) || (reminders.secondaryTime != nil)
 		recentReminderRatio = EvaluationContext.recentReminderCompletionRatio(entries: entries)
 		consistencyWindowDays = settings?.consistencyScoreWindow ?? 30
 	}

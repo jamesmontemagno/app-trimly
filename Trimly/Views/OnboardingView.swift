@@ -5,6 +5,7 @@ import UIKit
 
 struct OnboardingView: View {
     @EnvironmentObject var dataManager: DataManager
+    @EnvironmentObject var deviceSettings: DeviceSettingsStore
     @StateObject private var notificationService = NotificationService()
     @State private var currentPage = 0
     @State private var selectedUnit: WeightUnit = .pounds
@@ -537,8 +538,8 @@ struct OnboardingView: View {
             components.hour = 9
             components.minute = 0
             if let reminderTime = calendar.date(from: components) {
-                dataManager.updateSettings { settings in
-                    settings.reminderTime = reminderTime
+                deviceSettings.updateReminders { reminders in
+                    reminders.primaryTime = reminderTime
                 }
                 // Schedule the actual notification if authorized
                 Task {
@@ -584,6 +585,7 @@ struct OnboardingView: View {
 #Preview {
     OnboardingView()
         .environmentObject(DataManager(inMemory: true))
+    .environmentObject(DeviceSettingsStore())
 }
 
 #if canImport(UIKit)

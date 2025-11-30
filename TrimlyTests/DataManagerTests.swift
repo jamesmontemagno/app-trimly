@@ -8,7 +8,13 @@ struct DataManagerTests {
 	// MARK: - Helpers
 
 	private func makeInMemoryManager() async -> DataManager {
-		await DataManager(inMemory: true)
+		let suiteName = "com.trimly.tests.devicesettings.\(UUID().uuidString)"
+		guard let defaults = UserDefaults(suiteName: suiteName) else {
+			fatalError("Failed to create UserDefaults suite \(suiteName)")
+		}
+		defaults.removePersistentDomain(forName: suiteName)
+		let deviceSettings = DeviceSettingsStore(userDefaults: defaults)
+		return await DataManager(inMemory: true, deviceSettings: deviceSettings)
 	}
 
 	@Test
@@ -286,7 +292,9 @@ struct DataManagerTests {
 		manager.updateSettings { settings in
 			settings.hasCompletedOnboarding = true
 			settings.eulaAcceptedDate = Date()
-			settings.consecutiveReminderDismissals = 3
+		}
+		manager.deviceSettings.updateReminders { reminders in
+			reminders.consecutiveDismissals = 3
 		}
 
 		try manager.deleteAllData()
@@ -296,7 +304,7 @@ struct DataManagerTests {
 		#expect(manager.fetchGoalHistory().isEmpty)
 		#expect(manager.settings?.hasCompletedOnboarding == false)
 		#expect(manager.settings?.eulaAcceptedDate == nil)
-		#expect(manager.settings?.consecutiveReminderDismissals == 0)
+		#expect(manager.deviceSettings.reminders.consecutiveDismissals == 0)
 	}
 
 	// MARK: - CSV Export

@@ -1,7 +1,9 @@
 import SwiftUI
+import Combine
 
 struct RemindersView: View {
     @EnvironmentObject var dataManager: DataManager
+    @EnvironmentObject var deviceSettings: DeviceSettingsStore
     @StateObject private var notificationService = NotificationService()
     @Environment(\.dismiss) var dismiss
 
@@ -61,18 +63,18 @@ struct RemindersView: View {
                             TrimlyCardSection(title: String(localized: L10n.Reminders.adaptiveTitle), description: String(localized: L10n.Reminders.adaptiveDescription)) {
                                 Toggle(L10n.Reminders.smartToggle, isOn: $adaptiveEnabled)
                                     .onChange(of: adaptiveEnabled) { _, enabled in
-                                        dataManager.updateSettings { settings in
-                                            settings.adaptiveRemindersEnabled = enabled
+                                        deviceSettings.updateReminders { reminders in
+                                            reminders.adaptiveEnabled = enabled
                                         }
                                     }
-                                if notificationService.shouldSuggestTimeAdjustment(dataManager: dataManager),
+                                if notificationService.shouldSuggestTimeAdjustment(reminders: deviceSettings.reminders),
                                    let suggested = notificationService.suggestReminderTime(dataManager: dataManager) {
                                     Divider().padding(.vertical, 8)
                                     Button {
                                         primaryReminderTime = suggested
                                         scheduleReminder(time: suggested)
-                                        dataManager.updateSettings { settings in
-                                            settings.consecutiveReminderDismissals = 0
+                                        deviceSettings.updateReminders { reminders in
+                                            reminders.consecutiveDismissals = 0
                                         }
                                     } label: {
                                         HStack {
@@ -136,6 +138,9 @@ struct RemindersView: View {
                 await notificationService.checkAuthorizationStatus()
             }
         }
+        .onReceive(deviceSettings.remindersPublisher) { reminders in
+            syncState(with: reminders)
+        }
     }
 
     private func requestAuthorization() {
@@ -152,25 +157,24 @@ struct RemindersView: View {
     }
 
     private func loadSettings() {
-        if let settings = dataManager.settings {
-            primaryReminderEnabled = settings.reminderTime != nil
-            if let time = settings.reminderTime { primaryReminderTime = time }
-            secondaryReminderEnabled = settings.secondReminderTime != nil
-            if let time = settings.secondReminderTime { secondaryReminderTime = time }
-            adaptiveEnabled = settings.adaptiveRemindersEnabled
-        }
+        syncState(with: deviceSettings.reminders)
+    }
+
+    private func syncState(with reminders: DeviceSettingsStore.RemindersSettings) {
+        primaryReminderEnabled = reminders.primaryTime != nil
+        if let time = reminders.primaryTime { primaryReminderTime = time }
+        secondaryReminderEnabled = reminders.secondaryTime != nil
+        if let time = reminders.secondaryTime { secondaryReminderTime = time }
+        adaptiveEnabled = reminders.adaptiveEnabled
     }
 
     private func handlePrimaryReminderToggle(enabled: Bool) {
         if enabled {
             scheduleReminder(time: primaryReminderTime)
-            dataManager.updateSettings { settings in
-                settings.reminderTime = primaryReminderTime
-            }
         } else {
             notificationService.cancelPrimaryReminder()
-            dataManager.updateSettings { settings in
-                settings.reminderTime = nil
+            deviceSettings.updateReminders { reminders in
+                reminders.primaryTime = nil
             }
         }
     }
@@ -178,13 +182,10 @@ struct RemindersView: View {
     private func handleSecondaryReminderToggle(enabled: Bool) {
         if enabled {
             scheduleSecondaryReminder(time: secondaryReminderTime)
-            dataManager.updateSettings { settings in
-                settings.secondReminderTime = secondaryReminderTime
-            }
         } else {
             notificationService.cancelSecondaryReminder()
-            dataManager.updateSettings { settings in
-                settings.secondReminderTime = nil
+            deviceSettings.updateReminders { reminders in
+                reminders.secondaryTime = nil
             }
         }
     }
@@ -193,8 +194,8 @@ struct RemindersView: View {
         Task {
             do {
                 try await notificationService.scheduleDailyReminder(at: time)
-                dataManager.updateSettings { settings in
-                    settings.reminderTime = time
+                deviceSettings.updateReminders { reminders in
+                    reminders.primaryTime = time
                 }
             } catch {
                 print("Failed to schedule reminder: \(error)")
@@ -206,8 +207,8 @@ struct RemindersView: View {
         Task {
             do {
                 try await notificationService.scheduleSecondaryReminder(at: time)
-                dataManager.updateSettings { settings in
-                    settings.secondReminderTime = time
+                deviceSettings.updateReminders { reminders in
+                    reminders.secondaryTime = time
                 }
             } catch {
                 print("Failed to schedule secondary reminder: \(error)")
@@ -219,4 +220,5 @@ struct RemindersView: View {
 #Preview {
     RemindersView()
         .environmentObject(DataManager(inMemory: true))
+    .environmentObject(DeviceSettingsStore())
 }

@@ -108,6 +108,13 @@ SQLite + iCloud (Storage)
 - **XCTest**: Unit testing framework
  - **Swift Package Manager**: Used for initial development; project is now organized as an Xcode app target.
 
+### Device-Scoped Preferences
+
+- **DeviceSettingsStore** now owns all settings that should stay on a single device (UserDefaults-backed, `@MainActor`).
+- Reminders, including adaptive toggles and dismissal counters, now exist **only** inside `DeviceSettingsStore`.
+- HealthKit switches, duplicate tolerance, and import/sync timestamps also live solely inside `DeviceSettingsStore`.
+- The SwiftData `AppSettings` model has been slimmed down to sync-safe preferences (unit, charts, projection, onboarding state, etc.).
+
 ### Code Quality
 
 - ✅ Type-safe models

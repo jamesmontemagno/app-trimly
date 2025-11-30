@@ -145,27 +145,19 @@ final class NotificationService: ObservableObject {
     }
     
     /// Check if user should be prompted for reminder time adjustment
-    func shouldSuggestTimeAdjustment(dataManager: DataManager) -> Bool {
-        guard let settings = dataManager.settings else { return false }
-        
-        // Suggest after 3 consecutive dismissals
-        return settings.adaptiveRemindersEnabled &&
-               settings.consecutiveReminderDismissals >= 3
+    func shouldSuggestTimeAdjustment(reminders: DeviceSettingsStore.RemindersSettings) -> Bool {
+        reminders.adaptiveEnabled && reminders.consecutiveDismissals >= 3
     }
     
     /// Handle reminder dismissal
-    func handleReminderDismissal(dataManager: DataManager, didLogWithinWindow: Bool) {
-        guard dataManager.settings != nil else { return }
-        
+    func handleReminderDismissal(deviceSettings: DeviceSettingsStore, didLogWithinWindow: Bool) {
         if didLogWithinWindow {
-            // User logged weight within 2 hours of reminder - reset counter
-            dataManager.updateSettings { settings in
-                settings.consecutiveReminderDismissals = 0
+            deviceSettings.updateReminders { reminders in
+                reminders.consecutiveDismissals = 0
             }
         } else {
-            // User dismissed without logging - increment counter
-            dataManager.updateSettings { settings in
-                settings.consecutiveReminderDismissals += 1
+            deviceSettings.updateReminders { reminders in
+                reminders.consecutiveDismissals += 1
             }
         }
     }

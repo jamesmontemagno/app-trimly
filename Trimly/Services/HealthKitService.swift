@@ -241,8 +241,8 @@ final class HealthKitService: ObservableObject {
                 dataManager: dataManager,
                 unit: unit
             )
-            dataManager.updateSettings { current in
-                current.healthKitLastBackgroundSyncAt = Date()
+            dataManager.deviceSettings.updateHealthKit { settings in
+                settings.lastBackgroundSyncAt = Date()
             }
         } catch {
             print("Failed to sync recent samples: \(error)")
@@ -257,11 +257,10 @@ final class HealthKitService: ObservableObject {
         timestamp: Date,
         dataManager: DataManager
     ) -> Bool {
+        let healthSettings = dataManager.deviceSettings.healthKit
+        guard healthSettings.autoHideDuplicates else { return false }
+        let tolerance = healthSettings.duplicateToleranceKg
         let existingEntries = dataManager.fetchEntriesForDate(timestamp)
-        
-        guard let tolerance = dataManager.settings?.healthKitDuplicateToleranceKg else {
-            return false
-        }
         
         // Check if there's a matching entry within tolerance
         for entry in existingEntries {

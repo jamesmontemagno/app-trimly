@@ -12,6 +12,7 @@ import AppKit
 
 struct SettingsView: View {
 	@EnvironmentObject var dataManager: DataManager
+	@EnvironmentObject var deviceSettings: DeviceSettingsStore
 	@EnvironmentObject var storeManager: StoreManager
 	@State private var showingGoalSheet = false
 	@State private var showingGoalHistory = false
@@ -210,10 +211,10 @@ struct SettingsView: View {
 							settingsRow(
 								icon: "bell.badge.fill",
 								title: String(localized: L10n.Reminders.navigationTitle),
-								subtitle: dataManager.settings?.reminderTime != nil ? String(localized: L10n.Settings.remindersSubtitleOn) : String(localized: L10n.Settings.remindersSubtitleOff),
+								subtitle: deviceSettings.reminders.primaryTime != nil ? String(localized: L10n.Settings.remindersSubtitleOn) : String(localized: L10n.Settings.remindersSubtitleOff),
 								showChevron: true
 							) {
-								if dataManager.settings?.reminderTime != nil {
+								if deviceSettings.reminders.primaryTime != nil {
 									statusPill(text: String(localized: L10n.Settings.remindersStatusOn), color: .green)
 								} else {
 									statusPill(text: String(localized: L10n.Settings.remindersStatusOff), color: .secondary)
@@ -241,7 +242,7 @@ struct SettingsView: View {
 								if !storeManager.isPro {
 									Image(systemName: "lock.fill")
 										.foregroundStyle(.secondary)
-								} else if dataManager.settings?.healthKitEnabled == true {
+								} else if deviceSettings.healthKit.backgroundSyncEnabled {
 									statusPill(text: String(localized: L10n.Settings.healthConnected), color: .green)
 								}
 							}
@@ -865,4 +866,6 @@ struct ExportView: View {
 #Preview {
 	SettingsView()
 		.environmentObject(DataManager(inMemory: true))
+		.environmentObject(DeviceSettingsStore())
+		.environmentObject(StoreManager())
 }

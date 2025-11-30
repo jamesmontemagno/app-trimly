@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HealthKitView: View {
 	@EnvironmentObject var dataManager: DataManager
+	@EnvironmentObject var deviceSettings: DeviceSettingsStore
 	@StateObject private var healthKitService = HealthKitService()
 	@Environment(\.dismiss) var dismiss
     
@@ -22,8 +23,11 @@ struct HealthKitView: View {
 	@State private var healthKitEntryCount: Int = 0
 	@State private var firstHealthKitDate: Date?
 	@State private var lastHealthKitDate: Date?
-	@State private var showWriteWarningOnce = false
 	@State private var isImportingRecent = false
+
+	private var healthSettings: DeviceSettingsStore.HealthKitSettings {
+		deviceSettings.healthKit
+	}
     
 	var body: some View {
 		NavigationStack {
@@ -129,7 +133,7 @@ struct HealthKitView: View {
 							}
 							.disabled(sampleCount == nil || sampleCount == 0 || healthKitService.isImporting)
 							.buttonStyle(.borderedProminent)
-							if let lastImport = dataManager.settings?.healthKitLastImportAt {
+							if let lastImport = healthSettings.lastImportAt {
 								Divider().padding(.vertical, 8)
 								Text(L10n.Health.lastManualImport(lastImport.formatted(date: .abbreviated, time: .shortened)))
 									.font(.caption)
@@ -164,10 +168,10 @@ struct HealthKitView: View {
 						) {
 							Divider().padding(.vertical, 8)
 							Toggle(String(localized: L10n.Health.backgroundSyncToggle), isOn: Binding(
-								get: { dataManager.settings?.healthKitEnabled ?? false },
+								get: { healthSettings.backgroundSyncEnabled },
 								set: { enabled in
-									dataManager.updateSettings { settings in
-										settings.healthKitEnabled = enabled
+									deviceSettings.updateHealthKit { settings in
+										settings.backgroundSyncEnabled = enabled
 									}
 									if enabled {
 										enableBackgroundSync()
@@ -176,23 +180,23 @@ struct HealthKitView: View {
 							))
 							Divider().padding(.vertical, 8)
 							Toggle(String(localized: L10n.Health.autoHideToggle), isOn: Binding(
-								get: { dataManager.settings?.autoHideHealthKitDuplicates ?? true },
+								get: { healthSettings.autoHideDuplicates },
 								set: { enabled in
-									dataManager.updateSettings { settings in
-										settings.autoHideHealthKitDuplicates = enabled
+									deviceSettings.updateHealthKit { settings in
+										settings.autoHideDuplicates = enabled
 									}
 								}
 							))
 							Divider().padding(.vertical, 8)
 							Toggle(String(localized: L10n.Health.writeToHealthToggle), isOn: Binding(
-								get: { dataManager.settings?.healthKitWriteEnabled ?? false },
+								get: { healthSettings.writeEnabled },
 								set: { enabled in
-									dataManager.updateSettings { settings in
-										settings.healthKitWriteEnabled = enabled
+									deviceSettings.updateHealthKit { settings in
+										settings.writeEnabled = enabled
 									}
 								}
 							))
-							if let lastBackground = dataManager.settings?.healthKitLastBackgroundSyncAt {
+							if let lastBackground = healthSettings.lastBackgroundSyncAt {
 								Divider().padding(.vertical, 8)
 								Text(L10n.Health.lastBackgroundSync(lastBackground.formatted(date: .abbreviated, time: .shortened)))
 									.font(.caption)
@@ -273,8 +277,8 @@ struct HealthKitView: View {
 					unit: unit
 				)
 				importedCount = count
-				dataManager.updateSettings { settings in
-					settings.healthKitLastImportAt = Date()
+				deviceSettings.updateHealthKit { settings in
+					settings.lastImportAt = Date()
 				}
 				loadHealthKitSummary()
 			} catch {
@@ -289,7 +293,7 @@ struct HealthKitView: View {
 		let now = Date()
 		let calendar = Calendar.current
 		let start: Date
-		if let lastImport = dataManager.settings?.healthKitLastImportAt {
+		if let lastImport = healthSettings.lastImportAt {
 			start = lastImport
 		} else if let thirtyDaysAgo = calendar.date(byAdding: .day, value: -30, to: now) {
 			start = thirtyDaysAgo
@@ -306,8 +310,8 @@ struct HealthKitView: View {
 					unit: unit
 				)
 				importedCount = count
-				dataManager.updateSettings { settings in
-					settings.healthKitLastImportAt = Date()
+				deviceSettings.updateHealthKit { settings in
+					settings.lastImportAt = Date()
 				}
 				loadHealthKitSummary()
 			} catch {
@@ -361,4 +365,5 @@ extension HealthKitView {
 #Preview {
 	HealthKitView()
 		.environmentObject(DataManager(inMemory: true))
+		.environmentObject(DeviceSettingsStore())
 }

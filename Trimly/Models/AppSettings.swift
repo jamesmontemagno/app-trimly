@@ -21,18 +21,6 @@ final class AppSettings {
     /// Daily aggregation mode (latest vs average)
     var dailyAggregationMode: DailyAggregationMode = DailyAggregationMode.latest
     
-    /// Reminder time (nil if disabled)
-    var reminderTime: Date?
-    
-    /// Optional second reminder time
-    var secondReminderTime: Date?
-    
-    /// Whether adaptive reminder suggestions are enabled
-    var adaptiveRemindersEnabled: Bool = true
-    
-    /// Count of consecutive reminder dismissals
-    var consecutiveReminderDismissals: Int = 0
-    
     /// Chart display mode
     var chartMode: ChartMode = ChartMode.minimalist
     
@@ -47,24 +35,6 @@ final class AppSettings {
     
     /// EMA period (days)
     var emaPeriod: Int = 7
-    
-    /// HealthKit integration enabled
-    var healthKitEnabled: Bool = false
-    
-    /// Write new manual entries to HealthKit
-    var healthKitWriteEnabled: Bool = false
-    
-    /// Auto-hide HealthKit duplicates
-    var autoHideHealthKitDuplicates: Bool = true
-    
-    /// HealthKit duplicate tolerance in kg
-    var healthKitDuplicateToleranceKg: Double = 0.1
-
-    /// Last time a manual HealthKit import completed
-    var healthKitLastImportAt: Date?
-
-    /// Last time a background HealthKit sync completed
-    var healthKitLastBackgroundSyncAt: Date?
     
     /// Consistency score window (days)
     var consistencyScoreWindow: Int = 30
@@ -94,21 +64,11 @@ final class AppSettings {
         id: UUID = UUID(),
         preferredUnit: WeightUnit = .pounds,
         dailyAggregationMode: DailyAggregationMode = .latest,
-        reminderTime: Date? = nil,
-        secondReminderTime: Date? = nil,
-        adaptiveRemindersEnabled: Bool = true,
-        consecutiveReminderDismissals: Int = 0,
         chartMode: ChartMode = .minimalist,
         showMovingAverage: Bool = true,
         showEMA: Bool = true,
         movingAveragePeriod: Int = 7,
         emaPeriod: Int = 7,
-        healthKitEnabled: Bool = false,
-        healthKitWriteEnabled: Bool = false,
-        autoHideHealthKitDuplicates: Bool = true,
-        healthKitDuplicateToleranceKg: Double = 0.1,
-        healthKitLastImportAt: Date? = nil,
-        healthKitLastBackgroundSyncAt: Date? = nil,
         consistencyScoreWindow: Int = 30,
         appearance: AppAppearance = .system,
         hasCompletedOnboarding: Bool = false,
@@ -121,21 +81,11 @@ final class AppSettings {
         self.id = id
         self.preferredUnit = preferredUnit
         self.dailyAggregationMode = dailyAggregationMode
-        self.reminderTime = reminderTime
-        self.secondReminderTime = secondReminderTime
-        self.adaptiveRemindersEnabled = adaptiveRemindersEnabled
-        self.consecutiveReminderDismissals = consecutiveReminderDismissals
         self.chartMode = chartMode
         self.showMovingAverage = showMovingAverage
         self.showEMA = showEMA
         self.movingAveragePeriod = movingAveragePeriod
         self.emaPeriod = emaPeriod
-        self.healthKitEnabled = healthKitEnabled
-        self.healthKitWriteEnabled = healthKitWriteEnabled
-        self.autoHideHealthKitDuplicates = autoHideHealthKitDuplicates
-        self.healthKitDuplicateToleranceKg = healthKitDuplicateToleranceKg
-        self.healthKitLastImportAt = healthKitLastImportAt
-        self.healthKitLastBackgroundSyncAt = healthKitLastBackgroundSyncAt
         self.consistencyScoreWindow = consistencyScoreWindow
         self.appearance = appearance
         self.hasCompletedOnboarding = hasCompletedOnboarding

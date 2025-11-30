@@ -82,12 +82,23 @@ Singleton for app preferences.
 final class AppSettings {
     var preferredUnit: WeightUnit
     var dailyAggregationMode: DailyAggregationMode
-    var reminderTime: Date?
     var chartMode: ChartMode
-    var healthKitEnabled: Bool
-    // ... additional settings
+    var showMovingAverage: Bool
+    var showEMA: Bool
+    var movingAveragePeriod: Int
+    var emaPeriod: Int
+    var consistencyScoreWindow: Int
+    var appearance: AppAppearance
+    var hasCompletedOnboarding: Bool
+    var eulaAcceptedDate: Date?
+    var decimalPrecision: Int
+    var projectionMethod: ProjectionMethod
+    var minDaysForProjection: Int
+    var updatedAt: Date
 }
 ```
+
+> Device-scoped reminder and HealthKit toggles now live in `DeviceSettingsStore` so they never sync through CloudKit.
 
 ## Services
 

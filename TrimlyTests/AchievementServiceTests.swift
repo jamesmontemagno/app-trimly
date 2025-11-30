@@ -1,3 +1,4 @@
+import Foundation
 import XCTest
 import SwiftData
 @testable import TrimTally
@@ -5,16 +6,28 @@ import SwiftData
 @MainActor
 final class AchievementServiceTests: XCTestCase {
 	private var dataManager: DataManager!
+	private var deviceSettings: DeviceSettingsStore!
 	private var achievementService: AchievementService!
 	
 	override func setUp() async throws {
-		dataManager = DataManager(inMemory: true)
+		deviceSettings = makeDeviceSettingsStore()
+		dataManager = DataManager(inMemory: true, deviceSettings: deviceSettings)
 		achievementService = AchievementService()
 	}
 	
 	override func tearDown() {
 		dataManager = nil
+		deviceSettings = nil
 		achievementService = nil
+	}
+
+	private func makeDeviceSettingsStore() -> DeviceSettingsStore {
+		let suiteName = "com.trimly.tests.devicesettings.\(UUID().uuidString)"
+		guard let defaults = UserDefaults(suiteName: suiteName) else {
+			fatalError("Failed to create UserDefaults suite \(suiteName)")
+		}
+		defaults.removePersistentDomain(forName: suiteName)
+		return DeviceSettingsStore(userDefaults: defaults)
 	}
 	
 	func testLoggingAchievementUnlocksAfterTenEntries() throws {

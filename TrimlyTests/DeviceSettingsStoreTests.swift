@@ -1,0 +1,53 @@
+import Foundation
+import XCTest
+@testable import TrimTally
+
+@MainActor
+final class DeviceSettingsStoreTests: XCTestCase {
+    func testUpdateRemindersPersistsAcrossInstances() {
+        let (defaults, store) = makeStore()
+        let morning = Date(timeIntervalSince1970: 1_701_000_000)
+        store.updateReminders { reminders in
+            reminders.primaryTime = morning
+            reminders.adaptiveEnabled = false
+            reminders.consecutiveDismissals = 3
+        }
+        let reloaded = DeviceSettingsStore(userDefaults: defaults)
+        XCTAssertEqual(reloaded.reminders.primaryTime, morning)
+        XCTAssertNil(reloaded.reminders.secondaryTime)
+        XCTAssertFalse(reloaded.reminders.adaptiveEnabled)
+        XCTAssertEqual(reloaded.reminders.consecutiveDismissals, 3)
+    }
+    
+    func testUpdateHealthKitPersistsAcrossInstances() {
+        let (defaults, store) = makeStore()
+        let lastImport = Date(timeIntervalSince1970: 1_701_111_111)
+        let lastBackground = Date(timeIntervalSince1970: 1_701_222_222)
+        store.updateHealthKit { health in
+            health.backgroundSyncEnabled = true
+            health.writeEnabled = true
+            health.autoHideDuplicates = false
+            health.duplicateToleranceKg = 0.35
+            health.lastImportAt = lastImport
+            health.lastBackgroundSyncAt = lastBackground
+        }
+        let reloaded = DeviceSettingsStore(userDefaults: defaults)
+        let reloadedHealth = reloaded.healthKit
+        XCTAssertTrue(reloadedHealth.backgroundSyncEnabled)
+        XCTAssertTrue(reloadedHealth.writeEnabled)
+        XCTAssertFalse(reloadedHealth.autoHideDuplicates)
+        XCTAssertEqual(reloadedHealth.duplicateToleranceKg, 0.35, accuracy: 0.0001)
+        XCTAssertEqual(reloadedHealth.lastImportAt, lastImport)
+        XCTAssertEqual(reloadedHealth.lastBackgroundSyncAt, lastBackground)
+    }
+    
+    private func makeStore() -> (UserDefaults, DeviceSettingsStore) {
+        let suiteName = "com.trimly.tests.devicesettings.\(UUID().uuidString)"
+        guard let defaults = UserDefaults(suiteName: suiteName) else {
+            fatalError("Failed to create UserDefaults suite \(suiteName)")
+        }
+        defaults.removePersistentDomain(forName: suiteName)
+        let store = DeviceSettingsStore(userDefaults: defaults)
+        return (defaults, store)
+    }
+}

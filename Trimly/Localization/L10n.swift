@@ -71,11 +71,14 @@ enum L10n {
 		static let startSubtitle = LocalizedStringResource("onboarding.start.subtitle", defaultValue: "What's your current weight?")
 		static let startPlaceholder = LocalizedStringResource("onboarding.start.placeholder", defaultValue: "Weight")
 		static let startFieldLabel = LocalizedStringResource("onboarding.start.fieldLabel", defaultValue: "Starting weight entry")
+		static let startValidation = LocalizedStringResource("onboarding.start.error", defaultValue: "Enter a valid starting weight")
 		
 		static let goalTitle = LocalizedStringResource("onboarding.goal.title", defaultValue: "Set Your Goal")
 		static let goalSubtitle = LocalizedStringResource("onboarding.goal.subtitle", defaultValue: "What's your target weight?")
 		static let goalPlaceholder = LocalizedStringResource("onboarding.goal.placeholder", defaultValue: "Goal")
 		static let goalFieldLabel = LocalizedStringResource("onboarding.goal.fieldLabel", defaultValue: "Goal weight entry")
+		static let goalValidation = LocalizedStringResource("onboarding.goal.error", defaultValue: "Enter a valid target weight")
+		static let goalNeedsStart = LocalizedStringResource("onboarding.goal.missingStart", defaultValue: "Enter your starting weight before setting a goal")
 		
 		static let remindersTitle = LocalizedStringResource("onboarding.reminder.title", defaultValue: "Daily Reminders")
 		static let remindersSubtitle = LocalizedStringResource("onboarding.reminder.subtitle", defaultValue: "Stay consistent with gentle reminders")
@@ -316,6 +319,11 @@ enum L10n {
 	}
 
 	enum Goals {
+		static let startTitle = LocalizedStringResource("goals.setup.start.title", defaultValue: "Starting Weight")
+		static func startDescription(_ unitSymbol: String) -> LocalizedStringResource {
+			LocalizedStringResource("goals.setup.start.description", defaultValue: "Set your baseline in \(unitSymbol).")
+		}
+		static let startPlaceholder = LocalizedStringResource("goals.setup.start.placeholder", defaultValue: "150")
 		static let setupTitle = LocalizedStringResource("goals.setup.title", defaultValue: "Set Goal")
 		static let targetTitle = LocalizedStringResource("goals.setup.target.title", defaultValue: "Target Weight")
 		static func targetDescription(_ unitSymbol: String) -> LocalizedStringResource {
@@ -341,6 +349,7 @@ enum L10n {
 		static let errorInvalidWeight = LocalizedStringResource("goals.setup.error.invalidWeight", defaultValue: "Please enter a valid weight")
 		static let errorNonPositiveWeight = LocalizedStringResource("goals.setup.error.nonPositiveWeight", defaultValue: "Weight must be greater than zero")
 		static let errorMissingSettings = LocalizedStringResource("goals.setup.error.missingSettings", defaultValue: "Settings not available")
+		static let errorMissingStartingWeight = LocalizedStringResource("goals.setup.error.missingStartingWeight", defaultValue: "Enter a valid starting weight before saving")
 		static func errorSaveFailure(_ message: String) -> LocalizedStringResource {
 			LocalizedStringResource("goals.setup.error.saveFailure", defaultValue: "Failed to save goal: \(message)")
 		}

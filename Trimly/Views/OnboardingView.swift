@@ -11,6 +11,8 @@ struct OnboardingView: View {
     @State private var startingWeightText = ""
     @State private var goalWeightText = ""
     @State private var enableReminders = false
+    @State private var startingWeightError: LocalizedStringResource?
+    @State private var goalWeightError: LocalizedStringResource?
 
     private let onboardingSteps: [(title: LocalizedStringResource, symbol: String)] = [
         (L10n.Onboarding.stepWelcome, "figure.arms.open"),
@@ -227,6 +229,9 @@ struct OnboardingView: View {
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: 200)
                     .accessibilityLabel(Text(L10n.Onboarding.startFieldLabel))
+                    .onChange(of: startingWeightText) { _, _ in
+                        startingWeightError = nil
+                    }
 
                 Text(selectedUnit.symbol)
                     .font(.title3)
@@ -244,18 +249,19 @@ struct OnboardingView: View {
             .background(.thinMaterial)
             .clipShape(RoundedRectangle(cornerRadius: 12))
 
+            if let error = startingWeightError {
+                Text(error)
+                    .font(.footnote)
+                    .foregroundStyle(.red)
+                    .multilineTextAlignment(.center)
+            }
+
             Spacer()
 
-            VStack(spacing: 12) {
-                primaryButton(title: L10n.Common.continueButton) {
-                    saveStartingWeight()
-                }
-                .disabled(startingWeightText.isEmpty)
-
-                secondaryButton(title: L10n.Common.skipButton) {
-                    withAnimation { currentPage = 3 }
-                }
+            primaryButton(title: L10n.Common.continueButton) {
+                saveStartingWeight()
             }
+            .disabled(startingWeightText.isEmpty)
             .padding(.horizontal)
         }
         .padding()
@@ -287,6 +293,9 @@ struct OnboardingView: View {
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: 200)
                     .accessibilityLabel(Text(L10n.Onboarding.goalFieldLabel))
+                    .onChange(of: goalWeightText) { _, _ in
+                        goalWeightError = nil
+                    }
 
                 Text(selectedUnit.symbol)
                     .font(.title3)
@@ -304,18 +313,19 @@ struct OnboardingView: View {
             .background(.thinMaterial)
             .clipShape(RoundedRectangle(cornerRadius: 12))
 
+            if let error = goalWeightError {
+                Text(error)
+                    .font(.footnote)
+                    .foregroundStyle(.red)
+                    .multilineTextAlignment(.center)
+            }
+
             Spacer()
 
-            VStack(spacing: 12) {
-                primaryButton(title: L10n.Common.continueButton) {
-                    saveGoal()
-                }
-                .disabled(goalWeightText.isEmpty)
-
-                secondaryButton(title: L10n.Common.skipButton) {
-                    withAnimation { currentPage = 4 }
-                }
+            primaryButton(title: L10n.Common.continueButton) {
+                saveGoal()
             }
+            .disabled(goalWeightText.isEmpty)
             .padding(.horizontal)
         }
         .padding()
@@ -410,10 +420,12 @@ struct OnboardingView: View {
         hideKeyboard()
         #endif
         guard let weight = Double(startingWeightText), weight > 0 else {
-            withAnimation { currentPage = 3 }
+            startingWeightError = L10n.Onboarding.startValidation
             return
         }
 
+        startingWeightError = nil
+        goalWeightError = nil
         let weightKg = selectedUnit.convertToKg(weight)
         try? dataManager.addWeightEntry(weightKg: weightKg, unit: selectedUnit)
         withAnimation { currentPage = 3 }
@@ -424,14 +436,27 @@ struct OnboardingView: View {
         hideKeyboard()
         #endif
         guard let weight = Double(goalWeightText), weight > 0 else {
-            withAnimation { currentPage = 4 }
+            goalWeightError = L10n.Onboarding.goalValidation
             return
         }
 
+        guard let currentWeight = dataManager.getCurrentWeight() else {
+            goalWeightError = L10n.Onboarding.goalNeedsStart
+            withAnimation { currentPage = 2 }
+            return
+        }
+
+        goalWeightError = nil
         let weightKg = selectedUnit.convertToKg(weight)
-        let currentWeight = dataManager.getCurrentWeight()
-        try? dataManager.setGoal(targetWeightKg: weightKg, startingWeightKg: currentWeight)
-        withAnimation { currentPage = 4 }
+        do {
+            try dataManager.setGoal(targetWeightKg: weightKg, startingWeightKg: currentWeight)
+            withAnimation { currentPage = 4 }
+        } catch let dataError as DataManagerError {
+            goalWeightError = L10n.Onboarding.goalNeedsStart
+            withAnimation { currentPage = 2 }
+        } catch {
+            goalWeightError = L10n.Onboarding.goalValidation
+        }
     }
 
     private func saveReminders() {

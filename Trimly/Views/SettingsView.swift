@@ -522,6 +522,7 @@ struct GoalSetupView: View {
 	@Environment(\.dismiss) var dismiss
     
 	@State private var targetWeightText = ""
+	@State private var startingWeightText = ""
 	@State private var notes = ""
 	@State private var showingError = false
 	@State private var errorMessage = ""
@@ -531,8 +532,23 @@ struct GoalSetupView: View {
 			ScrollView {
 				VStack(spacing: 24) {
 					TrimlyCardSection(
+						title: String(localized: L10n.Goals.startTitle),
+						description: String(localized: L10n.Goals.startDescription(preferredUnit.symbol)),
+						style: .popup
+					) {
+						HStack(spacing: 12) {
+							TextField(String(localized: L10n.Goals.startPlaceholder), text: $startingWeightText)
+							#if os(iOS)
+							.keyboardType(.decimalPad)
+							#endif
+							Text(preferredUnit.symbol)
+								.foregroundStyle(.secondary)
+						}
+					}
+
+					TrimlyCardSection(
 						title: String(localized: L10n.Goals.targetTitle),
-						description: String(localized: L10n.Goals.targetDescription(dataManager.settings?.preferredUnit.symbol ?? "kg")),
+						description: String(localized: L10n.Goals.targetDescription(preferredUnit.symbol)),
 						style: .popup
 					) {
 						HStack(spacing: 12) {
@@ -540,7 +556,7 @@ struct GoalSetupView: View {
 								#if os(iOS)
 								.keyboardType(.decimalPad)
 								#endif
-							Text(dataManager.settings?.preferredUnit.symbol ?? "kg")
+							Text(preferredUnit.symbol)
 								.foregroundStyle(.secondary)
 						}
 					}
@@ -570,7 +586,7 @@ struct GoalSetupView: View {
 				}
 				ToolbarItem(placement: .confirmationAction) {
 					Button(String(localized: L10n.Common.saveButton)) { saveGoal() }
-						.disabled(targetWeightText.isEmpty)
+						.disabled(saveButtonDisabled)
 				}
 			}
 			.alert(L10n.Common.errorTitle, isPresented: $showingError) {
@@ -579,9 +595,54 @@ struct GoalSetupView: View {
 				Text(errorMessage)
 			}
 		}
+		.task {
+			prefillDefaults()
+		}
 	}
     
+	private var preferredUnit: WeightUnit {
+		dataManager.settings?.preferredUnit ?? .pounds
+	}
+
+	private var decimalPrecision: Int {
+		let precision = dataManager.settings?.decimalPrecision ?? 1
+		return min(max(precision, 0), 2)
+	}
+
+	private var saveButtonDisabled: Bool {
+		guard let start = Double(startingWeightText), start > 0,
+			  let target = Double(targetWeightText), target > 0 else {
+			return true
+		}
+		return false
+	}
+
+	private func formattedDisplayWeight(fromKg kg: Double) -> String {
+		let unitValue = preferredUnit.convert(fromKg: kg)
+		let format: String
+		switch decimalPrecision {
+		case ..<1:
+			format = "%.0f"
+		case 1:
+			format = "%.1f"
+		default:
+			format = "%.2f"
+		}
+		return String(format: format, unitValue)
+	}
+
+	private func prefillDefaults() {
+		if startingWeightText.isEmpty, let current = dataManager.getCurrentWeight() {
+			startingWeightText = formattedDisplayWeight(fromKg: current)
+		}
+	}
+
 	private func saveGoal() {
+		guard let starting = Double(startingWeightText), starting > 0 else {
+			errorMessage = String(localized: L10n.Goals.errorMissingStartingWeight)
+			showingError = true
+			return
+		}
 		guard let weight = Double(targetWeightText) else {
 			errorMessage = String(localized: L10n.Goals.errorInvalidWeight)
 			showingError = true
@@ -592,16 +653,11 @@ struct GoalSetupView: View {
 			showingError = true
 			return
 		}
-		guard let unit = dataManager.settings?.preferredUnit else {
-			errorMessage = String(localized: L10n.Goals.errorMissingSettings)
-			showingError = true
-			return
-		}
-		let weightKg = unit.convertToKg(weight)
-		let currentWeight = dataManager.getCurrentWeight()
+		let weightKg = preferredUnit.convertToKg(weight)
+		let startingKg = preferredUnit.convertToKg(starting)
 		do {
 			try dataManager.setGoal(targetWeightKg: weightKg,
-									startingWeightKg: currentWeight,
+								startingWeightKg: startingKg,
 									notes: notes.isEmpty ? nil : notes)
 			dismiss()
 		} catch {

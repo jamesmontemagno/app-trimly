@@ -171,6 +171,22 @@ struct DataManagerTests {
 		#expect(manager.consumeGoalAchievementCelebrationIfNeeded() == false)
 	}
 
+	@Test
+	func setGoal_requiresStartingWeightWhenUnavailable() async throws {
+		let manager = await makeInMemoryManager()
+		do {
+			try manager.setGoal(targetWeightKg: 75.0, startingWeightKg: nil)
+			Issue.record("Expected missing starting weight error")
+		} catch let error as DataManagerError {
+			guard case .missingStartingWeight = error else {
+				Issue.record("Unexpected DataManagerError: \(error)")
+				return
+			}
+		} catch {
+			Issue.record("Unexpected error: \(error)")
+		}
+	}
+
 	// MARK: - Analytics helpers
 
 	@Test

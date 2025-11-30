@@ -3485,6 +3485,17 @@
         }
       }
     },
+    "goals.setup.error.missingStartingWeight" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Enter a valid starting weight before saving"
+          }
+        }
+      }
+    },
     "goals.setup.error.nonPositiveWeight" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -3596,6 +3607,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notes"
+          }
+        }
+      }
+    },
+    "goals.setup.start.description" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Set your baseline in %@."
+          }
+        }
+      }
+    },
+    "goals.setup.start.placeholder" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "150"
+          }
+        }
+      }
+    },
+    "goals.setup.start.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Starting Weight"
           }
         }
       }
@@ -4927,6 +4971,28 @@
         }
       }
     },
+    "onboarding.goal.missingStart" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Enter your starting weight before setting a goal"
+          }
+        }
+      }
+    },
+    "onboarding.goal.error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Enter a valid target weight"
+          }
+        }
+      }
+    },
     "onboarding.goal.placeholder" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -5176,6 +5242,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Poids de départ"
+          }
+        }
+      }
+    },
+    "onboarding.start.error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Enter a valid starting weight"
           }
         }
       }

@@ -9,6 +9,20 @@ import Foundation
 import SwiftData
 import Combine
 
+enum DataManagerError: Error {
+    case missingStartingWeight
+}
+
+extension DataManagerError: LocalizedError {
+    var errorDescription: String? {
+        switch self {
+        case .missingStartingWeight:
+            // Mirror L10n.Goals.errorMissingStartingWeight without pulling in main-actor isolation
+            return NSLocalizedString("goals.setup.error.missingStartingWeight", comment: "Starting weight required before saving a goal")
+        }
+    }
+}
+
 /// Central data management service
 @MainActor
 final class DataManager: ObservableObject {
@@ -151,7 +165,9 @@ final class DataManager: ObservableObject {
             }
         }
         
-        let resolvedStartingWeight = startingWeightKg ?? getCurrentWeight()
+        guard let resolvedStartingWeight = startingWeightKg ?? getCurrentWeight() else {
+            throw DataManagerError.missingStartingWeight
+        }
         let goal = Goal(
             targetWeightKg: targetWeightKg,
             targetDate: targetDate,

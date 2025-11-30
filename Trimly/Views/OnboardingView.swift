@@ -5,6 +5,7 @@ import UIKit
 
 struct OnboardingView: View {
     @EnvironmentObject var dataManager: DataManager
+    @StateObject private var notificationService = NotificationService()
     @State private var currentPage = 0
     @State private var selectedUnit: WeightUnit = .pounds
     @State private var startingWeightText = ""
@@ -343,6 +344,11 @@ struct OnboardingView: View {
                 .background(.thinMaterial)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .padding(.horizontal)
+                .onChange(of: enableReminders) { _, enabled in
+                    if enabled {
+                        requestNotificationAuthorization()
+                    }
+                }
 
             if enableReminders {
                 Text(L10n.Onboarding.reminderHint)
@@ -430,12 +436,24 @@ struct OnboardingView: View {
 
     private func saveReminders() {
         if enableReminders {
-            dataManager.updateSettings { settings in
-                let calendar = Calendar.current
-                var components = calendar.dateComponents([.year, .month, .day], from: Date())
-                components.hour = 9
-                components.minute = 0
-                settings.reminderTime = calendar.date(from: components)
+            let calendar = Calendar.current
+            var components = calendar.dateComponents([.year, .month, .day], from: Date())
+            components.hour = 9
+            components.minute = 0
+            if let reminderTime = calendar.date(from: components) {
+                dataManager.updateSettings { settings in
+                    settings.reminderTime = reminderTime
+                }
+                // Schedule the actual notification if authorized
+                Task {
+                    if notificationService.isAuthorized {
+                        do {
+                            try await notificationService.scheduleDailyReminder(at: reminderTime)
+                        } catch {
+                            print("Failed to schedule reminder during onboarding: \(error)")
+                        }
+                    }
+                }
             }
         }
         withAnimation { currentPage = 5 }
@@ -445,6 +463,18 @@ struct OnboardingView: View {
         dataManager.updateSettings { settings in
             settings.hasCompletedOnboarding = true
             settings.eulaAcceptedDate = Date()
+        }
+    }
+
+    private func requestNotificationAuthorization() {
+        Task {
+            do {
+                try await notificationService.requestAuthorization()
+            } catch {
+                // If authorization fails or is denied, we continue silently.
+                // The user can enable notifications later in Settings.
+                print("Failed to authorize notifications during onboarding: \(error)")
+            }
         }
     }
 }

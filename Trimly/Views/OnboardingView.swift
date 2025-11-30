@@ -457,7 +457,7 @@ struct OnboardingView: View {
         do {
             try dataManager.setGoal(targetWeightKg: weightKg, startingWeightKg: currentWeight)
             withAnimation { currentPage = 4 }
-        } catch let dataError as DataManagerError {
+        } catch _ as DataManagerError {
             goalWeightError = L10n.Onboarding.goalNeedsStart
             withAnimation { currentPage = 2 }
         } catch {

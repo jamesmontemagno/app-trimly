@@ -3486,6 +3486,7 @@
       }
     },
     "goals.setup.error.missingStartingWeight" : {
+      "comment" : "Starting weight required before saving a goal",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
@@ -4856,29 +4857,6 @@
         }
       }
     },
-    "onboarding.eula.privacy" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Read Privacy Policy"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leer la Política de privacidad"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lire la politique de confidentialité"
-          }
-        }
-      }
-    },
     "onboarding.error.incomplete" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4898,6 +4876,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Veuillez entrer votre poids de départ et votre poids cible avant de continuer."
+          }
+        }
+      }
+    },
+    "onboarding.eula.privacy" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read Privacy Policy"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leer la Política de privacidad"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lire la politique de confidentialité"
           }
         }
       }
@@ -4971,6 +4972,17 @@
         }
       }
     },
+    "onboarding.goal.error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Enter a valid target weight"
+          }
+        }
+      }
+    },
     "onboarding.goal.fieldLabel" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -5001,17 +5013,6 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Enter your starting weight before setting a goal"
-          }
-        }
-      }
-    },
-    "onboarding.goal.error" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Enter a valid target weight"
           }
         }
       }
@@ -5177,6 +5178,17 @@
         }
       }
     },
+    "onboarding.start.error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Enter a valid starting weight"
+          }
+        }
+      }
+    },
     "onboarding.start.fieldLabel" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -5265,17 +5277,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Poids de départ"
-          }
-        }
-      }
-    },
-    "onboarding.start.error" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Enter a valid starting weight"
           }
         }
       }

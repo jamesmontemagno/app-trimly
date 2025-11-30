@@ -436,12 +436,20 @@ struct OnboardingView: View {
 
     private func saveReminders() {
         if enableReminders {
-            dataManager.updateSettings { settings in
-                let calendar = Calendar.current
-                var components = calendar.dateComponents([.year, .month, .day], from: Date())
-                components.hour = 9
-                components.minute = 0
-                settings.reminderTime = calendar.date(from: components)
+            let calendar = Calendar.current
+            var components = calendar.dateComponents([.year, .month, .day], from: Date())
+            components.hour = 9
+            components.minute = 0
+            if let reminderTime = calendar.date(from: components) {
+                dataManager.updateSettings { settings in
+                    settings.reminderTime = reminderTime
+                }
+                // Schedule the actual notification if authorized
+                Task {
+                    if notificationService.isAuthorized {
+                        try? await notificationService.scheduleDailyReminder(at: reminderTime)
+                    }
+                }
             }
         }
         withAnimation { currentPage = 5 }

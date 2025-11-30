@@ -1,4 +1,4 @@
-//
+    //
 //  DataManager.swift
 //  TrimTally
 //
@@ -16,6 +16,8 @@ final class DataManager: ObservableObject {
     let modelContext: ModelContext
     
     @Published var settings: AppSettings?
+    private var pendingGoalAchievementCelebration = false
+    private var pendingGoalAchievementGoalID: UUID?
 
     /// Ensures SwiftUI views refresh when persisted data changes
     private func publishChange() {
@@ -103,6 +105,7 @@ final class DataManager: ObservableObject {
         modelContext.insert(entry)
         try modelContext.save()
         publishChange()
+        try evaluateGoalAchievementIfNeeded(latestWeightKg: entry.weightKg)
     }
     
     func fetchAllEntries() -> [WeightEntry] {
@@ -139,13 +142,20 @@ final class DataManager: ObservableObject {
     func setGoal(targetWeightKg: Double, startingWeightKg: Double?, targetDate: Date? = nil, notes: String? = nil) throws {
         // Archive current active goal if exists
         if let activeGoal = fetchActiveGoal() {
-            activeGoal.archive(reason: .changed)
+            if activeGoal.completionReason == .achieved {
+                activeGoal.isActive = false
+                activeGoal.updatedAt = Date()
+                activeGoal.completedDate = activeGoal.completedDate ?? Date()
+            } else {
+                activeGoal.archive(reason: .changed)
+            }
         }
         
+        let resolvedStartingWeight = startingWeightKg ?? getCurrentWeight()
         let goal = Goal(
             targetWeightKg: targetWeightKg,
             targetDate: targetDate,
-            startingWeightKg: startingWeightKg,
+            startingWeightKg: resolvedStartingWeight,
             notes: notes
         )
         modelContext.insert(goal)
@@ -170,7 +180,12 @@ final class DataManager: ObservableObject {
     
     func completeGoal(reason: CompletionReason) throws {
         guard let activeGoal = fetchActiveGoal() else { return }
-        activeGoal.archive(reason: reason)
+        if reason == .achieved {
+            activeGoal.markAchieved()
+            markPendingGoalCelebration(goalID: activeGoal.id)
+        } else {
+            activeGoal.archive(reason: reason)
+        }
         try modelContext.save()
         publishChange()
     }
@@ -219,6 +234,47 @@ final class DataManager: ObservableObject {
             targetWeightKg: goal.targetWeightKg,
             minDays: settings.minDaysForProjection
         )
+    }
+
+    private func evaluateGoalAchievementIfNeeded(latestWeightKg: Double) throws {
+        guard let goal = fetchActiveGoal() else { return }
+        guard goal.completionReason != .achieved else { return }
+        guard let startWeight = goal.startingWeightKg ?? getStartWeight() else { return }
+        let target = goal.targetWeightKg
+        let tolerance: Double = 0.05
+        let meetsGoal: Bool
+        if startWeight > target {
+            meetsGoal = latestWeightKg <= target + tolerance
+        } else if startWeight < target {
+            meetsGoal = latestWeightKg >= target - tolerance
+        } else {
+            meetsGoal = abs(latestWeightKg - target) <= tolerance
+        }
+        guard meetsGoal else { return }
+        goal.markAchieved()
+        markPendingGoalCelebration(goalID: goal.id)
+        try modelContext.save()
+        publishChange()
+    }
+
+    func consumeGoalAchievementCelebrationIfNeeded() -> Bool {
+        guard pendingGoalAchievementCelebration else { return false }
+        pendingGoalAchievementCelebration = false
+        guard let goalID = pendingGoalAchievementGoalID else { return false }
+        pendingGoalAchievementGoalID = nil
+        return goal(withID: goalID)?.completionReason == .achieved
+    }
+
+    private func markPendingGoalCelebration(goalID: UUID) {
+        pendingGoalAchievementCelebration = true
+        pendingGoalAchievementGoalID = goalID
+    }
+
+    private func goal(withID id: UUID) -> Goal? {
+        let descriptor = FetchDescriptor<Goal>(
+            predicate: #Predicate { $0.id == id }
+        )
+        return try? modelContext.fetch(descriptor).first
     }
 
     // MARK: - Achievement Persistence
@@ -352,6 +408,8 @@ final class DataManager: ObservableObject {
         try modelContext.delete(model: WeightEntry.self)
         try modelContext.delete(model: Goal.self)
         try modelContext.delete(model: Achievement.self)
+        pendingGoalAchievementCelebration = false
+        pendingGoalAchievementGoalID = nil
         
         // Reset onboarding-related settings so the setup wizard runs again
         if let settings = settings {

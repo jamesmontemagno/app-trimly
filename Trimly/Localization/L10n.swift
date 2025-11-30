@@ -427,6 +427,7 @@ enum L10n {
 		static let goal50 = LocalizedStringResource("celebrations.goal.50", defaultValue: "Halfway to your goal—keep it up!")
 		static let goal75 = LocalizedStringResource("celebrations.goal.75", defaultValue: "Three quarters there—you're doing great!")
 		static let goal100 = LocalizedStringResource("celebrations.goal.100", defaultValue: "Goal achieved—congratulations!")
+			static let goalAchieved = LocalizedStringResource("celebrations.goal.achieved", defaultValue: "Goal reached—phenomenal effort!")
 		static let consistency70 = LocalizedStringResource("celebrations.consistency.70", defaultValue: "70% consistency—building a solid habit!")
 		static let consistency85 = LocalizedStringResource("celebrations.consistency.85", defaultValue: "85% consistency—excellent dedication!")
 		static let consistencyPercentTemplate = LocalizedStringResource("celebrations.consistency.percent", defaultValue: "Consistency at %d%% — keep it going!")

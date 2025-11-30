@@ -124,17 +124,51 @@ struct DataManagerTests {
 	}
 
 	@Test
-	func completeGoal_movesActiveGoalToHistory() async throws {
+	func completeGoal_achievedKeepsGoalActive() async throws {
 		let manager = await makeInMemoryManager()
 		try manager.setGoal(targetWeightKg: 75.0, startingWeightKg: 80.0)
 		try manager.completeGoal(reason: .achieved)
+
+		let active = manager.fetchActiveGoal()
+		#expect(active != nil)
+		#expect(active?.completionReason == .achieved)
+		#expect(active?.isActive == true)
+		#expect(active?.completedDate != nil)
+		#expect(manager.consumeGoalAchievementCelebrationIfNeeded() == true)
+		#expect(manager.consumeGoalAchievementCelebrationIfNeeded() == false)
+	}
+
+	@Test
+	func completeGoal_abandonedMovesActiveGoalToHistory() async throws {
+		let manager = await makeInMemoryManager()
+		try manager.setGoal(targetWeightKg: 75.0, startingWeightKg: 80.0)
+		try manager.completeGoal(reason: .abandoned)
 
 		let active = manager.fetchActiveGoal()
 		let history = manager.fetchGoalHistory()
 
 		#expect(active == nil)
 		#expect(history.count == 1)
-		#expect(history.first?.completionReason == .achieved)
+		#expect(history.first?.completionReason == .abandoned)
+		#expect(history.first?.isActive == false)
+	}
+
+	@Test
+	func goal_autoCompletesWhenTargetMet() async throws {
+		let manager = await makeInMemoryManager()
+		try manager.setGoal(targetWeightKg: 75.0, startingWeightKg: 80.0)
+		try manager.addWeightEntry(weightKg: 80.0, unit: .kilograms)
+		try manager.addWeightEntry(weightKg: 75.0, unit: .kilograms)
+
+		guard let goal = manager.fetchActiveGoal() else {
+			Issue.record("Expected an active goal")
+			return
+		}
+		#expect(goal.completionReason == .achieved)
+		#expect(goal.completedDate != nil)
+		#expect(goal.isActive == true)
+		#expect(manager.consumeGoalAchievementCelebrationIfNeeded() == true)
+		#expect(manager.consumeGoalAchievementCelebrationIfNeeded() == false)
 	}
 
 	// MARK: - Analytics helpers

@@ -70,12 +70,24 @@ final class Goal {
         self.updatedAt = updatedAt
     }
     
+    /// Mark the goal as achieved while keeping it active
+    func markAchieved(at date: Date = Date()) {
+        completionReason = .achieved
+        completedDate = date
+        updatedAt = date
+    }
+
     /// Archive this goal (mark as inactive)
     func archive(reason: CompletionReason) {
         isActive = false
-        completedDate = Date()
-        completionReason = reason
-        updatedAt = Date()
+        let now = Date()
+        if completionReason == .achieved && reason != .achieved {
+            completedDate = completedDate ?? now
+        } else {
+            completionReason = reason
+            completedDate = now
+        }
+        updatedAt = now
     }
 }
 

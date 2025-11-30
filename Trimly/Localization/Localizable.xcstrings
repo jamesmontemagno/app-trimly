@@ -1204,6 +1204,29 @@
         }
       }
     },
+    "celebrations.goal.achieved" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Goal reached—phenomenal effort!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meta alcanzada—¡esfuerzo fenomenal!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Objectif atteint — effort phénoménal !"
+          }
+        }
+      }
+    },
     "celebrations.streak.7" : {
       "extractionState" : "manual",
       "localizations" : {

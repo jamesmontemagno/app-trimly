@@ -27,6 +27,7 @@ final class CelebrationService: ObservableObject {
         case goal50Percent
         case goal75Percent
         case goal100Percent
+        case goalAchieved
         case consistency70
         case consistency85
         case achievement
@@ -43,6 +44,7 @@ final class CelebrationService: ObservableObject {
             case .goal50Percent: return "goal50Percent"
             case .goal75Percent: return "goal75Percent"
             case .goal100Percent: return "goal100Percent"
+            case .goalAchieved: return "goalAchieved"
             case .consistency70: return "consistency70"
             case .consistency85: return "consistency85"
             case .achievement: return "achievement"
@@ -71,6 +73,8 @@ final class CelebrationService: ObservableObject {
                 return String(localized: L10n.Celebrations.goal75)
             case .goal100Percent:
                 return String(localized: L10n.Celebrations.goal100)
+            case .goalAchieved:
+                return String(localized: L10n.Celebrations.goalAchieved)
             case .consistency70:
                 return String(localized: L10n.Celebrations.consistency70)
             case .consistency85:
@@ -90,7 +94,7 @@ final class CelebrationService: ObservableObject {
                 return "checkmark.circle.fill"
             case .goal25Percent, .goal50Percent, .goal75Percent:
                 return "chart.line.uptrend.xyaxis"
-            case .goal100Percent:
+            case .goal100Percent, .goalAchieved:
                 return "star.fill"
             case .consistency70, .consistency85:
                 return "calendar.badge.checkmark"
@@ -176,6 +180,10 @@ final class CelebrationService: ObservableObject {
 
     /// Check for goal progress celebrations
     private func checkGoalCelebration(dataManager: DataManager) -> Celebration? {
+        if dataManager.consumeGoalAchievementCelebrationIfNeeded() {
+            return createCelebration(type: .goalAchieved)
+        }
+
         guard let goal = dataManager.fetchActiveGoal(),
               let currentWeight = dataManager.getCurrentWeight(),
               let startWeight = goal.startingWeightKg ?? dataManager.getStartWeight() else {

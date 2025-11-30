@@ -331,7 +331,7 @@ struct SettingsView: View {
 			.navigationDestination(isPresented: $navigateToHealthKit) { HealthKitView() }
 			.sheet(isPresented: $showingGoalSheet) { GoalSetupView() }
 			.sheet(isPresented: $showingGoalHistory) { GoalHistoryView() }
-			.sheet(isPresented: $showingExport) { ExportView(csvData: exportedData) }
+			.sheet(isPresented: $showingExport) { ExportView(initialCSV: exportedData) }
 			.sheet(isPresented: $showingPaywall) { PaywallView() }
 			.confirmationDialog(String(localized: L10n.Common.deleteAllDataTitle), isPresented: $showingDeleteConfirmation, titleVisibility: .visible) {
 				Button(String(localized: L10n.Settings.deleteAllTitle), role: .destructive) { deleteAllData() }
@@ -676,15 +676,21 @@ struct GoalHistoryView: View {
 }
 
 struct ExportView: View {
-	let csvData: String
+	@EnvironmentObject var dataManager: DataManager
 	@Environment(\.dismiss) var dismiss
+	@State private var csvData: String
 
-	private var trimmedCSV: String {
-		csvData.trimmingCharacters(in: .whitespacesAndNewlines)
+	init(initialCSV: String) {
+		_csvData = State(initialValue: initialCSV)
 	}
 
 	private var hasContent: Bool {
-		!trimmedCSV.isEmpty
+		!csvData.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+	}
+
+	private var entryCount: Int {
+		let lines = csvData.split(whereSeparator: { $0 == "\n" || $0 == "\r" })
+		return max(lines.count - 1, 0) // ignore header row
 	}
 
 	var body: some View {
@@ -705,6 +711,11 @@ struct ExportView: View {
 									.textSelection(.enabled)
 									.frame(maxWidth: .infinity, alignment: .topLeading)
 							}
+						}
+						if entryCount == 0 {
+							Text(String(localized: L10n.Export.emptyDescription))
+								.font(.footnote)
+								.foregroundStyle(.secondary)
 						}
 					} else {
 						ContentUnavailableView(
@@ -730,6 +741,12 @@ struct ExportView: View {
 				}
 			}
 		}
+		.onAppear(perform: refreshData)
+	}
+
+	private func refreshData() {
+		let latest = dataManager.exportToCSV()
+		csvData = latest
 	}
 }
 

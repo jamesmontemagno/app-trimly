@@ -4879,6 +4879,29 @@
         }
       }
     },
+    "onboarding.error.incomplete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please enter your starting weight and goal weight before continuing."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingresa tu peso inicial y tu peso objetivo antes de continuar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veuillez entrer votre poids de départ et votre poids cible avant de continuer."
+          }
+        }
+      }
+    },
     "onboarding.eula.subtitle" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -13,6 +13,7 @@ struct OnboardingView: View {
     @State private var enableReminders = false
     @State private var startingWeightError: LocalizedStringResource?
     @State private var goalWeightError: LocalizedStringResource?
+    @State private var showIncompleteAlert = false
 
     private let onboardingSteps: [(title: LocalizedStringResource, symbol: String)] = [
         (L10n.Onboarding.stepWelcome, "figure.arms.open"),
@@ -83,6 +84,11 @@ struct OnboardingView: View {
             }
         }
         #endif
+        .alert(L10n.Common.errorTitle, isPresented: $showIncompleteAlert) {
+            Button(L10n.Common.okButton, role: .cancel) { }
+        } message: {
+            Text(L10n.Onboarding.incompleteError)
+        }
     }
 
     private func primaryButton(title: LocalizedStringResource, action: @escaping () -> Void) -> some View {
@@ -485,6 +491,12 @@ struct OnboardingView: View {
     }
 
     private func completeOnboarding() {
+        // Validate that starting weight and goal have been set
+        guard dataManager.getCurrentWeight() != nil, dataManager.fetchActiveGoal() != nil else {
+            showIncompleteAlert = true
+            return
+        }
+        
         dataManager.updateSettings { settings in
             settings.hasCompletedOnboarding = true
             settings.eulaAcceptedDate = Date()

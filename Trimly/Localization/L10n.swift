@@ -304,6 +304,13 @@ enum L10n {
 		static let privacyPolicy = LocalizedStringResource("settings.about.privacy", defaultValue: "Privacy Policy")
 		static let termsOfService = LocalizedStringResource("settings.about.terms", defaultValue: "Terms of Service")
 		static let deleteWarning = LocalizedStringResource("settings.data.delete.warning", defaultValue: "This will permanently delete all your weight entries and goals. This action cannot be undone.")
+		static let restorePurchases = LocalizedStringResource("settings.about.restorePurchases", defaultValue: "Restore Purchases")
+		static let restoreSuccessTitle = LocalizedStringResource("settings.restore.success.title", defaultValue: "Purchase Restored")
+		static let restoreSuccessMessage = LocalizedStringResource("settings.restore.success.message", defaultValue: "Your TrimTally Pro purchase has been restored successfully.")
+		static let restoreNotFoundTitle = LocalizedStringResource("settings.restore.notFound.title", defaultValue: "No Purchase Found")
+		static let restoreNotFoundMessage = LocalizedStringResource("settings.restore.notFound.message", defaultValue: "We couldn't find a previous TrimTally Pro purchase associated with your account.")
+		static let proStatus = LocalizedStringResource("settings.about.proStatus", defaultValue: "Pro")
+		static let proDescription = LocalizedStringResource("settings.about.proDescription", defaultValue: "You have TrimTally Pro")
 	}
 
 	enum Goals {

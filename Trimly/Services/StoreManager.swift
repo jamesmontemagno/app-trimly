@@ -52,9 +52,10 @@ class StoreManager: ObservableObject {
         }
     }
     
-    func restore() async {
+    func restore() async -> Bool {
         try? await AppStore.sync()
         await updateCustomerProductStatus()
+        return isPro
     }
     
     func updateCustomerProductStatus() async {

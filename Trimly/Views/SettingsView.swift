@@ -20,6 +20,8 @@ struct SettingsView: View {
 	@State private var navigateToHealthKit = false
 	@State private var showingDeleteConfirmation = false
 	@State private var exportedData = ""
+	@State private var showingRestoreSuccessAlert = false
+	@State private var showingRestoreNotFoundAlert = false
 #if DEBUG
 	@State private var showingSampleDataAlert = false
 	@State private var sampleDataAlertMessage = ""
@@ -64,6 +66,28 @@ struct SettingsView: View {
 							}
 						}
 						.buttonStyle(.plain)
+					} else {
+						TrimlyCardContainer(style: .elevated) {
+							HStack {
+								RoundedRectangle(cornerRadius: 14, style: .continuous)
+									.fill(Color.yellow.opacity(0.15))
+									.frame(width: 52, height: 52)
+									.overlay(
+										Image(systemName: "crown.fill")
+											.font(.title3)
+											.foregroundStyle(.yellow)
+									)
+								VStack(alignment: .leading, spacing: 4) {
+									Text(L10n.Settings.proStatus)
+										.font(.headline)
+									Text(L10n.Settings.proDescription)
+										.font(.subheadline)
+										.foregroundStyle(.secondary)
+								}
+								Spacer()
+							}
+							.padding(.vertical, 4)
+						}
 					}
 
 					settingsSection(
@@ -296,9 +320,14 @@ struct SettingsView: View {
 	#endif
 					
 					settingsSection(title: String(localized: L10n.Settings.aboutTitle)) {
-						Button("Restore Purchases") {
+						Button(String(localized: L10n.Settings.restorePurchases)) {
 							Task {
-								await storeManager.restore()
+								let found = await storeManager.restore()
+								if found {
+									showingRestoreSuccessAlert = true
+								} else {
+									showingRestoreNotFoundAlert = true
+								}
 							}
 						}
 						.buttonStyle(.plain)
@@ -338,6 +367,16 @@ struct SettingsView: View {
 				Button(String(localized: L10n.Common.cancelButton), role: .cancel) { }
 			} message: {
 				Text(L10n.Settings.deleteWarning)
+			}
+			.alert(String(localized: L10n.Settings.restoreSuccessTitle), isPresented: $showingRestoreSuccessAlert) {
+				Button(String(localized: L10n.Common.okButton), role: .cancel) { }
+			} message: {
+				Text(L10n.Settings.restoreSuccessMessage)
+			}
+			.alert(String(localized: L10n.Settings.restoreNotFoundTitle), isPresented: $showingRestoreNotFoundAlert) {
+				Button(String(localized: L10n.Common.okButton), role: .cancel) { }
+			} message: {
+				Text(L10n.Settings.restoreNotFoundMessage)
 			}
 #if DEBUG
 			.alert(String(localized: L10n.Debug.sampleDataTitle), isPresented: $showingSampleDataAlert) {

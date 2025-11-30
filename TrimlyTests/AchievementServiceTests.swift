@@ -1,5 +1,6 @@
 import XCTest
-@testable import Trimly
+import SwiftData
+@testable import TrimTally
 
 @MainActor
 final class AchievementServiceTests: XCTestCase {
@@ -40,6 +41,18 @@ final class AchievementServiceTests: XCTestCase {
 		let habitBuilder = dataManager.achievement(forKey: "consistency.solid", createIfMissing: false)
 		XCTAssertNotNil(habitBuilder)
 		XCTAssertNotNil(habitBuilder?.unlockedAt)
+	}
+
+	func testConsistencyAchievementsIgnoreHiddenEntries() throws {
+		try logSequentialEntries(count: 10)
+		let entries = dataManager.fetchAllEntries()
+		for entry in entries.dropLast() {
+			entry.isHidden = true
+		}
+		try dataManager.modelContext.save()
+		achievementService.refresh(using: dataManager, isPro: true)
+		let habitBuilder = dataManager.achievement(forKey: "consistency.solid", createIfMissing: false)
+		XCTAssertNil(habitBuilder?.unlockedAt)
 	}
 	
 	func testPremiumAchievementRequiresProUnlock() throws {

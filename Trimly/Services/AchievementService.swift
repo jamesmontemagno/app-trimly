@@ -8,15 +8,22 @@
 import Foundation
 import Combine
 import SwiftUI
+import OSLog
 
 @MainActor
 final class AchievementService: ObservableObject {
 	@Published private(set) var snapshots: [AchievementSnapshot] = []
+	@Published private(set) var diagnostics: AchievementDiagnostics?
 	
 	private let definitions: [AchievementDescriptor] = AchievementDescriptor.catalog
+	private let logger = Logger(subsystem: "com.trimly.TrimTally", category: "Achievements")
 	
 	func refresh(using dataManager: DataManager, isPro: Bool) {
 		let context = EvaluationContext(dataManager: dataManager)
+		diagnostics = context.makeDiagnosticsSnapshot()
+		logger.debug(
+			"Refresh stats — entries: \(context.totalEntries, privacy: .public), unique days: \(context.uniqueDayCount, privacy: .public), consistency: \(context.consistencyScore, privacy: .public)"
+		)
 		var updated: [AchievementSnapshot] = []
 		for descriptor in definitions {
 			let evaluation = evaluate(descriptor, context: context)
@@ -291,9 +298,11 @@ private struct EvaluationContext {
 	let goalsAchieved: Int
 	let remindersEnabled: Bool
 	let recentReminderRatio: Double
+	let consistencyWindowDays: Int
 	
 	init(dataManager: DataManager) {
-		let entries = dataManager.fetchAllEntries()
+		let allEntries = dataManager.fetchAllEntries()
+		let entries = allEntries.filter { !$0.isHidden }
 		totalEntries = entries.count
 		let uniqueDays = Set(entries.map { $0.normalizedDate })
 		uniqueDayCount = uniqueDays.count
@@ -301,9 +310,10 @@ private struct EvaluationContext {
 		consistencyScore = dataManager.getConsistencyScore() ?? 0
 		let completedGoals = dataManager.fetchGoalHistory().filter { $0.completionReason == .achieved }
 		goalsAchieved = completedGoals.count
-			let settings = dataManager.settings
+		let settings = dataManager.settings
 		remindersEnabled = (settings?.reminderTime != nil) || (settings?.secondReminderTime != nil)
 		recentReminderRatio = EvaluationContext.recentReminderCompletionRatio(entries: entries)
+		consistencyWindowDays = settings?.consistencyScoreWindow ?? 30
 	}
 	
 	private static func calculateLongestStreak(from dates: [Date]) -> Int {
@@ -342,4 +352,30 @@ private struct EvaluationContext {
 		}
 		return Double(loggedCount) / Double(windowDays)
 	}
+
+	func makeDiagnosticsSnapshot() -> AchievementDiagnostics {
+		AchievementDiagnostics(
+			totalEntries: totalEntries,
+			uniqueDayCount: uniqueDayCount,
+			longestStreak: longestStreak,
+			consistencyScore: consistencyScore,
+			goalsAchieved: goalsAchieved,
+			remindersEnabled: remindersEnabled,
+			recentReminderRatio: recentReminderRatio,
+			consistencyWindowDays: consistencyWindowDays,
+			evaluatedAt: Date()
+		)
+	}
+}
+
+struct AchievementDiagnostics {
+	let totalEntries: Int
+	let uniqueDayCount: Int
+	let longestStreak: Int
+	let consistencyScore: Double
+	let goalsAchieved: Int
+	let remindersEnabled: Bool
+	let recentReminderRatio: Double
+	let consistencyWindowDays: Int
+	let evaluatedAt: Date
 }

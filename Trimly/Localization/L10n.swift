@@ -12,6 +12,8 @@ enum L10n {
 		static let okButton = LocalizedStringResource("common.button.ok", defaultValue: "OK")
 		static let deleteButton = LocalizedStringResource("common.button.delete", defaultValue: "Delete")
 		static let refresh = LocalizedStringResource("common.button.refresh", defaultValue: "Refresh")
+		static let booleanYes = LocalizedStringResource("common.value.yes", defaultValue: "Yes")
+		static let booleanNo = LocalizedStringResource("common.value.no", defaultValue: "No")
 		static let errorTitle = LocalizedStringResource("common.alert.errorTitle", defaultValue: "Error")
 		static let deleteAllDataTitle = LocalizedStringResource("common.alert.deleteAllDataTitle", defaultValue: "Delete All Data")
 		static func days(_ count: Int) -> LocalizedStringResource {
@@ -452,6 +454,31 @@ enum L10n {
 		static let sampleDataSuccess = LocalizedStringResource("debug.sampleData.success", defaultValue: "Sample data generated.")
 		static func sampleDataFailure(_ message: String) -> LocalizedStringResource {
 			LocalizedStringResource("debug.sampleData.failure", defaultValue: "Couldn't generate sample data: \(message)")
+		}
+
+		enum Achievements {
+			static let sheetTitle = LocalizedStringResource("debug.achievements.sheet.title", defaultValue: "Achievement Diagnostics")
+			static let metricSection = LocalizedStringResource("debug.achievements.section.metric", defaultValue: "Metric Inputs")
+			static let contextSection = LocalizedStringResource("debug.achievements.section.context", defaultValue: "Evaluation Context")
+			static let unlockStatus = LocalizedStringResource("debug.achievements.unlock.status", defaultValue: "Unlock status")
+			static let requiresPro = LocalizedStringResource("debug.achievements.requiresPro", defaultValue: "Requires TrimTally Pro")
+			static let totalEntries = LocalizedStringResource("debug.achievements.totalEntries", defaultValue: "Visible entries")
+			static let uniqueDays = LocalizedStringResource("debug.achievements.uniqueDays", defaultValue: "Unique days logged")
+			static let longestStreak = LocalizedStringResource("debug.achievements.longestStreak", defaultValue: "Longest streak")
+			static let consistencyScore = LocalizedStringResource("debug.achievements.consistencyScore", defaultValue: "Consistency score")
+			static let consistencyWindow = LocalizedStringResource("debug.achievements.consistencyWindow", defaultValue: "Consistency window (days)")
+			static let goalsAchieved = LocalizedStringResource("debug.achievements.goalsAchieved", defaultValue: "Goals achieved")
+			static let remindersEnabled = LocalizedStringResource("debug.achievements.remindersEnabled", defaultValue: "Reminders enabled")
+			static let reminderRatio = LocalizedStringResource("debug.achievements.reminderRatio", defaultValue: "Reminder completion (21 days)")
+			static let evaluatedAt = LocalizedStringResource("debug.achievements.evaluatedAt", defaultValue: "Evaluated")
+			static let noDiagnostics = LocalizedStringResource("debug.achievements.noData", defaultValue: "No diagnostics captured yet.")
+			static let targetValue = LocalizedStringResource("debug.achievements.target.value", defaultValue: "Target value")
+			static let targetUniqueDays = LocalizedStringResource("debug.achievements.target.uniqueDays", defaultValue: "Target unique days")
+			static let targetStreakDays = LocalizedStringResource("debug.achievements.target.streakDays", defaultValue: "Target streak days")
+			static let consistencyThreshold = LocalizedStringResource("debug.achievements.target.consistency", defaultValue: "Consistency threshold")
+			static let targetGoals = LocalizedStringResource("debug.achievements.target.goals", defaultValue: "Target goals")
+			static let remindersRequired = LocalizedStringResource("debug.achievements.target.reminders", defaultValue: "Reminders required")
+			static let reminderRatioTarget = LocalizedStringResource("debug.achievements.target.reminderRatio", defaultValue: "Reminder ratio goal")
 		}
 	}
 

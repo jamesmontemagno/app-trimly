@@ -429,6 +429,17 @@
         }
       }
     },
+    "achievements.pro.unlockLine" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Unlock this achievement with TrimTally Pro."
+          }
+        }
+      }
+    },
     "achievements.progress.label" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -491,17 +502,6 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Upgrade to TrimTally Pro to unlock premium achievements."
-          }
-        }
-      }
-    },
-    "achievements.pro.unlockLine" : {
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Unlock this achievement with TrimTally Pro."
           }
         }
       }
@@ -2229,6 +2229,28 @@
         }
       }
     },
+    "common.value.no" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No"
+          }
+        }
+      }
+    },
+    "common.value.yes" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Yes"
+          }
+        }
+      }
+    },
     "Current" : {
       "localizations" : {
         "es" : {
@@ -2763,6 +2785,248 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Date"
+          }
+        }
+      }
+    },
+    "debug.achievements.consistencyScore" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Consistency score"
+          }
+        }
+      }
+    },
+    "debug.achievements.consistencyWindow" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Consistency window (days)"
+          }
+        }
+      }
+    },
+    "debug.achievements.evaluatedAt" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Evaluated"
+          }
+        }
+      }
+    },
+    "debug.achievements.goalsAchieved" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Goals achieved"
+          }
+        }
+      }
+    },
+    "debug.achievements.longestStreak" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Longest streak"
+          }
+        }
+      }
+    },
+    "debug.achievements.noData" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No diagnostics captured yet."
+          }
+        }
+      }
+    },
+    "debug.achievements.reminderRatio" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Reminder completion (21 days)"
+          }
+        }
+      }
+    },
+    "debug.achievements.remindersEnabled" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Reminders enabled"
+          }
+        }
+      }
+    },
+    "debug.achievements.requiresPro" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Requires TrimTally Pro"
+          }
+        }
+      }
+    },
+    "debug.achievements.section.context" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Evaluation Context"
+          }
+        }
+      }
+    },
+    "debug.achievements.section.metric" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Metric Inputs"
+          }
+        }
+      }
+    },
+    "debug.achievements.sheet.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Achievement Diagnostics"
+          }
+        }
+      }
+    },
+    "debug.achievements.target.consistency" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Consistency threshold"
+          }
+        }
+      }
+    },
+    "debug.achievements.target.goals" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Target goals"
+          }
+        }
+      }
+    },
+    "debug.achievements.target.reminderRatio" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Reminder ratio goal"
+          }
+        }
+      }
+    },
+    "debug.achievements.target.reminders" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Reminders required"
+          }
+        }
+      }
+    },
+    "debug.achievements.target.streakDays" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Target streak days"
+          }
+        }
+      }
+    },
+    "debug.achievements.target.uniqueDays" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Target unique days"
+          }
+        }
+      }
+    },
+    "debug.achievements.target.value" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Target value"
+          }
+        }
+      }
+    },
+    "debug.achievements.totalEntries" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Visible entries"
+          }
+        }
+      }
+    },
+    "debug.achievements.uniqueDays" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Unique days logged"
+          }
+        }
+      }
+    },
+    "debug.achievements.unlock.status" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Unlock status"
           }
         }
       }
@@ -5746,52 +6010,6 @@
         }
       }
     },
-    "settings.about.terms" : {
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Terms of Service"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Términos de uso"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Conditions d'utilisation"
-          }
-        }
-      }
-    },
-    "settings.about.version" : {
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Version"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Versión"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Version"
-          }
-        }
-      }
-    },
     "settings.about.proDescription" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -5861,94 +6079,48 @@
         }
       }
     },
-    "settings.restore.notFound.message" : {
+    "settings.about.terms" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "We couldn't find a previous TrimTally Pro purchase associated with your account."
+            "value" : "Terms of Service"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No pudimos encontrar una compra anterior de TrimTally Pro asociada con tu cuenta."
+            "value" : "Términos de uso"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nous n'avons pas trouvé d'achat TrimTally Pro précédent associé à votre compte."
+            "value" : "Conditions d'utilisation"
           }
         }
       }
     },
-    "settings.restore.notFound.title" : {
+    "settings.about.version" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "No Purchase Found"
+            "value" : "Version"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No se encontró compra"
+            "value" : "Versión"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aucun achat trouvé"
-          }
-        }
-      }
-    },
-    "settings.restore.success.message" : {
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Your TrimTally Pro purchase has been restored successfully."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tu compra de TrimTally Pro ha sido restaurada exitosamente."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Votre achat TrimTally Pro a été restauré avec succès."
-          }
-        }
-      }
-    },
-    "settings.restore.success.title" : {
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Purchase Restored"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Compra restaurada"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Achat restauré"
+            "value" : "Version"
           }
         }
       }
@@ -6754,6 +6926,98 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unité de poids"
+          }
+        }
+      }
+    },
+    "settings.restore.notFound.message" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "We couldn't find a previous TrimTally Pro purchase associated with your account."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No pudimos encontrar una compra anterior de TrimTally Pro asociada con tu cuenta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nous n'avons pas trouvé d'achat TrimTally Pro précédent associé à votre compte."
+          }
+        }
+      }
+    },
+    "settings.restore.notFound.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No Purchase Found"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró compra"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun achat trouvé"
+          }
+        }
+      }
+    },
+    "settings.restore.success.message" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Your TrimTally Pro purchase has been restored successfully."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu compra de TrimTally Pro ha sido restaurada exitosamente."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Votre achat TrimTally Pro a été restauré avec succès."
+          }
+        }
+      }
+    },
+    "settings.restore.success.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Purchase Restored"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compra restaurada"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Achat restauré"
           }
         }
       }

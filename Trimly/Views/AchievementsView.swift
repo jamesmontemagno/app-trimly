@@ -7,11 +7,13 @@
 
 import SwiftUI
 import Combine
+import Foundation
 
 struct AchievementsView: View {
 	@EnvironmentObject var dataManager: DataManager
 	@EnvironmentObject var storeManager: StoreManager
 	@StateObject private var achievementService = AchievementService()
+	@State private var selectedSnapshot: AchievementSnapshot?
 	
 	var body: some View {
 		NavigationStack {
@@ -20,7 +22,9 @@ struct AchievementsView: View {
 					ForEach(groupedSnapshots) { group in
 						Section {
 							ForEach(group.snapshots) { snapshot in
-								AchievementCard(snapshot: snapshot)
+								AchievementCard(snapshot: snapshot) {
+									selectedSnapshot = snapshot
+								}
 							}
 						} header: {
 							Text(group.category.title)
@@ -49,6 +53,12 @@ struct AchievementsView: View {
 			}
 			.onChange(of: storeManager.isPro) { _ in
 				refresh()
+			}
+			.sheet(item: $selectedSnapshot) { snapshot in
+				AchievementDiagnosticsSheet(
+					snapshot: snapshot,
+					diagnostics: achievementService.diagnostics
+				)
 			}
 		}
 	}
@@ -86,6 +96,7 @@ struct AchievementsView: View {
 
 private struct AchievementCard: View {
 	let snapshot: AchievementSnapshot
+	var onInspect: (() -> Void)? = nil
 	
 	var body: some View {
 		VStack(alignment: .leading, spacing: 12) {
@@ -127,6 +138,10 @@ private struct AchievementCard: View {
 		.frame(maxWidth: .infinity, alignment: .leading)
 		.background(.thinMaterial)
 		.clipShape(RoundedRectangle(cornerRadius: 16))
+		.contentShape(RoundedRectangle(cornerRadius: 16))
+		.onTapGesture {
+			onInspect?()
+		}
 		.overlay(alignment: .topTrailing) {
 			if snapshot.isUnlocked {
 				Image(systemName: "seal.fill")
@@ -157,6 +172,145 @@ private struct AchievementCard: View {
 	private var progressDisplay: String {
 		let percent = Int(snapshot.progressValue * 100)
 		return "\(percent)%"
+	}
+}
+
+private struct AchievementDiagnosticsSheet: View {
+	let snapshot: AchievementSnapshot
+	let diagnostics: AchievementDiagnostics?
+	@Environment(\.dismiss) private var dismiss
+
+	var body: some View {
+		NavigationStack {
+			List {
+				metricSection
+				contextSection
+			}
+			.navigationTitle(Text(L10n.Debug.Achievements.sheetTitle))
+			.toolbar {
+				ToolbarItem(placement: .cancellationAction) {
+					Button(L10n.Common.doneButton, action: dismiss.callAsFunction)
+				}
+			}
+		}
+	}
+
+	private var metricSection: some View {
+		Section(header: Text(L10n.Debug.Achievements.metricSection)) {
+			LabeledContent {
+				Text(progressDisplay)
+			} label: {
+				Text(L10n.Achievements.progressLabel)
+			}
+			LabeledContent {
+				Text(snapshot.isUnlocked ? yesText : noText)
+			} label: {
+				Text(L10n.Debug.Achievements.unlockStatus)
+			}
+			if snapshot.requiresPro {
+				Text(L10n.Debug.Achievements.requiresPro)
+					.font(.caption)
+					.foregroundStyle(.secondary)
+			}
+			ForEach(metricDetails) { detail in
+				LabeledContent {
+					Text(detail.value)
+				} label: {
+					Text(detail.title)
+				}
+			}
+		}
+	}
+
+	private var contextSection: some View {
+		Section(header: Text(L10n.Debug.Achievements.contextSection)) {
+			if let diagnostics {
+				LabeledContent {
+					Text("\(diagnostics.totalEntries)")
+				} label: {
+					Text(L10n.Debug.Achievements.totalEntries)
+				}
+				LabeledContent {
+					Text("\(diagnostics.uniqueDayCount)")
+				} label: {
+					Text(L10n.Debug.Achievements.uniqueDays)
+				}
+				LabeledContent {
+					Text("\(diagnostics.longestStreak)")
+				} label: {
+					Text(L10n.Debug.Achievements.longestStreak)
+				}
+				LabeledContent {
+					Text(percentString(diagnostics.consistencyScore))
+				} label: {
+					Text(L10n.Debug.Achievements.consistencyScore)
+				}
+				LabeledContent {
+					Text("\(diagnostics.consistencyWindowDays)")
+				} label: {
+					Text(L10n.Debug.Achievements.consistencyWindow)
+				}
+				LabeledContent {
+					Text("\(diagnostics.goalsAchieved)")
+				} label: {
+					Text(L10n.Debug.Achievements.goalsAchieved)
+				}
+				LabeledContent {
+					Text(diagnostics.remindersEnabled ? yesText : noText)
+				} label: {
+					Text(L10n.Debug.Achievements.remindersEnabled)
+				}
+				LabeledContent {
+					Text(percentString(diagnostics.recentReminderRatio))
+				} label: {
+					Text(L10n.Debug.Achievements.reminderRatio)
+				}
+				LabeledContent {
+					Text(diagnostics.evaluatedAt.formatted(date: .abbreviated, time: .shortened))
+				} label: {
+					Text(L10n.Debug.Achievements.evaluatedAt)
+				}
+			} else {
+				Text(L10n.Debug.Achievements.noDiagnostics)
+			}
+		}
+	}
+
+	private var progressDisplay: String {
+		"\(Int(snapshot.progressValue * 100))%"
+	}
+
+	private var metricDetails: [MetricDetail] {
+		switch snapshot.descriptor.metric {
+		case .totalEntries(let target):
+			return [MetricDetail(title: L10n.Debug.Achievements.targetValue, value: "\(target)")]
+		case .uniqueDays(let target):
+			return [MetricDetail(title: L10n.Debug.Achievements.targetUniqueDays, value: "\(target)")]
+		case .streakDays(let target):
+			return [MetricDetail(title: L10n.Debug.Achievements.targetStreakDays, value: "\(target)")]
+		case .consistency(let threshold):
+			return [MetricDetail(title: L10n.Debug.Achievements.consistencyThreshold, value: percentString(threshold))]
+		case .goalsAchieved(let target):
+			return [MetricDetail(title: L10n.Debug.Achievements.targetGoals, value: "\(target)")]
+		case .remindersEnabled:
+			return [MetricDetail(title: L10n.Debug.Achievements.remindersRequired, value: yesText)]
+		case .reminderConsistency(let ratio):
+			return [MetricDetail(title: L10n.Debug.Achievements.reminderRatioTarget, value: percentString(ratio))]
+		}
+	}
+
+	private func percentString(_ value: Double) -> String {
+		let percent = Int((value * 100).rounded())
+		return "\(percent)%"
+	}
+
+	private var yesText: String { String(localized: L10n.Common.booleanYes) }
+	private var noText: String { String(localized: L10n.Common.booleanNo) }
+
+	private struct MetricDetail: Identifiable {
+		let id = UUID()
+		let title: LocalizedStringResource
+		let value: String
 	}
 }
 

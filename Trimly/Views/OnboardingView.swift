@@ -5,6 +5,7 @@ import UIKit
 
 struct OnboardingView: View {
     @EnvironmentObject var dataManager: DataManager
+    @StateObject private var notificationService = NotificationService()
     @State private var currentPage = 0
     @State private var selectedUnit: WeightUnit = .pounds
     @State private var startingWeightText = ""
@@ -343,6 +344,11 @@ struct OnboardingView: View {
                 .background(.thinMaterial)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .padding(.horizontal)
+                .onChange(of: enableReminders) { _, enabled in
+                    if enabled {
+                        requestNotificationAuthorization()
+                    }
+                }
 
             if enableReminders {
                 Text(L10n.Onboarding.reminderHint)
@@ -445,6 +451,17 @@ struct OnboardingView: View {
         dataManager.updateSettings { settings in
             settings.hasCompletedOnboarding = true
             settings.eulaAcceptedDate = Date()
+        }
+    }
+
+    private func requestNotificationAuthorization() {
+        Task {
+            do {
+                try await notificationService.requestAuthorization()
+            } catch {
+                // If authorization fails or is denied, we continue silently.
+                // The user can enable notifications later in Settings.
+            }
         }
     }
 }

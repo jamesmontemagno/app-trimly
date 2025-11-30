@@ -51,7 +51,7 @@ struct AchievementsView: View {
 			.onReceive(dataManager.objectWillChange) { _ in
 				refresh()
 			}
-			.onChange(of: storeManager.isPro) { _ in
+			.onChange(of: storeManager.isPro) { _, _ in
 				refresh()
 			}
 			.sheet(item: $selectedSnapshot) { snapshot in

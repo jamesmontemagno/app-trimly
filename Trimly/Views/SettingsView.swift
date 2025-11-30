@@ -150,7 +150,7 @@ struct SettingsView: View {
 								settingsRow(
 									icon: "flag.checkered",
 									title: String(localized: L10n.Settings.currentGoalTitle),
-									subtitle: displayValue(goal.targetWeightKg),
+									subtitle: currentGoalSubtitle(for: goal),
 									showChevron: true
 								)
 							}
@@ -407,6 +407,16 @@ struct SettingsView: View {
 		let precision = dataManager.settings?.decimalPrecision ?? 1
 		return String(format: "%.*f %@", precision, value, unit.symbol as NSString)
 	}
+
+	private func currentGoalSubtitle(for goal: Goal) -> String {
+		let targetText = displayValue(goal.targetWeightKg)
+		if let startKg = goal.startingWeightKg {
+			let startText = displayValue(startKg)
+			return String(localized: L10n.Settings.currentGoalSubtitle(targetText, startText))
+		} else {
+			return String(localized: L10n.Settings.currentGoalSubtitle(targetText, nil))
+		}
+	}
     
 	private func exportData() {
 		exportedData = dataManager.exportToCSV()
@@ -531,20 +541,6 @@ struct GoalSetupView: View {
 		NavigationStack {
 			ScrollView {
 				VStack(spacing: 24) {
-					TrimlyCardSection(
-						title: String(localized: L10n.Goals.startTitle),
-						description: String(localized: L10n.Goals.startDescription(preferredUnit.symbol)),
-						style: .popup
-					) {
-						HStack(spacing: 12) {
-							TextField(String(localized: L10n.Goals.startPlaceholder), text: $startingWeightText)
-							#if os(iOS)
-							.keyboardType(.decimalPad)
-							#endif
-							Text(preferredUnit.symbol)
-								.foregroundStyle(.secondary)
-						}
-					}
 
 					TrimlyCardSection(
 						title: String(localized: L10n.Goals.targetTitle),
@@ -556,6 +552,21 @@ struct GoalSetupView: View {
 								#if os(iOS)
 								.keyboardType(.decimalPad)
 								#endif
+							Text(preferredUnit.symbol)
+								.foregroundStyle(.secondary)
+						}
+					}
+
+						TrimlyCardSection(
+						title: String(localized: L10n.Goals.startTitle),
+						description: String(localized: L10n.Goals.startDescription(preferredUnit.symbol)),
+						style: .popup
+					) {
+						HStack(spacing: 12) {
+							TextField(String(localized: L10n.Goals.startPlaceholder), text: $startingWeightText)
+							#if os(iOS)
+							.keyboardType(.decimalPad)
+							#endif
 							Text(preferredUnit.symbol)
 								.foregroundStyle(.secondary)
 						}
@@ -656,6 +667,12 @@ struct GoalSetupView: View {
 		let weightKg = preferredUnit.convertToKg(weight)
 		let startingKg = preferredUnit.convertToKg(starting)
 		do {
+			// When setting a goal from Settings, also log a corresponding entry
+			// so history and analytics align with the new starting point.
+			try dataManager.addWeightEntry(
+				weightKg: startingKg,
+				unit: preferredUnit
+			)
 			try dataManager.setGoal(targetWeightKg: weightKg,
 								startingWeightKg: startingKg,
 									notes: notes.isEmpty ? nil : notes)

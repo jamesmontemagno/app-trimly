@@ -192,7 +192,7 @@ struct DashboardView: View {
 			if let goal = dataManager.fetchActiveGoal(),
 			   let currentWeight = dataManager.getCurrentWeight(),
 			   let startWeight = goal.startingWeightKg ?? dataManager.getStartWeight() {
-                
+				
 				HStack(spacing: 20) {
 					VStack(alignment: .leading, spacing: 4) {
 						Text(L10n.Dashboard.fromStart)
@@ -237,6 +237,32 @@ struct DashboardView: View {
 					}
 				}
 				.frame(maxWidth: .infinity)
+				
+				if let goalStartDate = goal.startDate as Date? {
+					let startDisplay = displayValue(startWeight)
+					let targetDisplay = displayValue(goal.targetWeightKg)
+					let dateDisplay = goalStartDate.formatted(date: .abbreviated, time: .omitted)
+					
+					Divider()
+					
+					HStack(spacing: 12) {
+						Text("Start: \(startDisplay)")
+							.font(.caption)
+							.foregroundStyle(.secondary)
+						Text("·")
+							.font(.caption)
+							.foregroundStyle(.tertiary)
+						Text("Target: \(targetDisplay)")
+							.font(.caption)
+							.foregroundStyle(.secondary)
+						Text("·")
+							.font(.caption)
+							.foregroundStyle(.tertiary)
+						Text(dateDisplay)
+							.font(.caption)
+							.foregroundStyle(.secondary)
+					}
+				}
 			} else {
 				Text(L10n.Dashboard.setGoalPrompt)
 					.font(.subheadline)

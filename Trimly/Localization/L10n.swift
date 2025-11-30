@@ -277,6 +277,13 @@ enum L10n {
 		static let themeSubtitle = LocalizedStringResource("settings.personalization.theme.subtitle", defaultValue: "Choose TrimTally's appearance.")
 		static let goalsTitle = LocalizedStringResource("settings.section.goals.title", defaultValue: "Goals")
 		static let currentGoalTitle = LocalizedStringResource("settings.goals.current.title", defaultValue: "Current Goal")
+		static func currentGoalSubtitle(_ target: String, _ start: String?) -> LocalizedStringResource {
+			if let start {
+				return LocalizedStringResource("settings.goals.current.subtitle", defaultValue: "Target: \(target) · Start: \(start)")
+			} else {
+				return LocalizedStringResource("settings.goals.current.subtitle.targetOnly", defaultValue: "Target: \(target)")
+			}
+		}
 		static let goalHistoryTitle = LocalizedStringResource("settings.goals.history.title", defaultValue: "Goal History")
 		static let goalHistorySubtitle = LocalizedStringResource("settings.goals.history.subtitle", defaultValue: "See past targets and outcomes.")
 		static let setGoalTitle = LocalizedStringResource("settings.goals.set.title", defaultValue: "Set Goal")

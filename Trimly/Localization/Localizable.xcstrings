@@ -17,6 +17,9 @@
         }
       }
     },
+    "·" : {
+
+    },
     "%@" : {
       "localizations" : {
         "es" : {
@@ -6502,6 +6505,28 @@
         }
       }
     },
+    "settings.goals.current.subtitle" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Target: %1$@ · Start: %2$@"
+          }
+        }
+      }
+    },
+    "settings.goals.current.subtitle.targetOnly" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Target: %@"
+          }
+        }
+      }
+    },
     "settings.goals.current.title" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -7376,6 +7401,9 @@
         }
       }
     },
+    "Start: %@" : {
+
+    },
     "tabs.achievements" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -7480,6 +7508,9 @@
       }
     },
     "Take your weight tracking to the next level with advanced features." : {
+
+    },
+    "Target: %@" : {
 
     },
     "timeline.alert.deleteError.fallback" : {

@@ -17,9 +17,6 @@
         }
       }
     },
-    "·" : {
-
-    },
     "%@" : {
       "localizations" : {
         "es" : {
@@ -2703,6 +2700,98 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Progrès"
+          }
+        }
+      }
+    },
+    "dashboard.progress.meta.separator" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "|"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "|"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "|"
+          }
+        }
+      }
+    },
+    "dashboard.progress.meta.start" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Start weight: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peso inicial: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poids de départ: %@"
+          }
+        }
+      }
+    },
+    "dashboard.progress.meta.startDate" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Start date: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fecha de inicio: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date de début: %@"
+          }
+        }
+      }
+    },
+    "dashboard.progress.meta.target" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Target weight: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peso objetivo: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poids cible: %@"
           }
         }
       }
@@ -7401,9 +7490,6 @@
         }
       }
     },
-    "Start: %@" : {
-
-    },
     "tabs.achievements" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -7508,9 +7594,6 @@
       }
     },
     "Take your weight tracking to the next level with advanced features." : {
-
-    },
-    "Target: %@" : {
 
     },
     "timeline.alert.deleteError.fallback" : {

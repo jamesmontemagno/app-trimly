@@ -245,20 +245,20 @@ struct DashboardView: View {
 					
 					Divider()
 					
-					HStack(spacing: 12) {
-						Text("Start: \(startDisplay)")
+					HStack(spacing: 10) {
+						Text(String(localized: L10n.Dashboard.progressMetaStart(startDisplay)))
 							.font(.caption)
 							.foregroundStyle(.secondary)
-						Text("·")
+						Text(String(localized: L10n.Dashboard.progressMetaSeparator))
 							.font(.caption)
 							.foregroundStyle(.tertiary)
-						Text("Target: \(targetDisplay)")
+						Text(String(localized: L10n.Dashboard.progressMetaTarget(targetDisplay)))
 							.font(.caption)
 							.foregroundStyle(.secondary)
-						Text("·")
+						Text(String(localized: L10n.Dashboard.progressMetaSeparator))
 							.font(.caption)
 							.foregroundStyle(.tertiary)
-						Text(dateDisplay)
+						Text(String(localized: L10n.Dashboard.progressMetaStartDate(dateDisplay)))
 							.font(.caption)
 							.foregroundStyle(.secondary)
 					}

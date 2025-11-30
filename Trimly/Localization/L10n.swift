@@ -149,6 +149,16 @@ enum L10n {
 		static let toGoal = LocalizedStringResource("dashboard.toGoal", defaultValue: "To Goal")
 		static let progress = LocalizedStringResource("dashboard.progress", defaultValue: "Progress")
 		static let setGoalPrompt = LocalizedStringResource("dashboard.setGoalPrompt", defaultValue: "Set a goal to track progress")
+		static func progressMetaStart(_ value: String) -> LocalizedStringResource {
+			LocalizedStringResource("dashboard.progress.meta.start", defaultValue: "Start weight: \(value)")
+		}
+		static func progressMetaTarget(_ value: String) -> LocalizedStringResource {
+			LocalizedStringResource("dashboard.progress.meta.target", defaultValue: "Target weight: \(value)")
+		}
+		static func progressMetaStartDate(_ value: String) -> LocalizedStringResource {
+			LocalizedStringResource("dashboard.progress.meta.startDate", defaultValue: "Start date: \(value)")
+		}
+		static let progressMetaSeparator = LocalizedStringResource("dashboard.progress.meta.separator", defaultValue: "|")
 		static let consistencyScore = LocalizedStringResource("dashboard.consistencyScore", defaultValue: "Consistency Score")
 		static let consistencyVery = LocalizedStringResource("dashboard.consistency.very", defaultValue: "Very consistent")
 		static let consistencyConsistent = LocalizedStringResource("dashboard.consistency.consistent", defaultValue: "Consistent")

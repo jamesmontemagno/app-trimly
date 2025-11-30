@@ -14,6 +14,9 @@ struct OnboardingView: View {
     @State private var startingWeightError: LocalizedStringResource?
     @State private var goalWeightError: LocalizedStringResource?
     @State private var showIncompleteAlert = false
+    @State private var showInitialCloudSyncSuccess = false
+    @State private var hasWaitedForInitialCloudSync = false
+    @State private var didScheduleInitialCloudSyncWait = false
 
     private let onboardingSteps: [(title: LocalizedStringResource, symbol: String)] = [
         (L10n.Onboarding.stepWelcome, "figure.arms.open"),
@@ -89,6 +92,27 @@ struct OnboardingView: View {
         } message: {
             Text(L10n.Onboarding.incompleteError)
         }
+        .onAppear {
+            dataManager.refreshInitialCloudSyncState()
+            if didScheduleInitialCloudSyncWait == false {
+                didScheduleInitialCloudSyncWait = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                    hasWaitedForInitialCloudSync = true
+                }
+            }
+        }
+        .onChange(of: dataManager.hasFinishedInitialCloudSync) { _, finished in
+            guard finished, dataManager.hasAnyEntries() else { return }
+            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                showInitialCloudSyncSuccess = true
+            }
+            dataManager.markInitialCloudSyncSuccessShown()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                withAnimation(.easeOut(duration: 0.3)) {
+                    showInitialCloudSyncSuccess = false
+                }
+            }
+        }
     }
 
     private func primaryButton(title: LocalizedStringResource, action: @escaping () -> Void) -> some View {
@@ -145,6 +169,10 @@ struct OnboardingView: View {
         VStack(spacing: 32) {
             Spacer()
 
+            if shouldShowInitialCloudSyncBanner {
+                initialCloudSyncStatus
+            }
+
             Image(systemName: "figure.mixed.cardio")
                 .font(.system(size: 100))
                 .foregroundStyle(.blue.gradient)
@@ -168,6 +196,43 @@ struct OnboardingView: View {
             .padding(.horizontal)
         }
         .padding()
+    }
+
+    private var shouldShowInitialCloudSyncBanner: Bool {
+        showInitialCloudSyncSuccess || dataManager.hasFinishedInitialCloudSync == false
+    }
+
+    @ViewBuilder
+    private var initialCloudSyncStatus: some View {
+        if showInitialCloudSyncSuccess {
+            Label {
+                Text(L10n.Onboarding.cloudSyncFound)
+                    .font(.footnote)
+                    .foregroundStyle(.green)
+            } icon: {
+                Image(systemName: "checkmark.circle.fill")
+                    .foregroundStyle(.green)
+            }
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(.thinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .transition(.scale.combined(with: .opacity))
+        } else {
+            VStack(spacing: 8) {
+                ProgressView()
+                    .tint(.accentColor)
+                Text(hasWaitedForInitialCloudSync ? L10n.Onboarding.cloudSyncStillChecking : L10n.Onboarding.cloudSyncChecking)
+                    .font(.footnote)
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(.secondary)
+            }
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(.thinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .transition(.opacity)
+        }
     }
 
     private var unitSelectionPage: some View {

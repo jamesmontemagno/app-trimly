@@ -60,6 +60,9 @@ enum L10n {
 		
 		static let welcomeTitle = LocalizedStringResource("onboarding.welcome.title", defaultValue: "Welcome to TrimTally")
 		static let welcomeSubtitle = LocalizedStringResource("onboarding.welcome.subtitle", defaultValue: "Your supportive companion for mindful weight tracking")
+			static let cloudSyncChecking = LocalizedStringResource("onboarding.cloudSync.checking", defaultValue: "Looking for your previous TrimTally data...")
+			static let cloudSyncStillChecking = LocalizedStringResource("onboarding.cloudSync.stillChecking", defaultValue: "Still checking iCloud—tap Get Started to continue manually.")
+			static let cloudSyncFound = LocalizedStringResource("onboarding.cloudSync.found", defaultValue: "Found your history! Restoring it now...")
 		
 		static let unitTitle = LocalizedStringResource("onboarding.unit.title", defaultValue: "Choose Your Unit")
 		static let unitSubtitle = LocalizedStringResource("onboarding.unit.subtitle", defaultValue: "Select your preferred weight unit")
@@ -171,6 +174,8 @@ enum L10n {
 		}
 		static let plateauDetected = LocalizedStringResource("dashboard.plateauDetected", defaultValue: "Plateau Detected")
 		static let syncedToHealthKit = LocalizedStringResource("dashboard.syncedToHealthKit", defaultValue: "Also saved to Health")
+		static let syncedFromICloud = LocalizedStringResource("dashboard.syncedFromICloud", defaultValue: "Synced your history from iCloud")
+		static let icloudSyncLoading = LocalizedStringResource("dashboard.icloudSyncLoading", defaultValue: "Loading your history from iCloud...")
 	}
 
 	enum Reminders {

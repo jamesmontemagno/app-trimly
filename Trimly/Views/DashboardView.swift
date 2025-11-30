@@ -14,6 +14,7 @@ struct DashboardView: View {
 	@StateObject private var plateauService = PlateauDetectionService()
 	@State private var showingAddEntry = false
 	@State private var recentlySyncedToHealthKit = false
+	@State private var recentlySyncedFromICloud = false
     
 	var body: some View {
 		NavigationStack {
@@ -69,11 +70,18 @@ struct DashboardView: View {
 				}
 			}
 			.onAppear {
+				handleInitialCloudSyncState()
 				if let celebration = celebrationService.checkForCelebrations(dataManager: dataManager) {
 					celebrationService.showCelebration(celebration)
 				}
                 
 				plateauService.checkForPlateau(dataManager: dataManager)
+			}
+			.onChange(of: dataManager.hasFinishedInitialCloudSync) { _, _ in
+				handleInitialCloudSyncState()
+			}
+			.onChange(of: entryCount) { _, _ in
+				handleInitialCloudSyncState()
 			}
 		}
 	}
@@ -93,6 +101,16 @@ struct DashboardView: View {
 				if let todayEntries = todayEntries, !todayEntries.isEmpty {
 					primaryValueIndicator(entries: todayEntries)
 				}
+				if recentlySyncedFromICloud {
+					HStack(spacing: 6) {
+						Image(systemName: "icloud.and.arrow.down")
+							.font(.caption)
+							.foregroundStyle(.blue)
+						Text(L10n.Dashboard.syncedFromICloud)
+							.font(.caption)
+							.foregroundStyle(.secondary)
+					}
+				}
 				if recentlySyncedToHealthKit {
 					HStack(spacing: 6) {
 						Image(systemName: "heart.fill")
@@ -108,9 +126,15 @@ struct DashboardView: View {
 					.font(.system(size: 56, weight: .bold, design: .rounded))
 					.foregroundStyle(.secondary)
                 
-				Text(L10n.Dashboard.noEntries)
-					.font(.caption)
-					.foregroundStyle(.tertiary)
+				if dataManager.isAwaitingInitialCloudSync {
+					Text(L10n.Dashboard.icloudSyncLoading)
+						.font(.caption)
+						.foregroundStyle(.secondary)
+				} else {
+					Text(L10n.Dashboard.noEntries)
+						.font(.caption)
+						.foregroundStyle(.tertiary)
+				}
 			}
 		}
 		.frame(maxWidth: .infinity)
@@ -136,6 +160,10 @@ struct DashboardView: View {
 				}
 			}
 		}
+	}
+
+	private var entryCount: Int {
+		dataManager.fetchAllEntries().count
 	}
     
 	private var miniSparklineCard: some View {
@@ -441,6 +469,20 @@ struct DashboardView: View {
 		.padding()
 		.background(.blue.opacity(0.1))
 		.clipShape(RoundedRectangle(cornerRadius: 16))
+	}
+}
+
+private extension DashboardView {
+	func handleInitialCloudSyncState() {
+		dataManager.refreshInitialCloudSyncState()
+		guard dataManager.hasFinishedInitialCloudSync else { return }
+		guard dataManager.hasShownInitialCloudSyncSuccess == false else { return }
+		guard dataManager.getCurrentWeight() != nil else { return }
+		recentlySyncedFromICloud = true
+		dataManager.markInitialCloudSyncSuccessShown()
+		DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+			recentlySyncedFromICloud = false
+		}
 	}
 }
 

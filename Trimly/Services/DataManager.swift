@@ -32,6 +32,7 @@ final class DataManager: ObservableObject {
     @Published var settings: AppSettings?
     private var pendingGoalAchievementCelebration = false
     private var pendingGoalAchievementGoalID: UUID?
+    private var initialCloudSyncState = InitialCloudSyncState()
 
     /// Ensures SwiftUI views refresh when persisted data changes
     private func publishChange() {
@@ -61,6 +62,7 @@ final class DataManager: ObservableObject {
             
             // Load or create settings
             loadSettings()
+            refreshInitialCloudSyncState()
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
@@ -99,6 +101,56 @@ final class DataManager: ObservableObject {
         try? modelContext.save()
         publishChange()
     }
+
+    // MARK: - Initial Cloud Sync State
+    
+    var hasFinishedInitialCloudSync: Bool {
+        initialCloudSyncState.hasFinishedInitialCloudSync
+    }
+    
+    var hasShownInitialCloudSyncSuccess: Bool {
+        initialCloudSyncState.hasShownInitialCloudSyncSuccess
+    }
+    
+    var hasAutoCompletedOnboardingFromCloudData: Bool {
+        initialCloudSyncState.hasAutoCompletedOnboardingFromCloudData
+    }
+    
+    var isAwaitingInitialCloudSync: Bool {
+        guard settings?.hasCompletedOnboarding == true else { return false }
+        return hasFinishedInitialCloudSync == false && fetchAllEntries().isEmpty
+    }
+    
+    func refreshInitialCloudSyncState() {
+        markInitialCloudSyncCompletedIfNeeded()
+        autoCompleteOnboardingIfNeeded()
+    }
+    
+    func markInitialCloudSyncSuccessShown() {
+        initialCloudSyncState.markInitialCloudSyncSuccessShown()
+        publishChange()
+    }
+    
+    private func markInitialCloudSyncCompletedIfNeeded() {
+        guard hasFinishedInitialCloudSync == false else { return }
+        guard fetchAllEntries().isEmpty == false else { return }
+        initialCloudSyncState.markInitialCloudSyncCompleted()
+        publishChange()
+    }
+    
+    private func autoCompleteOnboardingIfNeeded() {
+        guard settings?.hasCompletedOnboarding == false else { return }
+        guard hasAutoCompletedOnboardingFromCloudData == false else { return }
+        guard fetchAllEntries().isEmpty == false else { return }
+        guard fetchActiveGoal() != nil else { return }
+        updateSettings { settings in
+            settings.hasCompletedOnboarding = true
+            if settings.eulaAcceptedDate == nil {
+                settings.eulaAcceptedDate = Date()
+            }
+        }
+        initialCloudSyncState.markAutoCompletedOnboardingFromCloudData()
+    }
     
     // MARK: - Weight Entry Management
     
@@ -119,6 +171,7 @@ final class DataManager: ObservableObject {
         modelContext.insert(entry)
         try modelContext.save()
         publishChange()
+        markInitialCloudSyncCompletedIfNeeded()
         try evaluateGoalAchievementIfNeeded(latestWeightKg: entry.weightKg)
     }
     
@@ -127,6 +180,10 @@ final class DataManager: ObservableObject {
             sortBy: [SortDescriptor(\.timestamp, order: .reverse)]
         )
         return (try? modelContext.fetch(descriptor)) ?? []
+    }
+
+    func hasAnyEntries() -> Bool {
+        fetchAllEntries().isEmpty == false
     }
     
     func fetchEntriesForDate(_ date: Date) -> [WeightEntry] {

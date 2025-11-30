@@ -18,6 +18,16 @@ struct ContentView: View {
                 OnboardingView()
             }
         }
+        .onAppear {
+            dataManager.refreshInitialCloudSyncState()
+        }
+        .task(id: dataManager.hasFinishedInitialCloudSync) {
+            guard dataManager.hasFinishedInitialCloudSync == false else { return }
+            while Task.isCancelled == false && dataManager.hasFinishedInitialCloudSync == false {
+                dataManager.refreshInitialCloudSyncState()
+                try? await Task.sleep(nanoseconds: 2_000_000_000)
+            }
+        }
     }
 }
 

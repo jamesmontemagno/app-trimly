@@ -17,6 +17,75 @@
         }
       }
     },
+    "onboarding.cloudSync.checking" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Looking for your previous TrimTally data..."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscando tus datos anteriores de TrimTally..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recherche de vos données TrimTally précédentes..."
+          }
+        }
+      }
+    },
+    "onboarding.cloudSync.found" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Found your history! Restoring it now..."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Encontramos tu historial! Restaurándolo ahora..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Historique retrouvé ! Restauration en cours..."
+          }
+        }
+      }
+    },
+    "onboarding.cloudSync.stillChecking" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Still checking iCloud—tap Get Started to continue manually."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seguimos comprobando iCloud; toca Comenzar para continuar manualmente."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toujours en cours de vérification d'iCloud — touchez Commencer pour continuer manuellement."
+          }
+        }
+      }
+    },
     "%@" : {
       "localizations" : {
         "es" : {
@@ -2838,6 +2907,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Également enregistré dans Santé"
+          }
+        }
+      }
+    },
+    "dashboard.syncedFromICloud" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Synced your history from iCloud"
+          }
+        }
+      }
+    },
+    "dashboard.icloudSyncLoading" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Loading your history from iCloud..."
           }
         }
       }

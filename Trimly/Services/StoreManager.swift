@@ -52,6 +52,9 @@ class StoreManager: ObservableObject {
         }
     }
     
+    /// Restores purchases from the App Store.
+    /// Returns true if the user has Pro status after syncing (meaning a purchase was found),
+    /// or false if no purchase is associated with their account.
     func restore() async -> Bool {
         try? await AppStore.sync()
         await updateCustomerProductStatus()

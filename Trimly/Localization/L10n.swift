@@ -89,6 +89,8 @@ enum L10n {
 		static let eulaSubtitle = LocalizedStringResource("onboarding.eula.subtitle", defaultValue: "By continuing, you agree to our Terms of Service and Privacy Policy")
 		static let eulaTerms = LocalizedStringResource("onboarding.eula.terms", defaultValue: "Read Terms of Service")
 		static let eulaPrivacy = LocalizedStringResource("onboarding.eula.privacy", defaultValue: "Read Privacy Policy")
+		
+		static let incompleteError = LocalizedStringResource("onboarding.error.incomplete", defaultValue: "Please enter your starting weight and goal weight before continuing.")
 	}
 
 	enum Charts {

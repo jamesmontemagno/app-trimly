@@ -208,6 +208,21 @@ final class HealthKitService: ObservableObject {
         }
     }
     
+    /// Register background delivery on app launch if enabled in settings
+    /// Call this from the app entry point to ensure background sync is active after app restarts
+    func registerBackgroundDeliveryIfEnabled(dataManager: DataManager) {
+        guard HealthKitService.isHealthKitAvailable() else { return }
+        guard dataManager.deviceSettings.healthKit.backgroundSyncEnabled else { return }
+        
+        // Check authorization status first
+        checkAuthorizationStatus()
+        guard isAuthorized else { return }
+        
+        // Get preferred unit from settings, default to kilograms
+        let unit = dataManager.settings?.preferredUnit ?? .kilograms
+        enableBackgroundDelivery(dataManager: dataManager, unit: unit)
+    }
+    
     /// Observe weight changes and sync new samples
     @MainActor
     private func observeWeightChanges(dataManager: DataManager, unit: WeightUnit) async {

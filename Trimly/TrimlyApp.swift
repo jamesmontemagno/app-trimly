@@ -12,6 +12,7 @@ import SwiftData
 struct TrimlyApp: App {
     @StateObject private var dataManager = DataManager()
     @StateObject private var storeManager = StoreManager()
+    @StateObject private var healthKitService = HealthKitService()
     #if os(iOS)
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     #elseif os(macOS)
@@ -26,6 +27,12 @@ struct TrimlyApp: App {
                 .environmentObject(dataManager.deviceSettings)
                 .environmentObject(storeManager)
                 .preferredColorScheme(colorScheme(for: dataManager.settings?.appearance))
+                .task {
+                    // Register HealthKit background observer on app launch if enabled
+                    #if os(iOS)
+                    healthKitService.registerBackgroundDeliveryIfEnabled(dataManager: dataManager)
+                    #endif
+                }
         }
         .modelContainer(dataManager.modelContainer)
         

@@ -59,10 +59,11 @@ final class AchievementService: ObservableObject {
 			let hasEnoughHistory = context.uniqueDayCount >= minDaysRequired
 			let meetsThreshold = context.consistencyScore >= threshold && context.consistencyScore > 0
 			let unlocked = hasEnoughHistory && meetsThreshold
-			// Progress accounts for both: days progress (up to 50%) + consistency progress (up to 50%)
-			// This ensures progress isn't 100% until both requirements are met
-			let daysProgress = min(Double(context.uniqueDayCount) / Double(minDaysRequired), 1.0) * 0.5
-			let consistencyProgress = min(context.consistencyScore / threshold, 1.0) * 0.5
+			// Progress accounts for both: days progress + consistency progress
+			// Each requirement contributes equally to the progress bar
+			let requirementWeight = 0.5
+			let daysProgress = min(Double(context.uniqueDayCount) / Double(minDaysRequired), 1.0) * requirementWeight
+			let consistencyProgress = min(context.consistencyScore / threshold, 1.0) * requirementWeight
 			let progress = daysProgress + consistencyProgress
 			return AchievementEvaluation(progress: progress, unlocked: unlocked)
 		case .goalsAchieved(let target):

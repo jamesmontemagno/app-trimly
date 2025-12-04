@@ -64,6 +64,7 @@ struct ChartsView: View {
 					}
 					.accessibilityLabel(Text(L10n.Common.addWeight))
 				}
+				#if os(iOS)
 				ToolbarItem(placement: .topBarLeading) {
 					Button {
 						showingSettings = true
@@ -72,6 +73,16 @@ struct ChartsView: View {
 					}
 					.accessibilityLabel(Text(L10n.Charts.settingsButton))
 				}
+				#else
+				ToolbarItem(placement: .navigation) {
+					Button {
+						showingSettings = true
+					} label: {
+						Image(systemName: "slider.horizontal.3")
+					}
+					.accessibilityLabel(Text(L10n.Charts.settingsButton))
+				}
+				#endif
 			}
 			.sheet(isPresented: $showingAddEntry) {
 				AddWeightEntryView()

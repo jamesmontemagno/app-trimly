@@ -45,6 +45,7 @@ enum L10n {
 		static let weightPlaceholder = LocalizedStringResource("addEntry.input.weight.placeholder", defaultValue: "0.0")
 		static let errorInvalidWeight = LocalizedStringResource("addEntry.error.invalidWeight", defaultValue: "Please enter a valid weight")
 		static let errorNonPositiveWeight = LocalizedStringResource("addEntry.error.nonPositiveWeight", defaultValue: "Weight must be greater than zero")
+		static let errorFutureDate = LocalizedStringResource("addEntry.error.futureDate", defaultValue: "Date cannot be in the future")
 		static let errorMissingSettings = LocalizedStringResource("addEntry.error.missingSettings", defaultValue: "Settings not available")
 		static func errorSaveFailure(_ message: String) -> LocalizedStringResource {
 			LocalizedStringResource("addEntry.error.saveFailure", defaultValue: "Failed to save entry: \(message)")

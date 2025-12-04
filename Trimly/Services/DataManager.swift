@@ -11,6 +11,7 @@ import Combine
 
 enum DataManagerError: Error {
     case missingStartingWeight
+    case futureDateNotAllowed
 }
 
 extension DataManagerError: LocalizedError {
@@ -19,6 +20,8 @@ extension DataManagerError: LocalizedError {
         case .missingStartingWeight:
             // Mirror L10n.Goals.errorMissingStartingWeight without pulling in main-actor isolation
             return NSLocalizedString("goals.setup.error.missingStartingWeight", comment: "Starting weight required before saving a goal")
+        case .futureDateNotAllowed:
+            return NSLocalizedString("addEntry.error.futureDate", comment: "Date cannot be in the future")
         }
     }
 }
@@ -171,6 +174,9 @@ final class DataManager: ObservableObject {
         notes: String? = nil,
         source: EntrySource = .manual
     ) throws {
+        guard timestamp <= Date() else {
+            throw DataManagerError.futureDateNotAllowed
+        }
         let entry = WeightEntry(
             timestamp: timestamp,
             weightKg: weightKg,

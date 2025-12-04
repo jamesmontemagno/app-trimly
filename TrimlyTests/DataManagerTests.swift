@@ -75,6 +75,28 @@ struct DataManagerTests {
 	}
 
 	@Test
+	func addWeightEntry_rejectsFutureDates() async throws {
+		let manager = await makeInMemoryManager()
+		let calendar = Calendar.current
+		// Force unwrap is safe here - adding 1 day to any valid date always succeeds
+		let tomorrow = calendar.date(byAdding: .day, value: 1, to: Date())!
+
+		do {
+			try manager.addWeightEntry(weightKg: 80.0, timestamp: tomorrow, unit: .kilograms)
+			Issue.record("Expected future date error")
+		} catch let error as DataManagerError {
+			guard case .futureDateNotAllowed = error else {
+				Issue.record("Unexpected DataManagerError: \(error)")
+				return
+			}
+		} catch {
+			Issue.record("Unexpected error: \(error)")
+		}
+
+		#expect(manager.fetchAllEntries().isEmpty)
+	}
+
+	@Test
 	func deleteEntry_removesItFromStore() async throws {
 		let manager = await makeInMemoryManager()
 		try manager.addWeightEntry(weightKg: 80.0, unit: .kilograms)

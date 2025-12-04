@@ -66,7 +66,7 @@ struct AddWeightEntryView: View {
 							description: String(localized: L10n.AddEntry.dateDescription),
 							style: .popup
 						) {
-							DatePicker(String(localized: L10n.AddEntry.dateTitle), selection: $selectedDate)
+							DatePicker(String(localized: L10n.AddEntry.dateTitle), selection: $selectedDate, in: ...Date())
 						#if os(iOS)
 							.datePickerStyle(.compact)
 						#endif
@@ -147,6 +147,12 @@ struct AddWeightEntryView: View {
         
 		guard weight > 0 else {
 			errorMessage = String(localized: L10n.AddEntry.errorNonPositiveWeight)
+			showingError = true
+			return
+		}
+        
+		guard selectedDate <= Date() else {
+			errorMessage = String(localized: L10n.AddEntry.errorFutureDate)
 			showingError = true
 			return
 		}

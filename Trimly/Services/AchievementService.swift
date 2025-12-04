@@ -55,10 +55,15 @@ final class AchievementService: ObservableObject {
 			return progressMetric(current: Double(context.longestStreak), target: Double(target))
 		case .consistency(let threshold):
 			// Require at least 10 unique days of logging before unlocking
-			let rawProgress = context.consistencyScore / threshold
-			let progress = min(max(rawProgress, 0), 1)
-			let hasEnoughHistory = context.uniqueDayCount >= 10
-			let unlocked = hasEnoughHistory && context.consistencyScore >= threshold && context.consistencyScore > 0
+			let minDaysRequired = 10
+			let hasEnoughHistory = context.uniqueDayCount >= minDaysRequired
+			let meetsThreshold = context.consistencyScore >= threshold && context.consistencyScore > 0
+			let unlocked = hasEnoughHistory && meetsThreshold
+			// Progress accounts for both: days progress (up to 50%) + consistency progress (up to 50%)
+			// This ensures progress isn't 100% until both requirements are met
+			let daysProgress = min(Double(context.uniqueDayCount) / Double(minDaysRequired), 1.0) * 0.5
+			let consistencyProgress = min(context.consistencyScore / threshold, 1.0) * 0.5
+			let progress = daysProgress + consistencyProgress
 			return AchievementEvaluation(progress: progress, unlocked: unlocked)
 		case .goalsAchieved(let target):
 			return progressMetric(current: Double(context.goalsAchieved), target: Double(target))
@@ -308,8 +313,7 @@ private struct EvaluationContext {
 		uniqueDayCount = uniqueDays.count
 		longestStreak = EvaluationContext.calculateLongestStreak(from: Array(uniqueDays))
 		consistencyScore = dataManager.getConsistencyScore() ?? 0
-		let completedGoals = dataManager.fetchGoalHistory().filter { $0.completionReason == .achieved }
-		goalsAchieved = completedGoals.count
+		goalsAchieved = dataManager.countAchievedGoals()
 		let settings = dataManager.settings
 		let reminders = dataManager.deviceSettings.reminders
 		remindersEnabled = (reminders.primaryTime != nil) || (reminders.secondaryTime != nil)

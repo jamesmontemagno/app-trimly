@@ -260,6 +260,15 @@ final class DataManager: ObservableObject {
         )
         return (try? modelContext.fetch(descriptor)) ?? []
     }
+
+    /// Counts all goals that have been achieved, whether still active or archived
+    func countAchievedGoals() -> Int {
+        // Fetch all goals - SwiftData predicates don't support optional enum comparisons well,
+        // so we filter in memory
+        let descriptor = FetchDescriptor<Goal>()
+        let allGoals = (try? modelContext.fetch(descriptor)) ?? []
+        return allGoals.filter { $0.completionReason == .achieved }.count
+    }
     
     func completeGoal(reason: CompletionReason) throws {
         guard let activeGoal = fetchActiveGoal() else { return }

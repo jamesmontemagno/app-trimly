@@ -79,6 +79,47 @@ final class AchievementServiceTests: XCTestCase {
 		let ledgerUnlocked = dataManager.achievement(forKey: "logging.ledger", createIfMissing: false)
 		XCTAssertNotNil(ledgerUnlocked?.unlockedAt)
 	}
+
+	func testConsistencyProgressAccountsForBothRequirements() throws {
+		// With 5 unique days and high consistency, progress should be less than 100%
+		// because the 10-day minimum isn't met
+		try logSequentialEntries(count: 5)
+		achievementService.refresh(using: dataManager, isPro: true)
+		let habitBuilder = dataManager.achievement(forKey: "consistency.solid", createIfMissing: false)
+		XCTAssertNotNil(habitBuilder)
+		// Progress should be around 75%: 50% from days (5/10) = 25% + 50% from consistency (high) ≈ 50%
+		// So total should be less than 100%
+		XCTAssertLessThan(habitBuilder?.progressValue ?? 0, 1.0)
+		XCTAssertNil(habitBuilder?.unlockedAt)
+	}
+
+	func testGoalAchievementCountsActiveAchievedGoals() throws {
+		// Set up an initial weight entry
+		let poundsUnit = WeightUnit.pounds
+		let startWeightKg = poundsUnit.convertToKg(180)
+		let targetWeightKg = poundsUnit.convertToKg(175)
+		try dataManager.addWeightEntry(weightKg: startWeightKg, timestamp: Date(), unit: poundsUnit)
+		
+		// Create and achieve a goal (it stays active)
+		try dataManager.setGoal(targetWeightKg: targetWeightKg, startingWeightKg: startWeightKg)
+		
+		// Log weight at or below goal to trigger automatic achievement
+		try dataManager.addWeightEntry(weightKg: targetWeightKg, timestamp: Date(), unit: poundsUnit)
+		
+		// Verify goal was marked as achieved
+		let activeGoal = dataManager.fetchActiveGoal()
+		XCTAssertNotNil(activeGoal)
+		XCTAssertEqual(activeGoal?.completionReason, .achieved)
+		
+		// Verify countAchievedGoals includes this active achieved goal
+		let achievedCount = dataManager.countAchievedGoals()
+		XCTAssertEqual(achievedCount, 1)
+		
+		// Verify achievements reflect the achieved goal
+		achievementService.refresh(using: dataManager, isPro: true)
+		let goalFirstAchievement = dataManager.achievement(forKey: "goals.first", createIfMissing: false)
+		XCTAssertNotNil(goalFirstAchievement?.unlockedAt)
+	}
 	
 	// MARK: - Helpers
 	

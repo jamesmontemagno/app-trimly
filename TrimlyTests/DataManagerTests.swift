@@ -78,7 +78,8 @@ struct DataManagerTests {
 	func addWeightEntry_rejectsFutureDates() async throws {
 		let manager = await makeInMemoryManager()
 		let calendar = Calendar.current
-		let tomorrow = calendar.date(byAdding: .day, value: 1, to: Date()) ?? Date()
+		// Force unwrap is safe here - adding 1 day to any valid date always succeeds
+		let tomorrow = calendar.date(byAdding: .day, value: 1, to: Date())!
 
 		do {
 			try manager.addWeightEntry(weightKg: 80.0, timestamp: tomorrow, unit: .kilograms)

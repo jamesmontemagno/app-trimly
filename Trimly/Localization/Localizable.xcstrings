@@ -836,6 +836,29 @@
         }
       }
     },
+    "addEntry.error.futureDate" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Date cannot be in the future"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La fecha no puede ser en el futuro"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La date ne peut pas être dans le futur"
+          }
+        }
+      }
+    },
     "addEntry.error.missingSettings" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {

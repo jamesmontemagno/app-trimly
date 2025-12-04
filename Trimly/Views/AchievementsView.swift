@@ -49,7 +49,7 @@ struct AchievementsView: View {
 					}
 					.accessibilityLabel(Text(L10n.Common.addWeight))
 				}
-				ToolbarItem(placement: .secondaryAction) {
+				ToolbarItem(placement: .topBarLeading) {
 					Button(action: refresh) {
 						Image(systemName: "arrow.clockwise")
 					}

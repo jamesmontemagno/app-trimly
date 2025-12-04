@@ -1434,6 +1434,29 @@
         }
       }
     },
+    "charts.button.settings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chart Settings"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes del Gráfico"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paramètres du Graphique"
+          }
+        }
+      }
+    },
     "charts.legend.ema" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {

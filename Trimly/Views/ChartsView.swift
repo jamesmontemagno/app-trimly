@@ -18,6 +18,7 @@ struct ChartsView: View {
 	@EnvironmentObject var dataManager: DataManager
 	@State private var selectedRange: ChartRange = .week
 	@State private var showingSettings = false
+	@State private var showingAddEntry = false
 	@State private var selectedPoint: ChartDataPoint?
 
 	private let tooltipFormatter: DateFormatter = {
@@ -57,11 +58,21 @@ struct ChartsView: View {
 			.toolbar {
 				ToolbarItem(placement: .primaryAction) {
 					Button {
+						showingAddEntry = true
+					} label: {
+						Image(systemName: "plus")
+					}
+				}
+				ToolbarItem(placement: .secondaryAction) {
+					Button {
 						showingSettings = true
 					} label: {
 						Image(systemName: "slider.horizontal.3")
 					}
 				}
+			}
+			.sheet(isPresented: $showingAddEntry) {
+				AddWeightEntryView()
 			}
 			.sheet(isPresented: $showingSettings) {
 				ChartSettingsView()

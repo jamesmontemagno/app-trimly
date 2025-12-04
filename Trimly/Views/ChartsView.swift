@@ -64,12 +64,13 @@ struct ChartsView: View {
 					}
 					.accessibilityLabel(Text(L10n.Common.addWeight))
 				}
-				ToolbarItem(placement: .secondaryAction) {
+				ToolbarItem(placement: .topBarLeading) {
 					Button {
 						showingSettings = true
 					} label: {
 						Image(systemName: "slider.horizontal.3")
 					}
+					.accessibilityLabel(Text(L10n.Charts.settingsButton))
 				}
 			}
 			.sheet(isPresented: $showingAddEntry) {

@@ -117,6 +117,7 @@ enum L10n {
 		static let goalLabel = LocalizedStringResource("charts.goal.label", defaultValue: "Goal")
 			static let selectionTitle = LocalizedStringResource("charts.selection.title", defaultValue: "Selected Entry")
 			static let selectionHint = LocalizedStringResource("charts.selection.hint", defaultValue: "Tap a point to see the exact weight.")
+		static let settingsButton = LocalizedStringResource("charts.button.settings", defaultValue: "Chart Settings")
 	}
 
 	enum ChartSettings {

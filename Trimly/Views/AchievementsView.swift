@@ -49,12 +49,21 @@ struct AchievementsView: View {
 					}
 					.accessibilityLabel(Text(L10n.Common.addWeight))
 				}
+				#if os(iOS)
 				ToolbarItem(placement: .topBarLeading) {
 					Button(action: refresh) {
 						Image(systemName: "arrow.clockwise")
 					}
 					.accessibilityLabel(Text(L10n.Common.refresh))
 				}
+				#else
+				ToolbarItem(placement: .navigation) {
+					Button(action: refresh) {
+						Image(systemName: "arrow.clockwise")
+					}
+					.accessibilityLabel(Text(L10n.Common.refresh))
+				}
+				#endif
 			}
 			.sheet(isPresented: $showingAddEntry) {
 				AddWeightEntryView()

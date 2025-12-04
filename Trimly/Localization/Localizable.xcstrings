@@ -2103,6 +2103,29 @@
         }
       }
     },
+    "common.button.addWeight" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Weight"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir Peso"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter Poids"
+          }
+        }
+      }
+    },
     "common.button.cancel" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {

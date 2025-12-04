@@ -12,6 +12,7 @@ enum L10n {
 		static let okButton = LocalizedStringResource("common.button.ok", defaultValue: "OK")
 		static let deleteButton = LocalizedStringResource("common.button.delete", defaultValue: "Delete")
 		static let refresh = LocalizedStringResource("common.button.refresh", defaultValue: "Refresh")
+		static let addWeight = LocalizedStringResource("common.button.addWeight", defaultValue: "Add Weight")
 		static let booleanYes = LocalizedStringResource("common.value.yes", defaultValue: "Yes")
 		static let booleanNo = LocalizedStringResource("common.value.no", defaultValue: "No")
 		static let errorTitle = LocalizedStringResource("common.alert.errorTitle", defaultValue: "Error")

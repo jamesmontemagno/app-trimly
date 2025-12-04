@@ -47,6 +47,7 @@ struct AchievementsView: View {
 					} label: {
 						Image(systemName: "plus")
 					}
+					.accessibilityLabel(Text(L10n.Common.addWeight))
 				}
 				ToolbarItem(placement: .secondaryAction) {
 					Button(action: refresh) {

@@ -14,6 +14,7 @@ struct AchievementsView: View {
 	@EnvironmentObject var storeManager: StoreManager
 	@StateObject private var achievementService = AchievementService()
 	@State private var selectedSnapshot: AchievementSnapshot?
+	@State private var showingAddEntry = false
 	
 	var body: some View {
 		NavigationStack {
@@ -41,11 +42,22 @@ struct AchievementsView: View {
 			.navigationTitle(Text(L10n.Achievements.navigationTitle))
 			.toolbar {
 				ToolbarItem(placement: .primaryAction) {
+					Button {
+						showingAddEntry = true
+					} label: {
+						Image(systemName: "plus")
+					}
+					.accessibilityLabel(Text(L10n.Common.addWeight))
+				}
+				ToolbarItem(placement: .secondaryAction) {
 					Button(action: refresh) {
 						Image(systemName: "arrow.clockwise")
 					}
 					.accessibilityLabel(Text(L10n.Common.refresh))
 				}
+			}
+			.sheet(isPresented: $showingAddEntry) {
+				AddWeightEntryView()
 			}
 			.onAppear(perform: refresh)
 			.onReceive(dataManager.objectWillChange) { _ in

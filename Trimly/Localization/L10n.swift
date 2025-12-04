@@ -447,6 +447,30 @@ enum L10n {
 			static func celebrationUnlocked(_ title: String) -> LocalizedStringResource {
 				LocalizedStringResource("achievements.celebration.unlocked", defaultValue: "\(title) unlocked!")
 			}
+			// Progress detail strings for achievement cards
+			static func progressEntries(_ current: Int, _ target: Int) -> LocalizedStringResource {
+				LocalizedStringResource("achievements.progress.entries", defaultValue: "\(current) of \(target) entries logged")
+			}
+			static func progressUniqueDays(_ current: Int, _ target: Int) -> LocalizedStringResource {
+				LocalizedStringResource("achievements.progress.uniqueDays", defaultValue: "\(current) of \(target) unique days")
+			}
+			static func progressStreakDays(_ current: Int, _ target: Int) -> LocalizedStringResource {
+				LocalizedStringResource("achievements.progress.streakDays", defaultValue: "Best streak: \(current) of \(target) days")
+			}
+			static func progressConsistency(_ currentPercent: Int, _ targetPercent: Int) -> LocalizedStringResource {
+				LocalizedStringResource("achievements.progress.consistency", defaultValue: "Current: \(currentPercent)% of \(targetPercent)% needed")
+			}
+			static func progressConsistencyWithDays(_ currentPercent: Int, _ targetPercent: Int, _ currentDays: Int, _ requiredDays: Int) -> LocalizedStringResource {
+				LocalizedStringResource("achievements.progress.consistencyWithDays", defaultValue: "\(currentPercent)% score · \(currentDays)/\(requiredDays) days needed to unlock")
+			}
+			static func progressGoals(_ current: Int, _ target: Int) -> LocalizedStringResource {
+				LocalizedStringResource("achievements.progress.goals", defaultValue: "\(current) of \(target) goals achieved")
+			}
+			static let progressRemindersOn = LocalizedStringResource("achievements.progress.reminders.on", defaultValue: "Reminders enabled ✓")
+			static let progressRemindersOff = LocalizedStringResource("achievements.progress.reminders.off", defaultValue: "Enable reminders in Settings to unlock")
+			static func progressReminderConsistency(_ currentPercent: Int, _ targetPercent: Int) -> LocalizedStringResource {
+				LocalizedStringResource("achievements.progress.reminderConsistency", defaultValue: "Logged \(currentPercent)% of last 21 days (\(targetPercent)% needed)")
+			}
 		}
 
 	enum Celebrations {

@@ -22,7 +22,7 @@ struct AchievementsView: View {
 					ForEach(groupedSnapshots) { group in
 						Section {
 							ForEach(group.snapshots) { snapshot in
-								AchievementCard(snapshot: snapshot) {
+								AchievementCard(snapshot: snapshot, diagnostics: achievementService.diagnostics) {
 									selectedSnapshot = snapshot
 								}
 							}
@@ -96,6 +96,7 @@ struct AchievementsView: View {
 
 private struct AchievementCard: View {
 	let snapshot: AchievementSnapshot
+	let diagnostics: AchievementDiagnostics?
 	var onInspect: (() -> Void)? = nil
 	
 	var body: some View {
@@ -119,6 +120,12 @@ private struct AchievementCard: View {
 				Text(snapshot.descriptor.detail)
 					.font(.subheadline)
 					.foregroundStyle(.secondary)
+				// Show detailed progress text
+				if let detailedProgress = detailedProgressText {
+					Text(detailedProgress)
+						.font(.caption)
+						.foregroundStyle(.secondary)
+				}
 				ProgressView(value: min(max(snapshot.progressValue, 0), 1)) {
 					Text(L10n.Achievements.progressLabel)
 						.font(.caption)
@@ -172,6 +179,40 @@ private struct AchievementCard: View {
 	private var progressDisplay: String {
 		let percent = Int(snapshot.progressValue * 100)
 		return "\(percent)%"
+	}
+	
+	/// Provides detailed progress text based on achievement type and current status
+	private var detailedProgressText: String? {
+		guard let diag = diagnostics else { return nil }
+		switch snapshot.descriptor.metric {
+		case .totalEntries(let target):
+			return String(localized: L10n.Achievements.progressEntries(diag.totalEntries, target))
+		case .uniqueDays(let target):
+			return String(localized: L10n.Achievements.progressUniqueDays(diag.uniqueDayCount, target))
+		case .streakDays(let target):
+			return String(localized: L10n.Achievements.progressStreakDays(diag.longestStreak, target))
+		case .consistency(let threshold):
+			let currentPercent = Int((diag.consistencyScore * 100).rounded())
+			let targetPercent = Int((threshold * 100).rounded())
+			let minDaysRequired = 10
+			if diag.uniqueDayCount < minDaysRequired {
+				return String(localized: L10n.Achievements.progressConsistencyWithDays(
+					currentPercent, targetPercent, diag.uniqueDayCount, minDaysRequired
+				))
+			} else {
+				return String(localized: L10n.Achievements.progressConsistency(currentPercent, targetPercent))
+			}
+		case .goalsAchieved(let target):
+			return String(localized: L10n.Achievements.progressGoals(diag.goalsAchieved, target))
+		case .remindersEnabled:
+			return diag.remindersEnabled
+				? String(localized: L10n.Achievements.progressRemindersOn)
+				: String(localized: L10n.Achievements.progressRemindersOff)
+		case .reminderConsistency(let targetRatio):
+			let currentPercent = Int((diag.recentReminderRatio * 100).rounded())
+			let targetPercent = Int((targetRatio * 100).rounded())
+			return String(localized: L10n.Achievements.progressReminderConsistency(currentPercent, targetPercent))
+		}
 	}
 }
 

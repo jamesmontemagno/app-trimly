@@ -30,15 +30,15 @@ struct OnboardingView: View {
 
     private var bottomContentPadding: CGFloat {
         #if os(iOS)
-        return 44
+        return 24
         #else
         return 0
         #endif
     }
 
     var body: some View {
-        VStack(spacing: 20) {
-            HStack(spacing: 12) {
+        VStack(spacing: 12) {
+            HStack(spacing: 8) {
                 ForEach(Array(onboardingSteps.enumerated()), id: \.offset) { index, step in
                     stepIcon(step, index: index)
                 }
@@ -77,7 +77,7 @@ struct OnboardingView: View {
         .padding(.bottom, bottomContentPadding)
         #if os(iOS)
         .safeAreaInset(edge: .bottom) {
-            Color.clear.frame(height: 12)
+            Color.clear.frame(height: 8)
         }
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
@@ -137,18 +137,18 @@ struct OnboardingView: View {
     }
 
     private func stepIcon(_ step: (title: LocalizedStringResource, symbol: String), index: Int) -> some View {
-        VStack(spacing: 6) {
+        VStack(spacing: 4) {
             Image(systemName: step.symbol)
-                .font(.system(size: 14, weight: .semibold))
+                .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(currentPage == index ? Color.white : .primary)
-                .padding(10)
+                .padding(8)
                 .background(
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
                         .fill(currentPage == index ? Color.accentColor : Color.accentColor.opacity(0.12))
                 )
             Circle()
                 .fill(currentPage == index ? Color.accentColor : Color.secondary.opacity(0.3))
-                .frame(width: 6, height: 6)
+                .frame(width: 5, height: 5)
         }
         .frame(maxWidth: .infinity)
         .accessibilityElement(children: .ignore)
@@ -156,47 +156,50 @@ struct OnboardingView: View {
     }
 
     private var pageIndicator: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: 6) {
             ForEach(onboardingSteps.indices, id: \.self) { index in
                 Capsule()
                     .fill(index == currentPage ? Color.accentColor : Color.accentColor.opacity(0.2))
-                    .frame(width: index == currentPage ? 20 : 8, height: 8)
+                    .frame(width: index == currentPage ? 16 : 6, height: 6)
             }
         }
-        .padding(.bottom, 8)
+        .padding(.bottom, 4)
     }
 
     private var welcomePage: some View {
-        VStack(spacing: 32) {
-            Spacer()
+        ScrollView {
+            VStack(spacing: 20) {
+                Spacer(minLength: 16)
 
-            if shouldShowInitialCloudSyncBanner {
-                initialCloudSyncStatus
+                if shouldShowInitialCloudSyncBanner {
+                    initialCloudSyncStatus
+                }
+
+                Image(systemName: "figure.mixed.cardio")
+                    .font(.system(size: 72))
+                    .foregroundStyle(.blue.gradient)
+
+                VStack(spacing: 12) {
+                    Text(L10n.Onboarding.welcomeTitle)
+                        .font(.largeTitle.bold())
+
+                    Text(L10n.Onboarding.welcomeSubtitle)
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                }
+
+                Spacer(minLength: 16)
+
+                primaryButton(title: L10n.Common.getStartedButton) {
+                    withAnimation { currentPage = 1 }
+                }
+                .padding(.horizontal)
             }
-
-            Image(systemName: "figure.mixed.cardio")
-                .font(.system(size: 100))
-                .foregroundStyle(.blue.gradient)
-
-            VStack(spacing: 16) {
-                Text(L10n.Onboarding.welcomeTitle)
-                    .font(.largeTitle.bold())
-
-                Text(L10n.Onboarding.welcomeSubtitle)
-                    .font(.title3)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal)
-            }
-
-            Spacer()
-
-            primaryButton(title: L10n.Common.getStartedButton) {
-                withAnimation { currentPage = 1 }
-            }
-            .padding(.horizontal)
+            .padding()
+            .frame(maxWidth: .infinity, minHeight: 0)
         }
-        .padding()
     }
 
     private var shouldShowInitialCloudSyncBanner: Bool {
@@ -237,254 +240,269 @@ struct OnboardingView: View {
     }
 
     private var unitSelectionPage: some View {
-        VStack(spacing: 32) {
-            Spacer()
+        ScrollView {
+            VStack(spacing: 20) {
+                Spacer(minLength: 16)
 
-            Image(systemName: "scalemass")
-                .font(.system(size: 80))
-                .foregroundStyle(.blue.gradient)
+                Image(systemName: "scalemass")
+                    .font(.system(size: 64))
+                    .foregroundStyle(.blue.gradient)
 
-            VStack(spacing: 16) {
-                Text(L10n.Onboarding.unitTitle)
-                    .font(.largeTitle.bold())
+                VStack(spacing: 12) {
+                    Text(L10n.Onboarding.unitTitle)
+                        .font(.largeTitle.bold())
 
-                Text(L10n.Onboarding.unitSubtitle)
-                    .font(.title3)
-                    .foregroundStyle(.secondary)
-            }
-
-            Picker(selection: $selectedUnit) {
-                Text(L10n.Onboarding.unitOptionPounds).tag(WeightUnit.pounds)
-                Text(L10n.Onboarding.unitOptionKilograms).tag(WeightUnit.kilograms)
-            } label: {
-                Text(L10n.Onboarding.unitPickerLabel)
-            }
-            .pickerStyle(.segmented)
-            .padding(.horizontal)
-
-            Spacer()
-
-            primaryButton(title: L10n.Common.continueButton) {
-                dataManager.updateSettings { settings in
-                    settings.preferredUnit = selectedUnit
+                    Text(L10n.Onboarding.unitSubtitle)
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
                 }
-                withAnimation { currentPage = 2 }
+
+                Picker(selection: $selectedUnit) {
+                    Text(L10n.Onboarding.unitOptionPounds).tag(WeightUnit.pounds)
+                    Text(L10n.Onboarding.unitOptionKilograms).tag(WeightUnit.kilograms)
+                } label: {
+                    Text(L10n.Onboarding.unitPickerLabel)
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal)
+
+                Spacer(minLength: 16)
+
+                primaryButton(title: L10n.Common.continueButton) {
+                    dataManager.updateSettings { settings in
+                        settings.preferredUnit = selectedUnit
+                    }
+                    withAnimation { currentPage = 2 }
+                }
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
+            .padding()
+            .frame(maxWidth: .infinity, minHeight: 0)
         }
-        .padding()
     }
 
     private var startingWeightPage: some View {
-        VStack(spacing: 32) {
-            Spacer()
+        ScrollView {
+            VStack(spacing: 20) {
+                Spacer(minLength: 16)
 
-            Image(systemName: "figure.stand")
-                .font(.system(size: 80))
-                .foregroundStyle(.blue.gradient)
+                Image(systemName: "figure.stand")
+                    .font(.system(size: 64))
+                    .foregroundStyle(.blue.gradient)
 
-            VStack(spacing: 16) {
-                Text(L10n.Onboarding.startTitle)
-                    .font(.largeTitle.bold())
+                VStack(spacing: 12) {
+                    Text(L10n.Onboarding.startTitle)
+                        .font(.largeTitle.bold())
 
-                Text(L10n.Onboarding.startSubtitle)
-                    .font(.title3)
-                    .foregroundStyle(.secondary)
-            }
+                    Text(L10n.Onboarding.startSubtitle)
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
+                }
 
-            HStack {
-                TextField("", text: $startingWeightText, prompt: Text(L10n.Onboarding.startPlaceholder))
-                    #if os(iOS)
-                    .keyboardType(.decimalPad)
-                    #endif
-                    .font(.system(.title).bold())
-                    .multilineTextAlignment(.center)
-                    .frame(maxWidth: 200)
-                    .accessibilityLabel(Text(L10n.Onboarding.startFieldLabel))
-                    .onChange(of: startingWeightText) { _, _ in
-                        startingWeightError = nil
-                    }
+                HStack {
+                    TextField("", text: $startingWeightText, prompt: Text(L10n.Onboarding.startPlaceholder))
+                        #if os(iOS)
+                        .keyboardType(.decimalPad)
+                        #endif
+                        .font(.system(.title).bold())
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: 200)
+                        .accessibilityLabel(Text(L10n.Onboarding.startFieldLabel))
+                        .onChange(of: startingWeightText) { _, _ in
+                            startingWeightError = nil
+                        }
 
-                Text(selectedUnit.symbol)
-                    .font(.title3)
-                    .foregroundStyle(.secondary)
-                
-                if !startingWeightText.isEmpty {
-                    Button(action: saveStartingWeight) {
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.title2)
-                            .foregroundStyle(Color.accentColor)
+                    Text(selectedUnit.symbol)
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
+                    
+                    if !startingWeightText.isEmpty {
+                        Button(action: saveStartingWeight) {
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.title2)
+                                .foregroundStyle(Color.accentColor)
+                        }
                     }
                 }
-            }
-            .padding()
-            .background(.thinMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-
-            if let error = startingWeightError {
-                Text(error)
-                    .font(.footnote)
-                    .foregroundStyle(.red)
-                    .multilineTextAlignment(.center)
-            }
-
-            Spacer()
-
-            primaryButton(title: L10n.Common.continueButton) {
-                saveStartingWeight()
-            }
-            .disabled(startingWeightText.isEmpty)
-            .padding(.horizontal)
-        }
-        .padding()
-    }
-
-    private var goalPage: some View {
-        VStack(spacing: 32) {
-            Spacer()
-
-            Image(systemName: "flag.checkered")
-                .font(.system(size: 80))
-                .foregroundStyle(.green.gradient)
-
-            VStack(spacing: 16) {
-                Text(L10n.Onboarding.goalTitle)
-                    .font(.largeTitle.bold())
-
-                Text(L10n.Onboarding.goalSubtitle)
-                    .font(.title3)
-                    .foregroundStyle(.secondary)
-            }
-
-            HStack {
-                TextField("", text: $goalWeightText, prompt: Text(L10n.Onboarding.goalPlaceholder))
-                    #if os(iOS)
-                    .keyboardType(.decimalPad)
-                    #endif
-                    .font(.system(.title).bold())
-                    .multilineTextAlignment(.center)
-                    .frame(maxWidth: 200)
-                    .accessibilityLabel(Text(L10n.Onboarding.goalFieldLabel))
-                    .onChange(of: goalWeightText) { _, _ in
-                        goalWeightError = nil
-                    }
-
-                Text(selectedUnit.symbol)
-                    .font(.title3)
-                    .foregroundStyle(.secondary)
-                
-                if !goalWeightText.isEmpty {
-                    Button(action: saveGoal) {
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.title2)
-                            .foregroundStyle(Color.accentColor)
-                    }
-                }
-            }
-            .padding()
-            .background(.thinMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-
-            if let error = goalWeightError {
-                Text(error)
-                    .font(.footnote)
-                    .foregroundStyle(.red)
-                    .multilineTextAlignment(.center)
-            }
-
-            Spacer()
-
-            primaryButton(title: L10n.Common.continueButton) {
-                saveGoal()
-            }
-            .disabled(goalWeightText.isEmpty)
-            .padding(.horizontal)
-        }
-        .padding()
-    }
-
-    private var remindersPage: some View {
-        VStack(spacing: 32) {
-            Spacer()
-
-            Image(systemName: "bell.badge")
-                .font(.system(size: 80))
-                .foregroundStyle(.orange.gradient)
-
-            VStack(spacing: 16) {
-                Text(L10n.Onboarding.remindersTitle)
-                    .font(.largeTitle.bold())
-
-                Text(L10n.Onboarding.remindersSubtitle)
-                    .font(.title3)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-            }
-
-            Toggle(L10n.Onboarding.reminderToggle, isOn: $enableReminders)
                 .padding()
                 .background(.thinMaterial)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
-                .padding(.horizontal)
-                .onChange(of: enableReminders) { _, enabled in
-                    if enabled {
-                        requestNotificationAuthorization()
-                    }
+
+                if let error = startingWeightError {
+                    Text(error)
+                        .font(.footnote)
+                        .foregroundStyle(.red)
+                        .multilineTextAlignment(.center)
                 }
 
-            if enableReminders {
-                Text(L10n.Onboarding.reminderHint)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
+                Spacer(minLength: 16)
 
-            Spacer()
-
-            primaryButton(title: L10n.Common.continueButton) {
-                saveReminders()
+                primaryButton(title: L10n.Common.continueButton) {
+                    saveStartingWeight()
+                }
+                .disabled(startingWeightText.isEmpty)
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
+            .padding()
+            .frame(maxWidth: .infinity, minHeight: 0)
         }
-        .padding()
+    }
+
+    private var goalPage: some View {
+        ScrollView {
+            VStack(spacing: 20) {
+                Spacer(minLength: 16)
+
+                Image(systemName: "flag.checkered")
+                    .font(.system(size: 64))
+                    .foregroundStyle(.green.gradient)
+
+                VStack(spacing: 12) {
+                    Text(L10n.Onboarding.goalTitle)
+                        .font(.largeTitle.bold())
+
+                    Text(L10n.Onboarding.goalSubtitle)
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
+                }
+
+                HStack {
+                    TextField("", text: $goalWeightText, prompt: Text(L10n.Onboarding.goalPlaceholder))
+                        #if os(iOS)
+                        .keyboardType(.decimalPad)
+                        #endif
+                        .font(.system(.title).bold())
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: 200)
+                        .accessibilityLabel(Text(L10n.Onboarding.goalFieldLabel))
+                        .onChange(of: goalWeightText) { _, _ in
+                            goalWeightError = nil
+                        }
+
+                    Text(selectedUnit.symbol)
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
+                    
+                    if !goalWeightText.isEmpty {
+                        Button(action: saveGoal) {
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.title2)
+                                .foregroundStyle(Color.accentColor)
+                        }
+                    }
+                }
+                .padding()
+                .background(.thinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+
+                if let error = goalWeightError {
+                    Text(error)
+                        .font(.footnote)
+                        .foregroundStyle(.red)
+                        .multilineTextAlignment(.center)
+                }
+
+                Spacer(minLength: 16)
+
+                primaryButton(title: L10n.Common.continueButton) {
+                    saveGoal()
+                }
+                .disabled(goalWeightText.isEmpty)
+                .padding(.horizontal)
+            }
+            .padding()
+            .frame(maxWidth: .infinity, minHeight: 0)
+        }
+    }
+
+    private var remindersPage: some View {
+        ScrollView {
+            VStack(spacing: 20) {
+                Spacer(minLength: 16)
+
+                Image(systemName: "bell.badge")
+                    .font(.system(size: 64))
+                    .foregroundStyle(.orange.gradient)
+
+                VStack(spacing: 12) {
+                    Text(L10n.Onboarding.remindersTitle)
+                        .font(.largeTitle.bold())
+
+                    Text(L10n.Onboarding.remindersSubtitle)
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                }
+
+                Toggle(L10n.Onboarding.reminderToggle, isOn: $enableReminders)
+                    .padding()
+                    .background(.thinMaterial)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .padding(.horizontal)
+                    .onChange(of: enableReminders) { _, enabled in
+                        if enabled {
+                            requestNotificationAuthorization()
+                        }
+                    }
+
+                if enableReminders {
+                    Text(L10n.Onboarding.reminderHint)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer(minLength: 16)
+
+                primaryButton(title: L10n.Common.continueButton) {
+                    saveReminders()
+                }
+                .padding(.horizontal)
+            }
+            .padding()
+            .frame(maxWidth: .infinity, minHeight: 0)
+        }
     }
 
     private var eulaPage: some View {
-        VStack(spacing: 32) {
-            Spacer()
+        ScrollView {
+            VStack(spacing: 20) {
+                Spacer(minLength: 16)
 
-            Image(systemName: "checkmark.seal")
-                .font(.system(size: 80))
-                .foregroundStyle(.blue.gradient)
+                Image(systemName: "checkmark.seal")
+                    .font(.system(size: 64))
+                    .foregroundStyle(.blue.gradient)
 
-            VStack(spacing: 16) {
-                Text(L10n.Onboarding.eulaTitle)
-                    .font(.largeTitle.bold())
+                VStack(spacing: 12) {
+                    Text(L10n.Onboarding.eulaTitle)
+                        .font(.largeTitle.bold())
 
-                Text(L10n.Onboarding.eulaSubtitle)
-                    .font(.title3)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal)
-            }
-
-            VStack(spacing: 12) {
-                Link(destination: URL(string: "https://www.refractored.com/terms")!) {
-                    Text(L10n.Onboarding.eulaTerms)
+                    Text(L10n.Onboarding.eulaSubtitle)
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
                 }
-                Link(destination: URL(string: "https://www.refractored.com/about#privacy-policy")!) {
-                    Text(L10n.Onboarding.eulaPrivacy)
+
+                VStack(spacing: 12) {
+                    Link(destination: URL(string: "https://www.refractored.com/terms")!) {
+                        Text(L10n.Onboarding.eulaTerms)
+                    }
+                    Link(destination: URL(string: "https://www.refractored.com/about#privacy-policy")!) {
+                        Text(L10n.Onboarding.eulaPrivacy)
+                    }
                 }
-            }
-            .font(.subheadline)
+                .font(.subheadline)
 
-            Spacer()
+                Spacer(minLength: 16)
 
-            primaryButton(title: L10n.Common.acceptButton) {
-                completeOnboarding()
+                primaryButton(title: L10n.Common.acceptButton) {
+                    completeOnboarding()
+                }
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
+            .padding()
+            .frame(maxWidth: .infinity, minHeight: 0)
         }
-        .padding()
     }
 
     private func saveStartingWeight() {

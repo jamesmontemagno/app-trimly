@@ -515,8 +515,23 @@ final class DataManager: ObservableObject {
             settings.eulaAcceptedDate = nil
             settings.updatedAt = Date()
         }
+        
+        // Reset notification settings (turn off reminders)
         deviceSettings.updateReminders { reminders in
+            reminders.primaryTime = nil
+            reminders.secondaryTime = nil
+            reminders.adaptiveEnabled = true
             reminders.consecutiveDismissals = 0
+        }
+        
+        // Reset HealthKit settings (turn off all HealthKit options)
+        deviceSettings.updateHealthKit { healthKit in
+            healthKit.backgroundSyncEnabled = false
+            healthKit.writeEnabled = false
+            healthKit.autoHideDuplicates = true
+            healthKit.duplicateToleranceKg = 0.1
+            healthKit.lastImportAt = nil
+            healthKit.lastBackgroundSyncAt = nil
         }
         
         try modelContext.save()

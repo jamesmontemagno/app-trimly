@@ -14,6 +14,7 @@ struct SettingsView: View {
 	@EnvironmentObject var dataManager: DataManager
 	@EnvironmentObject var deviceSettings: DeviceSettingsStore
 	@EnvironmentObject var storeManager: StoreManager
+	@StateObject private var notificationService = NotificationService()
 	@State private var showingGoalSheet = false
 	@State private var showingGoalHistory = false
 	@State private var showingExport = false
@@ -425,6 +426,7 @@ struct SettingsView: View {
 	}
     
 	private func deleteAllData() {
+		notificationService.cancelAllReminders()
 		try? dataManager.deleteAllData()
 	}
 

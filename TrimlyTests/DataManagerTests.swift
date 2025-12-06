@@ -316,7 +316,18 @@ struct DataManagerTests {
 			settings.eulaAcceptedDate = Date()
 		}
 		manager.deviceSettings.updateReminders { reminders in
+			reminders.primaryTime = Date()
+			reminders.secondaryTime = Date()
+			reminders.adaptiveEnabled = false
 			reminders.consecutiveDismissals = 3
+		}
+		manager.deviceSettings.updateHealthKit { healthKit in
+			healthKit.backgroundSyncEnabled = true
+			healthKit.writeEnabled = true
+			healthKit.autoHideDuplicates = false
+			healthKit.duplicateToleranceKg = 0.5
+			healthKit.lastImportAt = Date()
+			healthKit.lastBackgroundSyncAt = Date()
 		}
 
 		try manager.deleteAllData()
@@ -326,7 +337,18 @@ struct DataManagerTests {
 		#expect(manager.fetchGoalHistory().isEmpty)
 		#expect(manager.settings?.hasCompletedOnboarding == false)
 		#expect(manager.settings?.eulaAcceptedDate == nil)
+		// Verify notification settings are reset
+		#expect(manager.deviceSettings.reminders.primaryTime == nil)
+		#expect(manager.deviceSettings.reminders.secondaryTime == nil)
+		#expect(manager.deviceSettings.reminders.adaptiveEnabled == true)
 		#expect(manager.deviceSettings.reminders.consecutiveDismissals == 0)
+		// Verify HealthKit settings are reset
+		#expect(manager.deviceSettings.healthKit.backgroundSyncEnabled == false)
+		#expect(manager.deviceSettings.healthKit.writeEnabled == false)
+		#expect(manager.deviceSettings.healthKit.autoHideDuplicates == true)
+		#expect(manager.deviceSettings.healthKit.duplicateToleranceKg == 0.1)
+		#expect(manager.deviceSettings.healthKit.lastImportAt == nil)
+		#expect(manager.deviceSettings.healthKit.lastBackgroundSyncAt == nil)
 	}
 
 	// MARK: - CSV Export

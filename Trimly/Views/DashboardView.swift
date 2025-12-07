@@ -15,6 +15,7 @@ struct DashboardView: View {
 	@State private var showingAddEntry = false
 	@State private var recentlySyncedToHealthKit = false
 	@State private var recentlySyncedFromICloud = false
+	@State private var showingCharts = false
     
 	var body: some View {
 		NavigationStack {
@@ -22,8 +23,8 @@ struct DashboardView: View {
 				VStack(spacing: 24) {
 					todayWeightCard
 					miniSparklineCard
-					monthlyCalendarCard
 					progressSummaryCard
+					monthlyCalendarCard
                     
 					if shouldShowConsistency {
 						consistencyScoreCard
@@ -84,6 +85,10 @@ struct DashboardView: View {
 			.onChange(of: entryCount) { _, _ in
 				handleInitialCloudSyncState()
 			}
+		}
+		.navigationDestination(isPresented: $showingCharts) {
+			ChartsView()
+				.environmentObject(dataManager)
 		}
 	}
     
@@ -347,20 +352,26 @@ struct DashboardView: View {
 	}
     
 	private var trendSummaryCard: some View {
-		VStack(spacing: 8) {
-			Text(L10n.Dashboard.trendTitle)
-				.font(.subheadline)
-				.foregroundStyle(.secondary)
-            
-			let trend = dataManager.getTrend()
-			Text(trend.description)
-				.font(.title3.bold())
-				.foregroundStyle(trendColor(trend))
+		Button {
+			showingCharts = true
+		} label: {
+			VStack(spacing: 8) {
+				Text(L10n.Dashboard.trendTitle)
+					.font(.subheadline)
+					.foregroundStyle(.secondary)
+				
+				let trend = dataManager.getTrend()
+				Text(trend.description)
+					.font(.title3.bold())
+					.foregroundStyle(trendColor(trend))
+			}
+			.frame(maxWidth: .infinity)
+			.padding()
+			.background(.thinMaterial)
+			.clipShape(RoundedRectangle(cornerRadius: 16))
 		}
-		.frame(maxWidth: .infinity)
-		.padding()
-		.background(.thinMaterial)
-		.clipShape(RoundedRectangle(cornerRadius: 16))
+		.buttonStyle(.plain)
+		.accessibilityHint(Text("Opens charts"))
 	}
     
 	private func trendColor(_ trend: WeightAnalytics.TrendDirection) -> Color {

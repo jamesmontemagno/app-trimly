@@ -757,6 +757,9 @@ struct ChartSettingsView: View {
 						style: .popup
 					) {
 						Toggle(L10n.ChartSettings.movingAverageToggle, isOn: binding(\.showMovingAverage))
+						Text(L10n.ChartSettings.movingAverageInfo)
+							.font(.caption)
+							.foregroundStyle(.secondary)
 
 						if dataManager.settings?.showMovingAverage == true {
 							Divider().padding(.vertical, 10)
@@ -774,6 +777,9 @@ struct ChartSettingsView: View {
 						Divider().padding(.vertical, 10)
 
 						Toggle(L10n.ChartSettings.emaToggle, isOn: binding(\.showEMA))
+						Text(L10n.ChartSettings.emaInfo)
+							.font(.caption)
+							.foregroundStyle(.secondary)
 
 						if dataManager.settings?.showEMA == true {
 							Divider().padding(.vertical, 10)

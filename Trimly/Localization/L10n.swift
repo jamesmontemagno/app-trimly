@@ -143,8 +143,10 @@ enum L10n {
 		static let trendLayersTitle = LocalizedStringResource("chartSettings.trend.title", defaultValue: "Trend Layers")
 		static let trendLayersDescription = LocalizedStringResource("chartSettings.trend.description", defaultValue: "Overlay smoothed lines to better see direction without noise.")
 		static let movingAverageToggle = LocalizedStringResource("chartSettings.trend.toggle.ma", defaultValue: "Show Moving Average")
+		static let movingAverageInfo = LocalizedStringResource("chartSettings.trend.info.ma", defaultValue: "A simple moving average smooths recent entries by averaging the last few days.")
 		static let movingAverageLabel = LocalizedStringResource("chartSettings.trend.label.ma", defaultValue: "Moving Average")
 		static let emaToggle = LocalizedStringResource("chartSettings.trend.toggle.ema", defaultValue: "Show EMA")
+		static let emaInfo = LocalizedStringResource("chartSettings.trend.info.ema", defaultValue: "An exponential moving average reacts faster by weighting recent entries more heavily.")
 		static let emaLabel = LocalizedStringResource("chartSettings.trend.label.ema", defaultValue: "Exponential Moving Average")
 		static func daysLabel(_ days: Int) -> LocalizedStringResource {
 			LocalizedStringResource("chartSettings.trend.days", defaultValue: "\(days) days")

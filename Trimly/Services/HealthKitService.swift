@@ -15,6 +15,7 @@ final class HealthKitService: ObservableObject {
     
     private let healthStore = HKHealthStore()
     private let weightType = HKQuantityType.quantityType(forIdentifier: .bodyMass)!
+    private let syncOverlapSeconds: TimeInterval = 600 // re-read a small window to avoid missing edge samples
     
     @Published var isAuthorized = false
     @Published var isImporting = false
@@ -221,6 +222,11 @@ final class HealthKitService: ObservableObject {
         // Get preferred unit from settings, default to kilograms
         let unit = dataManager.settings?.preferredUnit ?? .kilograms
         enableBackgroundDelivery(dataManager: dataManager, unit: unit)
+
+        // Perform a catch-up sync on launch so we ingest any samples added while the app was not running
+        Task { @MainActor [weak self] in
+            await self?.syncRecentSamples(dataManager: dataManager, unit: unit)
+        }
     }
     
     /// Observe weight changes and sync new samples
@@ -242,25 +248,23 @@ final class HealthKitService: ObservableObject {
         healthStore.execute(query)
     }
     
-    /// Sync recent weight samples (last 7 days)
+    /// Sync recent weight samples from the last known sync point (with a small overlap) through now
     private func syncRecentSamples(dataManager: DataManager, unit: WeightUnit) async {
-        let endDate = Date()
-        guard let startDate = Calendar.current.date(byAdding: .day, value: -7, to: endDate) else {
-            return
-        }
-        
+        guard isAuthorized else { return }
+        let now = Date()
+        let startDate = syncStartDate(deviceSettings: dataManager.deviceSettings, now: now)
         do {
             try await importHistoricalData(
                 from: startDate,
-                to: endDate,
+                to: now,
                 dataManager: dataManager,
                 unit: unit
             )
             dataManager.deviceSettings.updateHealthKit { settings in
-                settings.lastBackgroundSyncAt = Date()
+                settings.lastBackgroundSyncAt = now
             }
         } catch {
-            print("Failed to sync recent samples: \(error)")
+            // Intentionally keep quiet to avoid spamming logs; UI surfaces errors on manual imports
         }
     }
     
@@ -289,6 +293,19 @@ final class HealthKitService: ObservableObject {
         }
         
         return false
+    }
+
+    /// Determine the start date for the next sync using the most recent sync/import anchor and a small overlap window
+    private func syncStartDate(deviceSettings: DeviceSettingsStore, now: Date = Date()) -> Date {
+        let anchor = deviceSettings.healthKit.lastBackgroundSyncAt ?? deviceSettings.healthKit.lastImportAt
+        if let anchor {
+            let overlap = deviceSettings.healthKit.autoHideDuplicates ? -syncOverlapSeconds : 0
+            return anchor.addingTimeInterval(overlap)
+        }
+        if let fallback = Calendar.current.date(byAdding: .day, value: -30, to: now) {
+            return fallback
+        }
+        return now
     }
 }
 

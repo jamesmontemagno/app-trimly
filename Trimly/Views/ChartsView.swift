@@ -637,11 +637,11 @@ struct FunStatCard: View {
 				Text(title)
 					.font(.caption)
 					.foregroundStyle(.secondary)
-					.lineLimit(1)
 				Text(value)
 					.font(.subheadline.bold())
-					.lineLimit(1)
-					.minimumScaleFactor(0.8)
+					.lineLimit(2)
+					.multilineTextAlignment(.leading)
+					.fixedSize(horizontal: false, vertical: true)
 			}
 		}
 		.frame(maxWidth: .infinity, alignment: .leading)

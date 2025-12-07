@@ -17,75 +17,6 @@
         }
       }
     },
-    "onboarding.cloudSync.checking" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Looking for your previous TrimTally data..."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buscando tus datos anteriores de TrimTally..."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recherche de vos données TrimTally précédentes..."
-          }
-        }
-      }
-    },
-    "onboarding.cloudSync.found" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Found your history! Restoring it now..."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¡Encontramos tu historial! Restaurándolo ahora..."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Historique retrouvé ! Restauration en cours..."
-          }
-        }
-      }
-    },
-    "onboarding.cloudSync.stillChecking" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Still checking iCloud—tap Get Started to continue manually."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seguimos comprobando iCloud; toca Comenzar para continuar manualmente."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Toujours en cours de vérification d'iCloud — touchez Commencer pour continuer manuellement."
-          }
-        }
-      }
-    },
     "%@" : {
       "localizations" : {
         "es" : {
@@ -509,6 +440,50 @@
         }
       }
     },
+    "achievements.progress.consistency" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Current: %1$lld%% of %2$lld%% needed"
+          }
+        }
+      }
+    },
+    "achievements.progress.consistencyWithDays" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld%% score · %2$lld/%3$lld days needed to unlock"
+          }
+        }
+      }
+    },
+    "achievements.progress.entries" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld of %2$lld entries logged"
+          }
+        }
+      }
+    },
+    "achievements.progress.goals" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld of %2$lld goals achieved"
+          }
+        }
+      }
+    },
     "achievements.progress.label" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -516,6 +491,61 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Progress"
+          }
+        }
+      }
+    },
+    "achievements.progress.reminderConsistency" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Logged %1$lld%% of last 21 days (%2$lld%% needed)"
+          }
+        }
+      }
+    },
+    "achievements.progress.reminders.off" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Enable reminders in Settings to unlock"
+          }
+        }
+      }
+    },
+    "achievements.progress.reminders.on" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Reminders enabled ✓"
+          }
+        }
+      }
+    },
+    "achievements.progress.streakDays" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Best streak: %1$lld of %2$lld days"
+          }
+        }
+      }
+    },
+    "achievements.progress.uniqueDays" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld of %2$lld unique days"
           }
         }
       }
@@ -813,6 +843,30 @@
         }
       }
     },
+    "addEntry.error.futureDate" : {
+      "comment" : "Date cannot be in the future",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Date cannot be in the future"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La fecha no puede ser en el futuro"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La date ne peut pas être dans le futur"
+          }
+        }
+      }
+    },
     "addEntry.error.invalidWeight" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -832,29 +886,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Veuillez saisir un poids valide"
-          }
-        }
-      }
-    },
-    "addEntry.error.futureDate" : {
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Date cannot be in the future"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La fecha no puede ser en el futuro"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La date ne peut pas être dans le futur"
           }
         }
       }
@@ -1365,6 +1396,29 @@
         }
       }
     },
+    "charts.button.settings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chart Settings"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes del Gráfico"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paramètres du Graphique"
+          }
+        }
+      }
+    },
     "charts.empty.description" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -1430,29 +1484,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Objectif"
-          }
-        }
-      }
-    },
-    "charts.button.settings" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chart Settings"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ajustes del Gráfico"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paramètres du Graphique"
           }
         }
       }
@@ -2658,6 +2689,17 @@
         }
       }
     },
+    "dashboard.icloudSyncLoading" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Loading your history from iCloud..."
+          }
+        }
+      }
+    },
     "dashboard.lastSevenDays" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -2957,6 +2999,17 @@
         }
       }
     },
+    "dashboard.syncedFromICloud" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Synced your history from iCloud"
+          }
+        }
+      }
+    },
     "dashboard.syncedToHealthKit" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2976,28 +3029,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Également enregistré dans Santé"
-          }
-        }
-      }
-    },
-    "dashboard.syncedFromICloud" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Synced your history from iCloud"
-          }
-        }
-      }
-    },
-    "dashboard.icloudSyncLoading" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Loading your history from iCloud..."
           }
         }
       }
@@ -5105,6 +5136,75 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Contrôle du soir"
+          }
+        }
+      }
+    },
+    "onboarding.cloudSync.checking" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Looking for your previous TrimTally data..."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscando tus datos anteriores de TrimTally..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recherche de vos données TrimTally précédentes..."
+          }
+        }
+      }
+    },
+    "onboarding.cloudSync.found" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Found your history! Restoring it now..."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Encontramos tu historial! Restaurándolo ahora..."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Historique retrouvé ! Restauration en cours..."
+          }
+        }
+      }
+    },
+    "onboarding.cloudSync.stillChecking" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Still checking iCloud—tap Get Started to continue manually."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seguimos comprobando iCloud; toca Comenzar para continuar manualmente."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toujours en cours de vérification d'iCloud — touchez Commencer pour continuer manuellement."
           }
         }
       }

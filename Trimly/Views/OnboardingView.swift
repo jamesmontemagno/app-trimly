@@ -12,6 +12,7 @@ struct OnboardingView: View {
     @State private var startingWeightText = ""
     @State private var goalWeightText = ""
     @State private var enableReminders = false
+    @State private var enableiCloudSync = true
     @State private var startingWeightError: LocalizedStringResource?
     @State private var goalWeightError: LocalizedStringResource?
     @State private var showIncompleteAlert = false
@@ -25,6 +26,7 @@ struct OnboardingView: View {
         (L10n.Onboarding.stepStart, "figure.stand"),
         (L10n.Onboarding.stepGoal, "flag.checkered"),
         (L10n.Onboarding.stepReminders, "bell.badge"),
+        (L10n.Onboarding.stepCloudSync, "icloud"),
         (L10n.Onboarding.stepFinish, "checkmark.seal")
     ]
 
@@ -52,7 +54,8 @@ struct OnboardingView: View {
                 startingWeightPage.tag(2)
                 goalPage.tag(3)
                 remindersPage.tag(4)
-                eulaPage.tag(5)
+                iCloudSyncPage.tag(5)
+                eulaPage.tag(6)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             #else
@@ -64,7 +67,8 @@ struct OnboardingView: View {
                 case 2: startingWeightPage
                 case 3: goalPage
                 case 4: remindersPage
-                case 5: eulaPage
+                case 5: iCloudSyncPage
+                case 6: eulaPage
                 default: EmptyView()
                 }
             }
@@ -462,6 +466,66 @@ struct OnboardingView: View {
             .frame(maxWidth: .infinity, minHeight: 0)
         }
     }
+    
+    private var iCloudSyncPage: some View {
+        ScrollView {
+            VStack(spacing: 20) {
+                Spacer(minLength: 16)
+
+                Image(systemName: "icloud")
+                    .font(.system(size: 64))
+                    .foregroundStyle(.blue.gradient)
+
+                VStack(spacing: 12) {
+                    Text(L10n.Onboarding.iCloudSyncTitle)
+                        .font(.largeTitle.bold())
+
+                    Text(L10n.Onboarding.iCloudSyncSubtitle)
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                }
+
+                Toggle(L10n.Onboarding.iCloudSyncToggle, isOn: $enableiCloudSync)
+                    .padding()
+                    .background(.thinMaterial)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .padding(.horizontal)
+
+                VStack(alignment: .leading, spacing: 12) {
+                    Text(L10n.Onboarding.iCloudSyncDescription)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.leading)
+                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        Label(L10n.Onboarding.iCloudSyncBenefit1, systemImage: "checkmark.circle.fill")
+                            .font(.subheadline)
+                            .foregroundStyle(.green)
+                        Label(L10n.Onboarding.iCloudSyncBenefit2, systemImage: "checkmark.circle.fill")
+                            .font(.subheadline)
+                            .foregroundStyle(.green)
+                        Label(L10n.Onboarding.iCloudSyncBenefit3, systemImage: "checkmark.circle.fill")
+                            .font(.subheadline)
+                            .foregroundStyle(.green)
+                    }
+                }
+                .padding()
+                .background(.thinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .padding(.horizontal)
+
+                Spacer(minLength: 16)
+
+                primaryButton(title: L10n.Common.continueButton) {
+                    saveiCloudSync()
+                }
+                .padding(.horizontal)
+            }
+            .padding()
+            .frame(maxWidth: .infinity, minHeight: 0)
+        }
+    }
 
     private var eulaPage: some View {
         ScrollView {
@@ -572,6 +636,13 @@ struct OnboardingView: View {
             }
         }
         withAnimation { currentPage = 5 }
+    }
+    
+    private func saveiCloudSync() {
+        deviceSettings.updateCloudSync { settings in
+            settings.iCloudSyncEnabled = enableiCloudSync
+        }
+        withAnimation { currentPage = 6 }
     }
 
     private func completeOnboarding() {

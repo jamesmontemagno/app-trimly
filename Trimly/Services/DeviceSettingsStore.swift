@@ -28,6 +28,10 @@ final class DeviceSettingsStore: ObservableObject {
         var lastBackgroundSyncAt: Date?
     }
     
+    struct CloudSyncSettings: Equatable {
+        var iCloudSyncEnabled: Bool
+    }
+    
     private enum Keys {
         static let primaryReminderTime = "device.reminders.primaryTime"
         static let secondaryReminderTime = "device.reminders.secondaryTime"
@@ -39,11 +43,13 @@ final class DeviceSettingsStore: ObservableObject {
         static let duplicateToleranceKg = "device.health.duplicateToleranceKg"
         static let lastImportAt = "device.health.lastImportAt"
         static let lastBackgroundSyncAt = "device.health.lastBackgroundSyncAt"
+        static let iCloudSyncEnabled = "device.cloudSync.enabled"
     }
     
     // MARK: - Published State
     @Published private(set) var reminders: RemindersSettings
     @Published private(set) var healthKit: HealthKitSettings
+    @Published private(set) var cloudSync: CloudSyncSettings
     
     var remindersPublisher: AnyPublisher<RemindersSettings, Never> {
         $reminders.eraseToAnyPublisher()
@@ -51,6 +57,10 @@ final class DeviceSettingsStore: ObservableObject {
     
     var healthKitPublisher: AnyPublisher<HealthKitSettings, Never> {
         $healthKit.eraseToAnyPublisher()
+    }
+    
+    var cloudSyncPublisher: AnyPublisher<CloudSyncSettings, Never> {
+        $cloudSync.eraseToAnyPublisher()
     }
     
     private let defaults: UserDefaults
@@ -72,6 +82,10 @@ final class DeviceSettingsStore: ObservableObject {
             lastImportAt: defaults.object(forKey: Keys.lastImportAt) as? Date,
             lastBackgroundSyncAt: defaults.object(forKey: Keys.lastBackgroundSyncAt) as? Date
         )
+        // Default to true to maintain backward compatibility with existing users
+        cloudSync = CloudSyncSettings(
+            iCloudSyncEnabled: defaults.object(forKey: Keys.iCloudSyncEnabled) as? Bool ?? true
+        )
     }
     
     // MARK: - Mutation
@@ -87,6 +101,13 @@ final class DeviceSettingsStore: ObservableObject {
         mutate(&copy)
         healthKit = copy
         persistHealthKit(copy)
+    }
+    
+    func updateCloudSync(_ mutate: (inout CloudSyncSettings) -> Void) {
+        var copy = cloudSync
+        mutate(&copy)
+        cloudSync = copy
+        persistCloudSync(copy)
     }
     
     // MARK: - Persistence Helpers
@@ -120,5 +141,9 @@ final class DeviceSettingsStore: ObservableObject {
         } else {
             defaults.removeObject(forKey: Keys.lastBackgroundSyncAt)
         }
+    }
+    
+    private func persistCloudSync(_ value: CloudSyncSettings) {
+        defaults.set(value.iCloudSyncEnabled, forKey: Keys.iCloudSyncEnabled)
     }
 }

@@ -53,6 +53,7 @@ final class DataManager: ObservableObject {
         } else {
             self.deviceSettings = DeviceSettingsStore()
         }
+        
         let schema = Schema([
             WeightEntry.self,
             Goal.self,
@@ -60,10 +61,19 @@ final class DataManager: ObservableObject {
             Achievement.self
         ])
         
+        // Determine CloudKit database setting based on user preference
+        let cloudKitDatabase: ModelConfiguration.CloudKitDatabase
+        if inMemory {
+            cloudKitDatabase = .none
+        } else {
+            // Use the device setting to determine if iCloud sync should be enabled
+            cloudKitDatabase = self.deviceSettings.cloudSync.iCloudSyncEnabled ? .automatic : .none
+        }
+        
         let modelConfiguration = ModelConfiguration(
             schema: schema,
             isStoredInMemoryOnly: inMemory,
-            cloudKitDatabase: inMemory ? .none : .automatic
+            cloudKitDatabase: cloudKitDatabase
         )
         
         do {

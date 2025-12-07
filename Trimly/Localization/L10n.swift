@@ -246,6 +246,8 @@ enum L10n {
 			LocalizedStringResource("health.import.recent.status", defaultValue: "\(count) samples imported")
 		}
 		static let recentImportHint = LocalizedStringResource("health.import.recent.hint", defaultValue: "You can rerun imports at any time—duplicates stay hidden.")
+		static let importRecentExplainer = LocalizedStringResource("health.import.recent.explainer", defaultValue: "Imports the last 30 days or since your last import—no date picking required.")
+		static let importDateRangeExplainer = LocalizedStringResource("health.import.range.explainer", defaultValue: "Uses the start/end dates above to pull your exact range.")
 		static let backgroundSyncTitle = LocalizedStringResource("health.sync.title", defaultValue: "Background Sync")
 			static let backgroundSyncDescription = LocalizedStringResource("health.sync.description", defaultValue: "Let TrimTally watch for new Health weight samples and keep things tidy.")
 		static let backgroundSyncToggle = LocalizedStringResource("health.sync.toggle", defaultValue: "Enable Background Sync")

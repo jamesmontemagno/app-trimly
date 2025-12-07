@@ -98,15 +98,16 @@ struct AddWeightEntryView: View {
 			#endif
 			.toolbar {
 				ToolbarItem(placement: .cancellationAction) {
-						Button(String(localized: L10n.Common.cancelButton)) {
+					Button(String(localized: L10n.Common.cancelButton)) {
 						dismiss()
 					}
 				}
                 
 				ToolbarItem(placement: .confirmationAction) {
-						Button(String(localized: L10n.Common.saveButton)) {
+					Button(String(localized: L10n.Common.saveButton)) {
 						saveEntry()
 					}
+					.tint(.accentColor)
 					.disabled(weightText.isEmpty)
 				}
 #if os(iOS)
@@ -115,6 +116,7 @@ struct AddWeightEntryView: View {
 					Button(String(localized: L10n.Common.doneButton)) {
 						focusedField = nil
 					}
+					.tint(.accentColor)
 				}
 #endif
 			}

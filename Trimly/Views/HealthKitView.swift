@@ -125,6 +125,9 @@ struct HealthKitView: View {
 							}
 							.disabled(healthKitService.isImporting || isImportingRecent)
 							.buttonStyle(.bordered)
+							Text(L10n.Health.importRecentExplainer)
+								.font(.caption)
+								.foregroundStyle(.secondary)
 							Button {
 								importData()
 							} label: {
@@ -133,6 +136,9 @@ struct HealthKitView: View {
 							}
 							.disabled(sampleCount == nil || sampleCount == 0 || healthKitService.isImporting)
 							.buttonStyle(.borderedProminent)
+							Text(L10n.Health.importDateRangeExplainer)
+								.font(.caption)
+								.foregroundStyle(.secondary)
 							if let lastImport = healthSettings.lastImportAt {
 								Divider().padding(.vertical, 8)
 								Text(L10n.Health.lastManualImport(lastImport.formatted(date: .abbreviated, time: .shortened)))

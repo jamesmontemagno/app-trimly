@@ -41,6 +41,20 @@ final class DeviceSettingsStoreTests: XCTestCase {
         XCTAssertEqual(reloadedHealth.lastBackgroundSyncAt, lastBackground)
     }
     
+    func testCloudSyncDefaultsToEnabled() {
+        let (_, store) = makeStore()
+        XCTAssertTrue(store.cloudSync.iCloudSyncEnabled, "iCloud sync should be enabled by default for backward compatibility")
+    }
+    
+    func testUpdateCloudSyncPersistsAcrossInstances() {
+        let (defaults, store) = makeStore()
+        store.updateCloudSync { settings in
+            settings.iCloudSyncEnabled = false
+        }
+        let reloaded = DeviceSettingsStore(userDefaults: defaults)
+        XCTAssertFalse(reloaded.cloudSync.iCloudSyncEnabled)
+    }
+    
     private func makeStore() -> (UserDefaults, DeviceSettingsStore) {
         let suiteName = "com.trimly.tests.devicesettings.\(UUID().uuidString)"
         guard let defaults = UserDefaults(suiteName: suiteName) else {

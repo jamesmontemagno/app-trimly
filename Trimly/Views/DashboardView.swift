@@ -173,52 +173,58 @@ struct DashboardView: View {
 	}
     
 	private var miniSparklineCard: some View {
-		VStack(alignment: .leading, spacing: 8) {
-			Text(L10n.Dashboard.lastSevenDays)
-				.font(.subheadline)
-				.foregroundStyle(.secondary)
-            
-			if let last7Days = last7DaysData, !last7Days.isEmpty {
-				let yDomain = sparklineYDomain(for: last7Days)
-				Chart {
-					ForEach(last7Days, id: \.date) { data in
-						LineMark(
-							x: .value("Date", data.date),
-							y: .value("Weight", data.weight)
-						)
-						.foregroundStyle(.blue.gradient)
-						.interpolationMethod(.catmullRom)
-                        
-						AreaMark(
-							x: .value("Date", data.date),
-							y: .value("Weight", data.weight)
-						)
-						.foregroundStyle(.blue.opacity(0.1).gradient)
-						.interpolationMethod(.catmullRom)
-						
-						PointMark(
-							x: .value("Date", data.date),
-							y: .value("Weight", data.weight)
-						)
-						.symbolSize(30)
-						.foregroundStyle(Color.blue)
+		Button {
+			showingCharts = true
+		} label: {
+			VStack(alignment: .leading, spacing: 8) {
+				Text(L10n.Dashboard.lastSevenDays)
+					.font(.subheadline)
+					.foregroundStyle(.secondary)
+
+				if let last7Days = last7DaysData, !last7Days.isEmpty {
+					let yDomain = sparklineYDomain(for: last7Days)
+					Chart {
+						ForEach(last7Days, id: \.date) { data in
+							LineMark(
+								x: .value("Date", data.date),
+								y: .value("Weight", data.weight)
+							)
+							.foregroundStyle(.blue.gradient)
+							.interpolationMethod(.catmullRom)
+
+							AreaMark(
+								x: .value("Date", data.date),
+								y: .value("Weight", data.weight)
+							)
+							.foregroundStyle(.blue.opacity(0.1).gradient)
+							.interpolationMethod(.catmullRom)
+							
+							PointMark(
+								x: .value("Date", data.date),
+								y: .value("Weight", data.weight)
+							)
+							.symbolSize(30)
+							.foregroundStyle(Color.blue)
+						}
 					}
-				}
-				.chartXAxis(.hidden)
-				.chartYAxis(.hidden)
-				.chartYScale(domain: yDomain)
-				.frame(height: 80)
-			} else {
-				Text(L10n.Dashboard.notEnoughData)
-					.font(.caption)
-					.foregroundStyle(.tertiary)
+					.chartXAxis(.hidden)
+					.chartYAxis(.hidden)
+					.chartYScale(domain: yDomain)
 					.frame(height: 80)
+				} else {
+					Text(L10n.Dashboard.notEnoughData)
+						.font(.caption)
+						.foregroundStyle(.tertiary)
+						.frame(height: 80)
+				}
 			}
+			.frame(maxWidth: .infinity, alignment: .leading)
+			.padding()
+			.background(.thinMaterial)
+			.clipShape(RoundedRectangle(cornerRadius: 16))
 		}
-		.frame(maxWidth: .infinity, alignment: .leading)
-		.padding()
-		.background(.thinMaterial)
-		.clipShape(RoundedRectangle(cornerRadius: 16))
+		.buttonStyle(.plain)
+		.accessibilityHint(Text("Opens charts"))
 	}
     
 	private var progressSummaryCard: some View {

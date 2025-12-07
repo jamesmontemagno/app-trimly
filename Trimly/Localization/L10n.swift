@@ -66,6 +66,7 @@ enum L10n {
 			static let cloudSyncChecking = LocalizedStringResource("onboarding.cloudSync.checking", defaultValue: "Looking for your previous TrimTally data...")
 			static let cloudSyncStillChecking = LocalizedStringResource("onboarding.cloudSync.stillChecking", defaultValue: "Still checking iCloud—tap Get Started to continue manually.")
 			static let cloudSyncFound = LocalizedStringResource("onboarding.cloudSync.found", defaultValue: "Found your history! Restoring it now...")
+			static let cloudSyncNoData = LocalizedStringResource("onboarding.cloudSync.noData", defaultValue: "No TrimTally data found in iCloud yet—start fresh and we'll sync new entries.")
 		
 		static let unitTitle = LocalizedStringResource("onboarding.unit.title", defaultValue: "Choose Your Unit")
 		static let unitSubtitle = LocalizedStringResource("onboarding.unit.subtitle", defaultValue: "Select your preferred weight unit")

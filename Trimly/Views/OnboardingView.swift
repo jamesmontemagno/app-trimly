@@ -207,7 +207,11 @@ struct OnboardingView: View {
     }
 
     private var shouldShowInitialCloudSyncBanner: Bool {
-        showInitialCloudSyncSuccess || dataManager.hasFinishedInitialCloudSync == false
+        showInitialCloudSyncSuccess || !dataManager.hasFinishedInitialCloudSync || showNoCloudDataBanner
+    }
+
+    private var showNoCloudDataBanner: Bool {
+        dataManager.hasFinishedInitialCloudSync && !dataManager.hasAnyEntries() && hasWaitedForInitialCloudSync
     }
 
     @ViewBuilder
@@ -226,6 +230,20 @@ struct OnboardingView: View {
             .background(.thinMaterial)
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .transition(.scale.combined(with: .opacity))
+        } else if showNoCloudDataBanner {
+            Label {
+                Text(L10n.Onboarding.cloudSyncNoData)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            } icon: {
+                Image(systemName: "icloud.slash")
+                    .foregroundStyle(.secondary)
+            }
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(.thinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .transition(.opacity)
         } else {
             VStack(spacing: 8) {
                 ProgressView()

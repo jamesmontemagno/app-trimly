@@ -43,6 +43,9 @@ struct AddWeightEntryView: View {
 									.keyboardType(.decimalPad)
 								#endif
 									.font(.system(size: 46, weight: .bold, design: .rounded))
+									.task {
+										focusedField = .weight
+									}
 									.frame(maxWidth: .infinity, alignment: .leading)
 									.focused($focusedField, equals: .weight)
 

@@ -117,14 +117,14 @@ struct ChartsView: View {
 				ForEach(data) { point in
 					LineMark(
 						x: .value("Date", point.date),
-						y: .value("Weight", point.weight)
+						y: .value("Weight", convertedWeight(point.weight))
 					)
 					.foregroundStyle(by: .value("Series", ChartSeries.weight.rawValue))
 					.interpolationMethod(.monotone)
                     
 					PointMark(
 						x: .value("Date", point.date),
-						y: .value("Weight", point.weight)
+						y: .value("Weight", convertedWeight(point.weight))
 					)
 					.symbol {
 						let isSelected = point.id == selectedPoint?.id
@@ -157,7 +157,7 @@ struct ChartsView: View {
 					ForEach(maData) { point in
 						LineMark(
 							x: .value("Date", point.date),
-							y: .value("MA", point.weight)
+							y: .value("MA", convertedWeight(point.weight))
 						)
 						.foregroundStyle(by: .value("Series", ChartSeries.movingAverage.rawValue))
 						.lineStyle(StrokeStyle(lineWidth: 2, dash: [5, 5]))
@@ -170,7 +170,7 @@ struct ChartsView: View {
 					ForEach(emaData) { point in
 						LineMark(
 							x: .value("Date", point.date),
-							y: .value("EMA", point.weight)
+							y: .value("EMA", convertedWeight(point.weight))
 						)
 						.foregroundStyle(by: .value("Series", ChartSeries.ema.rawValue))
 						.lineStyle(StrokeStyle(lineWidth: 2, dash: [2, 2]))
@@ -180,7 +180,7 @@ struct ChartsView: View {
                 
 				if let goal = dataManager.fetchActiveGoal() {
 					RuleMark(
-						y: .value("Goal", goal.targetWeightKg)
+						y: .value("Goal", convertedWeight(goal.targetWeightKg))
 					)
 					.foregroundStyle(goalLineColor)
 					.lineStyle(StrokeStyle(lineWidth: 2, dash: [10, 5]))
@@ -351,6 +351,11 @@ struct ChartsView: View {
 		let value = unit.convert(fromKg: kg)
 		let precision = dataManager.settings?.decimalPrecision ?? 1
 		return String(format: "%.*f", precision, value)
+	}
+
+	private func convertedWeight(_ kg: Double) -> Double {
+		guard let unit = dataManager.settings?.preferredUnit else { return kg }
+		return unit.convert(fromKg: kg)
 	}
 
 	@ViewBuilder

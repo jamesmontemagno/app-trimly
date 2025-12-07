@@ -15,7 +15,11 @@ struct DashboardView: View {
 	@State private var showingAddEntry = false
 	@State private var recentlySyncedToHealthKit = false
 	@State private var recentlySyncedFromICloud = false
-	@State private var showingCharts = false
+	let onShowCharts: () -> Void
+
+	init(onShowCharts: @escaping () -> Void = {}) {
+		self.onShowCharts = onShowCharts
+	}
     
 	var body: some View {
 		NavigationStack {
@@ -85,10 +89,6 @@ struct DashboardView: View {
 			.onChange(of: entryCount) { _, _ in
 				handleInitialCloudSyncState()
 			}
-		}
-		.navigationDestination(isPresented: $showingCharts) {
-			ChartsView()
-				.environmentObject(dataManager)
 		}
 	}
     
@@ -174,7 +174,7 @@ struct DashboardView: View {
     
 	private var miniSparklineCard: some View {
 		Button {
-			showingCharts = true
+			onShowCharts()
 		} label: {
 			VStack(alignment: .leading, spacing: 8) {
 				Text(L10n.Dashboard.lastSevenDays)
@@ -359,7 +359,7 @@ struct DashboardView: View {
     
 	private var trendSummaryCard: some View {
 		Button {
-			showingCharts = true
+			onShowCharts()
 		} label: {
 			VStack(spacing: 8) {
 				Text(L10n.Dashboard.trendTitle)

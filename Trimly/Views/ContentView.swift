@@ -34,9 +34,19 @@ struct ContentView: View {
 // MARK: - Main Tab View
 
 struct MainTabView: View {
+    enum Tab: Hashable {
+        case dashboard
+        case timeline
+        case charts
+        case achievements
+        case settings
+    }
+
+    @State private var selectedTab: Tab = .dashboard
+
     var body: some View {
-        TabView {
-            DashboardView()
+        TabView(selection: $selectedTab) {
+            DashboardView(onShowCharts: { selectedTab = .charts })
                 .tabItem {
                     Label {
                         Text(L10n.Tabs.today)
@@ -44,7 +54,8 @@ struct MainTabView: View {
                         Image(systemName: "house.fill")
                     }
                 }
-            
+                .tag(Tab.dashboard)
+			
             TimelineView()
                 .tabItem {
                     Label {
@@ -53,7 +64,8 @@ struct MainTabView: View {
                         Image(systemName: "list.bullet")
                     }
                 }
-            
+                .tag(Tab.timeline)
+			
             ChartsView()
                 .tabItem {
                     Label {
@@ -62,6 +74,7 @@ struct MainTabView: View {
                         Image(systemName: "chart.xyaxis.line")
                     }
                 }
+                .tag(Tab.charts)
 
             AchievementsView()
                 .tabItem {
@@ -71,7 +84,8 @@ struct MainTabView: View {
                         Image(systemName: "rosette")
                     }
                 }
-            
+                .tag(Tab.achievements)
+			
             SettingsView()
                 .tabItem {
                     Label {
@@ -80,6 +94,7 @@ struct MainTabView: View {
                         Image(systemName: "gear")
                     }
                 }
+                .tag(Tab.settings)
         }
     }
 }

@@ -285,22 +285,23 @@ struct DashboardView: View {
 					
 					Divider()
 					
-					HStack(spacing: 10) {
-						Text(String(localized: L10n.Dashboard.progressMetaStart(startDisplay)))
-							.font(.caption)
-							.foregroundStyle(.secondary)
-						Text(String(localized: L10n.Dashboard.progressMetaSeparator))
-							.font(.caption)
-							.foregroundStyle(.tertiary)
-						Text(String(localized: L10n.Dashboard.progressMetaTarget(targetDisplay)))
-							.font(.caption)
-							.foregroundStyle(.secondary)
-						Text(String(localized: L10n.Dashboard.progressMetaSeparator))
-							.font(.caption)
-							.foregroundStyle(.tertiary)
-						Text(String(localized: L10n.Dashboard.progressMetaStartDate(dateDisplay)))
-							.font(.caption)
-							.foregroundStyle(.secondary)
+					VStack(alignment: .leading, spacing: 6) {
+						HStack(spacing: 10) {
+							Text(String(localized: L10n.Dashboard.progressMetaStart(startDisplay)))
+								.font(.caption)
+								.foregroundStyle(.secondary)
+							Text(String(localized: L10n.Dashboard.progressMetaSeparator))
+								.font(.caption)
+								.foregroundStyle(.tertiary)
+							Text(String(localized: L10n.Dashboard.progressMetaTarget(targetDisplay)))
+								.font(.caption)
+								.foregroundStyle(.secondary)
+						}
+						HStack(spacing: 10) {
+							Text(String(localized: L10n.Dashboard.progressMetaStartDate(dateDisplay)))
+								.font(.caption)
+								.foregroundStyle(.secondary)
+						}
 					}
 				}
 			} else {

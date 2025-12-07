@@ -22,6 +22,7 @@ struct DashboardView: View {
 				VStack(spacing: 24) {
 					todayWeightCard
 					miniSparklineCard
+					monthlyCalendarCard
 					progressSummaryCard
                     
 					if shouldShowConsistency {
@@ -469,6 +470,25 @@ struct DashboardView: View {
 		.padding()
 		.background(.blue.opacity(0.1))
 		.clipShape(RoundedRectangle(cornerRadius: 16))
+	}
+	
+	private var monthlyCalendarCard: some View {
+		VStack(alignment: .leading, spacing: 8) {
+			Text(L10n.Dashboard.monthlyCalendar)
+				.font(.subheadline)
+				.foregroundStyle(.secondary)
+			
+			MonthCalendarView(datesWithEntries: datesWithEntries)
+		}
+		.frame(maxWidth: .infinity, alignment: .leading)
+		.padding()
+		.background(.thinMaterial)
+		.clipShape(RoundedRectangle(cornerRadius: 16))
+	}
+	
+	private var datesWithEntries: Set<Date> {
+		let entries = dataManager.fetchAllEntries()
+		return Set(entries.map { $0.normalizedDate })
 	}
 }
 

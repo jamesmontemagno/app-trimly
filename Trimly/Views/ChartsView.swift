@@ -20,6 +20,8 @@ struct ChartsView: View {
 	@State private var showingSettings = false
 	@State private var showingAddEntry = false
 	@State private var selectedPoint: ChartDataPoint?
+	@State private var showingMAInfo = false
+	@State private var showingEMAInfo = false
 
 	private let tooltipFormatter: DateFormatter = {
 		let formatter = DateFormatter()
@@ -228,6 +230,16 @@ struct ChartsView: View {
 		.padding()
 		.background(.thinMaterial)
 		.clipShape(RoundedRectangle(cornerRadius: 16))
+		.alert(String(localized: L10n.Charts.maInfoTitle), isPresented: $showingMAInfo) {
+			Button(String(localized: L10n.Common.okButton), role: .cancel) {}
+		} message: {
+			Text(L10n.Charts.maInfoDescription)
+		}
+		.alert(String(localized: L10n.Charts.emaInfoTitle), isPresented: $showingEMAInfo) {
+			Button(String(localized: L10n.Common.okButton), role: .cancel) {}
+		} message: {
+			Text(L10n.Charts.emaInfoDescription)
+		}
 	}
     
 	private var legend: some View {
@@ -235,14 +247,37 @@ struct ChartsView: View {
 			LegendItem(color: weightLinePrimary, label: String(localized: L10n.Charts.legendWeight), style: .solid)
             
 			if dataManager.settings?.showMovingAverage == true {
-				LegendItem(color: movingAverageColor, label: String(localized: L10n.Charts.legendMovingAverage), style: .dashed)
+				legendItemWithInfo(
+					color: movingAverageColor,
+					label: String(localized: L10n.Charts.legendMovingAverage),
+					style: .dashed,
+					onInfo: { showingMAInfo = true }
+				)
 			}
             
 			if dataManager.settings?.showEMA == true {
-				LegendItem(color: emaLineColor, label: String(localized: L10n.Charts.legendEMA), style: .dotted)
+				legendItemWithInfo(
+					color: emaLineColor,
+					label: String(localized: L10n.Charts.legendEMA),
+					style: .dotted,
+					onInfo: { showingEMAInfo = true }
+				)
 			}
 		}
 		.font(.caption)
+	}
+
+	private func legendItemWithInfo(color: Color, label: String, style: LineStyle, onInfo: @escaping () -> Void) -> some View {
+		HStack(spacing: 6) {
+			LegendItem(color: color, label: label, style: style)
+			Button(action: onInfo) {
+				Image(systemName: "info.circle")
+					.font(.caption)
+					.foregroundStyle(.secondary)
+			}
+			.accessibilityLabel(Text(label))
+			.accessibilityHint(Text(L10n.Charts.legendInfoHint))
+		}
 	}
     
 	private func statsView(stats: ChartStats) -> some View {

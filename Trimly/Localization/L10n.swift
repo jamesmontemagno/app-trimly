@@ -179,6 +179,7 @@ enum L10n {
 		static let syncedToHealthKit = LocalizedStringResource("dashboard.syncedToHealthKit", defaultValue: "Also saved to Health")
 		static let syncedFromICloud = LocalizedStringResource("dashboard.syncedFromICloud", defaultValue: "Synced your history from iCloud")
 		static let icloudSyncLoading = LocalizedStringResource("dashboard.icloudSyncLoading", defaultValue: "Loading your history from iCloud...")
+		static let monthlyCalendar = LocalizedStringResource("dashboard.monthlyCalendar", defaultValue: "This Month")
 	}
 
 	enum Reminders {

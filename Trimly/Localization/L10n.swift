@@ -337,6 +337,12 @@ enum L10n {
 			LocalizedStringResource("settings.consistency.window.subtitle", defaultValue: "Currently \(days) days.")
 		}
 		static let dataPrivacyTitle = LocalizedStringResource("settings.section.dataPrivacy.title", defaultValue: "Data & Privacy")
+		static let iCloudSyncTitle = LocalizedStringResource("settings.data.iCloudSync.title", defaultValue: "iCloud Sync")
+		static let iCloudSyncSubtitle = LocalizedStringResource("settings.data.iCloudSync.subtitle", defaultValue: "Sync data across all your devices.")
+		static let iCloudSyncEnabled = LocalizedStringResource("settings.data.iCloudSync.enabled", defaultValue: "On")
+		static let iCloudSyncDisabled = LocalizedStringResource("settings.data.iCloudSync.disabled", defaultValue: "Off")
+		static let iCloudSyncRestartTitle = LocalizedStringResource("settings.data.iCloudSync.restart.title", defaultValue: "Restart Required")
+		static let iCloudSyncRestartMessage = LocalizedStringResource("settings.data.iCloudSync.restart.message", defaultValue: "Please restart TrimTally for this change to take effect. Your data is securely encrypted and only accessible from your devices.")
 		static let exportTitle = LocalizedStringResource("settings.data.export.title", defaultValue: "Export Data")
 		static let exportSubtitle = LocalizedStringResource("settings.data.export.subtitle", defaultValue: "Create a CSV copy of your entries.")
 		static let deleteAllTitle = LocalizedStringResource("settings.data.delete.title", defaultValue: "Delete All Data")

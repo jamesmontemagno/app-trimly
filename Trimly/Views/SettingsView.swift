@@ -24,6 +24,7 @@ struct SettingsView: View {
 	@State private var exportedData = ""
 	@State private var showingRestoreSuccessAlert = false
 	@State private var showingRestoreNotFoundAlert = false
+	@State private var showingRestartRequiredAlert = false
 #if DEBUG
 	@State private var showingSampleDataAlert = false
 	@State private var sampleDataAlertMessage = ""
@@ -263,6 +264,25 @@ struct SettingsView: View {
 					}
 					
 					settingsSection(title: String(localized: L10n.Settings.dataPrivacyTitle)) {
+						settingsRow(
+							icon: "icloud",
+							title: String(localized: L10n.Settings.iCloudSyncTitle),
+							subtitle: String(localized: L10n.Settings.iCloudSyncSubtitle)
+						) {
+							Toggle("", isOn: Binding(
+								get: { deviceSettings.cloudSync.iCloudSyncEnabled },
+								set: { newValue in
+									deviceSettings.updateCloudSync { settings in
+										settings.iCloudSyncEnabled = newValue
+									}
+									showingRestartRequiredAlert = true
+								}
+							))
+							.labelsHidden()
+						}
+						
+						sectionDivider()
+						
 						Button {
 							if storeManager.isPro {
 								exportData()
@@ -379,6 +399,11 @@ struct SettingsView: View {
 				Button(String(localized: L10n.Common.okButton), role: .cancel) { }
 			} message: {
 				Text(L10n.Settings.restoreNotFoundMessage)
+			}
+			.alert(String(localized: L10n.Settings.iCloudSyncRestartTitle), isPresented: $showingRestartRequiredAlert) {
+				Button(String(localized: L10n.Common.okButton), role: .cancel) { }
+			} message: {
+				Text(L10n.Settings.iCloudSyncRestartMessage)
 			}
 #if DEBUG
 			.alert(String(localized: L10n.Debug.sampleDataTitle), isPresented: $showingSampleDataAlert) {

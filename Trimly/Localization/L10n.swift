@@ -58,6 +58,7 @@ enum L10n {
 		static let stepStart = LocalizedStringResource("onboarding.step.start", defaultValue: "Start")
 		static let stepGoal = LocalizedStringResource("onboarding.step.goal", defaultValue: "Goal")
 		static let stepReminders = LocalizedStringResource("onboarding.step.reminders", defaultValue: "Reminders")
+		static let stepCloudSync = LocalizedStringResource("onboarding.step.cloudSync", defaultValue: "iCloud Sync")
 		static let stepFinish = LocalizedStringResource("onboarding.step.finish", defaultValue: "Finish")
 		
 		static let welcomeTitle = LocalizedStringResource("onboarding.welcome.title", defaultValue: "Welcome to TrimTally")
@@ -89,6 +90,14 @@ enum L10n {
 		static let remindersSubtitle = LocalizedStringResource("onboarding.reminder.subtitle", defaultValue: "Stay consistent with gentle reminders")
 		static let reminderToggle = LocalizedStringResource("onboarding.reminder.toggle", defaultValue: "Enable Daily Reminder")
 		static let reminderHint = LocalizedStringResource("onboarding.reminder.hint", defaultValue: "We'll remind you at 9:00 AM each day")
+		
+		static let iCloudSyncTitle = LocalizedStringResource("onboarding.iCloudSync.title", defaultValue: "iCloud Sync")
+		static let iCloudSyncSubtitle = LocalizedStringResource("onboarding.iCloudSync.subtitle", defaultValue: "Keep your data in sync across all your devices")
+		static let iCloudSyncToggle = LocalizedStringResource("onboarding.iCloudSync.toggle", defaultValue: "Enable iCloud Sync")
+		static let iCloudSyncDescription = LocalizedStringResource("onboarding.iCloudSync.description", defaultValue: "Your weight data is securely encrypted and synced to your private iCloud account. Only your devices can access your data—Apple cannot read it.")
+		static let iCloudSyncBenefit1 = LocalizedStringResource("onboarding.iCloudSync.benefit1", defaultValue: "Automatic backup and restore")
+		static let iCloudSyncBenefit2 = LocalizedStringResource("onboarding.iCloudSync.benefit2", defaultValue: "Sync across iPhone, iPad, and Mac")
+		static let iCloudSyncBenefit3 = LocalizedStringResource("onboarding.iCloudSync.benefit3", defaultValue: "End-to-end encrypted")
 		
 		static let eulaTitle = LocalizedStringResource("onboarding.eula.title", defaultValue: "Terms & Privacy")
 		static let eulaSubtitle = LocalizedStringResource("onboarding.eula.subtitle", defaultValue: "By continuing, you agree to our Terms of Service and Privacy Policy")

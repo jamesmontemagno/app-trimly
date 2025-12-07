@@ -487,6 +487,9 @@ struct DashboardView: View {
 	}
 	
 	private var datesWithEntries: Set<Date> {
+		// Fetches all entries and creates a Set of normalized dates for O(1) lookup.
+		// This is re-evaluated only when dataManager publishes changes, which is
+		// the correct SwiftUI pattern for @EnvironmentObject derived data.
 		let entries = dataManager.fetchAllEntries()
 		return Set(entries.map { $0.normalizedDate })
 	}

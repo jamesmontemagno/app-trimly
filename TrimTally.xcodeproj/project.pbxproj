@@ -41,7 +41,6 @@
 		B37935DD2EDA544E00F0BEB1 /* Exceptions for "Trimly" folder in "TrimTally" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				LaunchScreen.storyboard,
 			);
 			target = B39227552ED9703A00C14B08 /* TrimTally */;
 		};

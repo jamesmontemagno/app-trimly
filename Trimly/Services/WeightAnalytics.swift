@@ -18,7 +18,8 @@ final class WeightAnalytics {
         mode: DailyAggregationMode
     ) -> [Date: Double] {
         let visibleEntries = entries.filter { !$0.isHidden }
-        let groupedByDay = Dictionary(grouping: visibleEntries) { $0.normalizedDate }
+        // Use dynamic normalization to handle timezone changes correctly
+        let groupedByDay = Dictionary(grouping: visibleEntries) { WeightEntry.normalizeDate($0.timestamp) }
         
         var result: [Date: Double] = [:]
         

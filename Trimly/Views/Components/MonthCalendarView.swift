@@ -13,8 +13,7 @@ struct MonthCalendarView: View {
 	let weightTextProvider: (Date) -> String?
 
 	@State private var currentMonth = Date()
-	@State private var selectedDate: Date?
-	@State private var showingPopover = false
+	@State private var selectedDate: IdentifiableDate?
 
 	private let calendar = Calendar.current
 	private let daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"]
@@ -59,11 +58,11 @@ struct MonthCalendarView: View {
 				}
 			}
 		}
-			.popover(isPresented: $showingPopover, attachmentAnchor: .rect(.bounds), arrowEdge: .bottom) {
+			.popover(item: $selectedDate, attachmentAnchor: .rect(.bounds), arrowEdge: .bottom) { selection in
 				Group {
-					if let selectedDate, let weightText = weightTextProvider(WeightEntry.normalizeDate(selectedDate)) {
+					if let weightText = weightTextProvider(WeightEntry.normalizeDate(selection.date)) {
 						VStack(alignment: .leading, spacing: 8) {
-							Text(dateString(selectedDate))
+							Text(dateString(selection.date))
 								.font(.subheadline.weight(.semibold))
 							Text(weightText)
 								.font(.title3.bold())
@@ -126,8 +125,7 @@ struct MonthCalendarView: View {
 
 	private func handleTap(on date: Date) {
 		guard hasEntry(for: date) else { return }
-		selectedDate = date
-		showingPopover = true
+		selectedDate = IdentifiableDate(date: date)
 	}
 
 	private func dateString(_ date: Date) -> String {

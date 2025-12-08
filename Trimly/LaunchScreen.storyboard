@@ -36,8 +36,8 @@
                             <constraint firstItem="brand-label" firstAttribute="top" secondItem="logo-image" secondAttribute="bottom" constant="20" id="label-top"/>
                             <constraint firstItem="logo-image" firstAttribute="height" constant="160" id="logo-height"/>
                             <constraint firstItem="logo-image" firstAttribute="width" constant="160" id="logo-width"/>
-                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="640" id="min-height"/>
                         </constraints>
+
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -15,6 +15,7 @@ struct AchievementsView: View {
 	@StateObject private var achievementService = AchievementService()
 	@State private var selectedSnapshot: AchievementSnapshot?
 	@State private var showingAddEntry = false
+	@State private var showingPaywall = false
 	
 	var body: some View {
 		NavigationStack {
@@ -24,7 +25,11 @@ struct AchievementsView: View {
 						Section {
 							ForEach(group.snapshots) { snapshot in
 								AchievementCard(snapshot: snapshot, diagnostics: achievementService.diagnostics) {
-									selectedSnapshot = snapshot
+									if snapshot.requiresPro {
+										showingPaywall = true
+									} else {
+										selectedSnapshot = snapshot
+									}
 								}
 							}
 						} header: {
@@ -68,6 +73,9 @@ struct AchievementsView: View {
 			.sheet(isPresented: $showingAddEntry) {
 				AddWeightEntryView()
 			}
+			.sheet(isPresented: $showingPaywall) {
+				PaywallView()
+			}
 			.onAppear(perform: refresh)
 			.onReceive(dataManager.objectWillChange) { _ in
 				refresh()
@@ -110,6 +118,10 @@ struct AchievementsView: View {
 		.frame(maxWidth: .infinity, alignment: .leading)
 		.background(.thinMaterial)
 		.clipShape(RoundedRectangle(cornerRadius: 16))
+		.contentShape(RoundedRectangle(cornerRadius: 16))
+		.onTapGesture {
+			showingPaywall = true
+		}
 	}
 	
 	private func refresh() {

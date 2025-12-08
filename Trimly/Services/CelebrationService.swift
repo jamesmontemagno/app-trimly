@@ -195,6 +195,14 @@ final class CelebrationService: ObservableObject {
         
         guard totalChange != 0 else { return nil }
         
+        // Calculate progress only if moving in the correct direction
+        // For weight loss (totalChange < 0): currentChange should also be negative (losing weight)
+        // For weight gain (totalChange > 0): currentChange should also be positive (gaining weight)
+        let isLosingWeight = totalChange < 0 && currentChange <= 0
+        let isGainingWeight = totalChange > 0 && currentChange >= 0
+        let movingInCorrectDirection = isLosingWeight || isGainingWeight
+        guard movingInCorrectDirection else { return nil }
+        
         let progress = abs(currentChange / totalChange)
         
         // Check milestones

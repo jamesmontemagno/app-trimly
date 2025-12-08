@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B3F3F5B22F0C3C0600F43F26 /* Trimly/LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B3F3F5B12F0C3C0600F43F26 /* Trimly/LaunchScreen.storyboard */; platformFilter = ios; };
+		B3F3F5B42F0C3C0600F43F26 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3F3F5B32F0C3C0600F43F26 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +34,7 @@
 		B39227652ED9703D00C14B08 /* TrimTallyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrimTallyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B392276F2ED9703D00C14B08 /* TrimTallyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrimTallyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3F3F5B12F0C3C0600F43F26 /* Trimly/LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Trimly/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		B3F3F5B32F0C3C0600F43F26 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Trimly/Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -48,6 +50,10 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		B39227582ED9703A00C14B08 /* Trimly */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			children = (
+				B3F3F5B12F0C3C0600F43F26 /* Trimly/LaunchScreen.storyboard */,
+				B3F3F5B32F0C3C0600F43F26 /* Assets.xcassets */,
+			);
 			exceptions = (
 				B37935DD2EDA544E00F0BEB1 /* Exceptions for "Trimly" folder in "TrimTally" target */,
 			);
@@ -94,7 +100,6 @@
 		B352DB8D2EDA02D2004E4B46 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
-				B3F3F5B12F0C3C0600F43F26 /* Trimly/LaunchScreen.storyboard */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -244,6 +249,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B3F3F5B22F0C3C0600F43F26 /* Trimly/LaunchScreen.storyboard in Resources */,
+				B3F3F5B42F0C3C0600F43F26 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

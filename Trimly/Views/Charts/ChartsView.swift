@@ -428,19 +428,6 @@ struct ChartsView: View {
 				)
 				.foregroundStyle(.purple.opacity(0.6))
 				.lineStyle(StrokeStyle(lineWidth: 2))
-				.annotation(position: .top, alignment: .center) {
-					VStack(spacing: 2) {
-						Image(systemName: "flag.fill")
-							.font(.caption2)
-							.foregroundStyle(.purple)
-						Text("Goal Start")
-							.font(.caption2)
-							.foregroundStyle(.purple)
-					}
-					.padding(6)
-					.background(.purple.opacity(0.1))
-					.clipShape(RoundedRectangle(cornerRadius: 6))
-				}
 			}
 		}
 	}

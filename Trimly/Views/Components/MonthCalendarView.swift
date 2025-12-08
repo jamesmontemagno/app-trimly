@@ -10,9 +10,12 @@ import SwiftUI
 /// A compact calendar view showing the current month with indicators for days with weight entries
 struct MonthCalendarView: View {
 	let datesWithEntries: Set<Date>
-	
+	let weightTextProvider: (Date) -> String?
+
 	@State private var currentMonth = Date()
-	
+	@State private var selectedDate: Date?
+	@State private var showingPopover = false
+
 	private let calendar = Calendar.current
 	private let daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"]
 	
@@ -45,7 +48,8 @@ struct MonthCalendarView: View {
 							date: date,
 							isCurrentMonth: isInCurrentMonth(date),
 							hasEntry: hasEntry(for: date),
-							isToday: isToday(date)
+							isToday: isToday(date),
+							didTap: { handleTap(on: date) }
 						)
 					} else {
 						// Empty cell for padding
@@ -55,6 +59,22 @@ struct MonthCalendarView: View {
 				}
 			}
 		}
+			.popover(isPresented: $showingPopover, attachmentAnchor: .rect(.bounds), arrowEdge: .bottom) {
+				if let selectedDate, let weightText = weightTextProvider(WeightEntry.normalizeDate(selectedDate)) {
+					VStack(alignment: .leading, spacing: 8) {
+						Text(dateString(selectedDate))
+							.font(.subheadline.weight(.semibold))
+						Text(weightText)
+							.font(.title3.bold())
+					}
+					.padding()
+					.frame(maxWidth: 220)
+				} else {
+					Text("No entry for this day")
+						.font(.subheadline)
+						.padding()
+				}
+			}
 	}
 	
 	private var monthYearString: String {
@@ -100,6 +120,19 @@ struct MonthCalendarView: View {
 	private func isToday(_ date: Date) -> Bool {
 		calendar.isDateInToday(date)
 	}
+
+	private func handleTap(on date: Date) {
+		guard hasEntry(for: date) else { return }
+		selectedDate = date
+		showingPopover = true
+	}
+
+	private func dateString(_ date: Date) -> String {
+		let formatter = DateFormatter()
+		formatter.dateStyle = .medium
+		formatter.timeStyle = .none
+		return formatter.string(from: date)
+	}
 }
 
 private struct DayCell: View {
@@ -107,57 +140,81 @@ private struct DayCell: View {
 	let isCurrentMonth: Bool
 	let hasEntry: Bool
 	let isToday: Bool
+	let didTap: () -> Void
 	
 	private let calendar = Calendar.current
 	
 	var body: some View {
-		ZStack {
-			// Background circle for today
-			if isToday {
-				Circle()
-					.strokeBorder(Color.blue, lineWidth: 1.5)
-					.frame(width: 28, height: 28)
-			}
-			
-			// Day number
-			Text("\(calendar.component(.day, from: date))")
-				.font(.caption)
-				.foregroundStyle(isCurrentMonth ? .primary : .tertiary)
-				.frame(width: 28, height: 28)
-			
-			// Indicator dot for entries
-			if hasEntry && isCurrentMonth {
-				VStack {
-					Spacer()
+		Button(action: didTap) {
+			ZStack {
+				if isToday {
 					Circle()
-						.fill(Color.green)
-						.frame(width: 4, height: 4)
-						.offset(y: 8)
+						.strokeBorder(Color.blue, lineWidth: 1.5)
+						.frame(width: 28, height: 28)
 				}
-				.frame(height: 28)
+
+				Text("\(calendar.component(.day, from: date))")
+					.font(.caption)
+					.foregroundStyle(isCurrentMonth ? .primary : .tertiary)
+					.frame(width: 28, height: 28)
+
+				if hasEntry && isCurrentMonth {
+					VStack {
+						Spacer()
+						Circle()
+							.fill(Color.green)
+							.frame(width: 4, height: 4)
+							.offset(y: 8)
+					}
+					.frame(height: 28)
+				}
 			}
 		}
+		.buttonStyle(.plain)
 		.frame(height: 28)
 	}
 }
 
 #Preview {
-	let calendar = Calendar.current
-	let today = Date()
-	var dates = Set<Date>()
-	
-	// Add some sample dates
-	for day in [0, 1, 3, 5, 7, 10, 12, 15, 18, 20, 25] {
-		if let date = calendar.date(byAdding: .day, value: -day, to: today) {
-			dates.insert(WeightEntry.normalizeDate(date))
+	VStack {
+		MonthCalendarView(
+			datesWithEntries: MonthCalendarPreviewData.sampleDates,
+			weightTextProvider: { MonthCalendarPreviewData.sampleWeights[$0] }
+		)
+		.padding()
+		.background(.thinMaterial)
+		.clipShape(RoundedRectangle(cornerRadius: 16))
+		.padding()
+	}
+}
+
+private enum MonthCalendarPreviewData {
+	static let sampleDates: Set<Date> = {
+		let calendar = Calendar.current
+		let today = Date()
+		var dates = Set<Date>()
+		
+		for day in [0, 1, 3, 5, 7, 10, 12, 15, 18, 20, 25] {
+			if let date = calendar.date(byAdding: .day, value: -day, to: today) {
+				dates.insert(WeightEntry.normalizeDate(date))
+			}
 		}
-	}
-	
-	return VStack {
-		MonthCalendarView(datesWithEntries: dates)
-			.padding()
-			.background(.thinMaterial)
-			.clipShape(RoundedRectangle(cornerRadius: 16))
-			.padding()
-	}
+		return dates
+	}()
+
+	static let sampleWeights: [Date: String] = {
+		let calendar = Calendar.current
+		let today = Date()
+		var weights = [Date: String]()
+		let values: [(Int, Double)] = [
+			(0, 72.4), (1, 72.0), (3, 71.8), (5, 72.1), (7, 71.5),
+			(10, 71.3), (12, 71.6), (15, 71.0), (18, 70.9), (20, 70.7), (25, 70.5)
+		]
+		for (day, weight) in values {
+			if let date = calendar.date(byAdding: .day, value: -day, to: today) {
+				weights[WeightEntry.normalizeDate(date)] = String(format: "%.1f kg", weight)
+			}
+		}
+		return weights
+	}()
 }

@@ -15,6 +15,7 @@ struct DashboardView: View {
 	@State private var showingAddEntry = false
 	@State private var recentlySyncedToHealthKit = false
 	@State private var recentlySyncedFromICloud = false
+	@State private var selectedSparklineDate: Date?
 	let onShowCharts: () -> Void
 
 	init(onShowCharts: @escaping () -> Void = {}) {
@@ -57,7 +58,7 @@ struct DashboardView: View {
 				}
 			}
 			.sheet(isPresented: $showingAddEntry, onDismiss: {
-				if let latest = todayEntries?.max(by: { $0.timestamp < $1.timestamp }), latest.source == .healthKit {
+if let latest = todayEntries?.max(by: { $0.timestamp < $1.timestamp }), latest.source == .healthKit {
 					recentlySyncedToHealthKit = true
 					DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
 						recentlySyncedToHealthKit = false
@@ -173,58 +174,99 @@ struct DashboardView: View {
 	}
     
 	private var miniSparklineCard: some View {
-		Button {
-			onShowCharts()
-		} label: {
-			VStack(alignment: .leading, spacing: 8) {
-				Text(L10n.Dashboard.lastSevenDays)
-					.font(.subheadline)
-					.foregroundStyle(.secondary)
-
-				if let last7Days = last7DaysData, !last7Days.isEmpty {
-					let yDomain = sparklineYDomain(for: last7Days)
-					Chart {
-						ForEach(last7Days, id: \.date) { data in
-							LineMark(
-								x: .value("Date", data.date),
-								y: .value("Weight", data.weight)
-							)
-							.foregroundStyle(.blue.gradient)
-							.interpolationMethod(.catmullRom)
-
-							AreaMark(
-								x: .value("Date", data.date),
-								y: .value("Weight", data.weight)
-							)
-							.foregroundStyle(.blue.opacity(0.1).gradient)
-							.interpolationMethod(.catmullRom)
-							
-							PointMark(
-								x: .value("Date", data.date),
-								y: .value("Weight", data.weight)
-							)
-							.symbolSize(30)
-							.foregroundStyle(Color.blue)
-						}
+		VStack(alignment: .leading, spacing: 8) {
+			HStack {
+				Button {
+					onShowCharts()
+				} label: {
+					HStack(spacing: 6) {
+						Text(L10n.Dashboard.lastSevenDays)
+							.font(.subheadline)
+						Image(systemName: "arrow.up.right.square")
+							.font(.caption2)
 					}
-					.chartXAxis(.hidden)
-					.chartYAxis(.hidden)
-					.chartYScale(domain: yDomain)
-					.frame(height: 80)
-				} else {
-					Text(L10n.Dashboard.notEnoughData)
-						.font(.caption)
-						.foregroundStyle(.tertiary)
-						.frame(height: 80)
 				}
+				.buttonStyle(.plain)
+				.foregroundStyle(.secondary)
+                
+				Spacer()
 			}
-			.frame(maxWidth: .infinity, alignment: .leading)
-			.padding()
-			.background(.thinMaterial)
-			.clipShape(RoundedRectangle(cornerRadius: 16))
+
+			if let last7Days = last7DaysData, !last7Days.isEmpty {
+				let yDomain = sparklineYDomain(for: last7Days)
+				Chart {
+					ForEach(last7Days, id: \.date) { data in
+						LineMark(
+x: .value("Date", data.date),
+y: .value("Weight", data.weight)
+)
+						.foregroundStyle(.blue.gradient)
+						.interpolationMethod(.catmullRom)
+
+						AreaMark(
+x: .value("Date", data.date),
+y: .value("Weight", data.weight)
+)
+						.foregroundStyle(.blue.opacity(0.1).gradient)
+						.interpolationMethod(.catmullRom)
+						
+						PointMark(
+x: .value("Date", data.date),
+y: .value("Weight", data.weight)
+)
+						.symbolSize(30)
+						.foregroundStyle(Color.blue)
+					}
+                    
+					if let selected = selectedSparklineDisplay {
+						RuleMark(x: .value("Selected", selected.date))
+							.lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4]))
+							.foregroundStyle(.secondary.opacity(0.4))
+						PointMark(
+x: .value("Selected", selected.date),
+y: .value("Weight", selected.weight)
+)
+						.symbolSize(70)
+						.foregroundStyle(.blue)
+					}
+				}
+				.chartXAxis(.hidden)
+				.chartYAxis(.hidden)
+				.chartYScale(domain: yDomain)
+				.chartXSelection(value: $selectedSparklineDate)
+				.frame(height: 80)
+				.popover(
+isPresented: Binding(
+get: { selectedSparklineDisplay != nil },
+set: { isPresented in
+if isPresented == false {
+selectedSparklineDate = nil
+}
+}
+)
+) {
+					if let selected = selectedSparklineDisplay {
+						VStack(alignment: .leading, spacing: 6) {
+							Text(selected.date.formatted(date: .abbreviated, time: .omitted))
+								.font(.caption)
+								.foregroundStyle(.secondary)
+							Text(selected.displayText)
+								.font(.headline)
+						}
+						.padding()
+					}
+				}
+			} else {
+				Text(L10n.Dashboard.notEnoughData)
+					.font(.caption)
+					.foregroundStyle(.tertiary)
+					.frame(height: 80)
+			}
 		}
-		.buttonStyle(.plain)
-		.accessibilityHint(Text("Opens charts"))
+		.frame(maxWidth: .infinity, alignment: .leading)
+		.padding()
+		.background(.thinMaterial)
+		.clipShape(RoundedRectangle(cornerRadius: 16))
 	}
     
 	private var progressSummaryCard: some View {
@@ -422,6 +464,14 @@ struct DashboardView: View {
 		return Array(last7)
 	}
 
+	private var selectedSparklineDisplay: (date: Date, weight: Double, displayText: String)? {
+		guard let selectedDate = selectedSparklineDate,
+				let last7Days = last7DaysData else { return nil }
+		let normalizedSelection = WeightEntry.normalizeDate(selectedDate)
+		guard let match = last7Days.first(where: { WeightEntry.normalizeDate($0.date) == normalizedSelection }) else { return nil }
+		return (match.date, match.weight, displayValue(match.weight))
+	}
+
 	private func sparklineYDomain(for data: [(date: Date, weight: Double)]) -> ClosedRange<Double> {
 		let weights = data.map { $0.weight }
 		guard let minWeight = weights.min(), let maxWeight = weights.max() else {
@@ -439,7 +489,7 @@ struct DashboardView: View {
 		guard let unit = dataManager.settings?.preferredUnit else {
 			return String(format: "%.1f kg", kg)
 		}
-		
+
 		let value = unit.convert(fromKg: kg)
 		let precision = dataManager.settings?.decimalPrecision ?? 1
 		return String(format: "%.*f %@", precision, value, unit.symbol as NSString)
@@ -449,7 +499,7 @@ struct DashboardView: View {
 		guard let unit = dataManager.settings?.preferredUnit else {
 			return String(format: "%.1f kg", kg)
 		}
-		
+
 		let value = unit.convert(fromKg: kg)
 		let precision = dataManager.settings?.decimalPrecision ?? 1
 		return String(format: "%.*f %@", precision, value, unit.symbol as NSString)
@@ -496,7 +546,10 @@ struct DashboardView: View {
 				.font(.subheadline)
 				.foregroundStyle(.secondary)
 			
-			MonthCalendarView(datesWithEntries: datesWithEntries)
+			MonthCalendarView(
+datesWithEntries: datesWithEntries,
+weightTextProvider: { date in dailyDisplayWeights[WeightEntry.normalizeDate(date)] }
+)
 		}
 		.frame(maxWidth: .infinity, alignment: .leading)
 		.padding()
@@ -510,6 +563,14 @@ struct DashboardView: View {
 		// the correct SwiftUI pattern for @EnvironmentObject derived data.
 		let entries = dataManager.fetchAllEntries()
 		return Set(entries.map { $0.normalizedDate })
+	}
+
+	private var dailyDisplayWeights: [Date: String] {
+		let entries = dataManager.getDailyWeights()
+		return entries.reduce(into: [Date: String]()) { dict, item in
+			let normalized = WeightEntry.normalizeDate(item.date)
+			dict[normalized] = displayValue(item.weight)
+		}
 	}
 }
 

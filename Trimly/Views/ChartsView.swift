@@ -22,6 +22,7 @@ struct ChartsView: View {
 	@State private var selectedPoint: ChartDataPoint?
 	@State private var showingMAInfo = false
 	@State private var showingEMAInfo = false
+	@State private var showingConsistencyInfo = false
 
 	private let tooltipFormatter: DateFormatter = {
 		let formatter = DateFormatter()
@@ -188,6 +189,30 @@ struct ChartsView: View {
 						Text(L10n.Charts.goalLabel)
 							.font(.caption)
 							.foregroundStyle(goalLineColor)
+					}
+					
+					// Add goal start date marker as vertical line
+					if let startDate = goal.startDate as Date?,
+					   startDate >= (data.first?.date ?? Date.distantPast),
+					   startDate <= (data.last?.date ?? Date.distantFuture) {
+						RuleMark(
+							x: .value("Goal Start", startDate)
+						)
+						.foregroundStyle(.purple.opacity(0.6))
+						.lineStyle(StrokeStyle(lineWidth: 2))
+						.annotation(position: .top, alignment: .center) {
+							VStack(spacing: 2) {
+								Image(systemName: "flag.fill")
+									.font(.caption2)
+									.foregroundStyle(.purple)
+								Text("Goal Start")
+									.font(.caption2)
+									.foregroundStyle(.purple)
+							}
+							.padding(6)
+							.background(.purple.opacity(0.1))
+							.clipShape(RoundedRectangle(cornerRadius: 6))
+						}
 					}
 				}
 			}
@@ -474,6 +499,7 @@ struct AnalyticsDashboardView: View {
 	let data: [ChartDataPoint]
 	let range: ChartRange
 	@EnvironmentObject var dataManager: DataManager
+	@State private var showingConsistencyInfo = false
 
 	var body: some View {
 		VStack(spacing: 16) {
@@ -530,12 +556,22 @@ struct AnalyticsDashboardView: View {
 				
 				// Consistency
 				if let consistency = calculateConsistency() {
-					FunStatCard(
-						icon: "chart.bar.fill",
-						title: "Consistency",
-						value: consistency,
-						color: .indigo
-					)
+					Button {
+						showingConsistencyInfo = true
+					} label: {
+						FunStatCard(
+							icon: "chart.bar.fill",
+							title: "Consistency",
+							value: consistency,
+							color: .indigo
+						)
+					}
+					.buttonStyle(.plain)
+					.alert("Consistency Score", isPresented: $showingConsistencyInfo) {
+						Button("OK", role: .cancel) {}
+					} message: {
+						consistencyInfoMessage
+					}
 				}
 				
 				// Range Info
@@ -609,12 +645,48 @@ struct AnalyticsDashboardView: View {
 		case .year: windowDays = 365
 		}
 		
-		guard let score = WeightAnalytics.calculateConsistencyScore(entries: entries, windowDays: windowDays) else {
+		// Use goal start date if available; otherwise fall back to window
+		let goalStartDate = dataManager.fetchActiveGoal()?.startDate
+		guard let score = WeightAnalytics.calculateConsistencyScore(
+			entries: entries,
+			windowDays: windowDays,
+			goalStartDate: goalStartDate
+		) else {
 			return nil
 		}
 		
 		let percentage = Int(score * 100)
 		return "\(percentage)%"
+	}
+	
+	private var consistencyInfoMessage: Text {
+		if let goal = dataManager.fetchActiveGoal(),
+		   let startDate = goal.startDate as Date? {
+			let entries = dataManager.fetchAllEntries()
+			let normalizedStartDate = WeightEntry.normalizeDate(startDate)
+			let uniqueDays = Set(entries.filter { $0.normalizedDate >= normalizedStartDate }.map { $0.normalizedDate }).count
+			let totalDays = max(1, Calendar.current.dateComponents([.day], from: normalizedStartDate, to: Date()).day ?? 1)
+			let percentage = Int((Double(uniqueDays) / Double(totalDays)) * 100)
+			let dateStr = startDate.formatted(date: .long, time: .omitted)
+			
+			return Text("How it's calculated:\n\nDays with entries: \(uniqueDays)\nTotal days since goal start: \(totalDays)\nFormula: \(uniqueDays) ÷ \(totalDays) = \(percentage)%\n\nGoal start date: \(dateStr)\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits.")
+		} else {
+			let entries = dataManager.fetchAllEntries()
+			let windowDays = getWindowDays()
+			let uniqueDays = Set(entries.map { $0.normalizedDate }).count
+			let percentage = Int((Double(uniqueDays) / Double(windowDays)) * 100)
+			
+			return Text("How it's calculated:\n\nDays with entries: \(uniqueDays)\nWindow: \(windowDays) days\nFormula: \(uniqueDays) ÷ \(windowDays) = \(percentage)%\n\nNo active goal - using \(range.displayName.lowercased()) window.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits.")
+		}
+	}
+	
+	private func getWindowDays() -> Int {
+		switch range {
+		case .week: return 7
+		case .month: return 30
+		case .quarter: return 90
+		case .year: return 365
+		}
 	}
 }
 

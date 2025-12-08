@@ -387,6 +387,9 @@ enum L10n {
 		static let notesDescription = LocalizedStringResource("goals.setup.notes.description", defaultValue: "Optional context you'll revisit later.")
 		static let notesPlaceholder = LocalizedStringResource("goals.setup.notes.placeholder", defaultValue: "Why this goal matters")
 		static let unitHint = LocalizedStringResource("goals.setup.unitHint", defaultValue: "We use your preferred units and precision settings to track progress and estimate timelines.")
+		static let actionsTitle = LocalizedStringResource("goals.actions.title", defaultValue: "Goal Options")
+		static let actionEditCurrent = LocalizedStringResource("goals.actions.editCurrent", defaultValue: "Edit Current Goal")
+		static let actionStartNew = LocalizedStringResource("goals.actions.startNew", defaultValue: "Start New Goal")
 		static let historyTitle = LocalizedStringResource("goals.history.title", defaultValue: "Goal History")
 		static func setOn(_ date: String) -> LocalizedStringResource {
 			LocalizedStringResource("goals.history.setOn", defaultValue: "Set on \(date)")
@@ -399,6 +402,7 @@ enum L10n {
 		static let completionAchieved = LocalizedStringResource("goals.history.completion.achieved", defaultValue: "Achieved")
 		static let completionChanged = LocalizedStringResource("goals.history.completion.changed", defaultValue: "Changed")
 		static let completionAbandoned = LocalizedStringResource("goals.history.completion.abandoned", defaultValue: "Abandoned")
+		static let errorNoActiveGoal = LocalizedStringResource("goals.error.noActiveGoal", defaultValue: "No active goal found")
 		static let errorInvalidWeight = LocalizedStringResource("goals.setup.error.invalidWeight", defaultValue: "Please enter a valid weight")
 		static let errorNonPositiveWeight = LocalizedStringResource("goals.setup.error.nonPositiveWeight", defaultValue: "Weight must be greater than zero")
 		static let errorMissingSettings = LocalizedStringResource("goals.setup.error.missingSettings", defaultValue: "Settings not available")

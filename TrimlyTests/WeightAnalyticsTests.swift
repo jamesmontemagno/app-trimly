@@ -94,6 +94,68 @@ struct WeightAnalyticsTests {
 	}
 
 	@Test
+	func consistency_withGoalStartDate_calculatesFromGoalStart() async throws {
+		let calendar = Calendar.current
+		let today = calendar.startOfDay(for: Date())
+		
+		// Goal started 5 days ago
+		let goalStartDate = calendar.date(byAdding: .day, value: -5, to: today) ?? today
+		
+		// User logged on days 0, 1, 3, and 5 (today) - that's 4 out of 6 days
+		let entries = [
+			makeEntry(daysAgo: 5),  // Goal start day
+			makeEntry(daysAgo: 3),
+			makeEntry(daysAgo: 1),
+			makeEntry(daysAgo: 0)   // Today
+		]
+		
+		// When using goal start date, should calculate from goal start to today (6 days total: 0-5)
+		let score = WeightAnalytics.calculateConsistencyScore(
+			entries: entries,
+			windowDays: 30,  // This should be ignored
+			goalStartDate: goalStartDate
+		)
+		
+		#expect(score != nil)
+		if let score {
+			// 4 days with entries out of 6 total days (days -5 to 0 inclusive)
+			let expected = 4.0 / 6.0
+			#expect(abs(score - expected) < 0.0001, "Expected \(expected) but got \(score)")
+		}
+	}
+
+	@Test
+	func consistency_withGoalStartDate_ignoresWindowDays() async throws {
+		let calendar = Calendar.current
+		let today = calendar.startOfDay(for: Date())
+		
+		// Goal started 60 days ago (way beyond typical window)
+		let goalStartDate = calendar.date(byAdding: .day, value: -60, to: today) ?? today
+		
+		// User has entries spread across the 60 days
+		var entries: [WeightEntry] = []
+		// Log every other day for 60 days
+		for i in stride(from: 0, to: 60, by: 2) {
+			entries.append(makeEntry(daysAgo: i))
+		}
+		
+		// With a 30-day window, this would only count recent 30 days
+		// But with goal start date, it should count all 60 days
+		let score = WeightAnalytics.calculateConsistencyScore(
+			entries: entries,
+			windowDays: 30,  // This should be ignored when goalStartDate is provided
+			goalStartDate: goalStartDate
+		)
+		
+		#expect(score != nil)
+		if let score {
+			// 30 entries (every other day) out of 61 total days (days 0-60 inclusive)
+			let expected = 30.0 / 61.0
+			#expect(abs(score - expected) < 0.01, "Expected ~\(expected) but got \(score)")
+		}
+	}
+
+	@Test
 	func goalProjection_returnsDateForClearDownwardTrend() async throws {
 		let calendar = Calendar.current
 		let today = calendar.startOfDay(for: Date())

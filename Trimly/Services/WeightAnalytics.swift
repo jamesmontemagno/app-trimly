@@ -92,26 +92,39 @@ final class WeightAnalytics {
     // MARK: - Consistency Score
     
     /// Calculate consistency score (percentage of days with entries)
+    /// - Parameters:
+    ///   - entries: Weight entries to analyze
+    ///   - windowDays: Rolling window in days (ignored if goalStartDate is provided)
+    ///   - goalStartDate: Optional goal start date. When provided, calculates consistency from this date to today
+    /// - Returns: Consistency score as a percentage (0.0 to 1.0), or nil if no entries
     static func calculateConsistencyScore(
         entries: [WeightEntry],
-        windowDays: Int
+        windowDays: Int,
+        goalStartDate: Date? = nil
     ) -> Double? {
         let visibleEntries = entries.filter { !$0.isHidden }
         guard !visibleEntries.isEmpty else { return nil }
         
-        // Find first entry date
-        let sortedEntries = visibleEntries.sorted { $0.normalizedDate < $1.normalizedDate }
-        guard let firstDate = sortedEntries.first?.normalizedDate else { return nil }
-        
-        // Calculate window start (most recent N days)
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
-        guard let windowStart = calendar.date(byAdding: .day, value: -windowDays + 1, to: today) else {
-            return nil
-        }
         
-        // Use the later of first entry date or window start
-        let effectiveStart = max(firstDate, windowStart)
+        let effectiveStart: Date
+        if let goalStartDate = goalStartDate {
+            // Use goal start date (normalized to start of day)
+            effectiveStart = calendar.startOfDay(for: goalStartDate)
+        } else {
+            // Find first entry date
+            let sortedEntries = visibleEntries.sorted { $0.normalizedDate < $1.normalizedDate }
+            guard let firstDate = sortedEntries.first?.normalizedDate else { return nil }
+            
+            // Calculate window start (most recent N days)
+            guard let windowStart = calendar.date(byAdding: .day, value: -windowDays + 1, to: today) else {
+                return nil
+            }
+            
+            // Use the later of first entry date or window start
+            effectiveStart = max(firstDate, windowStart)
+        }
         
         // Count days from effective start to today
         // Note: totalDays is 0 when effectiveStart == today (first day of logging)

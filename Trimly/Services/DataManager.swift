@@ -12,6 +12,7 @@ import Combine
 enum DataManagerError: Error {
     case missingStartingWeight
     case futureDateNotAllowed
+    case noActiveGoal
 }
 
 extension DataManagerError: LocalizedError {
@@ -22,6 +23,8 @@ extension DataManagerError: LocalizedError {
             return NSLocalizedString("goals.setup.error.missingStartingWeight", comment: "Starting weight required before saving a goal")
         case .futureDateNotAllowed:
             return NSLocalizedString("addEntry.error.futureDate", comment: "Date cannot be in the future")
+        case .noActiveGoal:
+            return NSLocalizedString("goals.error.noActiveGoal", comment: "No active goal found")
         }
     }
 }
@@ -262,6 +265,22 @@ final class DataManager: ObservableObject {
         publishChange()
     }
     
+    func updateGoal(targetWeightKg: Double, startingWeightKg: Double?, notes: String? = nil) throws {
+        guard let activeGoal = fetchActiveGoal() else {
+            throw DataManagerError.noActiveGoal
+        }
+        
+        activeGoal.targetWeightKg = targetWeightKg
+        if let startingWeight = startingWeightKg {
+            activeGoal.startingWeightKg = startingWeight
+        }
+        activeGoal.notes = notes
+        activeGoal.updatedAt = Date()
+        
+        try modelContext.save()
+        publishChange()
+    }
+    
     func fetchActiveGoal() -> Goal? {
         let descriptor = FetchDescriptor<Goal>(
             predicate: #Predicate { $0.isActive == true }
@@ -321,9 +340,11 @@ final class DataManager: ObservableObject {
     func getConsistencyScore() -> Double? {
         guard let settings = settings else { return nil }
         let entries = fetchAllEntries()
+        let goalStartDate = fetchActiveGoal()?.startDate
         return WeightAnalytics.calculateConsistencyScore(
             entries: entries,
-            windowDays: settings.consistencyScoreWindow
+            windowDays: settings.consistencyScoreWindow,
+            goalStartDate: goalStartDate
         )
     }
     

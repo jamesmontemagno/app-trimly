@@ -17,6 +17,8 @@ struct SettingsView: View {
 	@StateObject private var notificationService = NotificationService()
 	@State private var showingGoalSheet = false
 	@State private var showingGoalHistory = false
+	@State private var showingGoalActions = false
+	@State private var goalMode: GoalMode = .new
 	@State private var showingExport = false
 	@State private var showingPaywall = false
 	@State private var navigateToHealthKit = false
@@ -45,9 +47,65 @@ struct SettingsView: View {
 	}
 	
 	var body: some View {
+		settingsNavigation
+	}
+	
+	private var settingsNavigation: some View {
 		NavigationStack {
-			ScrollView {
-				VStack(alignment: .leading, spacing: 32) {
+			settingsContent
+				.scrollIndicators(.hidden)
+				.background(Color.clear)
+				.navigationTitle(Text(L10n.Settings.navigationTitle))
+				.navigationDestination(isPresented: $navigateToHealthKit) { HealthKitView() }
+				.sheet(isPresented: $showingGoalSheet) { GoalSetupView(mode: goalMode) }
+				.sheet(isPresented: $showingGoalHistory) { GoalHistoryView() }
+				.confirmationDialog(String(localized: L10n.Goals.actionsTitle), isPresented: $showingGoalActions) {
+					Button(String(localized: L10n.Goals.actionEditCurrent)) {
+						goalMode = .edit
+						showingGoalSheet = true
+					}
+					Button(String(localized: L10n.Goals.actionStartNew)) {
+						goalMode = .new
+						showingGoalSheet = true
+					}
+					Button(String(localized: L10n.Common.cancelButton), role: .cancel) {}
+				}
+				.sheet(isPresented: $showingExport) { ExportView(initialCSV: exportedData) }
+				.sheet(isPresented: $showingPaywall) { PaywallView() }
+				.confirmationDialog(String(localized: L10n.Common.deleteAllDataTitle), isPresented: $showingDeleteConfirmation, titleVisibility: .visible) {
+					Button(String(localized: L10n.Settings.deleteAllTitle), role: .destructive) { deleteAllData() }
+					Button(String(localized: L10n.Common.cancelButton), role: .cancel) { }
+				} message: {
+					Text(L10n.Settings.deleteWarning)
+				}
+				.alert(String(localized: L10n.Settings.restoreSuccessTitle), isPresented: $showingRestoreSuccessAlert) {
+					Button(String(localized: L10n.Common.okButton), role: .cancel) { }
+				} message: {
+					Text(L10n.Settings.restoreSuccessMessage)
+				}
+				.alert(String(localized: L10n.Settings.restoreNotFoundTitle), isPresented: $showingRestoreNotFoundAlert) {
+					Button(String(localized: L10n.Common.okButton), role: .cancel) { }
+				} message: {
+					Text(L10n.Settings.restoreNotFoundMessage)
+				}
+				.alert(String(localized: L10n.Settings.iCloudSyncRestartTitle), isPresented: $showingRestartRequiredAlert) {
+					Button(String(localized: L10n.Common.okButton), role: .cancel) { }
+				} message: {
+					Text(L10n.Settings.iCloudSyncRestartMessage)
+				}
+#if DEBUG
+				.alert(String(localized: L10n.Debug.sampleDataTitle), isPresented: $showingSampleDataAlert) {
+					Button(String(localized: L10n.Common.okButton), role: .cancel) { }
+				} message: {
+					Text(sampleDataAlertMessage)
+				}
+#endif
+		}
+	}
+	
+	private var settingsContent: some View {
+		ScrollView {
+			VStack(alignment: .leading, spacing: 32) {
 					if !storeManager.isPro {
 						Button {
 							showingPaywall = true
@@ -148,12 +206,11 @@ struct SettingsView: View {
 					settingsSection(title: String(localized: L10n.Settings.goalsTitle)) {
 						if let goal = dataManager.fetchActiveGoal() {
 							Button {
-								showingGoalSheet = true
-							} label: {
-								settingsRow(
-									icon: "flag.checkered",
-									title: String(localized: L10n.Settings.currentGoalTitle),
-									subtitle: currentGoalSubtitle(for: goal),
+							showingGoalActions = true
+						} label: {
+							settingsRow(
+								icon: "flag.checkered",
+								title: String(localized: L10n.Settings.currentGoalTitle),
 									showChevron: true
 								)
 							}
@@ -375,43 +432,6 @@ struct SettingsView: View {
 				.padding(.horizontal, 24)
 				.padding(.top, 32)
 				.padding(.bottom, 48)
-			}
-			.scrollIndicators(.hidden)
-			.background(Color.clear)
-			.navigationTitle(Text(L10n.Settings.navigationTitle))
-			.navigationDestination(isPresented: $navigateToHealthKit) { HealthKitView() }
-			.sheet(isPresented: $showingGoalSheet) { GoalSetupView() }
-			.sheet(isPresented: $showingGoalHistory) { GoalHistoryView() }
-			.sheet(isPresented: $showingExport) { ExportView(initialCSV: exportedData) }
-			.sheet(isPresented: $showingPaywall) { PaywallView() }
-			.confirmationDialog(String(localized: L10n.Common.deleteAllDataTitle), isPresented: $showingDeleteConfirmation, titleVisibility: .visible) {
-				Button(String(localized: L10n.Settings.deleteAllTitle), role: .destructive) { deleteAllData() }
-				Button(String(localized: L10n.Common.cancelButton), role: .cancel) { }
-			} message: {
-				Text(L10n.Settings.deleteWarning)
-			}
-			.alert(String(localized: L10n.Settings.restoreSuccessTitle), isPresented: $showingRestoreSuccessAlert) {
-				Button(String(localized: L10n.Common.okButton), role: .cancel) { }
-			} message: {
-				Text(L10n.Settings.restoreSuccessMessage)
-			}
-			.alert(String(localized: L10n.Settings.restoreNotFoundTitle), isPresented: $showingRestoreNotFoundAlert) {
-				Button(String(localized: L10n.Common.okButton), role: .cancel) { }
-			} message: {
-				Text(L10n.Settings.restoreNotFoundMessage)
-			}
-			.alert(String(localized: L10n.Settings.iCloudSyncRestartTitle), isPresented: $showingRestartRequiredAlert) {
-				Button(String(localized: L10n.Common.okButton), role: .cancel) { }
-			} message: {
-				Text(L10n.Settings.iCloudSyncRestartMessage)
-			}
-#if DEBUG
-			.alert(String(localized: L10n.Debug.sampleDataTitle), isPresented: $showingSampleDataAlert) {
-				Button(String(localized: L10n.Common.okButton), role: .cancel) { }
-			} message: {
-				Text(sampleDataAlertMessage)
-			}
-#endif
 		}
 	}
 
@@ -555,9 +575,16 @@ struct SettingsView: View {
 	}
 }
 
+enum GoalMode {
+	case new
+	case edit
+}
+
 struct GoalSetupView: View {
 	@EnvironmentObject var dataManager: DataManager
 	@Environment(\.dismiss) var dismiss
+	
+	let mode: GoalMode
     
 	@State private var targetWeightText = ""
 	@State private var startingWeightText = ""
@@ -615,7 +642,7 @@ struct GoalSetupView: View {
 				}
 				.padding(24)
 			}
-			.navigationTitle(Text(L10n.Goals.setupTitle))
+			.navigationTitle(Text(mode == .edit ? "Edit Goal" : L10n.Goals.setupTitle))
 			#if os(iOS)
 			.navigationBarTitleDisplayMode(.inline)
 			#endif
@@ -671,7 +698,13 @@ struct GoalSetupView: View {
 	}
 
 	private func prefillDefaults() {
-		if startingWeightText.isEmpty, let current = dataManager.getCurrentWeight() {
+		if mode == .edit, let goal = dataManager.fetchActiveGoal() {
+			targetWeightText = formattedDisplayWeight(fromKg: goal.targetWeightKg)
+			if let startingKg = goal.startingWeightKg {
+				startingWeightText = formattedDisplayWeight(fromKg: startingKg)
+			}
+			notes = goal.notes ?? ""
+		} else if startingWeightText.isEmpty, let current = dataManager.getCurrentWeight() {
 			startingWeightText = formattedDisplayWeight(fromKg: current)
 		}
 	}
@@ -695,15 +728,25 @@ struct GoalSetupView: View {
 		let weightKg = preferredUnit.convertToKg(weight)
 		let startingKg = preferredUnit.convertToKg(starting)
 		do {
-			// When setting a goal from Settings, also log a corresponding entry
-			// so history and analytics align with the new starting point.
-			try dataManager.addWeightEntry(
-				weightKg: startingKg,
-				unit: preferredUnit
-			)
-			try dataManager.setGoal(targetWeightKg: weightKg,
+			if mode == .edit {
+				// Edit mode: update existing goal
+				try dataManager.updateGoal(
+					targetWeightKg: weightKg,
+					startingWeightKg: startingKg,
+					notes: notes.isEmpty ? nil : notes
+				)
+			} else {
+				// New mode: create new goal (archives old one)
+				// When setting a goal from Settings, also log a corresponding entry
+				// so history and analytics align with the new starting point.
+				try dataManager.addWeightEntry(
+					weightKg: startingKg,
+					unit: preferredUnit
+				)
+				try dataManager.setGoal(targetWeightKg: weightKg,
 								startingWeightKg: startingKg,
 									notes: notes.isEmpty ? nil : notes)
+			}
 			dismiss()
 		} catch {
 			errorMessage = String(localized: L10n.Goals.errorSaveFailure(error.localizedDescription))

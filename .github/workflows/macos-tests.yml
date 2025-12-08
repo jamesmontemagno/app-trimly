@@ -20,6 +20,4 @@ jobs:
           xcode-version: '26.0'
 
       - name: Run macOS unit tests
-        run: |
-          cd app-trimly
-          xcodebuild -scheme TrimTally -destination 'platform=macOS,arch=arm64' test
+        run: xcodebuild -scheme TrimTally -destination 'platform=macOS,arch=arm64' test

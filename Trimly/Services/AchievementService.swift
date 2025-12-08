@@ -13,14 +13,21 @@ import OSLog
 @MainActor
 final class AchievementService: ObservableObject {
 	@Published private(set) var snapshots: [AchievementSnapshot] = []
+#if DEBUG
 	@Published private(set) var diagnostics: AchievementDiagnostics?
+#else
+	// Diagnostics are debug-only; expose a nil placeholder in release builds
+	var diagnostics: AchievementDiagnostics? { nil }
+#endif
 	
 	private let definitions: [AchievementDescriptor] = AchievementDescriptor.catalog
 	private let logger = Logger(subsystem: "com.trimly.TrimTally", category: "Achievements")
 	
 	func refresh(using dataManager: DataManager, isPro: Bool) {
 		let context = EvaluationContext(dataManager: dataManager)
+		#if DEBUG
 		diagnostics = context.makeDiagnosticsSnapshot()
+		#endif
 		logger.debug(
 			"Refresh stats — entries: \(context.totalEntries, privacy: .public), unique days: \(context.uniqueDayCount, privacy: .public), consistency: \(context.consistencyScore, privacy: .public)"
 		)
@@ -359,6 +366,7 @@ private struct EvaluationContext {
 		return Double(loggedCount) / Double(windowDays)
 	}
 
+	#if DEBUG
 	func makeDiagnosticsSnapshot() -> AchievementDiagnostics {
 		AchievementDiagnostics(
 			totalEntries: totalEntries,
@@ -372,6 +380,7 @@ private struct EvaluationContext {
 			evaluatedAt: Date()
 		)
 	}
+	#endif
 }
 
 struct AchievementDiagnostics {

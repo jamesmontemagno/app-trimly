@@ -75,12 +75,14 @@ struct AchievementsView: View {
 			.onChange(of: storeManager.isPro) { _, _ in
 				refresh()
 			}
+			#if DEBUG
 			.sheet(item: $selectedSnapshot) { snapshot in
 				AchievementDiagnosticsSheet(
 					snapshot: snapshot,
 					diagnostics: achievementService.diagnostics
 				)
 			}
+			#endif
 		}
 	}
 	
@@ -204,6 +206,7 @@ private struct AchievementCard: View {
 	
 	/// Provides detailed progress text based on achievement type and current status
 	private var detailedProgressText: String? {
+		#if DEBUG
 		guard let diag = diagnostics else { return nil }
 		switch snapshot.descriptor.metric {
 		case .totalEntries(let target):
@@ -234,9 +237,13 @@ private struct AchievementCard: View {
 			let targetPercent = Int((targetRatio * 100).rounded())
 			return String(localized: L10n.Achievements.progressReminderConsistency(currentPercent, targetPercent))
 		}
+		#else
+		return nil
+		#endif
 	}
 }
 
+#if DEBUG
 private struct AchievementDiagnosticsSheet: View {
 	let snapshot: AchievementSnapshot
 	let diagnostics: AchievementDiagnostics?
@@ -375,6 +382,7 @@ private struct AchievementDiagnosticsSheet: View {
 		let value: String
 	}
 }
+#endif
 
 private struct AchievementCategoryGroup: Identifiable {
 	let category: AchievementCategory

@@ -94,12 +94,10 @@ final class WeightAnalytics {
     /// Calculate consistency score (percentage of days with entries)
     /// - Parameters:
     ///   - entries: Weight entries to analyze
-    ///   - windowDays: Rolling window in days (ignored if goalStartDate is provided)
-    ///   - goalStartDate: Optional goal start date. When provided, calculates consistency from this date to today
+    ///   - goalStartDate: Optional goal start date. When provided, calculates consistency from this date to today. If nil, uses all available history.
     /// - Returns: Consistency score as a percentage (0.0 to 1.0), or nil if no entries
     static func calculateConsistencyScore(
         entries: [WeightEntry],
-        windowDays: Int,
         goalStartDate: Date? = nil
     ) -> Double? {
         let visibleEntries = entries.filter { !$0.isHidden }
@@ -113,17 +111,10 @@ final class WeightAnalytics {
             // Use goal start date (normalized to start of day)
             effectiveStart = calendar.startOfDay(for: goalStartDate)
         } else {
-            // Find first entry date
+            // No goal - use first entry date (all available history)
             let sortedEntries = visibleEntries.sorted { $0.normalizedDate < $1.normalizedDate }
             guard let firstDate = sortedEntries.first?.normalizedDate else { return nil }
-            
-            // Calculate window start (most recent N days)
-            guard let windowStart = calendar.date(byAdding: .day, value: -windowDays + 1, to: today) else {
-                return nil
-            }
-            
-            // Use the later of first entry date or window start
-            effectiveStart = max(firstDate, windowStart)
+            effectiveStart = firstDate
         }
         
         // Count days from effective start to today

@@ -35,9 +35,6 @@ final class AppSettings {
     
     /// EMA period (days)
     var emaPeriod: Int = 7
-    
-    /// Consistency score window (days)
-    var consistencyScoreWindow: Int = 30
 
     /// Preferred app appearance
     var appearance: AppAppearance = AppAppearance.system
@@ -69,7 +66,6 @@ final class AppSettings {
         showEMA: Bool = true,
         movingAveragePeriod: Int = 7,
         emaPeriod: Int = 7,
-        consistencyScoreWindow: Int = 30,
         appearance: AppAppearance = .system,
         hasCompletedOnboarding: Bool = false,
         eulaAcceptedDate: Date? = nil,
@@ -86,7 +82,6 @@ final class AppSettings {
         self.showEMA = showEMA
         self.movingAveragePeriod = movingAveragePeriod
         self.emaPeriod = emaPeriod
-        self.consistencyScoreWindow = consistencyScoreWindow
         self.appearance = appearance
         self.hasCompletedOnboarding = hasCompletedOnboarding
         self.eulaAcceptedDate = eulaAcceptedDate

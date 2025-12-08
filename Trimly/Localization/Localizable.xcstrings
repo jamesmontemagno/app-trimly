@@ -3197,17 +3197,6 @@
         }
       }
     },
-    "debug.achievements.consistencyWindow" : {
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Consistency window (days)"
-          }
-        }
-      }
-    },
     "debug.achievements.evaluatedAt" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -6903,52 +6892,6 @@
         }
       }
     },
-    "settings.consistency.window.subtitle" : {
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Currently %lld days."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Actualmente %lld días."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Actuellement %lld jours."
-          }
-        }
-      }
-    },
-    "settings.consistency.window.title" : {
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Window Length"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Duración de la ventana"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Longueur de la fenêtre"
-          }
-        }
-      }
-    },
     "settings.dailyValue.calculation.subtitle" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -7907,29 +7850,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "À propos de TrimTally"
-          }
-        }
-      }
-    },
-    "settings.section.consistency.title" : {
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Consistency Score"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Puntuación de consistencia"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Score de cohérence"
           }
         }
       }

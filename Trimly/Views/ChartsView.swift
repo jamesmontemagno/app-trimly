@@ -636,20 +636,11 @@ struct AnalyticsDashboardView: View {
 	
 	private func calculateConsistency() -> String? {
 		let entries = dataManager.fetchAllEntries()
-		let windowDays: Int
 		
-		switch range {
-		case .week: windowDays = 7
-		case .month: windowDays = 30
-		case .quarter: windowDays = 90
-		case .year: windowDays = 365
-		}
-		
-		// Use goal start date if available; otherwise fall back to window
+		// Use goal start date if available
 		let goalStartDate = dataManager.fetchActiveGoal()?.startDate
 		guard let score = WeightAnalytics.calculateConsistencyScore(
 			entries: entries,
-			windowDays: windowDays,
 			goalStartDate: goalStartDate
 		) else {
 			return nil

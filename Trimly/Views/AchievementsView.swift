@@ -215,13 +215,12 @@ private struct AchievementCard: View {
 			return String(localized: L10n.Achievements.progressUniqueDays(diag.uniqueDayCount, target))
 		case .streakDays(let target):
 			return String(localized: L10n.Achievements.progressStreakDays(diag.longestStreak, target))
-		case .consistency(let threshold):
+		case .consistency(let threshold, let minDays):
 			let currentPercent = Int((diag.consistencyScore * 100).rounded())
 			let targetPercent = Int((threshold * 100).rounded())
-			let minDaysRequired = 10
-			if diag.uniqueDayCount < minDaysRequired {
+			if diag.uniqueDayCount < minDays {
 				return String(localized: L10n.Achievements.progressConsistencyWithDays(
-					currentPercent, targetPercent, diag.uniqueDayCount, minDaysRequired
+					currentPercent, targetPercent, diag.uniqueDayCount, minDays
 				))
 			} else {
 				return String(localized: L10n.Achievements.progressConsistency(currentPercent, targetPercent))
@@ -315,11 +314,6 @@ private struct AchievementDiagnosticsSheet: View {
 					Text(L10n.Debug.Achievements.consistencyScore)
 				}
 				LabeledContent {
-					Text("\(diagnostics.consistencyWindowDays)")
-				} label: {
-					Text(L10n.Debug.Achievements.consistencyWindow)
-				}
-				LabeledContent {
 					Text("\(diagnostics.goalsAchieved)")
 				} label: {
 					Text(L10n.Debug.Achievements.goalsAchieved)
@@ -357,8 +351,11 @@ private struct AchievementDiagnosticsSheet: View {
 			return [MetricDetail(title: L10n.Debug.Achievements.targetUniqueDays, value: "\(target)")]
 		case .streakDays(let target):
 			return [MetricDetail(title: L10n.Debug.Achievements.targetStreakDays, value: "\(target)")]
-		case .consistency(let threshold):
-			return [MetricDetail(title: L10n.Debug.Achievements.consistencyThreshold, value: percentString(threshold))]
+		case .consistency(let threshold, let minDays):
+			return [
+				MetricDetail(title: L10n.Debug.Achievements.consistencyThreshold, value: percentString(threshold)),
+				MetricDetail(title: "Min Days", value: "\(minDays)")
+			]
 		case .goalsAchieved(let target):
 			return [MetricDetail(title: L10n.Debug.Achievements.targetGoals, value: "\(target)")]
 		case .remindersEnabled:

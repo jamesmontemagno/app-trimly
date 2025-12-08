@@ -309,16 +309,6 @@ struct SettingsView: View {
 						.buttonStyle(.plain)
 					}
 					
-					settingsSection(title: String(localized: L10n.Settings.consistencyTitle)) {
-						settingsRow(
-							icon: "chart.bar.fill",
-							title: String(localized: L10n.Settings.consistencyWindowTitle),
-							subtitle: String(localized: L10n.Settings.consistencyWindowSubtitle(dataManager.settings?.consistencyScoreWindow ?? 30))
-						) {
-							Stepper("", value: binding(\.consistencyScoreWindow), in: 7...90, step: 1)
-								.labelsHidden()
-						}
-					}
 					
 					settingsSection(title: String(localized: L10n.Settings.dataPrivacyTitle)) {
 						settingsRow(

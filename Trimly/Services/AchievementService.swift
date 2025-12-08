@@ -60,16 +60,15 @@ final class AchievementService: ObservableObject {
 			return progressMetric(current: Double(context.uniqueDayCount), target: Double(target))
 		case .streakDays(let target):
 			return progressMetric(current: Double(context.longestStreak), target: Double(target))
-		case .consistency(let threshold):
-			// Require at least 10 unique days of logging before unlocking
-			let minDaysRequired = 10
-			let hasEnoughHistory = context.uniqueDayCount >= minDaysRequired
+		case .consistency(let threshold, let minDays):
+			// Require at least minDays unique days of logging before unlocking
+			let hasEnoughHistory = context.uniqueDayCount >= minDays
 			let meetsThreshold = context.consistencyScore >= threshold && context.consistencyScore > 0
 			let unlocked = hasEnoughHistory && meetsThreshold
 			// Progress accounts for both: days progress + consistency progress
 			// Each requirement contributes equally to the progress bar
 			let requirementWeight = 0.5
-			let daysProgress = min(Double(context.uniqueDayCount) / Double(minDaysRequired), 1.0) * requirementWeight
+			let daysProgress = min(Double(context.uniqueDayCount) / Double(minDays), 1.0) * requirementWeight
 			let consistencyProgress = min(context.consistencyScore / threshold, 1.0) * requirementWeight
 			let progress = daysProgress + consistencyProgress
 			return AchievementEvaluation(progress: progress, unlocked: unlocked)
@@ -191,7 +190,7 @@ struct AchievementDescriptor: Identifiable {
 			detail: L10n.Achievements.consistencySolidDetail,
 			iconName: "chart.bar.fill",
 			category: .habits,
-			metric: .consistency(0.70),
+			metric: .consistency(threshold: 0.70, minDays: 10),
 			isPremium: false
 		),
 		AchievementDescriptor(
@@ -200,7 +199,7 @@ struct AchievementDescriptor: Identifiable {
 			detail: L10n.Achievements.consistencyExcellentDetail,
 			iconName: "chart.line.uptrend.xyaxis",
 			category: .habits,
-			metric: .consistency(0.90),
+			metric: .consistency(threshold: 0.90, minDays: 30),
 			isPremium: true
 		),
 		AchievementDescriptor(
@@ -297,7 +296,7 @@ enum AchievementMetric {
 	case totalEntries(Int)
 	case uniqueDays(Int)
 	case streakDays(Int)
-	case consistency(Double)
+	case consistency(threshold: Double, minDays: Int)
 	case goalsAchieved(Int)
 	case remindersEnabled
 	case reminderConsistency(Double)
@@ -311,7 +310,6 @@ private struct EvaluationContext {
 	let goalsAchieved: Int
 	let remindersEnabled: Bool
 	let recentReminderRatio: Double
-	let consistencyWindowDays: Int
 	
 	init(dataManager: DataManager) {
 		let allEntries = dataManager.fetchAllEntries()
@@ -326,7 +324,6 @@ private struct EvaluationContext {
 		let reminders = dataManager.deviceSettings.reminders
 		remindersEnabled = (reminders.primaryTime != nil) || (reminders.secondaryTime != nil)
 		recentReminderRatio = EvaluationContext.recentReminderCompletionRatio(entries: entries)
-		consistencyWindowDays = settings?.consistencyScoreWindow ?? 30
 	}
 	
 	private static func calculateLongestStreak(from dates: [Date]) -> Int {
@@ -376,7 +373,6 @@ private struct EvaluationContext {
 			goalsAchieved: goalsAchieved,
 			remindersEnabled: remindersEnabled,
 			recentReminderRatio: recentReminderRatio,
-			consistencyWindowDays: consistencyWindowDays,
 			evaluatedAt: Date()
 		)
 	}
@@ -391,6 +387,5 @@ struct AchievementDiagnostics {
 	let goalsAchieved: Int
 	let remindersEnabled: Bool
 	let recentReminderRatio: Double
-	let consistencyWindowDays: Int
 	let evaluatedAt: Date
 }

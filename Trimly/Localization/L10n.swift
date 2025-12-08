@@ -341,11 +341,7 @@ enum L10n {
 		static let healthTitle = LocalizedStringResource("settings.integrations.health.title", defaultValue: "Apple Health")
 		static let healthSubtitle = LocalizedStringResource("settings.integrations.health.subtitle", defaultValue: "Import and sync weight data.")
 		static let healthConnected = LocalizedStringResource("settings.integrations.health.connected", defaultValue: "Connected")
-		static let consistencyTitle = LocalizedStringResource("settings.section.consistency.title", defaultValue: "Consistency Score")
-		static let consistencyWindowTitle = LocalizedStringResource("settings.consistency.window.title", defaultValue: "Window Length")
-		static func consistencyWindowSubtitle(_ days: Int) -> LocalizedStringResource {
-			LocalizedStringResource("settings.consistency.window.subtitle", defaultValue: "Currently \(days) days.")
-		}
+
 		static let dataPrivacyTitle = LocalizedStringResource("settings.section.dataPrivacy.title", defaultValue: "Data & Privacy")
 		static let iCloudSyncTitle = LocalizedStringResource("settings.data.iCloudSync.title", defaultValue: "iCloud Sync")
 		static let iCloudSyncSubtitle = LocalizedStringResource("settings.data.iCloudSync.subtitle", defaultValue: "Sync data across all your devices.")
@@ -557,7 +553,7 @@ enum L10n {
 			static let uniqueDays = LocalizedStringResource("debug.achievements.uniqueDays", defaultValue: "Unique days logged")
 			static let longestStreak = LocalizedStringResource("debug.achievements.longestStreak", defaultValue: "Longest streak")
 			static let consistencyScore = LocalizedStringResource("debug.achievements.consistencyScore", defaultValue: "Consistency score")
-			static let consistencyWindow = LocalizedStringResource("debug.achievements.consistencyWindow", defaultValue: "Consistency window (days)")
+
 			static let goalsAchieved = LocalizedStringResource("debug.achievements.goalsAchieved", defaultValue: "Goals achieved")
 			static let remindersEnabled = LocalizedStringResource("debug.achievements.remindersEnabled", defaultValue: "Reminders enabled")
 			static let reminderRatio = LocalizedStringResource("debug.achievements.reminderRatio", defaultValue: "Reminder completion (21 days)")

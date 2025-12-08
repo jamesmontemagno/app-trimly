@@ -25,7 +25,7 @@ struct WeightAnalyticsTests {
 		// User started today and logged today
 		let entries = [makeEntry(daysAgo: 0)]
 
-		let score = WeightAnalytics.calculateConsistencyScore(entries: entries, windowDays: 30)
+		let score = WeightAnalytics.calculateConsistencyScore(entries: entries)
 
 		#expect(score != nil)
 		if let score {
@@ -38,7 +38,7 @@ struct WeightAnalyticsTests {
 		// User started yesterday and logged both days
 		let entries = [makeEntry(daysAgo: 1), makeEntry(daysAgo: 0)]
 
-		let score = WeightAnalytics.calculateConsistencyScore(entries: entries, windowDays: 30)
+		let score = WeightAnalytics.calculateConsistencyScore(entries: entries)
 
 		#expect(score != nil)
 		if let score {
@@ -51,7 +51,7 @@ struct WeightAnalyticsTests {
 		// Entries 2 days ago and today (missed yesterday)
 		let entries = [makeEntry(daysAgo: 2), makeEntry(daysAgo: 0)]
 
-		let score = WeightAnalytics.calculateConsistencyScore(entries: entries, windowDays: 30)
+		let score = WeightAnalytics.calculateConsistencyScore(entries: entries)
 
 		#expect(score != nil)
 		if let score {
@@ -68,7 +68,7 @@ struct WeightAnalyticsTests {
 			entries.append(makeEntry(daysAgo: i))
 		}
 
-		let score = WeightAnalytics.calculateConsistencyScore(entries: entries, windowDays: 7)
+		let score = WeightAnalytics.calculateConsistencyScore(entries: entries)
 
 		#expect(score != nil)
 		if let score {
@@ -84,7 +84,7 @@ struct WeightAnalyticsTests {
 		let hidden = makeEntry(daysAgo: 1, hidden: true)
 		let entries = [visible, hidden]
 
-		let score = WeightAnalytics.calculateConsistencyScore(entries: entries, windowDays: 30)
+		let score = WeightAnalytics.calculateConsistencyScore(entries: entries)
 
 		#expect(score != nil)
 		if let score {
@@ -112,7 +112,6 @@ struct WeightAnalyticsTests {
 		// When using goal start date, should calculate from goal start to today (6 days total: 0-5)
 		let score = WeightAnalytics.calculateConsistencyScore(
 			entries: entries,
-			windowDays: 30,  // This should be ignored
 			goalStartDate: goalStartDate
 		)
 		
@@ -125,7 +124,7 @@ struct WeightAnalyticsTests {
 	}
 
 	@Test
-	func consistency_withGoalStartDate_ignoresWindowDays() async throws {
+	func consistency_withGoalStartDate_coversFullGoalPeriod() async throws {
 		let calendar = Calendar.current
 		let today = calendar.startOfDay(for: Date())
 		
@@ -139,11 +138,9 @@ struct WeightAnalyticsTests {
 			entries.append(makeEntry(daysAgo: i))
 		}
 		
-		// With a 30-day window, this would only count recent 30 days
-		// But with goal start date, it should count all 60 days
+		// With goal start date, it should count all 60 days
 		let score = WeightAnalytics.calculateConsistencyScore(
 			entries: entries,
-			windowDays: 30,  // This should be ignored when goalStartDate is provided
 			goalStartDate: goalStartDate
 		)
 		

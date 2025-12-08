@@ -87,7 +87,6 @@ final class AppSettings {
     var showEMA: Bool
     var movingAveragePeriod: Int
     var emaPeriod: Int
-    var consistencyScoreWindow: Int
     var appearance: AppAppearance
     var hasCompletedOnboarding: Bool
     var eulaAcceptedDate: Date?

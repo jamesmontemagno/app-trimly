@@ -27,18 +27,14 @@ struct DataManagerTests {
 	func updateSettings_persistsChanges() async throws {
 		let manager = await makeInMemoryManager()
 		let originalDate = manager.settings?.updatedAt
-		let originalWindow = manager.settings?.consistencyScoreWindow
 
 		manager.updateSettings { settings in
-			settings.consistencyScoreWindow = 14
+			settings.preferredUnit = .kilograms
 		}
 
-		#expect(manager.settings?.consistencyScoreWindow == 14)
+		#expect(manager.settings?.preferredUnit == .kilograms)
 		if let originalDate, let updated = manager.settings?.updatedAt {
 			#expect(updated >= originalDate)
-		}
-		if let originalWindow {
-			#expect(originalWindow != manager.settings?.consistencyScoreWindow)
 		}
 	}
 
@@ -241,10 +237,6 @@ struct DataManagerTests {
 	@Test
 	func getConsistencyScore_respectsWindowAndGaps() async throws {
 		let manager = await makeInMemoryManager()
-		// Use a short window for deterministic behavior
-		manager.updateSettings { settings in
-			settings.consistencyScoreWindow = 7
-		}
 
 		let calendar = Calendar.current
 		let today = calendar.startOfDay(for: Date())

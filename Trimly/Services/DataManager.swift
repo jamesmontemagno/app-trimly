@@ -338,12 +338,10 @@ final class DataManager: ObservableObject {
     }
     
     func getConsistencyScore() -> Double? {
-        guard let settings = settings else { return nil }
         let entries = fetchAllEntries()
         let goalStartDate = fetchActiveGoal()?.startDate
         return WeightAnalytics.calculateConsistencyScore(
             entries: entries,
-            windowDays: settings.consistencyScoreWindow,
             goalStartDate: goalStartDate
         )
     }

@@ -245,18 +245,18 @@ selectedSparklineDate = nil
 }
 )
 ) {
-					if let selected = selectedSparklineDisplay {
-						VStack(alignment: .leading, spacing: 6) {
-							Text(selected.date.formatted(date: .abbreviated, time: .omitted))
-								.font(.caption)
-								.foregroundStyle(.secondary)
-							Text(selected.displayText)
-								.font(.headline)
-						}
-						.padding()
+				if let selected = selectedSparklineDisplay {
+					VStack(alignment: .leading, spacing: 6) {
+						Text(selected.date.formatted(date: .abbreviated, time: .omitted))
+							.font(.caption)
+							.foregroundStyle(.secondary)
+						Text(selected.displayText)
+							.font(.headline)
 					}
+					.padding()
+					.presentationCompactAdaptation(.popover)
 				}
-				.presentationCompactAdaptation(.popover)
+			}
 			} else {
 				Text(L10n.Dashboard.notEnoughData)
 					.font(.caption)

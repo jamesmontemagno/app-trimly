@@ -1488,6 +1488,50 @@
         }
       }
     },
+    "charts.info.ema.description" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "An exponential moving average reacts faster by giving more weight to your latest readings while still smoothing swings."
+          }
+        }
+      }
+    },
+    "charts.info.ema.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Exponential Moving Average"
+          }
+        }
+      }
+    },
+    "charts.info.ma.description" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "A simple moving average smooths recent entries by averaging the last few days so you can spot direction without noise."
+          }
+        }
+      }
+    },
+    "charts.info.ma.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Moving Average"
+          }
+        }
+      }
+    },
     "charts.legend.ema" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -1507,6 +1551,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "EMA"
+          }
+        }
+      }
+    },
+    "charts.legend.info.hint" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Opens a short description of this overlay"
           }
         }
       }
@@ -1989,6 +2044,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Les deux superpositions respectent votre filtre de date pour que les vues hebdomadaires restent propres."
+          }
+        }
+      }
+    },
+    "chartSettings.trend.info.ema" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "An exponential moving average reacts faster by weighting recent entries more heavily."
+          }
+        }
+      }
+    },
+    "chartSettings.trend.info.ma" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "A simple moving average smooths recent entries by averaging the last few days."
           }
         }
       }
@@ -2742,6 +2819,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dernier : %@"
+          }
+        }
+      }
+    },
+    "dashboard.monthlyCalendar" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "This Month"
           }
         }
       }
@@ -4434,6 +4522,17 @@
         }
       }
     },
+    "health.import.range.explainer" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Uses the start/end dates above to pull your exact range."
+          }
+        }
+      }
+    },
     "health.import.rangeHint" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4476,6 +4575,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Importer les récentes"
+          }
+        }
+      }
+    },
+    "health.import.recent.explainer" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Imports the last 30 days or since your last import—no date picking required."
           }
         }
       }
@@ -4956,6 +5066,9 @@
         }
       }
     },
+    "No entry for this day" : {
+
+    },
     "notifications.action.dismiss" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -5182,6 +5295,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Historique retrouvé ! Restauration en cours..."
+          }
+        }
+      }
+    },
+    "onboarding.cloudSync.noData" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No TrimTally data found in iCloud yet—start fresh and we'll sync new entries."
           }
         }
       }
@@ -5438,6 +5562,83 @@
         }
       }
     },
+    "onboarding.iCloudSync.benefit1" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Automatic backup and restore"
+          }
+        }
+      }
+    },
+    "onboarding.iCloudSync.benefit2" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Sync across iPhone, iPad, and Mac"
+          }
+        }
+      }
+    },
+    "onboarding.iCloudSync.benefit3" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "End-to-end encrypted"
+          }
+        }
+      }
+    },
+    "onboarding.iCloudSync.description" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Your weight data is securely encrypted and synced to your private iCloud account. Only your devices can access your data—Apple cannot read it."
+          }
+        }
+      }
+    },
+    "onboarding.iCloudSync.subtitle" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Keep your data in sync across all your devices"
+          }
+        }
+      }
+    },
+    "onboarding.iCloudSync.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "iCloud Sync"
+          }
+        }
+      }
+    },
+    "onboarding.iCloudSync.toggle" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Enable iCloud Sync"
+          }
+        }
+      }
+    },
     "onboarding.reminder.hint" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -5629,6 +5830,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Poids de départ"
+          }
+        }
+      }
+    },
+    "onboarding.step.cloudSync" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "iCloud Sync"
           }
         }
       }
@@ -5931,6 +6143,9 @@
           }
         }
       }
+    },
+    "Opens charts" : {
+
     },
     "plateau.hint.fluctuation" : {
       "extractionState" : "extracted_with_value",
@@ -6457,6 +6672,9 @@
         }
       }
     },
+    "Selected" : {
+
+    },
     "Selected Date" : {
 
     },
@@ -6850,6 +7068,72 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Exporter les données"
+          }
+        }
+      }
+    },
+    "settings.data.iCloudSync.disabled" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Off"
+          }
+        }
+      }
+    },
+    "settings.data.iCloudSync.enabled" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "On"
+          }
+        }
+      }
+    },
+    "settings.data.iCloudSync.restart.message" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Please restart TrimTally for this change to take effect. Your data is securely encrypted and only accessible from your devices."
+          }
+        }
+      }
+    },
+    "settings.data.iCloudSync.restart.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Restart Required"
+          }
+        }
+      }
+    },
+    "settings.data.iCloudSync.subtitle" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Sync data across all your devices."
+          }
+        }
+      }
+    },
+    "settings.data.iCloudSync.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "iCloud Sync"
           }
         }
       }

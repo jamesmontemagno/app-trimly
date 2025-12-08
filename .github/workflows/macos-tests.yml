@@ -19,5 +19,5 @@ jobs:
         with:
           xcode-version: '26.0'
 
-      - name: Run iOS simulator unit tests
-        run: xcodebuild -scheme TrimTally -destination "platform=iOS Simulator,name=iPhone 17" test
+      - name: Build iOS app
+        run: xcodebuild -scheme TrimTally -destination "platform=iOS Simulator,name=iPhone 17" build

@@ -60,22 +60,24 @@ struct MonthCalendarView: View {
 			}
 		}
 			.popover(isPresented: $showingPopover, attachmentAnchor: .rect(.bounds), arrowEdge: .bottom) {
-				if let selectedDate, let weightText = weightTextProvider(WeightEntry.normalizeDate(selectedDate)) {
-					VStack(alignment: .leading, spacing: 8) {
-						Text(dateString(selectedDate))
-							.font(.subheadline.weight(.semibold))
-						Text(weightText)
-							.font(.title3.bold())
-					}
-					.padding()
-					.frame(maxWidth: 220)
-				} else {
-					Text("No entry for this day")
-						.font(.subheadline)
+				Group {
+					if let selectedDate, let weightText = weightTextProvider(WeightEntry.normalizeDate(selectedDate)) {
+						VStack(alignment: .leading, spacing: 8) {
+							Text(dateString(selectedDate))
+								.font(.subheadline.weight(.semibold))
+							Text(weightText)
+								.font(.title3.bold())
+						}
 						.padding()
+						.frame(maxWidth: 220)
+					} else {
+						Text("No entry for this day")
+							.font(.subheadline)
+							.padding()
+					}
 				}
+				.presentationCompactAdaptation(.popover)
 			}
-		.presentationCompactAdaptation(.popover)
 	}
 	
 	private var monthYearString: String {

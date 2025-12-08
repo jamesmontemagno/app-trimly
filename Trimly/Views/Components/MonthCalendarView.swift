@@ -75,6 +75,7 @@ struct MonthCalendarView: View {
 						.padding()
 				}
 			}
+		.presentationCompactAdaptation(.popover)
 	}
 	
 	private var monthYearString: String {

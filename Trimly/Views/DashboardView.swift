@@ -256,6 +256,7 @@ selectedSparklineDate = nil
 						.padding()
 					}
 				}
+				.presentationCompactAdaptation(.popover)
 			} else {
 				Text(L10n.Dashboard.notEnoughData)
 					.font(.caption)

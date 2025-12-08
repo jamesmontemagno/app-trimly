@@ -5093,6 +5093,16 @@
         }
       }
     },
+    "How it's calculated:\n\nDays with entries: %lld\nDays since goal start: %lld\nFormula: %lld ÷ %lld = %lld%%\n\nGoal start: %@\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "How it's calculated:\n\nDays with entries: %1$lld\nDays since goal start: %2$lld\nFormula: %3$lld ÷ %4$lld = %5$lld%%\n\nGoal start: %6$@\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits."
+          }
+        }
+      }
+    },
     "How it's calculated:\n\nDays with entries: %lld\nRolling window: %lld days\nFormula: %lld ÷ %lld = %lld%%\n\nNo active goal - using 30-day rolling window.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits." : {
       "localizations" : {
         "en" : {
@@ -5119,6 +5129,16 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "How it's calculated:\n\nDays with entries: %1$lld\nWindow: %2$lld days\nFormula: %3$lld ÷ %4$lld = %5$lld%%\n\nNo active goal - using %6$@ window.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits."
+          }
+        }
+      }
+    },
+    "How it's calculated:\n\nDays with entries: %lld\nWindow: %lld days (%@)\nFormula: %lld ÷ %lld = %lld%%\n\nGoal started before this window - using %@ period.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "How it's calculated:\n\nDays with entries: %1$lld\nWindow: %2$lld days (%3$@)\nFormula: %4$lld ÷ %5$lld = %6$lld%%\n\nGoal started before this window - using %7$@ period.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits."
           }
         }
       }

@@ -30,9 +30,22 @@
 		B392276F2ED9703D00C14B08 /* TrimTallyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrimTallyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B3AEF6422EE6A0E300E396C8 /* Exceptions for "Trimly" folder in "TrimTally" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			platformFiltersByRelativePath = {
+				LaunchScreen.storyboard = (ios, xros, );
+			};
+			target = B39227552ED9703A00C14B08 /* TrimTally */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		B39227582ED9703A00C14B08 /* Trimly */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B3AEF6422EE6A0E300E396C8 /* Exceptions for "Trimly" folder in "TrimTally" target */,
+			);
 			path = Trimly;
 			sourceTree = "<group>";
 		};

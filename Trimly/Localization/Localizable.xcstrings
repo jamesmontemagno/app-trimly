@@ -3505,6 +3505,9 @@
         }
       }
     },
+    "Edit Goal" : {
+
+    },
     "EMA" : {
       "localizations" : {
         "es" : {
@@ -3631,6 +3634,51 @@
     },
     "Goal Start" : {
 
+    },
+    "goals.actions.editCurrent" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Edit Current Goal"
+          }
+        }
+      }
+    },
+    "goals.actions.startNew" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Start New Goal"
+          }
+        }
+      }
+    },
+    "goals.actions.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Goal Options"
+          }
+        }
+      }
+    },
+    "goals.error.noActiveGoal" : {
+      "comment" : "No active goal found",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No active goal found"
+          }
+        }
+      }
     },
     "goals.history.completedOn" : {
       "extractionState" : "extracted_with_value",

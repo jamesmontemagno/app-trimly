@@ -6,11 +6,6 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		B3F3F5B22F0C3C0600F43F26 /* Trimly/LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B3F3F5B12F0C3C0600F43F26 /* Trimly/LaunchScreen.storyboard */; };
-		B3F3F5B42F0C3C0600F43F26 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3F3F5B32F0C3C0600F43F26 /* Assets.xcassets */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXContainerItemProxy section */
 		B39227662ED9703D00C14B08 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -33,29 +28,11 @@
 		B39227562ED9703A00C14B08 /* TrimTally.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrimTally.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B39227652ED9703D00C14B08 /* TrimTallyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrimTallyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B392276F2ED9703D00C14B08 /* TrimTallyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrimTallyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		B3F3F5B12F0C3C0600F43F26 /* Trimly/LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Trimly/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		B3F3F5B32F0C3C0600F43F26 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Trimly/Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		B37935DD2EDA544E00F0BEB1 /* Exceptions for "Trimly" folder in "TrimTally" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-			);
-			target = B39227552ED9703A00C14B08 /* TrimTally */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		B39227582ED9703A00C14B08 /* Trimly */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			children = (
-				B3F3F5B12F0C3C0600F43F26 /* Trimly/LaunchScreen.storyboard */,
-				B3F3F5B32F0C3C0600F43F26 /* Assets.xcassets */,
-			);
-			exceptions = (
-				B37935DD2EDA544E00F0BEB1 /* Exceptions for "Trimly" folder in "TrimTally" target */,
-			);
 			path = Trimly;
 			sourceTree = "<group>";
 		};
@@ -247,8 +224,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3F3F5B22F0C3C0600F43F26 /* Trimly/LaunchScreen.storyboard in Resources */,
-				B3F3F5B42F0C3C0600F43F26 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

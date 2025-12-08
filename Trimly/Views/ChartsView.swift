@@ -636,12 +636,27 @@ struct AnalyticsDashboardView: View {
 	
 	private func calculateConsistency() -> String? {
 		let entries = dataManager.fetchAllEntries()
+		let windowDays = getWindowDays()
 		
-		// Use goal start date if available
+		// Use goal start date if available, but limit to current window
 		let goalStartDate = dataManager.fetchActiveGoal()?.startDate
+		let effectiveStartDate: Date?
+		
+		if let goalStart = goalStartDate {
+			let calendar = Calendar.current
+			let today = calendar.startOfDay(for: Date())
+			let daysSinceGoal = calendar.dateComponents([.day], from: goalStart, to: today).day ?? 0
+			
+			// Use the smaller of: days since goal started, or window size
+			let effectiveDays = min(daysSinceGoal + 1, windowDays)
+			effectiveStartDate = calendar.date(byAdding: .day, value: -effectiveDays + 1, to: today)
+		} else {
+			effectiveStartDate = nil
+		}
+		
 		guard let score = WeightAnalytics.calculateConsistencyScore(
 			entries: entries,
-			goalStartDate: goalStartDate
+			goalStartDate: effectiveStartDate
 		) else {
 			return nil
 		}
@@ -654,13 +669,29 @@ struct AnalyticsDashboardView: View {
 		if let goal = dataManager.fetchActiveGoal(),
 		   let startDate = goal.startDate as Date? {
 			let entries = dataManager.fetchAllEntries()
+			let calendar = Calendar.current
+			let today = calendar.startOfDay(for: Date())
 			let normalizedStartDate = WeightEntry.normalizeDate(startDate)
-			let uniqueDays = Set(entries.filter { $0.normalizedDate >= normalizedStartDate }.map { $0.normalizedDate }).count
-			let totalDays = max(1, Calendar.current.dateComponents([.day], from: normalizedStartDate, to: Date()).day ?? 1)
-			let percentage = Int((Double(uniqueDays) / Double(totalDays)) * 100)
-			let dateStr = startDate.formatted(date: .long, time: .omitted)
+			let windowDays = getWindowDays()
 			
-			return Text("How it's calculated:\n\nDays with entries: \(uniqueDays)\nTotal days since goal start: \(totalDays)\nFormula: \(uniqueDays) ÷ \(totalDays) = \(percentage)%\n\nGoal start date: \(dateStr)\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits.")
+			// Calculate days since goal started
+			let daysSinceGoal = calendar.dateComponents([.day], from: normalizedStartDate, to: today).day ?? 0
+			let effectiveDays = min(daysSinceGoal + 1, windowDays)
+			
+			// Calculate effective start date for window
+			let effectiveStartDate = calendar.date(byAdding: .day, value: -effectiveDays + 1, to: today) ?? normalizedStartDate
+			
+			let uniqueDays = Set(entries.filter { $0.normalizedDate >= effectiveStartDate }.map { $0.normalizedDate }).count
+			let percentage = Int((Double(uniqueDays) / Double(effectiveDays)) * 100)
+			
+			if daysSinceGoal + 1 <= windowDays {
+				// Goal is within the window period
+				let dateStr = startDate.formatted(date: .long, time: .omitted)
+				return Text("How it's calculated:\n\nDays with entries: \(uniqueDays)\nDays since goal start: \(effectiveDays)\nFormula: \(uniqueDays) ÷ \(effectiveDays) = \(percentage)%\n\nGoal start: \(dateStr)\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits.")
+			} else {
+				// Goal started before the window, use window limit
+				return Text("How it's calculated:\n\nDays with entries: \(uniqueDays)\nWindow: \(effectiveDays) days (\(range.displayName.lowercased()))\nFormula: \(uniqueDays) ÷ \(effectiveDays) = \(percentage)%\n\nGoal started before this window - using \(range.displayName.lowercased()) period.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits.")
+			}
 		} else {
 			let entries = dataManager.fetchAllEntries()
 			let windowDays = getWindowDays()

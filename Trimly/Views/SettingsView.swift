@@ -59,17 +59,6 @@ struct SettingsView: View {
 				.navigationDestination(isPresented: $navigateToHealthKit) { HealthKitView() }
 				.sheet(isPresented: $showingGoalSheet) { GoalSetupView(mode: goalMode) }
 				.sheet(isPresented: $showingGoalHistory) { GoalHistoryView() }
-				.confirmationDialog(String(localized: L10n.Goals.actionsTitle), isPresented: $showingGoalActions) {
-					Button(String(localized: L10n.Goals.actionEditCurrent)) {
-						goalMode = .edit
-						showingGoalSheet = true
-					}
-					Button(String(localized: L10n.Goals.actionStartNew)) {
-						goalMode = .new
-						showingGoalSheet = true
-					}
-					Button(String(localized: L10n.Common.cancelButton), role: .cancel) {}
-				}
 				.sheet(isPresented: $showingExport) { ExportView(initialCSV: exportedData) }
 				.sheet(isPresented: $showingPaywall) { PaywallView() }
 				.confirmationDialog(String(localized: L10n.Common.deleteAllDataTitle), isPresented: $showingDeleteConfirmation, titleVisibility: .visible) {
@@ -205,16 +194,32 @@ struct SettingsView: View {
 					
 					settingsSection(title: String(localized: L10n.Settings.goalsTitle)) {
 						if let goal = dataManager.fetchActiveGoal() {
-							Button {
-							showingGoalActions = true
-						} label: {
-							settingsRow(
-								icon: "flag.checkered",
-								title: String(localized: L10n.Settings.currentGoalTitle),
+						let preferredUnit = dataManager.settings?.preferredUnit ?? .pounds
+						let targetWeight = preferredUnit.convert(fromKg: goal.targetWeightKg)
+						let subtitle = String(format: "%.1f %@", targetWeight, preferredUnit.symbol)
+						
+						Button {
+						showingGoalActions = true
+					} label: {
+						settingsRow(
+							icon: "flag.checkered",
+							title: String(localized: L10n.Settings.currentGoalTitle),
+							subtitle: subtitle,
 									showChevron: true
 								)
 							}
 							.buttonStyle(.plain)
+							.confirmationDialog(String(localized: L10n.Goals.actionsTitle), isPresented: $showingGoalActions) {
+								Button(String(localized: L10n.Goals.actionEditCurrent)) {
+									goalMode = .edit
+									showingGoalSheet = true
+								}
+								Button(String(localized: L10n.Goals.actionStartNew)) {
+									goalMode = .new
+									showingGoalSheet = true
+								}
+								Button(String(localized: L10n.Common.cancelButton), role: .cancel) {}
+							}
 							
 							sectionDivider()
 							

@@ -16,6 +16,7 @@ This file is a concise status snapshot. For full details, see:
 - 14 major features implemented across v1.0–v1.2 (core tracking, analytics, goals, export, HealthKit, reminders, widget, celebrations, plateau detection).
 - iOS 17+ and macOS 14+ support with SwiftUI + SwiftData and iCloud sync.
 - Clean architecture (DataManager + services), strong tests for analytics and data operations.
+- Full internationalization support with English, Spanish, and French translations (458 strings).
 
 For a narrative overview of what’s built and how to run it, start with `README.md` and `docs/IMPLEMENTATION_SUMMARY.md`.
 
@@ -30,4 +31,4 @@ See `docs/FEATURE_IMPLEMENTATION_V1.2.md` for the detailed v1.1/v1.2 implementat
 
 ---
 
-**Last Reviewed:** November 2025
+**Last Reviewed:** December 2025

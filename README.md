@@ -146,7 +146,7 @@ TrimTally respects your privacy:
 
 - All data stored locally with optional iCloud sync
 - No third-party analytics or tracking
-- HealthKit data handled securely (when implemented)
+- HealthKit data handled securely with background sync
 - Full data export and deletion capabilities
 
 ## Testing
@@ -167,6 +167,15 @@ Tests cover:
 
 Contributions are welcome! Please feel free to submit issues or pull requests.
 
+## Localization
+
+TrimTally is available in three languages:
+- **English** (primary)
+- **Spanish** (Español)
+- **French** (Français)
+
+All user-facing strings are stored in `Trimly/Localization/Localizable.xcstrings` using the modern String Catalog format. The app automatically adapts to the device's language settings.
+
 ## License
 
 See [LICENSE](LICENSE) file for details.
@@ -177,7 +186,8 @@ Built with modern Apple technologies:
 - SwiftUI for beautiful, responsive interfaces
 - SwiftData for seamless data persistence
 - Swift Charts for elegant visualizations
-- HealthKit for health data integration (planned)
+- HealthKit for health data integration
+- WidgetKit for home screen widgets
 
 ---
 

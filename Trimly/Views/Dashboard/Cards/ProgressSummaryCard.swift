@@ -16,6 +16,9 @@ struct ProgressSummaryCard: View {
 	var body: some View {
 		VStack(spacing: 12) {
 			if let goal, let currentWeight, let startWeight {
+				// Determine if user is trying to gain or lose weight
+				let isGaining = goal.targetWeightKg > startWeight
+				
 				HStack(spacing: 20) {
 					VStack(alignment: .leading, spacing: 4) {
 						Text(L10n.Dashboard.fromStart)
@@ -26,7 +29,7 @@ struct ProgressSummaryCard: View {
 						let deltaDisplay = formatDelta(delta)
 						Text(deltaDisplay)
 							.font(.title3.bold())
-							.foregroundStyle(delta < 0 ? .green : delta > 0 ? .orange : .primary)
+							.foregroundStyle(deltaColor(delta: delta, isGaining: isGaining))
 					}
 					
 					Divider()
@@ -65,27 +68,32 @@ struct ProgressSummaryCard: View {
 					let startDisplay = displayValue(startWeight)
 					let targetDisplay = displayValue(goal.targetWeightKg)
 					let dateDisplay = goalStartDate.formatted(date: .abbreviated, time: .omitted)
+					let checkInsCount = countCheckIns(since: goalStartDate)
 					
 					Divider()
 					
-					VStack(alignment: .leading, spacing: 6) {
-						HStack(spacing: 10) {
+					HStack(spacing: 16) {
+						VStack(alignment: .leading, spacing: 4) {
 							Text(String(localized: L10n.Dashboard.progressMetaStart(startDisplay)))
 								.font(.caption)
 								.foregroundStyle(.secondary)
-							Text(String(localized: L10n.Dashboard.progressMetaSeparator))
-								.font(.caption)
-								.foregroundStyle(.tertiary)
 							Text(String(localized: L10n.Dashboard.progressMetaTarget(targetDisplay)))
 								.font(.caption)
 								.foregroundStyle(.secondary)
 						}
-						HStack(spacing: 10) {
+						
+						Spacer()
+						
+						VStack(alignment: .trailing, spacing: 4) {
 							Text(String(localized: L10n.Dashboard.progressMetaStartDate(dateDisplay)))
+								.font(.caption)
+								.foregroundStyle(.secondary)
+							Text(String(localized: L10n.Dashboard.progressMetaCheckIns(checkInsCount)))
 								.font(.caption)
 								.foregroundStyle(.secondary)
 						}
 					}
+					.frame(maxWidth: .infinity)
 				}
 			} else {
 				Text(L10n.Dashboard.setGoalPrompt)
@@ -116,5 +124,28 @@ struct ProgressSummaryCard: View {
 		let value = unit.convert(fromKg: kg)
 		let precision = dataManager.settings?.decimalPrecision ?? 1
 		return String(format: "%.*f %@", precision, value, unit.symbol as NSString)
+	}
+	
+	/// Determine the color for the delta based on goal direction
+	private func deltaColor(delta: Double, isGaining: Bool) -> Color {
+		if delta == 0 { return .primary }
+		
+		// For gaining goals: positive delta is good (green), negative is not ideal (orange)
+		// For losing goals: negative delta is good (green), positive is not ideal (orange)
+		if isGaining {
+			return delta > 0 ? .green : .orange
+		} else {
+			return delta < 0 ? .green : .orange
+		}
+	}
+	
+	/// Count check-ins (weight entries) since the goal start date
+	private func countCheckIns(since startDate: Date) -> Int {
+		let allEntries = dataManager.fetchAllEntries()
+		let normalizedStartDate = WeightEntry.normalizeDate(startDate)
+		let entriesSinceGoal = allEntries.filter { entry in
+			!entry.isHidden && entry.normalizedDate >= normalizedStartDate
+		}
+		return entriesSinceGoal.count
 	}
 }

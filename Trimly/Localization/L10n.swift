@@ -181,6 +181,9 @@ enum L10n {
 		static func progressMetaStartDate(_ value: String) -> LocalizedStringResource {
 			LocalizedStringResource("dashboard.progress.meta.startDate", defaultValue: "Start date: \(value)")
 		}
+		static func progressMetaCheckIns(_ count: Int) -> LocalizedStringResource {
+			LocalizedStringResource("dashboard.progress.meta.checkIns", defaultValue: "Check-ins: \(count)")
+		}
 		static let progressMetaSeparator = LocalizedStringResource("dashboard.progress.meta.separator", defaultValue: "|")
 		static let consistencyScore = LocalizedStringResource("dashboard.consistencyScore", defaultValue: "Consistency Score")
 		static let consistencyVery = LocalizedStringResource("dashboard.consistency.very", defaultValue: "Very consistent")

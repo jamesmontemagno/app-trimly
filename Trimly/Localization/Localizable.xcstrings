@@ -3067,6 +3067,29 @@
         }
       }
     },
+    "dashboard.progress.meta.checkIns" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Check-ins: %lld"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registros: %lld"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enregistrements: %lld"
+          }
+        }
+      }
+    },
     "dashboard.setGoalPrompt" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {

@@ -132,6 +132,7 @@ enum L10n {
 		static let legendInfoHint = LocalizedStringResource("charts.legend.info.hint", defaultValue: "Opens a short description of this overlay")
 			static let selectionTitle = LocalizedStringResource("charts.selection.title", defaultValue: "Selected Entry")
 			static let selectionHint = LocalizedStringResource("charts.selection.hint", defaultValue: "Tap a point to see the exact weight.")
+			static let tapToShowDotsHint = LocalizedStringResource("charts.tap.showDots.hint", defaultValue: "Tap the chart to show data points.")
 		static let settingsButton = LocalizedStringResource("charts.button.settings", defaultValue: "Chart Settings")
 	}
 

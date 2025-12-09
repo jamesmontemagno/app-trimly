@@ -363,6 +363,7 @@ struct ChartsView: View {
 		.interpolationMethod(.monotone)
 	}
 	
+	@ChartContentBuilder
 	private func weightPointMark(for point: ChartDataPoint) -> some ChartContent {
 		if showDots {
 			PointMark(

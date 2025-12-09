@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ProgressSummaryCard: View {
 	@EnvironmentObject var dataManager: DataManager
@@ -13,12 +14,15 @@ struct ProgressSummaryCard: View {
 	let currentWeight: Double?
 	let startWeight: Double?
 	
+	/// Determine if user is trying to gain or lose weight based on goal
+	private var isGaining: Bool {
+		guard let goal, let startWeight else { return false }
+		return goal.targetWeightKg > startWeight
+	}
+	
 	var body: some View {
 		VStack(spacing: 12) {
 			if let goal, let currentWeight, let startWeight {
-				// Determine if user is trying to gain or lose weight
-				let isGaining = goal.targetWeightKg > startWeight
-				
 				HStack(spacing: 20) {
 					VStack(alignment: .leading, spacing: 4) {
 						Text(L10n.Dashboard.fromStart)
@@ -141,11 +145,12 @@ struct ProgressSummaryCard: View {
 	
 	/// Count check-ins (weight entries) since the goal start date
 	private func countCheckIns(since startDate: Date) -> Int {
-		let allEntries = dataManager.fetchAllEntries()
 		let normalizedStartDate = WeightEntry.normalizeDate(startDate)
-		let entriesSinceGoal = allEntries.filter { entry in
-			!entry.isHidden && entry.normalizedDate >= normalizedStartDate
-		}
-		return entriesSinceGoal.count
+		let descriptor = FetchDescriptor<WeightEntry>(
+			predicate: #Predicate { entry in
+				!entry.isHidden && entry.normalizedDate >= normalizedStartDate
+			}
+		)
+		return (try? dataManager.modelContext.fetch(descriptor))?.count ?? 0
 	}
 }

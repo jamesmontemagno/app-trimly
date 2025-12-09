@@ -22,6 +22,7 @@ struct ChartsView: View {
 	@State private var selectedPoint: ChartDataPoint?
 	@State private var showingMAInfo = false
 	@State private var showingEMAInfo = false
+	@State private var showDots = false
 
 	private let tooltipFormatter: DateFormatter = {
 		let formatter = DateFormatter()
@@ -95,6 +96,7 @@ struct ChartsView: View {
 		}
 		.onChange(of: selectedRange) { _, _ in
 			selectedPoint = nil
+			showDots = false
 		}
 	}
 	
@@ -275,6 +277,13 @@ struct ChartsView: View {
 		.background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
 		.accessibilityElement(children: .combine)
 		.accessibilityLabel(Text("\(dateText), \(displayValue(point.weight)) \(unitSymbol)"))
+		.onTapGesture {
+			// Tapping the selected summary hides the dots
+			withAnimation {
+				showDots = false
+				selectedPoint = nil
+			}
+		}
 	}
 
 	private var selectionHintView: some View {
@@ -282,7 +291,7 @@ struct ChartsView: View {
 			Image(systemName: "hand.tap")
 				.font(.subheadline)
 				.foregroundStyle(.secondary)
-			Text(L10n.Charts.selectionHint)
+			Text(showDots ? L10n.Charts.selectionHint : L10n.Charts.tapToShowDotsHint)
 				.font(.footnote)
 				.foregroundStyle(.secondary)
 		}
@@ -313,9 +322,21 @@ struct ChartsView: View {
 		let plotFrame = geometry[plotFrameAnchor]
 		let xPosition = location.x - plotFrame.origin.x
 		guard xPosition >= 0, xPosition <= plotFrame.size.width else { return }
+		
+		// If dots are not shown, first tap shows them
+		if !showDots {
+			withAnimation {
+				showDots = true
+			}
+			return
+		}
+		
+		// If dots are shown, select the nearest point
 		guard let date: Date = proxy.value(atX: xPosition) else { return }
 		if let nearest = nearestPoint(to: date, in: data) {
-			selectedPoint = nearest
+			withAnimation {
+				selectedPoint = nearest
+			}
 		}
 	}
 
@@ -343,23 +364,25 @@ struct ChartsView: View {
 	}
 	
 	private func weightPointMark(for point: ChartDataPoint) -> some ChartContent {
-		PointMark(
-			x: .value("Date", point.date),
-			y: .value("Weight", convertedWeight(point.weight))
-		)
-		.symbol {
-			pointSymbol(for: point)
-		}
-		.foregroundStyle(by: .value("Series", ChartSeries.weight.rawValue))
-		.accessibilityLabel(pointAccessibilityLabel(point))
-		.annotation(position: .top, alignment: .leading) {
-			if selectedPoint?.id == point.id {
-				ChartTooltip(
-					point: point,
-					unit: dataManager.settings?.preferredUnit ?? .kilograms,
-					precision: dataManager.settings?.decimalPrecision ?? 1,
-					note: dataManager.fetchEntriesForDate(point.date).last?.notes
-				)
+		if showDots {
+			PointMark(
+				x: .value("Date", point.date),
+				y: .value("Weight", convertedWeight(point.weight))
+			)
+			.symbol {
+				pointSymbol(for: point)
+			}
+			.foregroundStyle(by: .value("Series", ChartSeries.weight.rawValue))
+			.accessibilityLabel(pointAccessibilityLabel(point))
+			.annotation(position: .top, alignment: .leading) {
+				if selectedPoint?.id == point.id {
+					ChartTooltip(
+						point: point,
+						unit: dataManager.settings?.preferredUnit ?? .kilograms,
+						precision: dataManager.settings?.decimalPrecision ?? 1,
+						note: dataManager.fetchEntriesForDate(point.date).last?.notes
+					)
+				}
 			}
 		}
 	}

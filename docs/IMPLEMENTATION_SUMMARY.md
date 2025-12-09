@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-**TrimTally** is a modern, supportive weight tracking application for iOS and macOS, built with SwiftUI and SwiftData. This implementation represents a complete Version 1.0 foundation with all core features.
+**TrimTally** is a modern, supportive weight tracking application for iOS and macOS, built with SwiftUI and SwiftData. This implementation represents a complete Version 1.2 with all core features, analytics, HealthKit integration, widgets, and full internationalization.
 
 ## What Has Been Built
 
@@ -86,6 +86,42 @@ An Xcode app project with:
     - Multi-device support
     - Conflict resolution
 
+11. **HealthKit Integration** (v1.1)
+    - Import historical weight data
+    - Background sync for new entries
+    - Duplicate detection and auto-hide
+    - Configurable tolerance levels
+
+12. **Adaptive Reminders** (v1.1)
+    - Daily notification scheduling
+    - Optional secondary reminder
+    - Auto-cancellation after logging
+    - Smart time suggestions based on patterns
+
+13. **Home Screen Widgets** (v1.1)
+    - Small widget (current weight + delta)
+    - Medium widget (weight + trend)
+    - Automatic updates
+    - Platform-adaptive design
+
+14. **Micro Celebrations** (v1.2)
+    - Achievement milestones (streaks, entries, goals)
+    - Consistency progress tracking
+    - Auto-dismiss notifications
+    - Supportive messaging
+
+15. **Plateau Detection** (v1.2)
+    - Automatic detection of weight stability
+    - Contextual guidance
+    - Configurable thresholds
+
+16. **Internationalization** (v1.2)
+    - English (primary)
+    - Spanish (Español)
+    - French (Français)
+    - 458 fully translated strings
+    - Automatic language adaptation
+
 ## Technical Implementation
 
 ### Architecture
@@ -105,8 +141,11 @@ SQLite + iCloud (Storage)
 - **SwiftUI**: Declarative UI framework
 - **SwiftData**: Modern persistence with iCloud
 - **Swift Charts**: Beautiful data visualization
+- **HealthKit**: Health data integration for weight tracking
+- **WidgetKit**: Home screen widgets
+- **UserNotifications**: Adaptive reminder system
 - **XCTest**: Unit testing framework
- - **Swift Package Manager**: Used for initial development; project is now organized as an Xcode app target.
+- **Swift Package Manager**: Used for initial development; project is now organized as an Xcode app target.
 
 ### Device-Scoped Preferences
 

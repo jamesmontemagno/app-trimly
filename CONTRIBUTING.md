@@ -1,6 +1,6 @@
 # Contributing to TrimTally
 
-Thank you for your interest in contributing to TrTrimTallyimly!
+Thank you for your interest in contributing to TrimTally!
 
 ## Development Environment
 
@@ -22,10 +22,10 @@ Thank you for your interest in contributing to TrTrimTallyimly!
 
 2. Open in Xcode:
    ```bash
-   open Package.swift
+   open TrimTally.xcodeproj
    ```
    
-   Or simply double-click `Package.swift` in Finder.
+   Or simply double-click `TrimTally.xcodeproj` in Finder.
 
 3. Select your target platform (iOS or macOS) from the scheme selector
 
@@ -40,22 +40,24 @@ In Xcode:
 
 Or from the command line on macOS:
 ```bash
-swift test
+xcodebuild -scheme TrimTally -destination 'platform=macOS,arch=arm64' test
 ```
 
 ## Project Structure
 
 ```
 app-trimly/
-├── Sources/
-│   └── Trimly/
-│       ├── Models/          # Data models (SwiftData)
-│       ├── Services/        # Business logic & analytics
-│       ├── Views/           # SwiftUI views
-│       └── TrimlyApp.swift  # App entry point
-├── Tests/
-│   └── TrimlyTests/         # Unit tests
-├── Package.swift            # Swift Package Manager manifest
+├── TrimTally.xcodeproj/         # Xcode project
+├── Trimly/
+│   ├── Models/                  # Data models (SwiftData)
+│   ├── Services/                # Business logic & analytics
+│   ├── Views/                   # SwiftUI views
+│   ├── Localization/            # Translations (xcstrings)
+│   ├── Widget/                  # WidgetKit extension
+│   └── TrimlyApp.swift          # App entry point
+├── TrimlyTests/                 # Unit tests
+├── TrimlyUITests/               # UI tests
+├── docs/                        # Documentation
 └── README.md
 ```
 
@@ -74,6 +76,23 @@ app-trimly/
 - Test analytics calculations thoroughly
 - Use in-memory storage for tests
 - Ensure tests are isolated and can run independently
+
+## Localization
+
+TrimTally supports multiple languages using String Catalogs (.xcstrings):
+
+- All user-facing strings must use `NSLocalizedString` or the `L10n` helper
+- Never hard-code strings in views
+- Add new strings to `Trimly/Localization/Localizable.xcstrings`
+- Provide translations for English, Spanish, and French
+- Use descriptive keys following the pattern: `section.subsection.string`
+- Test the app in different languages using Xcode's scheme settings
+
+### Supported Languages
+
+- English (primary)
+- Spanish (Español)
+- French (Français)
 
 ## Pull Request Process
 

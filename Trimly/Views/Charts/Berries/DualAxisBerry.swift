@@ -11,6 +11,10 @@ import Charts
 struct DualAxisBerry: View {
 	let data: [ChartDataPoint]
 	let unit: WeightUnit
+	let maData: [ChartDataPoint]?
+	let emaData: [ChartDataPoint]?
+	let goal: Goal?
+	let convertWeight: (Double) -> Double
 	
 	var body: some View {
 		VStack(alignment: .leading, spacing: 8) {
@@ -23,44 +27,63 @@ struct DualAxisBerry: View {
 				ForEach(data) { point in
 					LineMark(
 						x: .value("Date", point.date),
-						y: .value("Weight", unit.convert(fromKg: point.weight))
+						y: .value("Weight", convertWeight(point.weight))
 					)
 					.foregroundStyle(.blue)
 					.interpolationMethod(.catmullRom)
 					.lineStyle(StrokeStyle(lineWidth: 2))
 				}
 				
-				// Trend line (moving average)
-				ForEach(movingAverage) { point in
-					LineMark(
-						x: .value("Date", point.date),
-						y: .value("Trend", unit.convert(fromKg: point.weight))
+				// Moving Average
+				if let maData = maData {
+					ForEach(maData) { point in
+						LineMark(
+							x: .value("Date", point.date),
+							y: .value("MA", convertWeight(point.weight))
+						)
+						.foregroundStyle(.orange)
+						.interpolationMethod(.catmullRom)
+						.lineStyle(StrokeStyle(lineWidth: 2, dash: [5, 5]))
+					}
+				}
+				
+				// EMA
+				if let emaData = emaData {
+					ForEach(emaData) { point in
+						LineMark(
+							x: .value("Date", point.date),
+							y: .value("EMA", convertWeight(point.weight))
+						)
+						.foregroundStyle(.purple)
+						.interpolationMethod(.catmullRom)
+						.lineStyle(StrokeStyle(lineWidth: 2, dash: [2, 2]))
+					}
+				}
+				
+				// Goal line and start date
+				if let goal = goal {
+					RuleMark(
+						y: .value("Goal", convertWeight(goal.targetWeightKg))
 					)
-					.foregroundStyle(.orange)
-					.interpolationMethod(.catmullRom)
-					.lineStyle(StrokeStyle(lineWidth: 2, dash: [5, 5]))
+					.foregroundStyle(.green)
+					.lineStyle(StrokeStyle(lineWidth: 2, dash: [10, 5]))
+					
+					if let startDate = goal.startDate as Date?,
+					   startDate >= (data.first?.date ?? Date.distantPast),
+					   startDate <= (data.last?.date ?? Date.distantFuture) {
+						RuleMark(
+							x: .value("Goal Start", startDate)
+						)
+						.foregroundStyle(.green.opacity(0.6))
+						.lineStyle(StrokeStyle(lineWidth: 2))
+					}
 				}
 			}
-			.frame(height: 200)
-			.chartXAxis(.hidden)
-			.chartYAxis(.hidden)
+			.frame(height: 300)
 			.chartYScale(domain: .automatic(includesZero: false))
 		}
 		.padding()
 		.background(.ultraThinMaterial)
 		.clipShape(RoundedRectangle(cornerRadius: 12))
-	}
-	
-	private var movingAverage: [ChartDataPoint] {
-		guard data.count >= 3 else { return [] }
-		var result: [ChartDataPoint] = []
-		
-		for i in 2..<data.count {
-			let sum = data[i-2].weight + data[i-1].weight + data[i].weight
-			let avg = sum / 3.0
-			result.append(ChartDataPoint(date: data[i].date, weight: avg))
-		}
-		
-		return result
 	}
 }

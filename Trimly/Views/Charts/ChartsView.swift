@@ -116,37 +116,100 @@ struct ChartsView: View {
 	@ViewBuilder
 	private func berryChartsGrid(data: [ChartDataPoint]) -> some View {
 		let unit = dataManager.settings?.preferredUnit ?? .kilograms
+		let maData = movingAverageData
+		let ema = emaData
+		let goal = dataManager.fetchActiveGoal()
 		
 		LazyVStack(spacing: 16) {
-			// Row 1
-			HStack(spacing: 16) {
-				MinimalistLineBerry(data: data, unit: unit)
-				AreaGradientBerry(data: data, unit: unit)
-			}
+			MinimalistLineBerry(
+				data: data,
+				unit: unit,
+				maData: maData,
+				emaData: ema,
+				goal: goal,
+				convertWeight: convertedWeight
+			)
 			
-			// Row 2
-			HStack(spacing: 16) {
-				BarChartBerry(data: data, unit: unit)
-				CandlestickBerry(data: data, unit: unit)
-			}
+			AreaGradientBerry(
+				data: data,
+				unit: unit,
+				maData: maData,
+				emaData: ema,
+				goal: goal,
+				convertWeight: convertedWeight
+			)
 			
-			// Row 3
-			HStack(spacing: 16) {
-				DualAxisBerry(data: data, unit: unit)
-				HeatmapCalendarBerry(data: data, unit: unit)
-			}
+			BarChartBerry(
+				data: data,
+				unit: unit,
+				maData: maData,
+				emaData: ema,
+				goal: goal,
+				convertWeight: convertedWeight
+			)
 			
-			// Row 4
-			HStack(spacing: 16) {
-				MountainRidgeBerry(data: data, unit: unit)
-				DotMatrixBerry(data: data, unit: unit)
-			}
+			CandlestickBerry(
+				data: data,
+				unit: unit,
+				maData: maData,
+				emaData: ema,
+				goal: goal,
+				convertWeight: convertedWeight
+			)
 			
-			// Row 5
-			HStack(spacing: 16) {
-				StepChartBerry(data: data, unit: unit)
-				BubbleChartBerry(data: data, unit: unit)
-			}
+			DualAxisBerry(
+				data: data,
+				unit: unit,
+				maData: maData,
+				emaData: ema,
+				goal: goal,
+				convertWeight: convertedWeight
+			)
+			
+			HeatmapCalendarBerry(
+				data: data,
+				unit: unit,
+				maData: maData,
+				emaData: ema,
+				goal: goal,
+				convertWeight: convertedWeight
+			)
+			
+			MountainRidgeBerry(
+				data: data,
+				unit: unit,
+				maData: maData,
+				emaData: ema,
+				goal: goal,
+				convertWeight: convertedWeight
+			)
+			
+			DotMatrixBerry(
+				data: data,
+				unit: unit,
+				maData: maData,
+				emaData: ema,
+				goal: goal,
+				convertWeight: convertedWeight
+			)
+			
+			StepChartBerry(
+				data: data,
+				unit: unit,
+				maData: maData,
+				emaData: ema,
+				goal: goal,
+				convertWeight: convertedWeight
+			)
+			
+			BubbleChartBerry(
+				data: data,
+				unit: unit,
+				maData: maData,
+				emaData: ema,
+				goal: goal,
+				convertWeight: convertedWeight
+			)
 		}
 	}
 	

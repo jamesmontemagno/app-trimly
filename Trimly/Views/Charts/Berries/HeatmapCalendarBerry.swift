@@ -2,84 +2,107 @@
 //  HeatmapCalendarBerry.swift
 //  TrimTally
 //
-//  Chart Berry #6: Heatmap calendar grid view
+//  Chart Berry #6: Heatmap calendar grid view with trend overlays
 //
 
 import SwiftUI
+import Charts
 
 struct HeatmapCalendarBerry: View {
 	let data: [ChartDataPoint]
 	let unit: WeightUnit
-	
-	private let columns = Array(repeating: GridItem(.flexible(), spacing: 4), count: 7)
+	let maData: [ChartDataPoint]?
+	let emaData: [ChartDataPoint]?
+	let goal: Goal?
+	let convertWeight: (Double) -> Double
 	
 	var body: some View {
 		VStack(alignment: .leading, spacing: 8) {
-			Text("Heatmap Calendar")
+			Text("Heatmap with Trends")
 				.font(.headline)
 				.foregroundStyle(.secondary)
 			
-			LazyVGrid(columns: columns, spacing: 4) {
-				ForEach(heatmapData) { item in
-					RoundedRectangle(cornerRadius: 3)
-						.fill(item.color)
-						.frame(height: 25)
-						.overlay {
-							if item.hasData {
-								Image(systemName: "checkmark")
-									.font(.caption2)
-									.foregroundStyle(.white)
-							}
-						}
+			Chart {
+				// Heatmap-style bars
+				ForEach(data) { point in
+					BarMark(
+						x: .value("Date", point.date),
+						y: .value("Weight", convertWeight(point.weight))
+					)
+					.foregroundStyle(colorForWeight(point.weight))
+					.opacity(0.7)
+				}
+				
+				// Moving Average
+				if let maData = maData {
+					ForEach(maData) { point in
+						LineMark(
+							x: .value("Date", point.date),
+							y: .value("MA", convertWeight(point.weight))
+						)
+						.foregroundStyle(.orange)
+						.lineStyle(StrokeStyle(lineWidth: 2, dash: [5, 5]))
+						.interpolationMethod(.catmullRom)
+					}
+				}
+				
+				// EMA
+				if let emaData = emaData {
+					ForEach(emaData) { point in
+						LineMark(
+							x: .value("Date", point.date),
+							y: .value("EMA", convertWeight(point.weight))
+						)
+						.foregroundStyle(.purple)
+						.lineStyle(StrokeStyle(lineWidth: 2, dash: [2, 2]))
+						.interpolationMethod(.catmullRom)
+					}
+				}
+				
+				// Goal line and start date
+				if let goal = goal {
+					RuleMark(
+						y: .value("Goal", convertWeight(goal.targetWeightKg))
+					)
+					.foregroundStyle(.green)
+					.lineStyle(StrokeStyle(lineWidth: 2, dash: [10, 5]))
+					
+					if let startDate = goal.startDate as Date?,
+					   startDate >= (data.first?.date ?? Date.distantPast),
+					   startDate <= (data.last?.date ?? Date.distantFuture) {
+						RuleMark(
+							x: .value("Goal Start", startDate)
+						)
+						.foregroundStyle(.green.opacity(0.6))
+						.lineStyle(StrokeStyle(lineWidth: 2))
+					}
 				}
 			}
-			.frame(height: 200)
+			.frame(height: 300)
+			.chartYScale(domain: .automatic(includesZero: false))
 		}
 		.padding()
 		.background(.ultraThinMaterial)
 		.clipShape(RoundedRectangle(cornerRadius: 12))
 	}
 	
-	private struct HeatmapItem: Identifiable {
-		let id = UUID()
-		let date: Date
-		let hasData: Bool
-		let value: Double?
-		
-		var color: Color {
-			guard hasData, let value = value else {
-				return Color.gray.opacity(0.1)
-			}
-			return Color.blue.opacity(0.3 + (value * 0.7))
-		}
-	}
-	
-	private var heatmapData: [HeatmapItem] {
-		let calendar = Calendar.current
-		let endDate = Date()
-		let startDate = calendar.date(byAdding: .day, value: -27, to: endDate) ?? endDate
-		
-		var items: [HeatmapItem] = []
-		var currentDate = startDate
-		
-		let weights = data.map { unit.convert(fromKg: $0.weight) }
-		let minWeight = weights.min() ?? 0
-		let maxWeight = weights.max() ?? 1
-		let range = maxWeight - minWeight
-		
-		while currentDate <= endDate {
-			let dataPoint = data.first { calendar.isDate($0.date, inSameDayAs: currentDate) }
-			let normalizedValue = dataPoint.map { (unit.convert(fromKg: $0.weight) - minWeight) / max(range, 1) }
-			
-			items.append(HeatmapItem(
-				date: currentDate,
-				hasData: dataPoint != nil,
-				value: normalizedValue
-			))
-			
-			currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
+	private func colorForWeight(_ weight: Double) -> Color {
+		let weights = data.map { $0.weight }
+		guard let min = weights.min(), let max = weights.max() else {
+			return .blue
 		}
 		
-		return items
+		let range = max - min
+		guard range > 0 else { return .blue }
+		
+		let normalized = (weight - min) / range
+		
+		if normalized < 0.33 {
+			return .green
+		} else if normalized < 0.66 {
+			return .blue
+		} else {
+			return .red
+		}
 	}
 }

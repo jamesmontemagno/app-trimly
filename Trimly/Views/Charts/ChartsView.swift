@@ -45,8 +45,19 @@ struct ChartsView: View {
 				ScrollView {
 					VStack(spacing: 16) {
 						if let chartData = chartData {
-							weightChart(data: chartData)
-								.padding()
+							// Title section
+							Text("Chart Berries - Choose Your Favorite!")
+								.font(.title2.bold())
+								.padding(.top)
+							
+							Text("10 different ways to visualize your weight journey")
+								.font(.subheadline)
+								.foregroundStyle(.secondary)
+								.padding(.bottom, 8)
+							
+							// Display all 10 berry charts
+							berryChartsGrid(data: chartData)
+								.padding(.horizontal)
 						} else {
 							ContentUnavailableView(
 								String(localized: L10n.Charts.noDataTitle),
@@ -97,6 +108,45 @@ struct ChartsView: View {
 		.onChange(of: selectedRange) { _, _ in
 			selectedPoint = nil
 			showDots = false
+		}
+	}
+	
+	// MARK: - Berry Charts Grid
+	
+	@ViewBuilder
+	private func berryChartsGrid(data: [ChartDataPoint]) -> some View {
+		let unit = dataManager.settings?.preferredUnit ?? .kilograms
+		
+		LazyVStack(spacing: 16) {
+			// Row 1
+			HStack(spacing: 16) {
+				MinimalistLineBerry(data: data, unit: unit)
+				AreaGradientBerry(data: data, unit: unit)
+			}
+			
+			// Row 2
+			HStack(spacing: 16) {
+				BarChartBerry(data: data, unit: unit)
+				CandlestickBerry(data: data, unit: unit)
+			}
+			
+			// Row 3
+			HStack(spacing: 16) {
+				DualAxisBerry(data: data, unit: unit)
+				HeatmapCalendarBerry(data: data, unit: unit)
+			}
+			
+			// Row 4
+			HStack(spacing: 16) {
+				MountainRidgeBerry(data: data, unit: unit)
+				DotMatrixBerry(data: data, unit: unit)
+			}
+			
+			// Row 5
+			HStack(spacing: 16) {
+				StepChartBerry(data: data, unit: unit)
+				BubbleChartBerry(data: data, unit: unit)
+			}
 		}
 	}
 	

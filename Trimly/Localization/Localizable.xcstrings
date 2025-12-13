@@ -6471,6 +6471,7 @@
       }
     },
     "How it's calculated:\n\nDays with entries: %lld\nRolling window: %lld days\nFormula: %lld ÷ %lld = %lld%%\n\nNo active goal - using 30-day rolling window.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6488,6 +6489,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Comment c'est calculé :\n\nJours avec des entrées : %1$lld\nFenêtre glissante : %2$lld jours\nFormule : %3$lld ÷ %4$lld = %5$lld%%\n\nPas d'objectif actif - utilisation d'une fenêtre glissante de 30 jours.\n\nSuivez vos habitudes d'enregistrement au fil du temps. Une constance plus élevée aide à construire des habitudes de gestion du poids durables."
+          }
+        }
+      }
+    },
+    "How it's calculated:\n\nDays with entries: %lld\nTotal days since first entry: %lld\nFormula: %lld ÷ %lld = %lld%%\n\nFirst entry date: %@\n\nNo active goal - using all available history.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "How it's calculated:\n\nDays with entries: %1$lld\nTotal days since first entry: %2$lld\nFormula: %3$lld ÷ %4$lld = %5$lld%%\n\nFirst entry date: %6$@\n\nNo active goal - using all available history.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits."
           }
         }
       }
@@ -6575,6 +6586,9 @@
       }
     },
     "Min Days" : {
+
+    },
+    "No entries yet. Start tracking your weight to see your consistency score!" : {
 
     },
     "No entry for this day" : {

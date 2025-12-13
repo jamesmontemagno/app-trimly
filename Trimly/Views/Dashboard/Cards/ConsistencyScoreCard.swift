@@ -62,22 +62,38 @@ struct ConsistencyScoreCard: View {
 }
 
 func consistencyInfoMessage(dataManager: DataManager) -> Text {
+	let calendar = Calendar.current
+	let today = calendar.startOfDay(for: Date())
+	
 	if let goal = dataManager.fetchActiveGoal(),
 	   let startDate = goal.startDate as Date? {
-		let entries = dataManager.fetchAllEntries()
-		let normalizedStartDate = WeightEntry.normalizeDate(startDate)
-		let uniqueDays = Set(entries.filter { $0.normalizedDate >= normalizedStartDate }.map { $0.normalizedDate }).count
-		let totalDays = max(1, Calendar.current.dateComponents([.day], from: normalizedStartDate, to: Date()).day ?? 1)
-		let percentage = Int((Double(uniqueDays) / Double(totalDays)) * 100)
+		let entries = dataManager.fetchAllEntries().filter { !$0.isHidden }
+		let normalizedStartDate = calendar.startOfDay(for: startDate)
+		let uniqueDays = Set(entries.filter { $0.normalizedDate >= normalizedStartDate && $0.normalizedDate <= today }.map { $0.normalizedDate }).count
+		let totalDays = calendar.dateComponents([.day], from: normalizedStartDate, to: today).day ?? 0
+		let totalDaysInclusive = totalDays + 1 // Include today
+		let percentage = Int((Double(uniqueDays) / Double(totalDaysInclusive)) * 100)
 		let dateStr = startDate.formatted(date: .long, time: .omitted)
 		
-		return Text("How it's calculated:\n\nDays with entries: \(uniqueDays)\nTotal days since goal start: \(totalDays)\nFormula: \(uniqueDays) ÷ \(totalDays) = \(percentage)%\n\nGoal start date: \(dateStr)\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits.")
+		return Text("How it's calculated:\n\nDays with entries: \(uniqueDays)\nTotal days since goal start: \(totalDaysInclusive)\nFormula: \(uniqueDays) ÷ \(totalDaysInclusive) = \(percentage)%\n\nGoal start date: \(dateStr)\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits.")
 	} else {
-		let entries = dataManager.fetchAllEntries()
-		let windowDays = 30
-		let uniqueDays = Set(entries.map { $0.normalizedDate }).count
-		let percentage = Int((Double(uniqueDays) / Double(windowDays)) * 100)
+		let visibleEntries = dataManager.fetchAllEntries().filter { !$0.isHidden }
+		guard !visibleEntries.isEmpty else {
+			return Text("No entries yet. Start tracking your weight to see your consistency score!")
+		}
 		
-		return Text("How it's calculated:\n\nDays with entries: \(uniqueDays)\nRolling window: \(windowDays) days\nFormula: \(uniqueDays) ÷ \(windowDays) = \(percentage)%\n\nNo active goal - using 30-day rolling window.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits.")
+		let sortedEntries = visibleEntries.sorted { $0.normalizedDate < $1.normalizedDate }
+		guard let firstDate = sortedEntries.first?.normalizedDate else {
+			return Text("No entries yet. Start tracking your weight to see your consistency score!")
+		}
+		
+		let effectiveStart = firstDate
+		let uniqueDays = Set(visibleEntries.filter { $0.normalizedDate >= effectiveStart && $0.normalizedDate <= today }.map { $0.normalizedDate }).count
+		let totalDays = calendar.dateComponents([.day], from: effectiveStart, to: today).day ?? 0
+		let totalDaysInclusive = totalDays + 1 // Include today
+		let percentage = Int((Double(uniqueDays) / Double(totalDaysInclusive)) * 100)
+		let dateStr = firstDate.formatted(date: .long, time: .omitted)
+		
+		return Text("How it's calculated:\n\nDays with entries: \(uniqueDays)\nTotal days since first entry: \(totalDaysInclusive)\nFormula: \(uniqueDays) ÷ \(totalDaysInclusive) = \(percentage)%\n\nFirst entry date: \(dateStr)\n\nNo active goal - using all available history.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits.")
 	}
 }

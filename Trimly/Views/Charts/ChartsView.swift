@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Charts
+import Combine
 #if os(macOS)
 import AppKit
 #endif
@@ -23,6 +24,11 @@ struct ChartsView: View {
 	@State private var showingMAInfo = false
 	@State private var showingEMAInfo = false
 	@State private var showDots = false
+	@State private var chartCache: [ChartRange: [ChartDataPoint]] = [:]
+	@State private var movingAverageCache: [ChartRange: [ChartDataPoint]] = [:]
+	@State private var emaCache: [ChartRange: [ChartDataPoint]] = [:]
+	private let minimumHighlightBandWidth: CGFloat = 24 // Keep the selection band visible on tight plots.
+	private let highlightBandWidthPercentage: CGFloat = 0.015 // Scale the selection band with the plot width.
 
 	private let tooltipFormatter: DateFormatter = {
 		let formatter = DateFormatter()
@@ -97,6 +103,14 @@ struct ChartsView: View {
 		.onChange(of: selectedRange) { _, _ in
 			selectedPoint = nil
 			showDots = false
+			prewarmCaches(for: selectedRange)
+		}
+		.onReceive(dataManager.objectWillChange) { _ in
+			invalidateCaches()
+			prewarmCaches(for: selectedRange)
+		}
+		.onAppear {
+			prewarmCaches(for: selectedRange)
 		}
 	}
 	
@@ -134,19 +148,35 @@ struct ChartsView: View {
 			.chartLegend(.hidden)
 			.chartOverlay { proxy in
 				GeometryReader { geo in
-					Rectangle()
-						.fill(.clear)
-						.contentShape(Rectangle())
-						.gesture(
-							DragGesture(minimumDistance: 0)
-								.onChanged { value in
-									updateSelection(at: value.location, proxy: proxy, geometry: geo, data: data)
-								}
-								.onEnded { _ in }
-						)
-						.onTapGesture { location in
-							updateSelection(at: location, proxy: proxy, geometry: geo, data: data)
+					ZStack {
+						if let selectedPoint,
+						   let plotFrameAnchor = proxy.plotFrame,
+						   let xPosition = proxy.position(forX: selectedPoint.date) {
+							let plotFrame = geo[plotFrameAnchor]
+							let highlightX = xPosition + plotFrame.origin.x
+							let bandWidth = highlightBandWidth(for: plotFrame)
+							
+							Rectangle()
+								.fill(weightLinePrimary.opacity(0.08))
+								.frame(width: bandWidth, height: plotFrame.height)
+								.position(x: highlightX, y: plotFrame.midY)
+								.allowsHitTesting(false)
 						}
+						
+						Rectangle()
+							.fill(.clear)
+							.contentShape(Rectangle())
+							.gesture(
+								DragGesture(minimumDistance: 0)
+									.onChanged { value in
+										updateSelection(at: value.location, proxy: proxy, geometry: geo, data: data)
+									}
+									.onEnded { _ in }
+							)
+							.onTapGesture { location in
+								updateSelection(at: location, proxy: proxy, geometry: geo, data: data)
+							}
+					}
 				}
 			}
 			
@@ -181,39 +211,71 @@ struct ChartsView: View {
 	// MARK: - Data Processing
 	
 	private var chartData: [ChartDataPoint]? {
-		let dailyWeights = dataManager.getDailyWeights()
-		guard !dailyWeights.isEmpty else { return nil }
-		
-		let filtered = filterByRange(dailyWeights)
-		guard !filtered.isEmpty else { return nil }
-		
-		return filtered.map { ChartDataPoint(date: $0.date, weight: $0.weight) }
+		cachedChartData(for: selectedRange)
 	}
 	
 	private var movingAverageData: [ChartDataPoint]? {
-		guard let period = dataManager.settings?.movingAveragePeriod else { return nil }
-		let dailyWeights = dataManager.getDailyWeights()
-		let filtered = filterByRange(dailyWeights)
-		
-		let ma = WeightAnalytics.calculateMovingAverage(dailyWeights: filtered, period: period)
-		return ma.map { ChartDataPoint(date: $0.date, weight: $0.value) }
+		cachedMovingAverageData(for: selectedRange)
 	}
 	
 	private var emaData: [ChartDataPoint]? {
-		guard let period = dataManager.settings?.emaPeriod else { return nil }
-		let dailyWeights = dataManager.getDailyWeights()
-		let filtered = filterByRange(dailyWeights)
-		
-		let ema = WeightAnalytics.calculateEMA(dailyWeights: filtered, period: period)
-		return ema.map { ChartDataPoint(date: $0.date, weight: $0.value) }
+		cachedEMAData(for: selectedRange)
 	}
 	
-	private func filterByRange(_ data: [(date: Date, weight: Double)]) -> [(date: Date, weight: Double)] {
+	private func cachedChartData(for range: ChartRange) -> [ChartDataPoint]? {
+		if let cached = chartCache[range] {
+			return cached
+		}
+		
+		let dailyWeights = dataManager.getDailyWeights()
+		guard !dailyWeights.isEmpty else { return nil }
+		
+		let filtered = filterData(dailyWeights, in: range)
+		guard !filtered.isEmpty else { return nil }
+		
+		let mapped = filtered.map { ChartDataPoint(date: $0.date, weight: $0.weight) }
+		chartCache[range] = mapped
+		return mapped
+	}
+	
+	private func cachedMovingAverageData(for range: ChartRange) -> [ChartDataPoint]? {
+		if let cached = movingAverageCache[range] {
+			return cached.isEmpty ? nil : cached
+		}
+		
+		guard let period = dataManager.settings?.movingAveragePeriod else { return nil }
+		let dailyWeights = dataManager.getDailyWeights()
+		let filtered = filterData(dailyWeights, in: range)
+		
+		let ma = WeightAnalytics.calculateMovingAverage(dailyWeights: filtered, period: period)
+		let mapped = ma.map { ChartDataPoint(date: $0.date, weight: $0.value) }
+		guard !mapped.isEmpty else { return nil }
+		movingAverageCache[range] = mapped
+		return mapped
+	}
+	
+	private func cachedEMAData(for range: ChartRange) -> [ChartDataPoint]? {
+		if let cached = emaCache[range] {
+			return cached.isEmpty ? nil : cached
+		}
+		
+		guard let period = dataManager.settings?.emaPeriod else { return nil }
+		let dailyWeights = dataManager.getDailyWeights()
+		let filtered = filterData(dailyWeights, in: range)
+		
+		let ema = WeightAnalytics.calculateEMA(dailyWeights: filtered, period: period)
+		let mapped = ema.map { ChartDataPoint(date: $0.date, weight: $0.value) }
+		guard !mapped.isEmpty else { return nil }
+		emaCache[range] = mapped
+		return mapped
+	}
+	
+	private func filterData(_ data: [(date: Date, weight: Double)], in range: ChartRange) -> [(date: Date, weight: Double)] {
 		let calendar = Calendar.current
 		let now = Date()
 		
 		let startDate: Date
-		switch selectedRange {
+		switch range {
 		case .week:
 			startDate = calendar.date(byAdding: .day, value: -7, to: now) ?? now
 		case .month:
@@ -239,6 +301,26 @@ struct ChartsView: View {
 	}
 	
 	// MARK: - Helpers
+	
+	private func invalidateCaches() {
+		chartCache.removeAll()
+		movingAverageCache.removeAll()
+		emaCache.removeAll()
+	}
+	
+	private func prewarmCaches(for range: ChartRange) {
+		_ = cachedChartData(for: range)
+		if dataManager.settings?.showMovingAverage == true {
+			_ = cachedMovingAverageData(for: range)
+		}
+		if dataManager.settings?.showEMA == true {
+			_ = cachedEMAData(for: range)
+		}
+	}
+
+	private func highlightBandWidth(for plotFrame: CGRect) -> CGFloat {
+		max(minimumHighlightBandWidth, plotFrame.width * highlightBandWidthPercentage)
+	}
 	
 	private func displayValue(_ kg: Double) -> String {
 		guard let unit = dataManager.settings?.preferredUnit else {
@@ -323,18 +405,10 @@ struct ChartsView: View {
 		let xPosition = location.x - plotFrame.origin.x
 		guard xPosition >= 0, xPosition <= plotFrame.size.width else { return }
 		
-		// If dots are not shown, first tap shows them
-		if !showDots {
-			withAnimation {
-				showDots = true
-			}
-			return
-		}
-		
-		// If dots are shown, select the nearest point
 		guard let date: Date = proxy.value(atX: xPosition) else { return }
 		if let nearest = nearestPoint(to: date, in: data) {
 			withAnimation {
+				showDots = true
 				selectedPoint = nearest
 			}
 		}
@@ -348,42 +422,30 @@ struct ChartsView: View {
 	
 	@ChartContentBuilder
 	private func weightSeriesMarks(data: [ChartDataPoint]) -> some ChartContent {
-		ForEach(data) { point in
-			weightLineMark(for: point)
-			weightPointMark(for: point)
-		}
-	}
-	
-	private func weightLineMark(for point: ChartDataPoint) -> some ChartContent {
-		LineMark(
-			x: .value("Date", point.date),
-			y: .value("Weight", convertedWeight(point.weight))
-		)
-		.foregroundStyle(by: .value("Series", ChartSeries.weight.rawValue))
-		.interpolationMethod(.monotone)
-	}
-	
-	@ChartContentBuilder
-	private func weightPointMark(for point: ChartDataPoint) -> some ChartContent {
-		if showDots {
-			PointMark(
-				x: .value("Date", point.date),
-				y: .value("Weight", convertedWeight(point.weight))
-			)
-			.symbol {
-				pointSymbol(for: point)
+		// Draw the line connecting all points (only if more than 1 point)
+		if data.count > 1 {
+			ForEach(data) { point in
+				LineMark(
+					x: .value("Date", point.date),
+					y: .value("Weight", convertedWeight(point.weight))
+				)
+				.foregroundStyle(by: .value("Series", ChartSeries.weight.rawValue))
+				.interpolationMethod(.monotone)
 			}
-			.foregroundStyle(by: .value("Series", ChartSeries.weight.rawValue))
-			.accessibilityLabel(pointAccessibilityLabel(point))
-			.annotation(position: .top, alignment: .leading) {
-				if selectedPoint?.id == point.id {
-					ChartTooltip(
-						point: point,
-						unit: dataManager.settings?.preferredUnit ?? .kilograms,
-						precision: dataManager.settings?.decimalPrecision ?? 1,
-						note: dataManager.fetchEntriesForDate(point.date).last?.notes
-					)
+		}
+		
+		// Draw points if enabled OR if there's only one data point
+		if showDots || data.count == 1 {
+			ForEach(data) { point in
+				PointMark(
+					x: .value("Date", point.date),
+					y: .value("Weight", convertedWeight(point.weight))
+				)
+				.symbol {
+					pointSymbol(for: point)
 				}
+				.foregroundStyle(by: .value("Series", ChartSeries.weight.rawValue))
+				.accessibilityLabel(pointAccessibilityLabel(point))
 			}
 		}
 	}

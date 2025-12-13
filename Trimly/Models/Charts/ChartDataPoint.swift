@@ -7,8 +7,16 @@
 
 import Foundation
 
-struct ChartDataPoint: Identifiable {
-	let id = UUID()
+struct ChartDataPoint: Identifiable, Hashable {
+	let id: String
 	let date: Date
 	let weight: Double
+	
+	init(date: Date, weight: Double) {
+		self.date = date
+		self.weight = weight
+		let dateBits = date.timeIntervalSinceReferenceDate.bitPattern
+		let weightBits = weight.bitPattern
+		self.id = "\(dateBits)-\(weightBits)"
+	}
 }

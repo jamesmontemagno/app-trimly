@@ -125,9 +125,6 @@
         }
       }
     },
-    "10 different ways to visualize your weight journey" : {
-
-    },
     "achievements.category.goals" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -1762,15 +1759,6 @@
         }
       }
     },
-    "Bar Chart" : {
-
-    },
-    "Bubble Density" : {
-
-    },
-    "Candlestick Range" : {
-
-    },
     "celebrations.consistency.70" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2092,9 +2080,6 @@
           }
         }
       }
-    },
-    "Chart Berries - Choose Your Favorite!" : {
-
     },
     "charts.button.settings" : {
       "extractionState" : "manual",
@@ -4175,18 +4160,18 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Longest streak"
+            "value" : "Current streak"
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Racha más larga"
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Plus longue série"
           }
         }
@@ -4743,12 +4728,6 @@
           }
         }
       }
-    },
-    "Dot Matrix" : {
-
-    },
-    "Dual Axis Trend" : {
-
     },
     "Edit Goal" : {
 
@@ -5525,9 +5504,6 @@
           }
         }
       }
-    },
-    "Gradient Area" : {
-
     },
     "health.authorization.description" : {
       "extractionState" : "manual",
@@ -6472,12 +6448,6 @@
         }
       }
     },
-    "Heatmap with Trends" : {
-
-    },
-    "High" : {
-
-    },
     "How it's calculated:\n\nDays with entries: %lld\nDays since goal start: %lld\nFormula: %lld ÷ %lld = %lld%%\n\nGoal start: %@\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits." : {
       "localizations" : {
         "en" : {
@@ -6588,9 +6558,6 @@
         }
       }
     },
-    "Low" : {
-
-    },
     "MA" : {
       "localizations" : {
         "es" : {
@@ -6607,16 +6574,7 @@
         }
       }
     },
-    "Min" : {
-
-    },
     "Min Days" : {
-
-    },
-    "Minimalist Line" : {
-
-    },
-    "Mountain Ridge" : {
 
     },
     "No entry for this day" : {
@@ -9796,9 +9754,6 @@
           }
         }
       }
-    },
-    "Step Chart" : {
-
     },
     "tabs.achievements" : {
       "extractionState" : "extracted_with_value",

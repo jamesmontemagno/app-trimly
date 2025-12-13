@@ -186,9 +186,9 @@ private struct AchievementCard: View {
 		}
 		.overlay(alignment: .topTrailing) {
 			if snapshot.isUnlocked {
-				Image(systemName: "seal.fill")
+				Image(systemName: "medal.fill")
 					.symbolRenderingMode(.palette)
-					.foregroundStyle(.green, .white)
+					.foregroundStyle(.orange, .yellow)
 					.padding(8)
 			}
 		}
@@ -203,10 +203,6 @@ private struct AchievementCard: View {
 					.padding(.horizontal, 8)
 					.background(Color.yellow.opacity(0.15))
 					.clipShape(Capsule())
-			}
-			if snapshot.isUnlocked {
-				Image(systemName: "checkmark.seal.fill")
-					.foregroundStyle(.green)
 			}
 		}
 	}

@@ -6449,6 +6449,7 @@
       }
     },
     "How it's calculated:\n\nDays with entries: %lld\nDays since goal start: %lld\nFormula: %lld ÷ %lld = %lld%%\n\nGoal start: %@\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6525,7 +6526,18 @@
         }
       }
     },
+    "How it's calculated:\n\nDays with entries: %lld\nTotal days since goal start: %lld\nFormula: %lld ÷ %lld = %lld%%\n\nGoal start: %@\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "How it's calculated:\n\nDays with entries: %1$lld\nTotal days since goal start: %2$lld\nFormula: %3$lld ÷ %4$lld = %5$lld%%\n\nGoal start: %6$@\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits."
+          }
+        }
+      }
+    },
     "How it's calculated:\n\nDays with entries: %lld\nWindow: %lld days\nFormula: %lld ÷ %lld = %lld%%\n\nNo active goal - using %@ window.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6565,6 +6577,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Comment c'est calculé :\n\nJours avec des entrées : %1$lld\nFenêtre : %2$lld jours (%3$@)\nFormule : %4$lld ÷ %5$lld = %6$lld%%\n\nObjectif commencé avant cette fenêtre - utilisation de la période %7$@.\n\nSuivez vos habitudes d'enregistrement au fil du temps. Une constance plus élevée aide à construire des habitudes de gestion du poids durables."
+          }
+        }
+      }
+    },
+    "How it's calculated:\n\nDays with entries: %lld\nWindow: %lld days (%@)\nFormula: %lld ÷ %lld = %lld%%\n\nNo active goal - using %@ window.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "How it's calculated:\n\nDays with entries: %1$lld\nWindow: %2$lld days (%3$@)\nFormula: %4$lld ÷ %5$lld = %6$lld%%\n\nNo active goal - using %7$@ window.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits."
           }
         }
       }

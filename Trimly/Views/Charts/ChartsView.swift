@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Charts
+import Combine
 #if os(macOS)
 import AppKit
 #endif
@@ -421,42 +422,30 @@ struct ChartsView: View {
 	
 	@ChartContentBuilder
 	private func weightSeriesMarks(data: [ChartDataPoint]) -> some ChartContent {
-		ForEach(data) { point in
-			weightLineMark(for: point)
-			weightPointMark(for: point)
-		}
-	}
-	
-	private func weightLineMark(for point: ChartDataPoint) -> some ChartContent {
-		LineMark(
-			x: .value("Date", point.date),
-			y: .value("Weight", convertedWeight(point.weight))
-		)
-		.foregroundStyle(by: .value("Series", ChartSeries.weight.rawValue))
-		.interpolationMethod(.monotone)
-	}
-	
-	@ChartContentBuilder
-	private func weightPointMark(for point: ChartDataPoint) -> some ChartContent {
-		if showDots {
-			PointMark(
-				x: .value("Date", point.date),
-				y: .value("Weight", convertedWeight(point.weight))
-			)
-			.symbol {
-				pointSymbol(for: point)
+		// Draw the line connecting all points (only if more than 1 point)
+		if data.count > 1 {
+			ForEach(data) { point in
+				LineMark(
+					x: .value("Date", point.date),
+					y: .value("Weight", convertedWeight(point.weight))
+				)
+				.foregroundStyle(by: .value("Series", ChartSeries.weight.rawValue))
+				.interpolationMethod(.monotone)
 			}
-			.foregroundStyle(by: .value("Series", ChartSeries.weight.rawValue))
-			.accessibilityLabel(pointAccessibilityLabel(point))
-			.annotation(position: .top, alignment: .leading) {
-				if selectedPoint?.id == point.id {
-					ChartTooltip(
-						point: point,
-						unit: dataManager.settings?.preferredUnit ?? .kilograms,
-						precision: dataManager.settings?.decimalPrecision ?? 1,
-						note: dataManager.fetchEntriesForDate(point.date).last?.notes
-					)
+		}
+		
+		// Draw points if enabled OR if there's only one data point
+		if showDots || data.count == 1 {
+			ForEach(data) { point in
+				PointMark(
+					x: .value("Date", point.date),
+					y: .value("Weight", convertedWeight(point.weight))
+				)
+				.symbol {
+					pointSymbol(for: point)
 				}
+				.foregroundStyle(by: .value("Series", ChartSeries.weight.rawValue))
+				.accessibilityLabel(pointAccessibilityLabel(point))
 			}
 		}
 	}

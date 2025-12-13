@@ -35,6 +35,7 @@ final class DataManager: ObservableObject {
     let modelContainer: ModelContainer
     let modelContext: ModelContext
     let deviceSettings: DeviceSettingsStore
+    private let notificationService: NotificationService
     
     @Published var settings: AppSettings?
     private var pendingGoalAchievementCelebration = false
@@ -46,7 +47,11 @@ final class DataManager: ObservableObject {
         objectWillChange.send()
     }
     
-    init(inMemory: Bool = false, deviceSettings: DeviceSettingsStore? = nil) {
+    init(
+        inMemory: Bool = false,
+        deviceSettings: DeviceSettingsStore? = nil,
+        notificationService: NotificationService? = nil
+    ) {
         if let deviceSettings {
             self.deviceSettings = deviceSettings
         } else if inMemory {
@@ -56,6 +61,8 @@ final class DataManager: ObservableObject {
         } else {
             self.deviceSettings = DeviceSettingsStore()
         }
+
+        self.notificationService = notificationService ?? NotificationService()
         
         let schema = Schema([
             WeightEntry.self,
@@ -202,6 +209,7 @@ final class DataManager: ObservableObject {
         publishChange()
         markInitialCloudSyncCompletedIfNeeded()
         try evaluateGoalAchievementIfNeeded(latestWeightKg: entry.weightKg)
+        notificationService.cancelTodayReminderIfLogged(dataManager: self)
     }
     
     func fetchAllEntries() -> [WeightEntry] {

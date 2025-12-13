@@ -226,7 +226,7 @@ private struct AchievementCard: View {
 		case .uniqueDays(let target):
 			return String(localized: L10n.Achievements.progressUniqueDays(diag.uniqueDayCount, target))
 		case .streakDays(let target):
-			return String(localized: L10n.Achievements.progressStreakDays(diag.longestStreak, target))
+			return String(localized: L10n.Achievements.progressStreakDays(diag.currentStreak, target))
 		case .consistency(let threshold, let minDays):
 			let currentPercent = Int((diag.consistencyScore * 100).rounded())
 			let targetPercent = Int((threshold * 100).rounded())
@@ -316,9 +316,9 @@ private struct AchievementDiagnosticsSheet: View {
 					Text(L10n.Debug.Achievements.uniqueDays)
 				}
 				LabeledContent {
-					Text("\(diagnostics.longestStreak)")
+					Text("\(diagnostics.currentStreak)")
 				} label: {
-					Text(L10n.Debug.Achievements.longestStreak)
+					Text(L10n.Debug.Achievements.currentStreak)
 				}
 				LabeledContent {
 					Text(percentString(diagnostics.consistencyScore))

@@ -555,7 +555,7 @@ enum L10n {
 			static let requiresPro = LocalizedStringResource("debug.achievements.requiresPro", defaultValue: "Requires TrimTally Pro")
 			static let totalEntries = LocalizedStringResource("debug.achievements.totalEntries", defaultValue: "Visible entries")
 			static let uniqueDays = LocalizedStringResource("debug.achievements.uniqueDays", defaultValue: "Unique days logged")
-			static let longestStreak = LocalizedStringResource("debug.achievements.longestStreak", defaultValue: "Longest streak")
+			static let currentStreak = LocalizedStringResource("debug.achievements.longestStreak", defaultValue: "Current streak")
 			static let consistencyScore = LocalizedStringResource("debug.achievements.consistencyScore", defaultValue: "Consistency score")
 
 			static let goalsAchieved = LocalizedStringResource("debug.achievements.goalsAchieved", defaultValue: "Goals achieved")

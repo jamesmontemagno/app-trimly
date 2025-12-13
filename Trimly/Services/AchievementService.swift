@@ -59,7 +59,7 @@ final class AchievementService: ObservableObject {
 		case .uniqueDays(let target):
 			return progressMetric(current: Double(context.uniqueDayCount), target: Double(target))
 		case .streakDays(let target):
-			return progressMetric(current: Double(context.longestStreak), target: Double(target))
+			return progressMetric(current: Double(context.currentStreak), target: Double(target))
 		case .consistency(let threshold, let minDays):
 			// Require at least minDays unique days of logging before unlocking
 			let hasEnoughHistory = context.uniqueDayCount >= minDays
@@ -305,7 +305,7 @@ enum AchievementMetric {
 private struct EvaluationContext {
 	let totalEntries: Int
 	let uniqueDayCount: Int
-	let longestStreak: Int
+	let currentStreak: Int
 	let consistencyScore: Double
 	let goalsAchieved: Int
 	let remindersEnabled: Bool
@@ -317,7 +317,7 @@ private struct EvaluationContext {
 		totalEntries = entries.count
 		let uniqueDays = Set(entries.map { $0.normalizedDate })
 		uniqueDayCount = uniqueDays.count
-		longestStreak = EvaluationContext.calculateLongestStreak(from: Array(uniqueDays))
+		currentStreak = EvaluationContext.calculateCurrentStreak(from: uniqueDays)
 		consistencyScore = dataManager.getConsistencyScore() ?? 0
 		goalsAchieved = dataManager.countAchievedGoals()
 		let settings = dataManager.settings
@@ -326,24 +326,17 @@ private struct EvaluationContext {
 		recentReminderRatio = EvaluationContext.recentReminderCompletionRatio(entries: entries)
 	}
 	
-	private static func calculateLongestStreak(from dates: [Date]) -> Int {
-		let sorted = dates.sorted()
-		guard !sorted.isEmpty else { return 0 }
+	private static func calculateCurrentStreak(from dates: Set<Date>) -> Int {
+		guard !dates.isEmpty else { return 0 }
 		let calendar = Calendar.current
-		var current = 1
-		var best = 1
-		for index in 1..<sorted.count {
-			let prev = sorted[index - 1]
-			let currentDate = sorted[index]
-			let days = calendar.dateComponents([.day], from: prev, to: currentDate).day ?? 0
-			if days == 1 {
-				current += 1
-				best = max(best, current)
-			} else if days > 1 {
-				current = 1
-			}
+		var streak = 0
+		var cursor = calendar.startOfDay(for: Date())
+		while dates.contains(cursor) {
+			streak += 1
+			guard let previous = calendar.date(byAdding: .day, value: -1, to: cursor) else { break }
+			cursor = previous
 		}
-		return best
+		return streak
 	}
 	
 	private static func recentReminderCompletionRatio(entries: [WeightEntry]) -> Double {
@@ -368,7 +361,7 @@ private struct EvaluationContext {
 		AchievementDiagnostics(
 			totalEntries: totalEntries,
 			uniqueDayCount: uniqueDayCount,
-			longestStreak: longestStreak,
+			currentStreak: currentStreak,
 			consistencyScore: consistencyScore,
 			goalsAchieved: goalsAchieved,
 			remindersEnabled: remindersEnabled,
@@ -382,7 +375,7 @@ private struct EvaluationContext {
 struct AchievementDiagnostics {
 	let totalEntries: Int
 	let uniqueDayCount: Int
-	let longestStreak: Int
+	let currentStreak: Int
 	let consistencyScore: Double
 	let goalsAchieved: Int
 	let remindersEnabled: Bool

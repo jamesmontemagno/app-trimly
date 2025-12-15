@@ -86,6 +86,8 @@ struct ChartSettingsView: View {
 					Button(String(localized: L10n.Common.doneButton)) {
 						dismiss()
 					}
+					.buttonStyle(.borderedProminent)
+					.tint(.accentColor)
 				}
 			}
 		}

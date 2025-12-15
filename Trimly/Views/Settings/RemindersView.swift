@@ -131,6 +131,8 @@ struct RemindersView: View {
                     Button(String(localized: L10n.Common.saveButton)) {
                         saveChanges()
                     }
+				.buttonStyle(.borderedProminent)
+				.tint(.accentColor)
                     .disabled(!hasChanges)
                 }
             }

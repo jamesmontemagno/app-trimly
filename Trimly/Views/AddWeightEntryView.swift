@@ -110,6 +110,7 @@ struct AddWeightEntryView: View {
 					Button(String(localized: L10n.Common.saveButton)) {
 						saveEntry()
 					}
+					.buttonStyle(.borderedProminent)
 					.tint(.accentColor)
 					.disabled(weightText.isEmpty)
 				}
@@ -119,6 +120,7 @@ struct AddWeightEntryView: View {
 					Button(String(localized: L10n.Common.doneButton)) {
 						focusedField = nil
 					}
+					.buttonStyle(.borderedProminent)
 					.tint(.accentColor)
 				}
 #endif

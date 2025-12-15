@@ -89,6 +89,8 @@ struct OnboardingView: View {
                 Button(L10n.Common.doneButton) {
                     hideKeyboard()
                 }
+			.buttonStyle(.borderedProminent)
+			.tint(.accentColor)
             }
         }
         #endif

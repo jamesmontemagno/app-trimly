@@ -67,6 +67,8 @@ struct ExportView: View {
 			.toolbar {
 				ToolbarItem(placement: .confirmationAction) {
 					Button(String(localized: L10n.Common.doneButton)) { dismiss() }
+						.buttonStyle(.borderedProminent)
+						.tint(.accentColor)
 				}
 				ToolbarItem(placement: .primaryAction) {
 					ShareLink(item: csvData)

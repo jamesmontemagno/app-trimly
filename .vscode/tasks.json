@@ -1,0 +1,37 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build macOS",
+			"type": "shell",
+			"command": "xcodebuild",
+			"args": [
+				"-scheme",
+				"TrimTally",
+				"-destination",
+				"platform=macOS,arch=arm64",
+				"build"
+			],
+			"problemMatcher": [
+				"$xcodebuild"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Build iOS Simulator",
+			"type": "shell",
+			"command": "xcodebuild",
+			"args": [
+				"-scheme",
+				"TrimTally",
+				"-destination",
+				"platform=iOS Simulator,name=iPhone 17",
+				"build"
+			],
+			"problemMatcher": [
+				"$xcodebuild"
+			],
+			"group": "build"
+		}
+	]
+}

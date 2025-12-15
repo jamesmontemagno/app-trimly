@@ -222,6 +222,8 @@ struct HealthKitView: View {
 					Button(String(localized: L10n.Common.doneButton)) {
 						dismiss()
 					}
+					.buttonStyle(.borderedProminent)
+					.tint(.accentColor)
 				}
 			}
 			.alert(String(localized: L10n.Common.errorTitle), isPresented: $showingError) {

@@ -84,6 +84,8 @@ struct GoalSetupView: View {
 				}
 				ToolbarItem(placement: .confirmationAction) {
 					Button(String(localized: L10n.Common.saveButton)) { saveGoal() }
+						.buttonStyle(.borderedProminent)
+						.tint(.accentColor)
 						.disabled(saveButtonDisabled)
 				}
 			}

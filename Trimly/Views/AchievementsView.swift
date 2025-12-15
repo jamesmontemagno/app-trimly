@@ -266,6 +266,8 @@ private struct AchievementDiagnosticsSheet: View {
 			.toolbar {
 				ToolbarItem(placement: .cancellationAction) {
 					Button(L10n.Common.doneButton, action: dismiss.callAsFunction)
+						.buttonStyle(.borderedProminent)
+						.tint(.accentColor)
 				}
 			}
 		}

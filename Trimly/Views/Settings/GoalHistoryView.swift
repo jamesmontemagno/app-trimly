@@ -29,6 +29,8 @@ struct GoalHistoryView: View {
 			.toolbar {
 				ToolbarItem(placement: .confirmationAction) {
 					Button(String(localized: L10n.Common.doneButton)) { dismiss() }
+						.buttonStyle(.borderedProminent)
+						.tint(.accentColor)
 				}
 			}
 			.overlay {

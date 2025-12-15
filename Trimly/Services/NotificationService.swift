@@ -17,9 +17,15 @@ final class NotificationService: ObservableObject {
     
     @Published var isAuthorized = false
     
-    // Notification identifiers
+    // Notification identifiers (base prefixes; individual occurrences append date)
     private let primaryReminderID = "trimly.reminder.primary"
     private let secondaryReminderID = "trimly.reminder.secondary"
+    private let reminderLookaheadDays = 14
+    private static let dailyIdentifierFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter
+    }()
     
     // MARK: - Authorization
     
@@ -38,81 +44,35 @@ final class NotificationService: ObservableObject {
     
     // MARK: - Schedule Reminders
     
-    /// Schedule daily reminder
+    /// Schedule a rolling set of single-occurrence primary reminders (non-repeating)
     func scheduleDailyReminder(at time: Date) async throws {
-        guard isAuthorized else {
-            throw NotificationError.notAuthorized
-        }
-        
-        // Cancel existing reminder
-        notificationCenter.removePendingNotificationRequests(withIdentifiers: [primaryReminderID])
-        
-        // Create notification content
-        let content = UNMutableNotificationContent()
-        content.title = String(localized: L10n.Notifications.primaryTitle)
-        content.body = String(localized: L10n.Notifications.primaryBody)
-        content.sound = .default
-        content.categoryIdentifier = "WEIGHT_REMINDER"
-        
-        // Create trigger for daily reminder
-        let components = Calendar.current.dateComponents([.hour, .minute], from: time)
-        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
-        
-        // Create request
-        let request = UNNotificationRequest(
-            identifier: primaryReminderID,
-            content: content,
-            trigger: trigger
-        )
-        
-        try await notificationCenter.add(request)
+        try await scheduleSeries(baseID: primaryReminderID, time: time, title: L10n.Notifications.primaryTitle, body: L10n.Notifications.primaryBody, sound: .default)
     }
     
-    /// Schedule secondary reminder (optional)
+    /// Schedule a rolling set of single-occurrence secondary reminders (non-repeating)
     func scheduleSecondaryReminder(at time: Date) async throws {
-        guard isAuthorized else {
-            throw NotificationError.notAuthorized
-        }
-        
-        // Cancel existing reminder
-        notificationCenter.removePendingNotificationRequests(withIdentifiers: [secondaryReminderID])
-        
-        // Create notification content
-        let content = UNMutableNotificationContent()
-        content.title = String(localized: L10n.Notifications.secondaryTitle)
-        content.body = String(localized: L10n.Notifications.secondaryBody)
-        content.sound = .default
-        content.categoryIdentifier = "WEIGHT_REMINDER"
-        
-        // Create trigger for daily reminder
-        let components = Calendar.current.dateComponents([.hour, .minute], from: time)
-        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
-        
-        // Create request
-        let request = UNNotificationRequest(
-            identifier: secondaryReminderID,
-            content: content,
-            trigger: trigger
-        )
-        
-        try await notificationCenter.add(request)
+        try await scheduleSeries(baseID: secondaryReminderID, time: time, title: L10n.Notifications.secondaryTitle, body: L10n.Notifications.secondaryBody, sound: .default)
     }
     
     /// Cancel all reminders
     func cancelAllReminders() {
-        notificationCenter.removePendingNotificationRequests(
-            withIdentifiers: [primaryReminderID, secondaryReminderID]
-        )
+        Task {
+            await removePending(withBaseIDs: [primaryReminderID, secondaryReminderID])
+        }
     }
     
     /// Cancel primary reminder
     func cancelPrimaryReminder() {
-        notificationCenter.removePendingNotificationRequests(withIdentifiers: [primaryReminderID])
+        Task {
+            await removePending(withBaseIDs: [primaryReminderID])
+        }
     }
     
     /// Cancel secondary reminder
     func cancelSecondaryReminder() {
-        notificationCenter.removePendingNotificationRequests(withIdentifiers: [secondaryReminderID])
+        Task {
+            await removePending(withBaseIDs: [secondaryReminderID])
+        }
     }
     
     // MARK: - Adaptive Reminders
@@ -120,27 +80,18 @@ final class NotificationService: ObservableObject {
     /// Suggest a new reminder time based on logging patterns
     func suggestReminderTime(dataManager: DataManager) -> Date? {
         let entries = dataManager.fetchAllEntries()
-        
-        // Get entries from last 10 days
         let recentEntries = entries.filter {
             let daysSince = Calendar.current.dateComponents([.day], from: $0.timestamp, to: Date()).day ?? 0
             return daysSince <= 10
         }
-        
         guard !recentEntries.isEmpty else { return nil }
-        
-        // Calculate median logging time
         let hours = recentEntries.map { entry -> Int in
             Calendar.current.component(.hour, from: entry.timestamp)
         }.sorted()
-        
         let medianHour = hours[hours.count / 2]
-        
-        // Create suggested time
         var components = DateComponents()
         components.hour = medianHour
         components.minute = 0
-        
         return Calendar.current.date(from: components)
     }
     
@@ -162,15 +113,107 @@ final class NotificationService: ObservableObject {
         }
     }
     
-    /// Cancel reminder if user logged before fire time
-    func cancelTodayReminderIfLogged(dataManager: DataManager) {
+    /// Cancel reminder occurrences for today if the user already logged, then top-up future occurrences
+    func cancelTodayReminderIfLogged(dataManager: DataManager, reminders: DeviceSettingsStore.RemindersSettings) async {
         let todayEntries = dataManager.fetchEntriesForDate(Date())
+        guard !todayEntries.isEmpty else { return }
         
-        if !todayEntries.isEmpty {
-            // User already logged today - cancel today's notification
-            notificationCenter.removeDeliveredNotifications(
-                withIdentifiers: [primaryReminderID, secondaryReminderID]
-            )
+        let idsForToday = todayReminderIdentifiers()
+        notificationCenter.removeDeliveredNotifications(withIdentifiers: idsForToday)
+        notificationCenter.removePendingNotificationRequests(withIdentifiers: idsForToday)
+        
+        if let primaryTime = reminders.primaryTime {
+            try? await scheduleSeries(baseID: primaryReminderID, time: primaryTime, title: L10n.Notifications.primaryTitle, body: L10n.Notifications.primaryBody, sound: .default, skipToday: true)
+        }
+        if let secondaryTime = reminders.secondaryTime {
+            try? await scheduleSeries(baseID: secondaryReminderID, time: secondaryTime, title: L10n.Notifications.secondaryTitle, body: L10n.Notifications.secondaryBody, sound: .default, skipToday: true)
+        }
+    }
+    
+    /// Ensure reminders are scheduled for the configured window (used on app launch)
+    func ensureReminderSchedule(reminders: DeviceSettingsStore.RemindersSettings) async {
+        if isAuthorized == false {
+            await checkAuthorizationStatus()
+        }
+        guard isAuthorized else { return }
+        if let primaryTime = reminders.primaryTime {
+            try? await scheduleSeries(baseID: primaryReminderID, time: primaryTime, title: L10n.Notifications.primaryTitle, body: L10n.Notifications.primaryBody, sound: .default)
+        }
+        if let secondaryTime = reminders.secondaryTime {
+            try? await scheduleSeries(baseID: secondaryReminderID, time: secondaryTime, title: L10n.Notifications.secondaryTitle, body: L10n.Notifications.secondaryBody, sound: .default)
+        }
+    }
+    
+    // MARK: - Scheduling Helpers
+    
+    private func scheduleSeries(
+        baseID: String,
+        time: Date,
+        title: LocalizedStringResource,
+        body: LocalizedStringResource,
+        sound: UNNotificationSound?,
+        skipToday: Bool = false
+    ) async throws {
+        guard isAuthorized else {
+            throw NotificationError.notAuthorized
+        }
+        await removePending(withBaseIDs: [baseID])
+        let now = Date()
+        let calendar = Calendar.current
+        let startOfToday = calendar.startOfDay(for: now)
+        let components = calendar.dateComponents([.hour, .minute], from: time)
+        let content = UNMutableNotificationContent()
+        content.title = String(localized: title)
+        content.body = String(localized: body)
+        content.sound = sound
+        content.categoryIdentifier = "WEIGHT_REMINDER"
+        
+        for offset in 0..<reminderLookaheadDays {
+            guard let day = calendar.date(byAdding: .day, value: offset, to: startOfToday) else { continue }
+            guard let fireDate = calendar.date(bySettingHour: components.hour ?? 8, minute: components.minute ?? 0, second: 0, of: day) else { continue }
+            if skipToday && calendar.isDate(fireDate, inSameDayAs: now) {
+                continue
+            }
+            if fireDate <= now { continue }
+            let id = makeIdentifier(baseID: baseID, date: fireDate)
+            let triggerComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: fireDate)
+            let trigger = UNCalendarNotificationTrigger(dateMatching: triggerComponents, repeats: false)
+            let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
+            do {
+                try await notificationCenter.add(request)
+            } catch {
+                #if DEBUG
+                print("[Notifications] Failed to schedule \(id): \(error)")
+                #endif
+            }
+        }
+    }
+    
+    private func todayReminderIdentifiers() -> [String] {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        return [primaryReminderID, secondaryReminderID].map { makeIdentifier(baseID: $0, date: today) }
+    }
+    
+    private func makeIdentifier(baseID: String, date: Date) -> String {
+        let formatter = NotificationService.dailyIdentifierFormatter
+        return "\(baseID).\(formatter.string(from: date))"
+    }
+    
+    private func removePending(withBaseIDs baseIDs: [String]) async {
+        let requests = await pendingRequests()
+        let idsToRemove = requests
+            .map { $0.identifier }
+            .filter { id in baseIDs.contains { id.hasPrefix($0) } }
+        guard !idsToRemove.isEmpty else { return }
+        notificationCenter.removePendingNotificationRequests(withIdentifiers: idsToRemove)
+    }
+    
+    private func pendingRequests() async -> [UNNotificationRequest] {
+        await withCheckedContinuation { continuation in
+            notificationCenter.getPendingNotificationRequests { requests in
+                continuation.resume(returning: requests)
+            }
         }
     }
 }

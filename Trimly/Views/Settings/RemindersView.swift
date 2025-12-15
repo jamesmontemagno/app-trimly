@@ -149,6 +149,7 @@ struct RemindersView: View {
                 try await notificationService.requestAuthorization()
                 if notificationService.isAuthorized {
                     await notificationService.checkAuthorizationStatus()
+                    await notificationService.ensureReminderSchedule(reminders: deviceSettings.reminders)
                 }
             } catch {
                 print("Failed to authorize notifications: \(error)")

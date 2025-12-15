@@ -209,7 +209,12 @@ final class DataManager: ObservableObject {
         publishChange()
         markInitialCloudSyncCompletedIfNeeded()
         try evaluateGoalAchievementIfNeeded(latestWeightKg: entry.weightKg)
-        notificationService.cancelTodayReminderIfLogged(dataManager: self)
+        Task(priority: .userInitiated) {
+            await notificationService.cancelTodayReminderIfLogged(
+                dataManager: self,
+                reminders: deviceSettings.reminders
+            )
+        }
     }
     
     func fetchAllEntries() -> [WeightEntry] {
@@ -534,6 +539,12 @@ final class DataManager: ObservableObject {
         }
         
         return csv
+    }
+
+    // MARK: - Reminder Scheduling
+
+    func refreshReminderSchedule() async {
+        await notificationService.ensureReminderSchedule(reminders: deviceSettings.reminders)
     }
     
     // MARK: - Data Deletion

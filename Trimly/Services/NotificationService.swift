@@ -201,18 +201,18 @@ final class NotificationService: ObservableObject {
     }
     
     private func removePending(withBaseIDs baseIDs: [String]) async {
-        let requests = await pendingRequests()
-        let idsToRemove = requests
-            .map { $0.identifier }
+        let identifiers = await pendingRequestIdentifiers()
+        let idsToRemove = identifiers
             .filter { id in baseIDs.contains { id.hasPrefix($0) } }
         guard !idsToRemove.isEmpty else { return }
         notificationCenter.removePendingNotificationRequests(withIdentifiers: idsToRemove)
     }
     
-    private func pendingRequests() async -> [UNNotificationRequest] {
+    private func pendingRequestIdentifiers() async -> [String] {
         await withCheckedContinuation { continuation in
             notificationCenter.getPendingNotificationRequests { requests in
-                continuation.resume(returning: requests)
+                let identifiers = requests.map { $0.identifier }
+                continuation.resume(returning: identifiers)
             }
         }
     }

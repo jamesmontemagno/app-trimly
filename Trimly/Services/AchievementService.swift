@@ -320,7 +320,6 @@ private struct EvaluationContext {
 		currentStreak = EvaluationContext.calculateCurrentStreak(from: uniqueDays)
 		consistencyScore = dataManager.getConsistencyScore() ?? 0
 		goalsAchieved = dataManager.countAchievedGoals()
-		let settings = dataManager.settings
 		let reminders = dataManager.deviceSettings.reminders
 		remindersEnabled = (reminders.primaryTime != nil) || (reminders.secondaryTime != nil)
 		recentReminderRatio = EvaluationContext.recentReminderCompletionRatio(entries: entries)

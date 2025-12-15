@@ -21,7 +21,8 @@ struct SettingsView: View {
 	@State private var goalMode: GoalMode = .new
 	@State private var showingExport = false
 	@State private var showingPaywall = false
-	@State private var navigateToHealthKit = false
+	@State private var showingRemindersSheet = false
+	@State private var showingHealthSheet = false
 	@State private var showingDeleteConfirmation = false
 	@State private var exportedData = ""
 	@State private var showingRestoreSuccessAlert = false
@@ -56,11 +57,12 @@ struct SettingsView: View {
 				.scrollIndicators(.hidden)
 				.background(Color.clear)
 				.navigationTitle(Text(L10n.Settings.navigationTitle))
-				.navigationDestination(isPresented: $navigateToHealthKit) { HealthKitView() }
 				.sheet(isPresented: $showingGoalSheet) { GoalSetupView(mode: goalMode) }
 				.sheet(isPresented: $showingGoalHistory) { GoalHistoryView() }
 				.sheet(isPresented: $showingExport) { ExportView(initialCSV: exportedData) }
 				.sheet(isPresented: $showingPaywall) { PaywallView() }
+				.sheet(isPresented: $showingRemindersSheet) { RemindersView() }
+				.sheet(isPresented: $showingHealthSheet) { HealthKitView() }
 				.confirmationDialog(String(localized: L10n.Common.deleteAllDataTitle), isPresented: $showingDeleteConfirmation, titleVisibility: .visible) {
 					Button(String(localized: L10n.Settings.deleteAllTitle), role: .destructive) { deleteAllData() }
 					Button(String(localized: L10n.Common.cancelButton), role: .cancel) { }
@@ -269,8 +271,8 @@ struct SettingsView: View {
 					}
 					
 					settingsSection(title: String(localized: L10n.Settings.habitsTitle)) {
-						NavigationLink {
-							RemindersView()
+						Button {
+							showingRemindersSheet = true
 						} label: {
 							settingsRow(
 								icon: "bell.badge.fill",
@@ -291,7 +293,7 @@ struct SettingsView: View {
 					settingsSection(title: String(localized: L10n.Settings.integrationsTitle)) {
 						Button {
 							if storeManager.isPro {
-								navigateToHealthKit = true
+								showingHealthSheet = true
 							} else {
 								showingPaywall = true
 							}

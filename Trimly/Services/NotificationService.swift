@@ -216,6 +216,35 @@ final class NotificationService: ObservableObject {
             }
         }
     }
+    
+    #if DEBUG
+    /// Get detailed info about pending notifications for debugging
+    func getPendingNotificationsDebugInfo() async -> [String] {
+        await withCheckedContinuation { continuation in
+            notificationCenter.getPendingNotificationRequests { requests in
+                let formatter = DateFormatter()
+                formatter.dateStyle = .short
+                formatter.timeStyle = .short
+                
+                let info = requests.sorted { r1, r2 in
+                    guard let t1 = r1.trigger as? UNCalendarNotificationTrigger,
+                          let t2 = r2.trigger as? UNCalendarNotificationTrigger,
+                          let d1 = t1.nextTriggerDate(),
+                          let d2 = t2.nextTriggerDate() else { return false }
+                    return d1 < d2
+                }.map { request -> String in
+                    var result = request.identifier
+                    if let trigger = request.trigger as? UNCalendarNotificationTrigger,
+                       let nextDate = trigger.nextTriggerDate() {
+                        result += " → \(formatter.string(from: nextDate))"
+                    }
+                    return result
+                }
+                continuation.resume(returning: info)
+            }
+        }
+    }
+    #endif
 }
 
 // MARK: - Notification Categories

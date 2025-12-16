@@ -31,6 +31,8 @@ struct SettingsView: View {
 #if DEBUG
 	@State private var showingSampleDataAlert = false
 	@State private var sampleDataAlertMessage = ""
+	@State private var showingNotificationsDebug = false
+	@State private var pendingNotificationsInfo: [String] = []
 #endif
 	
 	private var appVersion: String {
@@ -89,6 +91,15 @@ struct SettingsView: View {
 					Button(String(localized: L10n.Common.okButton), role: .cancel) { }
 				} message: {
 					Text(sampleDataAlertMessage)
+				}
+				.alert("Scheduled Notifications (\(pendingNotificationsInfo.count))", isPresented: $showingNotificationsDebug) {
+					Button("OK", role: .cancel) { }
+				} message: {
+					if pendingNotificationsInfo.isEmpty {
+						Text("No notifications scheduled")
+					} else {
+						Text(pendingNotificationsInfo.joined(separator: "\n"))
+					}
 				}
 #endif
 		}
@@ -389,6 +400,25 @@ struct SettingsView: View {
 								iconTint: .indigo
 							) {
 								statusPill(text: String(localized: L10n.Debug.sampleDataAction), color: .indigo)
+							}
+						}
+						.buttonStyle(.plain)
+						
+						sectionDivider()
+						
+						Button {
+							Task {
+								pendingNotificationsInfo = await dataManager.getPendingNotifications()
+								showingNotificationsDebug = true
+							}
+						} label: {
+							settingsRow(
+								icon: "bell.badge",
+								title: "View Scheduled Notifications",
+								subtitle: "Debug: Show pending notification requests",
+								iconTint: .orange
+							) {
+								statusPill(text: "Debug", color: .orange)
 							}
 						}
 						.buttonStyle(.plain)

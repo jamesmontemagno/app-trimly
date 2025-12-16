@@ -544,6 +544,8 @@ final class DataManager: ObservableObject {
     // MARK: - Reminder Scheduling
 
     func refreshReminderSchedule() async {
+        // Ensure we have fresh authorization status before scheduling
+        await notificationService.checkAuthorizationStatus()
         await notificationService.ensureReminderSchedule(reminders: deviceSettings.reminders)
     }
     
@@ -564,6 +566,8 @@ final class DataManager: ObservableObject {
     
     /// Schedule daily (primary) reminder at the specified time
     func scheduleDailyReminder(at time: Date) async throws {
+        // Ensure authorization status is current before scheduling
+        await notificationService.checkAuthorizationStatus()
         try await notificationService.scheduleDailyReminder(at: time)
         deviceSettings.updateReminders { reminders in
             reminders.primaryTime = time
@@ -572,6 +576,8 @@ final class DataManager: ObservableObject {
     
     /// Schedule secondary reminder at the specified time
     func scheduleSecondaryReminder(at time: Date) async throws {
+        // Ensure authorization status is current before scheduling
+        await notificationService.checkAuthorizationStatus()
         try await notificationService.scheduleSecondaryReminder(at: time)
         deviceSettings.updateReminders { reminders in
             reminders.secondaryTime = time
@@ -617,6 +623,13 @@ final class DataManager: ObservableObject {
     func setupNotificationCategories() {
         notificationService.setupNotificationCategories()
     }
+    
+    #if DEBUG
+    /// Get pending notification requests for debugging
+    func getPendingNotifications() async -> [String] {
+        await notificationService.getPendingNotificationsDebugInfo()
+    }
+    #endif
     
     // MARK: - Data Deletion
     

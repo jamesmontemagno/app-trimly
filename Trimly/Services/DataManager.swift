@@ -547,6 +547,77 @@ final class DataManager: ObservableObject {
         await notificationService.ensureReminderSchedule(reminders: deviceSettings.reminders)
     }
     
+    /// Whether the user has authorized notifications
+    var isNotificationAuthorized: Bool {
+        notificationService.isAuthorized
+    }
+    
+    /// Request notification authorization from the user
+    func requestNotificationAuthorization() async throws {
+        try await notificationService.requestAuthorization()
+    }
+    
+    /// Check current notification authorization status
+    func checkNotificationAuthorizationStatus() async {
+        await notificationService.checkAuthorizationStatus()
+    }
+    
+    /// Schedule daily (primary) reminder at the specified time
+    func scheduleDailyReminder(at time: Date) async throws {
+        try await notificationService.scheduleDailyReminder(at: time)
+        deviceSettings.updateReminders { reminders in
+            reminders.primaryTime = time
+        }
+    }
+    
+    /// Schedule secondary reminder at the specified time
+    func scheduleSecondaryReminder(at time: Date) async throws {
+        try await notificationService.scheduleSecondaryReminder(at: time)
+        deviceSettings.updateReminders { reminders in
+            reminders.secondaryTime = time
+        }
+    }
+    
+    /// Cancel primary reminder
+    func cancelPrimaryReminder() {
+        notificationService.cancelPrimaryReminder()
+        deviceSettings.updateReminders { reminders in
+            reminders.primaryTime = nil
+        }
+    }
+    
+    /// Cancel secondary reminder
+    func cancelSecondaryReminder() {
+        notificationService.cancelSecondaryReminder()
+        deviceSettings.updateReminders { reminders in
+            reminders.secondaryTime = nil
+        }
+    }
+    
+    /// Cancel all reminders
+    func cancelAllReminders() {
+        notificationService.cancelAllReminders()
+        deviceSettings.updateReminders { reminders in
+            reminders.primaryTime = nil
+            reminders.secondaryTime = nil
+        }
+    }
+    
+    /// Suggest a new reminder time based on logging patterns
+    func suggestReminderTime() -> Date? {
+        notificationService.suggestReminderTime(dataManager: self)
+    }
+    
+    /// Check if user should be prompted for reminder time adjustment
+    func shouldSuggestTimeAdjustment() -> Bool {
+        notificationService.shouldSuggestTimeAdjustment(reminders: deviceSettings.reminders)
+    }
+    
+    /// Setup notification categories and actions
+    func setupNotificationCategories() {
+        notificationService.setupNotificationCategories()
+    }
+    
     // MARK: - Data Deletion
     
     func deleteAllData() throws {

@@ -6,7 +6,6 @@ import UIKit
 struct OnboardingView: View {
     @EnvironmentObject var dataManager: DataManager
     @EnvironmentObject var deviceSettings: DeviceSettingsStore
-    @StateObject private var notificationService = NotificationService()
     @State private var currentPage = 0
     @State private var selectedUnit: WeightUnit = .pounds
     @State private var startingWeightText = ""
@@ -640,16 +639,28 @@ struct OnboardingView: View {
             components.hour = 9
             components.minute = 0
             if let reminderTime = calendar.date(from: components) {
-                deviceSettings.updateReminders { reminders in
-                    reminders.primaryTime = reminderTime
-                }
-                // Schedule the actual notification if authorized
+                // Schedule notifications and save settings
+                // This is done in a Task to properly await authorization completion
                 Task {
-                    if notificationService.isAuthorized {
+                    // First, ensure we have the latest authorization status
+                    await dataManager.checkNotificationAuthorizationStatus()
+                    
+                    if dataManager.isNotificationAuthorized {
                         do {
-                            try await notificationService.scheduleDailyReminder(at: reminderTime)
+                            try await dataManager.scheduleDailyReminder(at: reminderTime)
                         } catch {
+                            // If scheduling fails, still save the preference
+                            // TrimlyApp will retry on next launch via refreshReminderSchedule
+                            deviceSettings.updateReminders { reminders in
+                                reminders.primaryTime = reminderTime
+                            }
                             print("Failed to schedule reminder during onboarding: \(error)")
+                        }
+                    } else {
+                        // User enabled reminders but auth is pending or denied
+                        // Save the preference anyway - TrimlyApp will schedule when auth is granted
+                        deviceSettings.updateReminders { reminders in
+                            reminders.primaryTime = reminderTime
                         }
                     }
                 }
@@ -681,7 +692,7 @@ struct OnboardingView: View {
     private func requestNotificationAuthorization() {
         Task {
             do {
-                try await notificationService.requestAuthorization()
+                try await dataManager.requestNotificationAuthorization()
             } catch {
                 // If authorization fails or is denied, we continue silently.
                 // The user can enable notifications later in Settings.

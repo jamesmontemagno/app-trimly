@@ -4,7 +4,6 @@ import Combine
 struct RemindersView: View {
     @EnvironmentObject var dataManager: DataManager
     @EnvironmentObject var deviceSettings: DeviceSettingsStore
-    @StateObject private var notificationService = NotificationService()
     @Environment(\.dismiss) var dismiss
 
     @State private var primaryReminderEnabled = false
@@ -13,13 +12,14 @@ struct RemindersView: View {
     @State private var secondaryReminderTime = Date()
     @State private var adaptiveEnabled = true
     @State private var hasChanges = false
+    @State private var isAuthorized = false
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
                     TrimlyCardSection(title: String(localized: L10n.Reminders.authorizationTitle)) {
-                        if notificationService.isAuthorized {
+                        if isAuthorized {
                             Label(String(localized: L10n.Reminders.notificationsEnabled), systemImage: "checkmark.circle.fill")
                                 .font(.headline)
                                 .foregroundStyle(.green)
@@ -39,7 +39,7 @@ struct RemindersView: View {
                         }
                     }
 
-                    if notificationService.isAuthorized {
+                    if isAuthorized {
                         TrimlyCardSection(title: String(localized: L10n.Reminders.dailyTitle), description: String(localized: L10n.Reminders.dailyDescription)) {
                             Toggle(L10n.Reminders.dailyToggle, isOn: $primaryReminderEnabled)
                                 .onChange(of: primaryReminderEnabled) { _, _ in
@@ -66,8 +66,8 @@ struct RemindersView: View {
                                     .onChange(of: adaptiveEnabled) { _, _ in
                                         hasChanges = true
                                     }
-                                if notificationService.shouldSuggestTimeAdjustment(reminders: deviceSettings.reminders),
-                                   let suggested = notificationService.suggestReminderTime(dataManager: dataManager) {
+                                if dataManager.shouldSuggestTimeAdjustment(),
+                                   let suggested = dataManager.suggestReminderTime() {
                                     Divider().padding(.vertical, 8)
                                     Button {
                                         primaryReminderTime = suggested
@@ -140,56 +140,62 @@ struct RemindersView: View {
         .onAppear {
             loadSettings()
             Task {
-                await notificationService.checkAuthorizationStatus()
+                await dataManager.checkNotificationAuthorizationStatus()
+                isAuthorized = dataManager.isNotificationAuthorized
             }
         }
     }
 
     private func saveChanges() {
-        // Save primary reminder
-        if primaryReminderEnabled {
-            scheduleReminder(time: primaryReminderTime)
-        } else {
-            notificationService.cancelPrimaryReminder()
-            deviceSettings.updateReminders { reminders in
-                reminders.primaryTime = nil
+        Task {
+            // Save primary reminder
+            if primaryReminderEnabled {
+                do {
+                    try await dataManager.scheduleDailyReminder(at: primaryReminderTime)
+                } catch {
+                    print("Failed to schedule primary reminder: \(error)")
+                }
+            } else {
+                dataManager.cancelPrimaryReminder()
             }
-        }
-        
-        // Save secondary reminder
-        if secondaryReminderEnabled {
-            scheduleSecondaryReminder(time: secondaryReminderTime)
-        } else {
-            notificationService.cancelSecondaryReminder()
-            deviceSettings.updateReminders { reminders in
-                reminders.secondaryTime = nil
+            
+            // Save secondary reminder
+            if secondaryReminderEnabled {
+                do {
+                    try await dataManager.scheduleSecondaryReminder(at: secondaryReminderTime)
+                } catch {
+                    print("Failed to schedule secondary reminder: \(error)")
+                }
+            } else {
+                dataManager.cancelSecondaryReminder()
             }
-        }
-        
-        // Save adaptive setting
-        deviceSettings.updateReminders { reminders in
-            reminders.adaptiveEnabled = adaptiveEnabled
-        }
-        
-        // Reset consecutive dismissals if user accepted a suggestion
-        if let suggested = notificationService.suggestReminderTime(dataManager: dataManager),
-           primaryReminderEnabled && abs(primaryReminderTime.timeIntervalSince(suggested)) < 60 {
+            
+            // Save adaptive setting
             deviceSettings.updateReminders { reminders in
-                reminders.consecutiveDismissals = 0
+                reminders.adaptiveEnabled = adaptiveEnabled
             }
+            
+            // Reset consecutive dismissals if user accepted a suggestion
+            if let suggested = dataManager.suggestReminderTime(),
+               primaryReminderEnabled && abs(primaryReminderTime.timeIntervalSince(suggested)) < 60 {
+                deviceSettings.updateReminders { reminders in
+                    reminders.consecutiveDismissals = 0
+                }
+            }
+            
+            hasChanges = false
+            dismiss()
         }
-        
-        hasChanges = false
-        dismiss()
     }
 
     private func requestAuthorization() {
         Task {
             do {
-                try await notificationService.requestAuthorization()
-                if notificationService.isAuthorized {
-                    await notificationService.checkAuthorizationStatus()
-                    await notificationService.ensureReminderSchedule(reminders: deviceSettings.reminders)
+                try await dataManager.requestNotificationAuthorization()
+                await dataManager.checkNotificationAuthorizationStatus()
+                isAuthorized = dataManager.isNotificationAuthorized
+                if isAuthorized {
+                    await dataManager.refreshReminderSchedule()
                 }
             } catch {
                 print("Failed to authorize notifications: \(error)")
@@ -199,6 +205,7 @@ struct RemindersView: View {
 
     private func loadSettings() {
         syncState(with: deviceSettings.reminders)
+        isAuthorized = dataManager.isNotificationAuthorized
     }
 
     private func syncState(with reminders: DeviceSettingsStore.RemindersSettings) {
@@ -208,32 +215,6 @@ struct RemindersView: View {
         if let time = reminders.secondaryTime { secondaryReminderTime = time }
         adaptiveEnabled = reminders.adaptiveEnabled
         hasChanges = false
-    }
-
-    private func scheduleReminder(time: Date) {
-        Task {
-            do {
-                try await notificationService.scheduleDailyReminder(at: time)
-                deviceSettings.updateReminders { reminders in
-                    reminders.primaryTime = time
-                }
-            } catch {
-                print("Failed to schedule reminder: \(error)")
-            }
-        }
-    }
-
-    private func scheduleSecondaryReminder(time: Date) {
-        Task {
-            do {
-                try await notificationService.scheduleSecondaryReminder(at: time)
-                deviceSettings.updateReminders { reminders in
-                    reminders.secondaryTime = time
-                }
-            } catch {
-                print("Failed to schedule secondary reminder: \(error)")
-            }
-        }
     }
 }
 

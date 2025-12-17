@@ -546,7 +546,7 @@ final class DataManager: ObservableObject {
     func refreshReminderSchedule() async {
         // Ensure we have fresh authorization status before scheduling
         await notificationService.checkAuthorizationStatus()
-        await notificationService.ensureReminderSchedule(reminders: deviceSettings.reminders)
+        await notificationService.ensureReminderSchedule(reminders: deviceSettings.reminders, dataManager: self)
     }
     
     /// Whether the user has authorized notifications

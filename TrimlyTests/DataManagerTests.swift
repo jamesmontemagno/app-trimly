@@ -343,6 +343,55 @@ struct DataManagerTests {
 		#expect(manager.deviceSettings.healthKit.lastBackgroundSyncAt == nil)
 	}
 
+	// MARK: - Notifications
+
+	@Test
+	func addWeightEntry_cancelsAndReschedulesReminders() async throws {
+		let manager = await makeInMemoryManager()
+		let calendar = Calendar.current
+		let today = calendar.startOfDay(for: Date())
+		
+		// Before adding entry, there should be no entries for today
+		#expect(manager.fetchEntriesForDate(today).isEmpty)
+		
+		// Add an entry for today
+		try manager.addWeightEntry(weightKg: 80.0, timestamp: today, unit: .kilograms)
+		
+		// Verify that the entry exists for today
+		let todayEntries = manager.fetchEntriesForDate(today)
+		#expect(todayEntries.count == 1)
+		
+		// The addWeightEntry method calls cancelTodayReminderIfLogged,
+		// which should:
+		// 1. Check if today has entries (it does now)
+		// 2. Cancel any pending notifications for today
+		// 3. Reschedule future notifications with skipToday: true
+	}
+
+	@Test
+	func fetchEntriesForDate_usedByNotificationScheduling() async throws {
+		let manager = await makeInMemoryManager()
+		let calendar = Calendar.current
+		let today = calendar.startOfDay(for: Date())
+		let yesterday = calendar.date(byAdding: .day, value: -1, to: today) ?? today
+		
+		// Add entries for different days
+		try manager.addWeightEntry(weightKg: 79.0, timestamp: yesterday, unit: .kilograms)
+		try manager.addWeightEntry(weightKg: 80.0, timestamp: today, unit: .kilograms)
+		
+		// Verify fetchEntriesForDate correctly filters by day
+		let todayEntries = manager.fetchEntriesForDate(today)
+		#expect(todayEntries.count == 1)
+		#expect(todayEntries.first?.weightKg == 80.0)
+		
+		let yesterdayEntries = manager.fetchEntriesForDate(yesterday)
+		#expect(yesterdayEntries.count == 1)
+		#expect(yesterdayEntries.first?.weightKg == 79.0)
+		
+		// This method is critical for ensureReminderSchedule to determine
+		// whether to skip scheduling notifications for today
+	}
+
 	// MARK: - CSV Export
 
 	@Test

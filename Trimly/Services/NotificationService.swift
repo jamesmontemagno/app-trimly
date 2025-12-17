@@ -131,16 +131,21 @@ final class NotificationService: ObservableObject {
     }
     
     /// Ensure reminders are scheduled for the configured window (used on app launch)
-    func ensureReminderSchedule(reminders: DeviceSettingsStore.RemindersSettings) async {
+    func ensureReminderSchedule(reminders: DeviceSettingsStore.RemindersSettings, dataManager: DataManager) async {
         if isAuthorized == false {
             await checkAuthorizationStatus()
         }
         guard isAuthorized else { return }
+        
+        // Check if user has already logged weight for today
+        let todayEntries = dataManager.fetchEntriesForDate(Date())
+        let skipToday = !todayEntries.isEmpty
+        
         if let primaryTime = reminders.primaryTime {
-            try? await scheduleSeries(baseID: primaryReminderID, time: primaryTime, title: L10n.Notifications.primaryTitle, body: L10n.Notifications.primaryBody, sound: .default)
+            try? await scheduleSeries(baseID: primaryReminderID, time: primaryTime, title: L10n.Notifications.primaryTitle, body: L10n.Notifications.primaryBody, sound: .default, skipToday: skipToday)
         }
         if let secondaryTime = reminders.secondaryTime {
-            try? await scheduleSeries(baseID: secondaryReminderID, time: secondaryTime, title: L10n.Notifications.secondaryTitle, body: L10n.Notifications.secondaryBody, sound: .default)
+            try? await scheduleSeries(baseID: secondaryReminderID, time: secondaryTime, title: L10n.Notifications.secondaryTitle, body: L10n.Notifications.secondaryBody, sound: .default, skipToday: skipToday)
         }
     }
     

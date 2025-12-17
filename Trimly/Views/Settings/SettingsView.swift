@@ -391,6 +391,8 @@ struct SettingsView: View {
 						title: String(localized: L10n.Debug.toolsTitle),
 						description: String(localized: L10n.Debug.toolsDescription)
 					) {
+
+#if DEBUG
 						Button {
 							generateSampleData()
 						} label: {
@@ -406,6 +408,7 @@ struct SettingsView: View {
 						.buttonStyle(.plain)
 						
 						sectionDivider()
+#endif
 						
 						Button {
 							Task {

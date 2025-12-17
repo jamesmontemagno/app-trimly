@@ -32,8 +32,6 @@ struct SettingsView: View {
 	@State private var showingSampleDataAlert = false
 	@State private var sampleDataAlertMessage = ""
 #endif
-
-
 	@State private var showingNotificationsDebug = false
 	@State private var pendingNotificationsInfo: [String] = []
 	
@@ -88,12 +86,6 @@ struct SettingsView: View {
 				} message: {
 					Text(L10n.Settings.iCloudSyncRestartMessage)
 				}
-#if DEBUG
-				.alert(String(localized: L10n.Debug.sampleDataTitle), isPresented: $showingSampleDataAlert) {
-					Button(String(localized: L10n.Common.okButton), role: .cancel) { }
-				} message: {
-					Text(sampleDataAlertMessage)
-				}
 				.alert("Scheduled Notifications (\(pendingNotificationsInfo.count))", isPresented: $showingNotificationsDebug) {
 					Button("OK", role: .cancel) { }
 				} message: {
@@ -102,6 +94,12 @@ struct SettingsView: View {
 					} else {
 						Text(pendingNotificationsInfo.joined(separator: "\n"))
 					}
+				}
+#if DEBUG
+				.alert(String(localized: L10n.Debug.sampleDataTitle), isPresented: $showingSampleDataAlert) {
+					Button(String(localized: L10n.Common.okButton), role: .cancel) { }
+				} message: {
+					Text(sampleDataAlertMessage)
 				}
 #endif
 		}
@@ -391,8 +389,6 @@ struct SettingsView: View {
 						title: String(localized: L10n.Debug.toolsTitle),
 						description: String(localized: L10n.Debug.toolsDescription)
 					) {
-
-#if DEBUG
 						Button {
 							generateSampleData()
 						} label: {
@@ -408,7 +404,6 @@ struct SettingsView: View {
 						.buttonStyle(.plain)
 						
 						sectionDivider()
-#endif
 						
 						Button {
 							Task {

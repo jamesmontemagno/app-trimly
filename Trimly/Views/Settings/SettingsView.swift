@@ -31,9 +31,11 @@ struct SettingsView: View {
 #if DEBUG
 	@State private var showingSampleDataAlert = false
 	@State private var sampleDataAlertMessage = ""
+#endif
+
+
 	@State private var showingNotificationsDebug = false
 	@State private var pendingNotificationsInfo: [String] = []
-#endif
 	
 	private var appVersion: String {
 		let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""

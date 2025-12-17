@@ -385,7 +385,6 @@ struct SettingsView: View {
 						.buttonStyle(.plain)
 					}
 			
-	#if DEBUG
 					settingsSection(
 						title: String(localized: L10n.Debug.toolsTitle),
 						description: String(localized: L10n.Debug.toolsDescription)
@@ -423,7 +422,7 @@ struct SettingsView: View {
 						}
 						.buttonStyle(.plain)
 					}
-	#endif
+
 					
 					settingsSection(title: String(localized: L10n.Settings.aboutTitle)) {
 						Button(String(localized: L10n.Settings.restorePurchases)) {

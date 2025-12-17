@@ -28,10 +28,8 @@ struct SettingsView: View {
 	@State private var showingRestoreSuccessAlert = false
 	@State private var showingRestoreNotFoundAlert = false
 	@State private var showingRestartRequiredAlert = false
-#if DEBUG
 	@State private var showingSampleDataAlert = false
 	@State private var sampleDataAlertMessage = ""
-#endif
 	@State private var showingNotificationsDebug = false
 	@State private var pendingNotificationsInfo: [String] = []
 	
@@ -95,13 +93,11 @@ struct SettingsView: View {
 						Text(pendingNotificationsInfo.joined(separator: "\n"))
 					}
 				}
-#if DEBUG
 				.alert(String(localized: L10n.Debug.sampleDataTitle), isPresented: $showingSampleDataAlert) {
 					Button(String(localized: L10n.Common.okButton), role: .cancel) { }
 				} message: {
 					Text(sampleDataAlertMessage)
 				}
-#endif
 		}
 	}
 	
@@ -389,6 +385,7 @@ struct SettingsView: View {
 						title: String(localized: L10n.Debug.toolsTitle),
 						description: String(localized: L10n.Debug.toolsDescription)
 					) {
+					if DebugFlags.showSampleDataGeneration {
 						Button {
 							generateSampleData()
 						} label: {
@@ -402,64 +399,68 @@ struct SettingsView: View {
 							}
 						}
 						.buttonStyle(.plain)
-						
-						sectionDivider()
-						
-						Button {
-							Task {
-								pendingNotificationsInfo = await dataManager.getPendingNotifications()
-								showingNotificationsDebug = true
-							}
-						} label: {
-							settingsRow(
-								icon: "bell.badge",
-								title: "View Scheduled Notifications",
-								subtitle: "Debug: Show pending notification requests",
-								iconTint: .orange
-							) {
-								statusPill(text: "Debug", color: .orange)
-							}
-						}
-						.buttonStyle(.plain)
 					}
 
+					if DebugFlags.showPendingNotificationsDebug {
+						if DebugFlags.showSampleDataGeneration {
+							sectionDivider()
+						}
 					
-					settingsSection(title: String(localized: L10n.Settings.aboutTitle)) {
-						Button(String(localized: L10n.Settings.restorePurchases)) {
-							Task {
-								let found = await storeManager.restore()
-								if found {
-									showingRestoreSuccessAlert = true
-								} else {
-									showingRestoreNotFoundAlert = true
-								}
-							}
+					Button {
+						Task {
+							pendingNotificationsInfo = await dataManager.getPendingNotifications()
+							showingNotificationsDebug = true
 						}
-						.buttonStyle(.plain)
-						.foregroundStyle(.primary)
-						
-						sectionDivider()
-
-						HStack {
-							Text(L10n.Settings.versionLabel)
-							Spacer()
-							Text(appVersion)
-								.foregroundStyle(.secondary)
+					} label: {
+						settingsRow(
+							icon: "bell.badge",
+							title: "View Scheduled Notifications",
+							subtitle: "Debug: Show pending notification requests",
+							iconTint: .orange
+						) {
+							statusPill(text: "Debug", color: .orange)
 						}
-						
-						sectionDivider()
-						
-						Link(String(localized: L10n.Settings.privacyPolicy), destination: URL(string: "https://www.refractored.com/about#privacy-policy")!)
-							.font(.body.weight(.semibold))
-						Link(String(localized: L10n.Settings.termsOfService), destination: URL(string: "https://www.refractored.com/terms")!)
-							.font(.body.weight(.semibold))
+					}
+					.buttonStyle(.plain)
+				}
+			}
+			
+			settingsSection(title: String(localized: L10n.Settings.aboutTitle)) {
+				Button(String(localized: L10n.Settings.restorePurchases)) {
+					Task {
+						let found = await storeManager.restore()
+						if found {
+							showingRestoreSuccessAlert = true
+						} else {
+							showingRestoreNotFoundAlert = true
+						}
 					}
 				}
-				.padding(.horizontal, 24)
-				.padding(.top, 32)
-				.padding(.bottom, 48)
+				.buttonStyle(.plain)
+				.foregroundStyle(.primary)
+				
+				sectionDivider()
+
+				HStack {
+					Text(L10n.Settings.versionLabel)
+					Spacer()
+					Text(appVersion)
+						.foregroundStyle(.secondary)
+				}
+				
+				sectionDivider()
+				
+				Link(String(localized: L10n.Settings.privacyPolicy), destination: URL(string: "https://www.refractored.com/about#privacy-policy")!)
+					.font(.body.weight(.semibold))
+				Link(String(localized: L10n.Settings.termsOfService), destination: URL(string: "https://www.refractored.com/terms")!)
+					.font(.body.weight(.semibold))
+			}
 		}
+		.padding(.horizontal, 24)
+		.padding(.top, 32)
+		.padding(.bottom, 48)
 	}
+}
 
 	private func binding<T>(_ keyPath: WritableKeyPath<AppSettings, T>) -> Binding<T> {
 		Binding(
@@ -501,7 +502,6 @@ struct SettingsView: View {
 		try? dataManager.deleteAllData()
 	}
 
-#if DEBUG
 	private func generateSampleData() {
 		do {
 			try dataManager.generateSampleData()
@@ -511,7 +511,6 @@ struct SettingsView: View {
 		}
 		showingSampleDataAlert = true
 	}
-#endif
 	
 	private func settingsSection<Content: View>(title: String, description: String? = nil, @ViewBuilder content: @escaping () -> Content) -> some View {
 		VStack(alignment: .leading, spacing: 12) {

@@ -182,9 +182,7 @@ final class NotificationService: ObservableObject {
             do {
                 try await notificationCenter.add(request)
             } catch {
-                #if DEBUG
                 print("[Notifications] Failed to schedule \(id): \(error)")
-                #endif
             }
         }
     }
@@ -217,7 +215,6 @@ final class NotificationService: ObservableObject {
         }
     }
     
-    #if DEBUG
     /// Get detailed info about pending notifications for debugging
     func getPendingNotificationsDebugInfo() async -> [String] {
         await withCheckedContinuation { continuation in
@@ -244,7 +241,6 @@ final class NotificationService: ObservableObject {
             }
         }
     }
-    #endif
 }
 
 // MARK: - Notification Categories

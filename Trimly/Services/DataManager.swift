@@ -624,12 +624,10 @@ final class DataManager: ObservableObject {
         notificationService.setupNotificationCategories()
     }
     
-    #if DEBUG
-    /// Get pending notification requests for debugging
+    /// Get pending notification requests (debug info)
     func getPendingNotifications() async -> [String] {
-        await notificationService.getPendingNotificationsDebugInfo()
+        return await notificationService.getPendingNotificationsDebugInfo()
     }
-    #endif
     
     // MARK: - Data Deletion
     
@@ -670,9 +668,8 @@ final class DataManager: ObservableObject {
         publishChange()
     }
 
-#if DEBUG
     // MARK: - Debug Helpers
-    /// Removes existing entries and creates a 30-day downward trend (165 lb → 160 lb) for visualization in debug builds.
+    /// Removes existing entries and creates a 30-day downward trend (165 lb → 160 lb) for visualization.
     func generateSampleData(days: Int = 30) throws {
         try modelContext.delete(model: WeightEntry.self)
         try modelContext.save()
@@ -722,5 +719,4 @@ final class DataManager: ObservableObject {
         try modelContext.save()
         publishChange()
     }
-#endif
 }

@@ -66,7 +66,7 @@ struct NotificationServiceTests {
 		// Add a weight entry for yesterday, not today
 		try manager.addWeightEntry(weightKg: 80.0, timestamp: yesterday, unit: .kilograms)
 		
-		// Verify that today has no entries
+		// Verify that today has no entries (using Date() directly like production code)
 		let todayEntries = manager.fetchEntriesForDate(Date())
 		#expect(todayEntries.isEmpty)
 		

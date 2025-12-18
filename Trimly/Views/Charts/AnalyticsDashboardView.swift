@@ -95,6 +95,21 @@ struct AnalyticsDashboardView: View {
 					color: .orange
 				)
 			}
+			
+			Divider()
+			
+			// Average Weight Block
+			VStack(spacing: 8) {
+				Text(L10n.Charts.statAverageWeight)
+					.font(.caption)
+					.foregroundStyle(.secondary)
+				
+				Text(displayValueWithUnit(stats.average))
+					.font(.title2.bold())
+					.foregroundStyle(.primary)
+			}
+			.frame(maxWidth: .infinity)
+			.padding(.vertical, 8)
 		}
 	}
 	
@@ -104,6 +119,15 @@ struct AnalyticsDashboardView: View {
 		}
 		let value = unit.convert(fromKg: kg)
 		return String(format: "%.1f", value)
+	}
+	
+	private func displayValueWithUnit(_ kg: Double) -> String {
+		guard let unit = dataManager.settings?.preferredUnit else {
+			return String(format: "%.1f kg", kg)
+		}
+		let value = unit.convert(fromKg: kg)
+		let precision = dataManager.settings?.decimalPrecision ?? 1
+		return String(format: "%.*f %@", precision, value, unit.symbol as NSString)
 	}
 	
 	private func calculateTrend() -> (text: String, icon: String, color: Color)? {

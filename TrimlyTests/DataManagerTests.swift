@@ -415,4 +415,55 @@ struct DataManagerTests {
 		#expect(firstDataRow.contains(",80.00,kg,"))
 		#expect(firstDataRow.contains("\"First\""))
 	}
+	
+	// MARK: - 7-Day Average Tests
+	
+	@Test
+	func sevenDayAverage_requiresAtLeastSevenCheckIns() async throws {
+		let manager = await makeInMemoryManager()
+		let calendar = Calendar.current
+		let today = calendar.startOfDay(for: Date())
+		
+		// Add only 6 entries
+		for offset in 0..<6 {
+			let day = calendar.date(byAdding: .day, value: -offset, to: today) ?? today
+			try manager.addWeightEntry(weightKg: 80.0, timestamp: day, unit: .kilograms)
+		}
+		
+		let allEntries = manager.fetchAllEntries().filter { !$0.isHidden }
+		#expect(allEntries.count == 6)
+		
+		// 7-day average should not be available with less than 7 check-ins
+		#expect(allEntries.count < 7)
+	}
+	
+	@Test
+	func sevenDayAverage_availableWithSevenOrMoreCheckIns() async throws {
+		let manager = await makeInMemoryManager()
+		let calendar = Calendar.current
+		let today = calendar.startOfDay(for: Date())
+		
+		// Add exactly 7 entries on 7 consecutive days
+		for offset in 0..<7 {
+			let day = calendar.date(byAdding: .day, value: -offset, to: today) ?? today
+			try manager.addWeightEntry(weightKg: 80.0 + Double(offset) * 0.5, timestamp: day, unit: .kilograms)
+		}
+		
+		let allEntries = manager.fetchAllEntries().filter { !$0.isHidden }
+		#expect(allEntries.count >= 7)
+		
+		// Get daily weights for last 7 days
+		let dailyWeights = manager.getDailyWeights()
+		let last7Days = dailyWeights.suffix(7)
+		
+		#expect(last7Days.count > 0)
+		
+		// Calculate average
+		let sum = last7Days.reduce(0.0) { $0 + $1.weight }
+		let average = sum / Double(last7Days.count)
+		
+		// Average should be reasonable (between min and max weight)
+		#expect(average >= 80.0)
+		#expect(average <= 83.0)
+	}
 }

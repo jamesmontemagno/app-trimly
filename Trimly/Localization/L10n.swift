@@ -363,6 +363,14 @@ enum L10n {
 		static let versionLabel = LocalizedStringResource("settings.about.version", defaultValue: "Version")
 		static let privacyPolicy = LocalizedStringResource("settings.about.privacy", defaultValue: "Privacy Policy")
 		static let termsOfService = LocalizedStringResource("settings.about.terms", defaultValue: "Terms of Service")
+		static let supportTitle = LocalizedStringResource("settings.section.support.title", defaultValue: "Support")
+		static let supportDescription = LocalizedStringResource("settings.section.support.description", defaultValue: "Reach out for help or share feedback with the TrimTally team.")
+		static let contactSupport = LocalizedStringResource("settings.support.contact", defaultValue: "Contact Support")
+		static let contactSupportSubtitle = LocalizedStringResource("settings.support.contact.subtitle", defaultValue: "Opens your email app with helpful diagnostics attached.")
+		static let supportFallbackTitle = LocalizedStringResource("settings.support.fallback.title", defaultValue: "Email App Unavailable")
+		static func supportFallbackMessage(_ email: String) -> LocalizedStringResource {
+			LocalizedStringResource("settings.support.fallback.message", defaultValue: "We couldn't open your email app. Please email \(email) directly and include the version and device info shown in Settings.")
+		}
 		static let deleteWarning = LocalizedStringResource("settings.data.delete.warning", defaultValue: "This will permanently delete all your weight entries and goals. This action cannot be undone.")
 		static let restorePurchases = LocalizedStringResource("settings.about.restorePurchases", defaultValue: "Restore Purchases")
 		static let restoreSuccessTitle = LocalizedStringResource("settings.restore.success.title", defaultValue: "Purchase Restored")

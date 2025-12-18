@@ -8,12 +8,15 @@
 import SwiftUI
 #if os(macOS)
 import AppKit
+#elseif canImport(UIKit)
+import UIKit
 #endif
 
 struct SettingsView: View {
 	@EnvironmentObject var dataManager: DataManager
 	@EnvironmentObject var deviceSettings: DeviceSettingsStore
 	@EnvironmentObject var storeManager: StoreManager
+	@Environment(\.openURL) private var openURL
 	@StateObject private var notificationService = NotificationService()
 	@State private var showingGoalSheet = false
 	@State private var showingGoalHistory = false
@@ -32,6 +35,7 @@ struct SettingsView: View {
 	@State private var sampleDataAlertMessage = ""
 	@State private var showingNotificationsDebug = false
 	@State private var pendingNotificationsInfo: [String] = []
+	@State private var showingSupportFallbackAlert = false
 	
 	private var appVersion: String {
 		let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
@@ -97,6 +101,11 @@ struct SettingsView: View {
 					Button(String(localized: L10n.Common.okButton), role: .cancel) { }
 				} message: {
 					Text(sampleDataAlertMessage)
+				}
+				.alert(String(localized: L10n.Settings.supportFallbackTitle), isPresented: $showingSupportFallbackAlert) {
+					Button(String(localized: L10n.Common.okButton), role: .cancel) { }
+				} message: {
+					Text(String(localized: L10n.Settings.supportFallbackMessage("contact@refractored.com")))
 				}
 		}
 	}
@@ -455,12 +464,74 @@ struct SettingsView: View {
 				Link(String(localized: L10n.Settings.termsOfService), destination: URL(string: "https://www.refractored.com/terms")!)
 					.font(.body.weight(.semibold))
 			}
+			
+			settingsSection(
+				title: String(localized: L10n.Settings.supportTitle),
+				description: String(localized: L10n.Settings.supportDescription)
+			) {
+				Button {
+					composeSupportEmail()
+				} label: {
+					settingsRow(
+						icon: "envelope.badge", 
+						title: String(localized: L10n.Settings.contactSupport),
+						subtitle: String(localized: L10n.Settings.contactSupportSubtitle),
+						showChevron: true,
+						iconTint: .blue
+					)
+				}
+				.buttonStyle(.plain)
+			}
 		}
 		.padding(.horizontal, 24)
 		.padding(.top, 32)
 		.padding(.bottom, 48)
 	}
 }
+
+	private func composeSupportEmail() {
+		let formatter = DateFormatter()
+		formatter.dateStyle = .medium
+		formatter.timeStyle = .short
+		let timestamp = formatter.string(from: Date())
+		let subject = "TrimTally Support - \(timestamp)"
+		let bodyLines = [
+			"App Version: \(appVersion)",
+			"Device: \(deviceDescription)",
+			"",
+			"Please describe what happened:",
+			""
+		]
+		var components = URLComponents()
+		components.scheme = "mailto"
+		components.path = "contact@refractored.com"
+		components.queryItems = [
+			URLQueryItem(name: "subject", value: subject),
+			URLQueryItem(name: "body", value: bodyLines.joined(separator: "\n"))
+		]
+		guard let url = components.url else {
+			showingSupportFallbackAlert = true
+			return
+		}
+		openURL(url) { accepted in
+			if !accepted {
+				showingSupportFallbackAlert = true
+			}
+		}
+	}
+
+	private var deviceDescription: String {
+#if canImport(UIKit)
+		let device = UIDevice.current
+		return "\(device.model) (\(device.systemName) \(device.systemVersion))"
+#elseif os(macOS)
+		let version = ProcessInfo.processInfo.operatingSystemVersion
+		let name = Host.current().localizedName ?? "Mac"
+		return "\(name) (macOS \(version.majorVersion).\(version.minorVersion).\(version.patchVersion))"
+#else
+		return "Unknown Device"
+#endif
+	}
 
 	private func binding<T>(_ keyPath: WritableKeyPath<AppSettings, T>) -> Binding<T> {
 		Binding(

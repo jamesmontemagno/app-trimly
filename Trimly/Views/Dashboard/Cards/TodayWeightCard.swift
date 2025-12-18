@@ -29,6 +29,25 @@ struct TodayWeightCard: View {
 				if let todayEntries, !todayEntries.isEmpty {
 					primaryValueIndicator(entries: todayEntries)
 				}
+				
+				// Show 7-day average if user has at least 7 check-ins
+				if let sevenDayAvg = calculateSevenDayAverage() {
+					VStack(spacing: 4) {
+						Divider()
+							.padding(.horizontal, 40)
+							.padding(.top, 8)
+						
+						Text(L10n.Dashboard.sevenDayAverage)
+							.font(.caption2)
+							.foregroundStyle(.secondary)
+						
+						Text(displayValue(sevenDayAvg))
+							.font(.title3.weight(.semibold))
+							.foregroundStyle(.blue)
+					}
+					.padding(.top, 4)
+				}
+				
 				if recentlySyncedFromICloud {
 					SyncIndicator(type: .iCloud)
 				}
@@ -84,5 +103,21 @@ struct TodayWeightCard: View {
 		let value = unit.convert(fromKg: kg)
 		let precision = dataManager.settings?.decimalPrecision ?? 1
 		return String(format: "%.*f %@", precision, value, unit.symbol as NSString)
+	}
+	
+	private func calculateSevenDayAverage() -> Double? {
+		// Get all entries to check if user has at least 7 check-ins
+		let allEntries = dataManager.fetchAllEntries().filter { !$0.isHidden }
+		guard allEntries.count >= 7 else { return nil }
+		
+		// Get daily weights and take the last 7 days
+		let dailyWeights = dataManager.getDailyWeights()
+		guard !dailyWeights.isEmpty else { return nil }
+		
+		let last7Days = dailyWeights.suffix(7)
+		guard last7Days.count > 0 else { return nil }
+		
+		let sum = last7Days.reduce(0.0) { $0 + $1.weight }
+		return sum / Double(last7Days.count)
 	}
 }

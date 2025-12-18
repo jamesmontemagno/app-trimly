@@ -124,6 +124,7 @@ enum L10n {
 		static let statMax = LocalizedStringResource("charts.stats.max", defaultValue: "Max")
 		static let statAvg = LocalizedStringResource("charts.stats.avg", defaultValue: "Avg")
 		static let statRange = LocalizedStringResource("charts.stats.range", defaultValue: "Range")
+		static let statAverageWeight = LocalizedStringResource("charts.stats.averageWeight", defaultValue: "Average Weight")
 		static let goalLabel = LocalizedStringResource("charts.goal.label", defaultValue: "Goal")
 		static let maInfoTitle = LocalizedStringResource("charts.info.ma.title", defaultValue: "Moving Average")
 		static let maInfoDescription = LocalizedStringResource("charts.info.ma.description", defaultValue: "A simple moving average smooths recent entries by averaging the last few days so you can spot direction without noise.")
@@ -167,6 +168,7 @@ enum L10n {
 		static func averageEntries(_ count: Int) -> LocalizedStringResource {
 			LocalizedStringResource("dashboard.averageEntries", defaultValue: "Average of \(count) entries")
 		}
+		static let sevenDayAverage = LocalizedStringResource("dashboard.sevenDayAverage", defaultValue: "7-Day Average")
 		static let lastSevenDays = LocalizedStringResource("dashboard.lastSevenDays", defaultValue: "Last 7 Days")
 		static let notEnoughData = LocalizedStringResource("dashboard.notEnoughData", defaultValue: "Not enough data")
 		static let fromStart = LocalizedStringResource("dashboard.fromStart", defaultValue: "From Start")

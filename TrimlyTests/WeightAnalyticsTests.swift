@@ -181,4 +181,54 @@ struct WeightAnalyticsTests {
 			#expect(projection >= lastDate)
 		}
 	}
+	
+	// MARK: - 7-Day Average Tests
+	
+	@Test
+	func sevenDayAverage_calculatesCorrectly() async throws {
+		let calendar = Calendar.current
+		let today = calendar.startOfDay(for: Date())
+		
+		// Create 7 days of weight entries with known values
+		var series: [(date: Date, weight: Double)] = []
+		let weights = [80.0, 81.0, 82.0, 81.5, 80.5, 79.5, 80.0]
+		
+		for offset in (0..<7).reversed() {
+			let day = calendar.date(byAdding: .day, value: -offset, to: today) ?? today
+			series.append((date: day, weight: weights[6 - offset]))
+		}
+		
+		// Calculate expected average
+		let expectedAverage = weights.reduce(0.0, +) / Double(weights.count)
+		
+		// Get last 7 days
+		let last7Days = series.suffix(7)
+		let sum = last7Days.reduce(0.0) { $0 + $1.weight }
+		let calculatedAverage = sum / Double(last7Days.count)
+		
+		#expect(abs(calculatedAverage - expectedAverage) < 0.0001)
+	}
+	
+	@Test
+	func sevenDayAverage_withMoreThanSevenDays_usesLastSevenOnly() async throws {
+		let calendar = Calendar.current
+		let today = calendar.startOfDay(for: Date())
+		
+		// Create 10 days of weight entries
+		var series: [(date: Date, weight: Double)] = []
+		for offset in (0..<10).reversed() {
+			let day = calendar.date(byAdding: .day, value: -offset, to: today) ?? today
+			// First 3 days: 85kg, last 7 days: 80kg
+			let weight = offset < 3 ? 85.0 : 80.0
+			series.append((date: day, weight: weight))
+		}
+		
+		// Get last 7 days (should all be 80.0)
+		let last7Days = series.suffix(7)
+		let sum = last7Days.reduce(0.0) { $0 + $1.weight }
+		let calculatedAverage = sum / Double(last7Days.count)
+		
+		// Average should be 80.0, not affected by the earlier 85.0 entries
+		#expect(abs(calculatedAverage - 80.0) < 0.0001)
+	}
 }

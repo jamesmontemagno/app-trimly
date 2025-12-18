@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { 
+  Shield,
   Scale, 
   TrendingUp, 
   Target, 
   Cloud, 
   Activity, 
   Bell, 
+  Trophy,
   ArrowRight,
   Download,
   Sun,
@@ -50,34 +52,44 @@ function App() {
 
   const features = [
     {
+      icon: <Shield className="w-6 h-6" />,
+      title: "Private by Design",
+      description: "TrimTally keeps every entry on your device with end-to-end privacy. No accounts, no tracking—ever."
+    },
+    {
+      icon: <Cloud className="w-6 h-6" />,
+      title: "Optional iCloud Backup",
+      description: "Enable secure, encrypted iCloud sync when you want to keep your history backed up across Apple devices."
+    },
+    {
       icon: <Scale className="w-6 h-6" />,
       title: "Multi-Entry Logging",
-      description: "Log your weight multiple times a day. We'll handle the daily aggregation for you."
+      description: "Log as often as you like and let TrimTally handle daily normalization and insights."
     },
     {
       icon: <TrendingUp className="w-6 h-6" />,
       title: "Advanced Analytics",
-      description: "Visualize your progress with SMA, EMA, and linear regression trend lines."
+      description: "Spot trends with SMA, EMA, linear regression, and volatility-aware projections."
     },
     {
       icon: <Target className="w-6 h-6" />,
       title: "Goal Tracking",
-      description: "Set your target weight and track your journey with smart projections."
-    },
-    {
-      icon: <Cloud className="w-6 h-6" />,
-      title: "iCloud Sync",
-      description: "Your data stays in sync across all your devices automatically and securely."
+      description: "Set smart goals and see how each weigh-in moves you closer with actionable timelines."
     },
     {
       icon: <Activity className="w-6 h-6" />,
       title: "HealthKit Integration",
-      description: "Seamlessly syncs with Apple Health to keep all your health data in one place."
+      description: "Import or export with Apple Health to keep your wellness data perfectly aligned."
     },
     {
       icon: <Bell className="w-6 h-6" />,
       title: "Smart Reminders",
-      description: "Get notified at the perfect time to build a consistent weighing habit."
+      description: "Build consistent routines with adaptive nudges that respect your schedule."
+    },
+    {
+      icon: <Trophy className="w-6 h-6" />,
+      title: "Celebrations & Achievements",
+      description: "Stay motivated with milestones, streak celebrations, and plateau detection insights."
     }
   ]
 
@@ -105,7 +117,7 @@ function App() {
       <header className="header">
         <div className="container header-content">
           <div className="logo">
-            <img src={`${import.meta.env.BASE_URL}app-icon.png`} className="logo-icon" alt="TrimTally Logo" />
+            <img src={`${import.meta.env.BASE_URL}app-icon.svg`} className="logo-icon" alt="TrimTally Logo" />
             <span className="logo-text">TrimTally</span>
           </div>
           <nav className="nav">
@@ -149,12 +161,17 @@ function App() {
             transition={{ duration: 0.6 }}
           >
             <h1 className="hero-title">
-              Your supportive companion for <span className="gradient-text">mindful weight tracking</span>
+              Private, secure weight tracking <span className="gradient-text">with no account required</span>
             </h1>
             <p className="hero-subtitle">
-              TrimTally helps you understand your weight trends without the obsession. 
-              Focus on the long-term journey with powerful analytics and gentle guidance.
+              TrimTally keeps your progress safe on-device by default, with optional encrypted iCloud backup when you want it. 
+              Understand trends without the noise thanks to clear analytics, smart goals, and encouraging feedback.
             </p>
+            <div className="hero-highlights">
+              <span className="hero-highlight-pill">Private &amp; secure</span>
+              <span className="hero-highlight-pill">No account required</span>
+              <span className="hero-highlight-pill">Optional iCloud backup</span>
+            </div>
             <div className="hero-buttons">
               <a href="#" className="btn btn-primary">
                 <Download size={20} />
@@ -249,7 +266,7 @@ function App() {
           <div className="footer-content">
             <div className="footer-brand">
               <div className="logo">
-                <img src={`${import.meta.env.BASE_URL}app-icon.png`} className="logo-icon-sm" alt="TrimTally Logo" />
+                <img src={`${import.meta.env.BASE_URL}app-icon.svg`} className="logo-icon-sm" alt="TrimTally Logo" />
                 <span>TrimTally</span>
               </div>
               <p>© {new Date().getFullYear()} Refractored. All rights reserved.</p>

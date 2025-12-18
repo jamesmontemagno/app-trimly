@@ -43,20 +43,7 @@ struct DashboardView: View {
 						currentWeight: dataManager.getCurrentWeight(),
 						startWeight: dataManager.fetchActiveGoal()?.startingWeightKg ?? dataManager.getStartWeight()
 					)
-					
-					MonthlyCalendarCard(weightMap: dailyDisplayWeights)
-					
-					if shouldShowConsistency {
-						ConsistencyScoreCard(
-							showingInfo: $showingConsistencyInfo,
-							score: dataManager.getConsistencyScore()
-						)
-						.alert("Consistency Score", isPresented: $showingConsistencyInfo) {
-							Button("OK", role: .cancel) {}
-						} message: {
-							consistencyInfoMessage(dataManager: dataManager)
-						}
-					}
+
 					
 					TrendSummaryCard(
 						trend: dataManager.getTrend(),
@@ -72,6 +59,20 @@ struct DashboardView: View {
 							plateau: plateau,
 							onDismiss: { plateauService.dismissPlateau() }
 						)
+					}
+										
+					MonthlyCalendarCard(weightMap: dailyDisplayWeights)
+					
+					if shouldShowConsistency {
+						ConsistencyScoreCard(
+							showingInfo: $showingConsistencyInfo,
+							score: dataManager.getConsistencyScore()
+						)
+						.alert("Consistency Score", isPresented: $showingConsistencyInfo) {
+							Button("OK", role: .cancel) {}
+						} message: {
+							consistencyInfoMessage(dataManager: dataManager)
+						}
 					}
 				}
 				.padding()

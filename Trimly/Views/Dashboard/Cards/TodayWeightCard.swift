@@ -35,7 +35,8 @@ struct TodayWeightCard: View {
 					VStack(spacing: 4) {
 						Divider()
 							.padding(.horizontal, 40)
-							.padding(.top, 8)
+							.padding(.top, 4)
+							.padding(.bottom, 4)
 						
 						Text(L10n.Dashboard.sevenDayAverage)
 							.font(.caption2)

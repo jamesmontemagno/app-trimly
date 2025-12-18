@@ -193,8 +193,9 @@ struct WeightAnalyticsTests {
 		let weights = [80.0, 81.0, 82.0, 81.5, 80.5, 79.5, 80.0]
 		var series: [(date: Date, weight: Double)] = []
 		
+		// Build series from oldest to newest (6 days ago to today)
 		for (index, weight) in weights.enumerated() {
-			let daysAgo = 6 - index // Start from 6 days ago to today
+			let daysAgo = (weights.count - 1) - index
 			let day = calendar.date(byAdding: .day, value: -daysAgo, to: today) ?? today
 			series.append((date: day, weight: weight))
 		}

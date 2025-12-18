@@ -114,7 +114,10 @@ struct TodayWeightCard: View {
 		let dailyWeights = dataManager.getDailyWeights()
 		guard !dailyWeights.isEmpty else { return nil }
 		
+		// Take up to the last 7 days (may be fewer if user hasn't logged that long)
 		let last7Days = dailyWeights.suffix(7)
+		
+		// Calculate average of available days
 		let sum = last7Days.reduce(0.0) { $0 + $1.weight }
 		return sum / Double(last7Days.count)
 	}

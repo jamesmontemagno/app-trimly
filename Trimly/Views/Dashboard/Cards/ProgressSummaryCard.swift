@@ -61,7 +61,7 @@ struct ProgressSummaryCard: View {
 						let currentChange = currentWeight - startWeight
 						let progress = totalChange != 0 ? (currentChange / totalChange) * 100 : 0
 						
-						Text("\(Int(min(100, max(0, progress))))%")
+						Text("\(Int(min(100, progress)))%")
 							.font(.title3.bold())
 							.foregroundStyle(.purple)
 					}

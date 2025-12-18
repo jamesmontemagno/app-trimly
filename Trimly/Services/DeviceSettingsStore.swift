@@ -32,6 +32,10 @@ final class DeviceSettingsStore: ObservableObject {
         var iCloudSyncEnabled: Bool
     }
     
+    struct ProSettings: Equatable {
+        var isPro: Bool
+    }
+    
     private enum Keys {
         static let primaryReminderTime = "device.reminders.primaryTime"
         static let secondaryReminderTime = "device.reminders.secondaryTime"
@@ -44,12 +48,14 @@ final class DeviceSettingsStore: ObservableObject {
         static let lastImportAt = "device.health.lastImportAt"
         static let lastBackgroundSyncAt = "device.health.lastBackgroundSyncAt"
         static let iCloudSyncEnabled = "device.cloudSync.enabled"
+        static let isPro = "device.pro.isPro"
     }
     
     // MARK: - Published State
     @Published private(set) var reminders: RemindersSettings
     @Published private(set) var healthKit: HealthKitSettings
     @Published private(set) var cloudSync: CloudSyncSettings
+    @Published private(set) var pro: ProSettings
     
     var remindersPublisher: AnyPublisher<RemindersSettings, Never> {
         $reminders.eraseToAnyPublisher()
@@ -61,6 +67,10 @@ final class DeviceSettingsStore: ObservableObject {
     
     var cloudSyncPublisher: AnyPublisher<CloudSyncSettings, Never> {
         $cloudSync.eraseToAnyPublisher()
+    }
+    
+    var proPublisher: AnyPublisher<ProSettings, Never> {
+        $pro.eraseToAnyPublisher()
     }
     
     private let defaults: UserDefaults
@@ -86,6 +96,10 @@ final class DeviceSettingsStore: ObservableObject {
         cloudSync = CloudSyncSettings(
             iCloudSyncEnabled: defaults.object(forKey: Keys.iCloudSyncEnabled) as? Bool ?? true
         )
+        // Default to false - user must purchase to become pro
+        pro = ProSettings(
+            isPro: defaults.object(forKey: Keys.isPro) as? Bool ?? false
+        )
     }
     
     // MARK: - Mutation
@@ -108,6 +122,13 @@ final class DeviceSettingsStore: ObservableObject {
         mutate(&copy)
         cloudSync = copy
         persistCloudSync(copy)
+    }
+    
+    func updatePro(_ mutate: (inout ProSettings) -> Void) {
+        var copy = pro
+        mutate(&copy)
+        pro = copy
+        persistPro(copy)
     }
     
     // MARK: - Persistence Helpers
@@ -145,5 +166,9 @@ final class DeviceSettingsStore: ObservableObject {
     
     private func persistCloudSync(_ value: CloudSyncSettings) {
         defaults.set(value.iCloudSyncEnabled, forKey: Keys.iCloudSyncEnabled)
+    }
+    
+    private func persistPro(_ value: ProSettings) {
+        defaults.set(value.isPro, forKey: Keys.isPro)
     }
 }

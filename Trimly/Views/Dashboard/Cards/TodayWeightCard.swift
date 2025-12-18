@@ -115,8 +115,6 @@ struct TodayWeightCard: View {
 		guard !dailyWeights.isEmpty else { return nil }
 		
 		let last7Days = dailyWeights.suffix(7)
-		guard last7Days.count > 0 else { return nil }
-		
 		let sum = last7Days.reduce(0.0) { $0 + $1.weight }
 		return sum / Double(last7Days.count)
 	}

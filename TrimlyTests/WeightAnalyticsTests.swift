@@ -190,12 +190,13 @@ struct WeightAnalyticsTests {
 		let today = calendar.startOfDay(for: Date())
 		
 		// Create 7 days of weight entries with known values
-		var series: [(date: Date, weight: Double)] = []
 		let weights = [80.0, 81.0, 82.0, 81.5, 80.5, 79.5, 80.0]
+		var series: [(date: Date, weight: Double)] = []
 		
-		for offset in (0..<7).reversed() {
-			let day = calendar.date(byAdding: .day, value: -offset, to: today) ?? today
-			series.append((date: day, weight: weights[6 - offset]))
+		for (index, weight) in weights.enumerated() {
+			let daysAgo = 6 - index // Start from 6 days ago to today
+			let day = calendar.date(byAdding: .day, value: -daysAgo, to: today) ?? today
+			series.append((date: day, weight: weight))
 		}
 		
 		// Calculate expected average

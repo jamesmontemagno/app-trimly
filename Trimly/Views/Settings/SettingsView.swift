@@ -390,48 +390,49 @@ struct SettingsView: View {
 						}
 						.buttonStyle(.plain)
 					}
-			
-					settingsSection(
-						title: String(localized: L10n.Debug.toolsTitle),
-						description: String(localized: L10n.Debug.toolsDescription)
-					) {
-					if DebugFlags.showSampleDataGeneration {
+					if(DebugFlags.showPendingNotificationsDebug || DebugFlags.showSampleDataGeneration) {
+						settingsSection(
+							title: String(localized: L10n.Debug.toolsTitle),
+							description: String(localized: L10n.Debug.toolsDescription)
+						) {
+						if DebugFlags.showSampleDataGeneration {
+							Button {
+								generateSampleData()
+							} label: {
+								settingsRow(
+									icon: "wand.and.stars",
+									title: String(localized: L10n.Debug.sampleDataTitle),
+									subtitle: String(localized: L10n.Debug.sampleDataSubtitle),
+									iconTint: .indigo
+								) {
+									statusPill(text: String(localized: L10n.Debug.sampleDataAction), color: .indigo)
+								}
+							}
+							.buttonStyle(.plain)
+						}
+
+						if DebugFlags.showPendingNotificationsDebug {
+							if DebugFlags.showSampleDataGeneration {
+								sectionDivider()
+							}
+						
 						Button {
-							generateSampleData()
+							Task {
+								pendingNotificationsInfo = await dataManager.getPendingNotifications()
+								showingNotificationsDebug = true
+							}
 						} label: {
 							settingsRow(
-								icon: "wand.and.stars",
-								title: String(localized: L10n.Debug.sampleDataTitle),
-								subtitle: String(localized: L10n.Debug.sampleDataSubtitle),
-								iconTint: .indigo
+								icon: "bell.badge",
+								title: "View Scheduled Notifications",
+								subtitle: "Debug: Show pending notification requests",
+								iconTint: .orange
 							) {
-								statusPill(text: String(localized: L10n.Debug.sampleDataAction), color: .indigo)
+								statusPill(text: "Debug", color: .orange)
 							}
 						}
 						.buttonStyle(.plain)
 					}
-
-					if DebugFlags.showPendingNotificationsDebug {
-						if DebugFlags.showSampleDataGeneration {
-							sectionDivider()
-						}
-					
-					Button {
-						Task {
-							pendingNotificationsInfo = await dataManager.getPendingNotifications()
-							showingNotificationsDebug = true
-						}
-					} label: {
-						settingsRow(
-							icon: "bell.badge",
-							title: "View Scheduled Notifications",
-							subtitle: "Debug: Show pending notification requests",
-							iconTint: .orange
-						) {
-							statusPill(text: "Debug", color: .orange)
-						}
-					}
-					.buttonStyle(.plain)
 				}
 			}
 			

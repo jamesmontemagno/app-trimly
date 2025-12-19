@@ -243,6 +243,11 @@ private struct AchievementCard: View {
 			}
 		case .goalsAchieved(let target):
 			return String(localized: L10n.Achievements.progressGoals(diag.goalsAchieved, target))
+		case .goalProgress:
+			let currentPercent = Int(diag.goalProgressPercent.rounded())
+			return String(localized: L10n.Achievements.progressGoalHalfway(currentPercent))
+		case .sameWeightStreak(let days):
+			return String(localized: L10n.Achievements.progressSteadyState(diag.sameWeightStreakDays, days))
 		case .remindersEnabled:
 			return diag.remindersEnabled
 				? String(localized: L10n.Achievements.progressRemindersOn)
@@ -376,6 +381,10 @@ private struct AchievementDiagnosticsSheet: View {
 			]
 		case .goalsAchieved(let target):
 			return [MetricDetail(title: L10n.Debug.Achievements.targetGoals, value: "\(target)")]
+		case .goalProgress(let threshold):
+			return [MetricDetail(title: "Goal Progress Threshold", value: "\(Int(threshold))%")]
+		case .sameWeightStreak(let days):
+			return [MetricDetail(title: "Same Weight Days", value: "\(days)")]
 		case .remindersEnabled:
 			return [MetricDetail(title: L10n.Debug.Achievements.remindersRequired, value: yesText)]
 		case .reminderConsistency(let ratio):

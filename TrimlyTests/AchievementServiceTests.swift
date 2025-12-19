@@ -70,7 +70,7 @@ final class AchievementServiceTests: XCTestCase {
 	}
 	
 	func testPremiumAchievementRequiresProUnlock() throws {
-		try logSequentialEntries(count: 370)
+		try logSequentialEntries(count: 105)
 		achievementService.refresh(using: dataManager, isPro: false)
 		let ledgerLocked = dataManager.achievement(forKey: "logging.ledger", createIfMissing: false)
 		XCTAssertNotNil(ledgerLocked)
@@ -146,6 +146,106 @@ final class AchievementServiceTests: XCTestCase {
 		let stillUnlocked = dataManager.achievement(forKey: "logging.newcomer", createIfMissing: false)
 		XCTAssertNotNil(stillUnlocked?.unlockedAt)
 		XCTAssertEqual(stillUnlocked?.progressValue, 0)
+	}
+	
+	func testYearLongStreakAchievement() throws {
+		// Log 365 consecutive days
+		try logSequentialEntries(count: 365)
+		achievementService.refresh(using: dataManager, isPro: true)
+		let yearStreak = dataManager.achievement(forKey: "streak.year", createIfMissing: false)
+		XCTAssertNotNil(yearStreak)
+		XCTAssertNotNil(yearStreak?.unlockedAt)
+		XCTAssertEqual(yearStreak?.progressValue, 0)
+	}
+	
+	func testYearLongStreakRequiresPro() throws {
+		try logSequentialEntries(count: 365)
+		achievementService.refresh(using: dataManager, isPro: false)
+		let yearStreakLocked = dataManager.achievement(forKey: "streak.year", createIfMissing: false)
+		XCTAssertNotNil(yearStreakLocked)
+		XCTAssertNil(yearStreakLocked?.unlockedAt)
+	}
+	
+	func testHalfwayGoalAchievement() throws {
+		let poundsUnit = WeightUnit.pounds
+		let startWeightKg = poundsUnit.convertToKg(200)
+		let targetWeightKg = poundsUnit.convertToKg(180)
+		
+		// Log starting weight
+		try dataManager.addWeightEntry(weightKg: startWeightKg, timestamp: Date(), unit: poundsUnit)
+		
+		// Set goal
+		try dataManager.setGoal(targetWeightKg: targetWeightKg, startingWeightKg: startWeightKg)
+		
+		// Log weight at 50% progress (190 lbs)
+		let halfwayWeightKg = poundsUnit.convertToKg(190)
+		let calendar = Calendar.current
+		let tomorrow = calendar.date(byAdding: .day, value: 1, to: Date()) ?? Date()
+		try dataManager.addWeightEntry(weightKg: halfwayWeightKg, timestamp: tomorrow, unit: poundsUnit)
+		
+		achievementService.refresh(using: dataManager, isPro: false)
+		let halfway = dataManager.achievement(forKey: "goals.halfway", createIfMissing: false)
+		XCTAssertNotNil(halfway)
+		XCTAssertNotNil(halfway?.unlockedAt)
+	}
+	
+	func testSteadyStateAchievement() throws {
+		let poundsUnit = WeightUnit.pounds
+		let weightKg = poundsUnit.convertToKg(170)
+		let calendar = Calendar.current
+		
+		// Log the same weight for 5 consecutive days
+		for dayOffset in 0..<5 {
+			let timestamp = calendar.date(byAdding: .day, value: -dayOffset, to: Date()) ?? Date()
+			try dataManager.addWeightEntry(weightKg: weightKg, timestamp: timestamp, unit: poundsUnit)
+		}
+		
+		achievementService.refresh(using: dataManager, isPro: true)
+		let steadyState = dataManager.achievement(forKey: "consistency.steady", createIfMissing: false)
+		XCTAssertNotNil(steadyState)
+		XCTAssertNotNil(steadyState?.unlockedAt)
+	}
+	
+	func testSteadyStateRequiresPro() throws {
+		let poundsUnit = WeightUnit.pounds
+		let weightKg = poundsUnit.convertToKg(170)
+		let calendar = Calendar.current
+		
+		// Log the same weight for 5 consecutive days
+		for dayOffset in 0..<5 {
+			let timestamp = calendar.date(byAdding: .day, value: -dayOffset, to: Date()) ?? Date()
+			try dataManager.addWeightEntry(weightKg: weightKg, timestamp: timestamp, unit: poundsUnit)
+		}
+		
+		achievementService.refresh(using: dataManager, isPro: false)
+		let steadyStateLocked = dataManager.achievement(forKey: "consistency.steady", createIfMissing: false)
+		XCTAssertNotNil(steadyStateLocked)
+		XCTAssertNil(steadyStateLocked?.unlockedAt)
+	}
+	
+	func testSteadyStateDoesNotUnlockWithDifferentWeights() throws {
+		let poundsUnit = WeightUnit.pounds
+		let calendar = Calendar.current
+		
+		// Log different weights for 5 consecutive days
+		for dayOffset in 0..<5 {
+			let timestamp = calendar.date(byAdding: .day, value: -dayOffset, to: Date()) ?? Date()
+			let weightKg = poundsUnit.convertToKg(170 + Double(dayOffset))
+			try dataManager.addWeightEntry(weightKg: weightKg, timestamp: timestamp, unit: poundsUnit)
+		}
+		
+		achievementService.refresh(using: dataManager, isPro: true)
+		let steadyState = dataManager.achievement(forKey: "consistency.steady", createIfMissing: false)
+		XCTAssertNotNil(steadyState)
+		XCTAssertNil(steadyState?.unlockedAt)
+	}
+	
+	func testDataDevoteeUnlocksAt100Entries() throws {
+		try logSequentialEntries(count: 100)
+		achievementService.refresh(using: dataManager, isPro: true)
+		let ledger = dataManager.achievement(forKey: "logging.ledger", createIfMissing: false)
+		XCTAssertNotNil(ledger)
+		XCTAssertNotNil(ledger?.unlockedAt)
 	}
 	
 	// MARK: - Helpers

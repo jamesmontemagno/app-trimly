@@ -449,23 +449,29 @@ final class DataManager: ObservableObject {
     ) -> Achievement {
         let record = achievementRecord(forKey: key, createIfMissing: true, isPremium: isPremium)!
         let achievement = record.achievement
-        let clampedProgress = min(max(progress, 0), 1)
         let now = Date()
         var didChange = record.isNew
         if achievement.isPremium != isPremium {
             achievement.isPremium = isPremium
             didChange = true
         }
-        if achievement.progressValue != clampedProgress {
-            achievement.progressValue = clampedProgress
+        // If unlocking the achievement for the first time, reset progress to 0
+        if unlocked && achievement.unlockedAt == nil {
+            achievement.unlockedAt = now
+            if achievement.progressValue != 0 {
+                achievement.progressValue = 0
+            }
             didChange = true
+        } else {
+            // Only update progress if achievement is not yet unlocked
+            let clampedProgress = min(max(progress, 0), 1)
+            if achievement.progressValue != clampedProgress {
+                achievement.progressValue = clampedProgress
+                didChange = true
+            }
         }
         if achievement.metadata != metadata {
             achievement.metadata = metadata
-            didChange = true
-        }
-        if unlocked && achievement.unlockedAt == nil {
-            achievement.unlockedAt = now
             didChange = true
         }
         if let markCelebrated, achievement.didCelebrateUnlock != markCelebrated {

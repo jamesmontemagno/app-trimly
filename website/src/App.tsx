@@ -46,8 +46,6 @@ const AppShell = ({ theme, setTheme, resolvedTheme }: AppShellProps) => {
           </div>
           <nav className="nav">
             <button type="button" onClick={scrollToFeatures}>Features</button>
-            <Link to="/privacy">Privacy</Link>
-            <Link to="/terms">Terms</Link>
             <div className="theme-toggle">
               <button 
                 className={`theme-btn ${theme === 'light' ? 'active' : ''}`} 

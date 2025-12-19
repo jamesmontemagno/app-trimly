@@ -171,6 +171,7 @@ struct SettingsView: View {
 							Picker(String(localized: L10n.Settings.weightUnitTitle), selection: binding(\.preferredUnit)) {
 								Text(L10n.Onboarding.unitOptionPounds).tag(WeightUnit.pounds)
 								Text(L10n.Onboarding.unitOptionKilograms).tag(WeightUnit.kilograms)
+								Text(L10n.Onboarding.unitOptionStones).tag(WeightUnit.stones)
 							}
 							.labelsHidden()
 							.pickerStyle(.segmented)

@@ -72,6 +72,7 @@ enum L10n {
 		static let unitSubtitle = LocalizedStringResource("onboarding.unit.subtitle", defaultValue: "Select your preferred weight unit")
 		static let unitOptionPounds = LocalizedStringResource("onboarding.unit.option.pounds", defaultValue: "Pounds (lb)")
 		static let unitOptionKilograms = LocalizedStringResource("onboarding.unit.option.kilograms", defaultValue: "Kilograms (kg)")
+		static let unitOptionStones = LocalizedStringResource("onboarding.unit.option.stones", defaultValue: "Stones (st)")
 		static let unitPickerLabel = LocalizedStringResource("onboarding.unit.pickerLabel", defaultValue: "Preferred unit")
 		
 		static let startTitle = LocalizedStringResource("onboarding.start.title", defaultValue: "Starting Weight")

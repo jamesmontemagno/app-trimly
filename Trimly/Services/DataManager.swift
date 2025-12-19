@@ -462,7 +462,7 @@ final class DataManager: ObservableObject {
                 achievement.progressValue = 0
             }
             didChange = true
-        } else {
+        } else if achievement.unlockedAt == nil {
             // Only update progress if achievement is not yet unlocked
             let clampedProgress = min(max(progress, 0), 1)
             if achievement.progressValue != clampedProgress {
@@ -470,6 +470,7 @@ final class DataManager: ObservableObject {
                 didChange = true
             }
         }
+        // If already unlocked, don't update progress (it stays at 0)
         if achievement.metadata != metadata {
             achievement.metadata = metadata
             didChange = true

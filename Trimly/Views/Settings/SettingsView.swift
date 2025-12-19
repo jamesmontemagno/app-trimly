@@ -462,6 +462,7 @@ struct SettingsView: View {
 				
 				Link(String(localized: L10n.Settings.privacyPolicy), destination: LegalLinks.privacyPolicy)
 					.font(.body.weight(.semibold))
+					.padding(.bottom, 8)
 				Link(String(localized: L10n.Settings.termsOfService), destination: LegalLinks.termsOfService)
 					.font(.body.weight(.semibold))
 			}
@@ -622,41 +623,75 @@ struct SettingsView: View {
 		@ViewBuilder accessory: () -> Accessory = { EmptyView() }
 	) -> some View {
 		let needsTrailingSpacer = accessoryPlacement == .trailing || showChevron
-		return HStack(alignment: .top, spacing: 16) {
-			RoundedRectangle(cornerRadius: 14, style: .continuous)
-				.fill(iconTint.opacity(0.15))
-				.frame(width: 52, height: 52)
-				.overlay(
-					Image(systemName: icon)
-						.font(.title3)
-						.foregroundStyle(iconTint)
-				)
-			VStack(alignment: .leading, spacing: accessoryPlacement == .below ? 10 : 2) {
-				Text(title)
-					.font(.body.weight(.semibold))
-				if let subtitle {
-					Text(subtitle)
-						.font(.caption)
-						.foregroundStyle(.secondary)
-				}
-				if accessoryPlacement == .below {
+		
+		if accessoryPlacement == .below {
+			return AnyView(
+				VStack(alignment: .leading, spacing: 12) {
+					HStack(alignment: .top, spacing: 16) {
+						RoundedRectangle(cornerRadius: 14, style: .continuous)
+							.fill(iconTint.opacity(0.15))
+							.frame(width: 52, height: 52)
+							.overlay(
+								Image(systemName: icon)
+									.font(.title3)
+									.foregroundStyle(iconTint)
+							)
+						VStack(alignment: .leading, spacing: 2) {
+							Text(title)
+								.font(.body.weight(.semibold))
+							if let subtitle {
+								Text(subtitle)
+									.font(.caption)
+									.foregroundStyle(.secondary)
+							}
+						}
+						Spacer(minLength: 0)
+						if showChevron {
+							Image(systemName: "chevron.right")
+								.font(.footnote.weight(.semibold))
+								.foregroundStyle(.tertiary)
+						}
+					}
 					accessory()
 						.frame(maxWidth: .infinity)
 				}
-			}
-			if needsTrailingSpacer {
-				Spacer(minLength: 0)
-			}
-			if accessoryPlacement == .trailing {
-				accessory()
-			}
-			if showChevron {
-				Image(systemName: "chevron.right")
-					.font(.footnote.weight(.semibold))
-					.foregroundStyle(.tertiary)
-			}
+				.padding(.vertical, 10)
+			)
+		} else {
+			return AnyView(
+				HStack(alignment: .top, spacing: 16) {
+					RoundedRectangle(cornerRadius: 14, style: .continuous)
+						.fill(iconTint.opacity(0.15))
+						.frame(width: 52, height: 52)
+						.overlay(
+							Image(systemName: icon)
+								.font(.title3)
+								.foregroundStyle(iconTint)
+						)
+					VStack(alignment: .leading, spacing: 2) {
+						Text(title)
+							.font(.body.weight(.semibold))
+						if let subtitle {
+							Text(subtitle)
+								.font(.caption)
+								.foregroundStyle(.secondary)
+						}
+					}
+					if needsTrailingSpacer {
+						Spacer(minLength: 0)
+					}
+					if accessoryPlacement == .trailing {
+						accessory()
+					}
+					if showChevron {
+						Image(systemName: "chevron.right")
+							.font(.footnote.weight(.semibold))
+							.foregroundStyle(.tertiary)
+					}
+				}
+				.padding(.vertical, 6)
+			)
 		}
-		.padding(.vertical, accessoryPlacement == .below ? 10 : 6)
 	}
 	
 	private func statusPill(text: String, color: Color) -> some View {

@@ -12,7 +12,7 @@ import Foundation
 struct DebugFlags {
 	/// Set to `true` to show the "View Scheduled Notifications" debug button in Settings.
 	/// Set to `false` to hide it.
-	static let showPendingNotificationsDebug = true
+	static let showPendingNotificationsDebug = false
 	
 	/// Set to `true` to enable sample data generation in Settings.
 	/// Set to `false` to hide it.

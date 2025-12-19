@@ -491,9 +491,3 @@ struct AchievementDiagnostics {
 	let recentReminderRatio: Double
 	let evaluatedAt: Date
 }
-	let consistencyScore: Double
-	let goalsAchieved: Int
-	let remindersEnabled: Bool
-	let recentReminderRatio: Double
-	let evaluatedAt: Date
-}

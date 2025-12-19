@@ -283,6 +283,7 @@ struct OnboardingView: View {
                 Picker(selection: $selectedUnit) {
                     Text(L10n.Onboarding.unitOptionPounds).tag(WeightUnit.pounds)
                     Text(L10n.Onboarding.unitOptionKilograms).tag(WeightUnit.kilograms)
+                    Text(L10n.Onboarding.unitOptionStones).tag(WeightUnit.stones)
                 } label: {
                     Text(L10n.Onboarding.unitPickerLabel)
                 }

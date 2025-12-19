@@ -80,6 +80,7 @@ final class WeightEntry {
 enum WeightUnit: String, Codable {
     case kilograms = "kg"
     case pounds = "lb"
+    case stones = "st"
     
     /// Convert from kilograms to this unit
     func convert(fromKg kg: Double) -> Double {
@@ -88,6 +89,8 @@ enum WeightUnit: String, Codable {
             return kg
         case .pounds:
             return kg * 2.20462
+        case .stones:
+            return kg / 6.35029
         }
     }
     
@@ -98,6 +101,8 @@ enum WeightUnit: String, Codable {
             return value
         case .pounds:
             return value / 2.20462
+        case .stones:
+            return value * 6.35029
         }
     }
     

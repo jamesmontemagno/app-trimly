@@ -7723,6 +7723,29 @@
         }
       }
     },
+    "onboarding.unit.option.stones" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stones (st)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piedras (st)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stones (st)"
+          }
+        }
+      }
+    },
     "onboarding.unit.pickerLabel" : {
       "extractionState" : "manual",
       "localizations" : {

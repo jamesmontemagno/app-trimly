@@ -55,6 +55,36 @@ final class DeviceSettingsStoreTests: XCTestCase {
         XCTAssertFalse(reloaded.cloudSync.iCloudSyncEnabled)
     }
     
+    func testProDefaultsToFalse() {
+        let (_, store) = makeStore()
+        XCTAssertFalse(store.pro.isPro, "Pro status should be false by default")
+    }
+    
+    func testUpdateProPersistsAcrossInstances() {
+        let (defaults, store) = makeStore()
+        // Initially false
+        XCTAssertFalse(store.pro.isPro)
+        
+        // Update to true
+        store.updatePro { pro in
+            pro.isPro = true
+        }
+        XCTAssertTrue(store.pro.isPro)
+        
+        // Verify persistence across instances
+        let reloaded = DeviceSettingsStore(userDefaults: defaults)
+        XCTAssertTrue(reloaded.pro.isPro, "Pro status should persist across instances")
+        
+        // Update back to false
+        reloaded.updatePro { pro in
+            pro.isPro = false
+        }
+        
+        // Verify it persists again
+        let reloaded2 = DeviceSettingsStore(userDefaults: defaults)
+        XCTAssertFalse(reloaded2.pro.isPro, "Pro status should persist when set to false")
+    }
+    
     private func makeStore() -> (UserDefaults, DeviceSettingsStore) {
         let suiteName = "com.trimly.tests.devicesettings.\(UUID().uuidString)"
         guard let defaults = UserDefaults(suiteName: suiteName) else {

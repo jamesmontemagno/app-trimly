@@ -11,8 +11,14 @@ class StoreManager: ObservableObject {
     
     private let productIds = ["trimtallypro"]
     private var updates: Task<Void, Never>? = nil
+    private weak var deviceSettings: DeviceSettingsStore?
     
-    init() {
+    init(deviceSettings: DeviceSettingsStore? = nil) {
+        self.deviceSettings = deviceSettings
+        // Initialize isPro from local storage if available
+        if let deviceSettings = deviceSettings {
+            self.isPro = deviceSettings.pro.isPro
+        }
         updates = newTransactionListenerTask()
         Task {
             await requestProducts()
@@ -76,6 +82,10 @@ class StoreManager: ObservableObject {
         }
         
         self.isPro = purchasedPro
+        // Persist pro status to local device settings
+        deviceSettings?.updatePro { pro in
+            pro.isPro = purchasedPro
+        }
     }
     
     nonisolated private func checkVerified<T>(_ result: VerificationResult<T>) throws -> T {

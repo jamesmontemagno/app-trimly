@@ -74,6 +74,11 @@ final class AchievementService: ObservableObject {
 			return AchievementEvaluation(progress: progress, unlocked: unlocked)
 		case .goalsAchieved(let target):
 			return progressMetric(current: Double(context.goalsAchieved), target: Double(target))
+		case .goalProgress(let threshold):
+			let progress = min(context.goalProgressPercent / threshold, 1.0)
+			return AchievementEvaluation(progress: progress, unlocked: context.goalProgressPercent >= threshold)
+		case .sameWeightStreak(let days):
+			return progressMetric(current: Double(context.sameWeightStreakDays), target: Double(days))
 		case .remindersEnabled:
 			return AchievementEvaluation(progress: context.remindersEnabled ? 1 : 0, unlocked: context.remindersEnabled)
 		case .reminderConsistency(let targetRatio):
@@ -127,7 +132,7 @@ struct AchievementDescriptor: Identifiable {
 			detail: L10n.Achievements.loggingLedgerDetail,
 			iconName: "book.closed.fill",
 			category: .logging,
-			metric: .totalEntries(365),
+			metric: .totalEntries(100),
 			isPremium: true
 		),
 		AchievementDescriptor(
@@ -155,6 +160,15 @@ struct AchievementDescriptor: Identifiable {
 			iconName: "sparkles",
 			category: .streaks,
 			metric: .streakDays(90),
+			isPremium: true
+		),
+		AchievementDescriptor(
+			key: "streak.year",
+			title: L10n.Achievements.streakYearTitle,
+			detail: L10n.Achievements.streakYearDetail,
+			iconName: "star.circle.fill",
+			category: .streaks,
+			metric: .streakDays(365),
 			isPremium: true
 		),
 		AchievementDescriptor(
@@ -203,12 +217,30 @@ struct AchievementDescriptor: Identifiable {
 			isPremium: true
 		),
 		AchievementDescriptor(
+			key: "consistency.steady",
+			title: L10n.Achievements.consistencySteadyTitle,
+			detail: L10n.Achievements.consistencySteadyDetail,
+			iconName: "equal.circle.fill",
+			category: .habits,
+			metric: .sameWeightStreak(days: 5),
+			isPremium: true
+		),
+		AchievementDescriptor(
 			key: "goals.first",
 			title: L10n.Achievements.goalFirstTitle,
 			detail: L10n.Achievements.goalFirstDetail,
 			iconName: "flag.checkered",
 			category: .goals,
 			metric: .goalsAchieved(1),
+			isPremium: false
+		),
+		AchievementDescriptor(
+			key: "goals.halfway",
+			title: L10n.Achievements.goalHalfwayTitle,
+			detail: L10n.Achievements.goalHalfwayDetail,
+			iconName: "chart.line.uptrend.xyaxis.circle.fill",
+			category: .goals,
+			metric: .goalProgress(threshold: 50.0),
 			isPremium: false
 		),
 		AchievementDescriptor(
@@ -298,6 +330,8 @@ enum AchievementMetric {
 	case streakDays(Int)
 	case consistency(threshold: Double, minDays: Int)
 	case goalsAchieved(Int)
+	case goalProgress(threshold: Double)
+	case sameWeightStreak(days: Int)
 	case remindersEnabled
 	case reminderConsistency(Double)
 }
@@ -308,6 +342,8 @@ private struct EvaluationContext {
 	let currentStreak: Int
 	let consistencyScore: Double
 	let goalsAchieved: Int
+	let goalProgressPercent: Double
+	let sameWeightStreakDays: Int
 	let remindersEnabled: Bool
 	let recentReminderRatio: Double
 	
@@ -320,6 +356,8 @@ private struct EvaluationContext {
 		currentStreak = EvaluationContext.calculateCurrentStreak(from: uniqueDays)
 		consistencyScore = dataManager.getConsistencyScore() ?? 0
 		goalsAchieved = dataManager.countAchievedGoals()
+		goalProgressPercent = EvaluationContext.calculateGoalProgress(dataManager: dataManager)
+		sameWeightStreakDays = EvaluationContext.calculateSameWeightStreak(entries: entries)
 		let reminders = dataManager.deviceSettings.reminders
 		remindersEnabled = (reminders.primaryTime != nil) || (reminders.secondaryTime != nil)
 		recentReminderRatio = EvaluationContext.recentReminderCompletionRatio(entries: entries)
@@ -354,6 +392,74 @@ private struct EvaluationContext {
 		}
 		return Double(loggedCount) / Double(windowDays)
 	}
+	
+	private static func calculateGoalProgress(dataManager: DataManager) -> Double {
+		guard let activeGoal = dataManager.fetchActiveGoal(),
+		      let startWeight = activeGoal.startingWeightKg else { return 0 }
+		
+		// Get current weight from most recent entry
+		let entries = dataManager.fetchAllEntries().filter { !$0.isHidden }
+		guard let currentWeight = entries.sorted(by: { $0.timestamp > $1.timestamp }).first?.weightKg else { return 0 }
+		
+		let targetWeight = activeGoal.targetWeightKg
+		let totalChange = targetWeight - startWeight
+		guard totalChange != 0 else { return 0 }
+		
+		let currentChange = currentWeight - startWeight
+		let progress = (currentChange / totalChange) * 100
+		
+		// Clamp progress to 0-100%
+		return max(0, min(100, progress))
+	}
+	
+	private static func calculateSameWeightStreak(entries: [WeightEntry]) -> Int {
+		// Get entries sorted by date, most recent first
+		let sortedEntries = entries.sorted { $0.timestamp > $1.timestamp }
+		guard sortedEntries.count >= 2 else { return sortedEntries.count }
+		
+		// Group by normalized date and get most recent entry per day
+		var entriesByDay: [Date: WeightEntry] = [:]
+		for entry in sortedEntries {
+			let normalized = entry.normalizedDate
+			if entriesByDay[normalized] == nil {
+				entriesByDay[normalized] = entry
+			}
+		}
+		
+		// Get unique days sorted in reverse chronological order
+		let uniqueDays = Array(Set(sortedEntries.map { $0.normalizedDate })).sorted(by: >)
+		guard uniqueDays.count >= 2 else { return uniqueDays.count }
+		
+		let calendar = Calendar.current
+		var streak = 1
+		var currentDay = uniqueDays[0]
+		
+		// Get the weight from the most recent day
+		guard let firstWeight = entriesByDay[currentDay]?.weightKg else { return 0 }
+		let tolerance = 0.01 // Allow for tiny floating point differences
+		
+		// Check consecutive days going backwards
+		for i in 1..<uniqueDays.count {
+			let nextDay = uniqueDays[i]
+			
+			// Check if days are consecutive
+			guard let expectedPreviousDay = calendar.date(byAdding: .day, value: -1, to: currentDay),
+			      calendar.isDate(expectedPreviousDay, inSameDayAs: nextDay) else {
+				break
+			}
+			
+			// Check if weight is the same (within tolerance)
+			guard let nextWeight = entriesByDay[nextDay]?.weightKg,
+			      abs(nextWeight - firstWeight) < tolerance else {
+				break
+			}
+			
+			streak += 1
+			currentDay = nextDay
+		}
+		
+		return streak
+	}
 
 	#if DEBUG
 	func makeDiagnosticsSnapshot() -> AchievementDiagnostics {
@@ -363,6 +469,8 @@ private struct EvaluationContext {
 			currentStreak: currentStreak,
 			consistencyScore: consistencyScore,
 			goalsAchieved: goalsAchieved,
+			goalProgressPercent: goalProgressPercent,
+			sameWeightStreakDays: sameWeightStreakDays,
 			remindersEnabled: remindersEnabled,
 			recentReminderRatio: recentReminderRatio,
 			evaluatedAt: Date()
@@ -375,6 +483,14 @@ struct AchievementDiagnostics {
 	let totalEntries: Int
 	let uniqueDayCount: Int
 	let currentStreak: Int
+	let consistencyScore: Double
+	let goalsAchieved: Int
+	let goalProgressPercent: Double
+	let sameWeightStreakDays: Int
+	let remindersEnabled: Bool
+	let recentReminderRatio: Double
+	let evaluatedAt: Date
+}
 	let consistencyScore: Double
 	let goalsAchieved: Int
 	let remindersEnabled: Bool

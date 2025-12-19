@@ -355,6 +355,52 @@
         }
       }
     },
+    "achievements.consistency.steady.detail" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Log the same weight 5 days in a row"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registra el mismo peso 5 días seguidos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enregistrez le même poids 5 jours d'affilée"
+          }
+        }
+      }
+    },
+    "achievements.consistency.steady.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Steady State"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estado Estable"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "État Stable"
+          }
+        }
+      }
+    },
     "achievements.goal.first.detail" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -397,6 +443,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Finisseur d'Objectifs"
+          }
+        }
+      }
+    },
+    "achievements.goal.halfway.detail" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Reach 50% progress on your first goal"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alcanza el 50% de progreso en tu primer objetivo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atteignez 50% de progrès sur votre premier objectif"
+          }
+        }
+      }
+    },
+    "achievements.goal.halfway.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Halfway There"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Mitad de Camino"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À Mi-Chemin"
           }
         }
       }
@@ -660,19 +752,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Log 365 weight entries"
+            "value" : "Log 100 weight entries"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Registra 365 entradas de peso"
+            "value" : "Registra 100 entradas de peso"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enregistrez 365 entrées de poids"
+            "value" : "Enregistrez 100 entrées de poids"
           }
         }
       }
@@ -953,6 +1045,29 @@
         }
       }
     },
+    "achievements.progress.goalHalfway" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%lld%% progress toward your first goal"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%% de progreso hacia tu primer objetivo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%% de progrès vers votre premier objectif"
+          }
+        }
+      }
+    },
     "achievements.progress.label" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -1064,6 +1179,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Meilleure série : %1$lld sur %2$lld jours"
+          }
+        }
+      }
+    },
+    "achievements.progress.steadyState" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld of %2$lld days with same weight"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld de %2$lld días con el mismo peso"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld sur %2$lld jours avec le même poids"
           }
         }
       }
@@ -1294,6 +1432,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Trimestre Inarrêtable"
+          }
+        }
+      }
+    },
+    "achievements.streak.year.detail" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Log 365 days in a row"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registra 365 días seguidos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enregistrez 365 jours d'affilée"
+          }
+        }
+      }
+    },
+    "achievements.streak.year.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Year-Long Logger"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrador Anual"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enregistreur Annuel"
           }
         }
       }

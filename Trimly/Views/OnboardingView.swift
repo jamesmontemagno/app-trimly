@@ -567,10 +567,10 @@ struct OnboardingView: View {
                 }
 
                 VStack(spacing: 12) {
-                    Link(destination: URL(string: "https://www.refractored.com/terms")!) {
+                    Link(destination: LegalLinks.termsOfService) {
                         Text(L10n.Onboarding.eulaTerms)
                     }
-                    Link(destination: URL(string: "https://www.refractored.com/about#privacy-policy")!) {
+                    Link(destination: LegalLinks.privacyPolicy) {
                         Text(L10n.Onboarding.eulaPrivacy)
                     }
                 }

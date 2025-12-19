@@ -51,6 +51,19 @@
   color: var(--primary);
 }
 
+.nav button {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.nav button:hover {
+  color: var(--primary);
+}
+
 .theme-toggle {
   display: flex;
   background-color: var(--surface);
@@ -272,6 +285,43 @@
 
 .footer-links a:hover {
   color: var(--primary);
+}
+
+.legal-page {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  color: var(--text);
+}
+
+.legal-page h1 {
+  font-size: 2.75rem;
+  margin-bottom: 12px;
+}
+
+.legal-page h2 {
+  font-size: 1.5rem;
+  margin-top: 24px;
+}
+
+.legal-page p,
+.legal-page li {
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.legal-page ul {
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.legal-meta {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
 }
 
 /* Responsive */

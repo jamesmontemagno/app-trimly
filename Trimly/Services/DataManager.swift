@@ -458,9 +458,7 @@ final class DataManager: ObservableObject {
         // If unlocking the achievement for the first time, reset progress to 0
         if unlocked && achievement.unlockedAt == nil {
             achievement.unlockedAt = now
-            if achievement.progressValue != 0 {
-                achievement.progressValue = 0
-            }
+            achievement.progressValue = 0
             didChange = true
         } else if achievement.unlockedAt == nil {
             // Only update progress if achievement is not yet unlocked
@@ -470,7 +468,7 @@ final class DataManager: ObservableObject {
                 didChange = true
             }
         }
-        // If already unlocked, don't update progress (it stays at 0)
+        // If already unlocked (unlockedAt != nil), don't update progress (it stays at 0)
         if achievement.metadata != metadata {
             achievement.metadata = metadata
             didChange = true

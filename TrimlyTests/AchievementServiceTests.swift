@@ -37,7 +37,7 @@ final class AchievementServiceTests: XCTestCase {
 		XCTAssertNotNil(newcomer)
 		XCTAssertNotNil(newcomer?.unlockedAt)
 		// Progress should be reset to 0 when achievement is unlocked
-		XCTAssertEqual(newcomer?.progressValue ?? -1, 0)
+		XCTAssertEqual(newcomer?.progressValue, 0)
 	}
 
 	func testConsistencyAchievementsRequireMinimumDays() throws {
@@ -138,14 +138,14 @@ final class AchievementServiceTests: XCTestCase {
 		XCTAssertNotNil(unlocked)
 		XCTAssertNotNil(unlocked?.unlockedAt)
 		// Progress should be reset to 0 upon unlock
-		XCTAssertEqual(unlocked?.progressValue ?? -1, 0)
+		XCTAssertEqual(unlocked?.progressValue, 0)
 		
 		// Log more entries - progress should remain 0 once unlocked
 		try logSequentialEntries(count: 5, startOffset: 10)
 		achievementService.refresh(using: dataManager, isPro: true)
 		let stillUnlocked = dataManager.achievement(forKey: "logging.newcomer", createIfMissing: false)
 		XCTAssertNotNil(stillUnlocked?.unlockedAt)
-		XCTAssertEqual(stillUnlocked?.progressValue ?? -1, 0)
+		XCTAssertEqual(stillUnlocked?.progressValue, 0)
 	}
 	
 	// MARK: - Helpers

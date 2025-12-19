@@ -36,7 +36,8 @@ final class AchievementServiceTests: XCTestCase {
 		let newcomer = dataManager.achievement(forKey: "logging.newcomer", createIfMissing: false)
 		XCTAssertNotNil(newcomer)
 		XCTAssertNotNil(newcomer?.unlockedAt)
-		XCTAssertGreaterThanOrEqual(newcomer?.progressValue ?? 0, 1)
+		// Progress should be reset to 0 when achievement is unlocked
+		XCTAssertEqual(newcomer?.progressValue, 0)
 	}
 
 	func testConsistencyAchievementsRequireMinimumDays() throws {
@@ -119,6 +120,32 @@ final class AchievementServiceTests: XCTestCase {
 		achievementService.refresh(using: dataManager, isPro: true)
 		let goalFirstAchievement = dataManager.achievement(forKey: "goals.first", createIfMissing: false)
 		XCTAssertNotNil(goalFirstAchievement?.unlockedAt)
+	}
+	
+	func testAchievementProgressResetToZeroWhenUnlocked() throws {
+		// Log 5 entries to build up progress (50% for logging.newcomer which requires 10)
+		try logSequentialEntries(count: 5)
+		achievementService.refresh(using: dataManager, isPro: true)
+		let partialProgress = dataManager.achievement(forKey: "logging.newcomer", createIfMissing: false)
+		XCTAssertNotNil(partialProgress)
+		XCTAssertNil(partialProgress?.unlockedAt)
+		XCTAssertEqual(partialProgress?.progressValue, 0.5, accuracy: 0.01)
+		
+		// Log 5 more entries to unlock the achievement (total 10)
+		try logSequentialEntries(count: 5, startOffset: 5)
+		achievementService.refresh(using: dataManager, isPro: true)
+		let unlocked = dataManager.achievement(forKey: "logging.newcomer", createIfMissing: false)
+		XCTAssertNotNil(unlocked)
+		XCTAssertNotNil(unlocked?.unlockedAt)
+		// Progress should be reset to 0 upon unlock
+		XCTAssertEqual(unlocked?.progressValue, 0)
+		
+		// Log more entries - progress should remain 0 once unlocked
+		try logSequentialEntries(count: 5, startOffset: 10)
+		achievementService.refresh(using: dataManager, isPro: true)
+		let stillUnlocked = dataManager.achievement(forKey: "logging.newcomer", createIfMissing: false)
+		XCTAssertNotNil(stillUnlocked?.unlockedAt)
+		XCTAssertEqual(stillUnlocked?.progressValue, 0)
 	}
 	
 	// MARK: - Helpers

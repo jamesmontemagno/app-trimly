@@ -155,24 +155,32 @@ private struct AchievementCard: View {
 				Text(snapshot.descriptor.detail)
 					.font(.subheadline)
 					.foregroundStyle(.secondary)
-				// Show detailed progress text
-				if let detailedProgress = detailedProgressText {
-					Text(detailedProgress)
-						.font(.caption)
-						.foregroundStyle(.secondary)
-				}
-				ProgressView(value: min(max(snapshot.progressValue, 0), 1)) {
-					Text(L10n.Achievements.progressLabel)
-						.font(.caption)
-						.foregroundStyle(.secondary)
-				} currentValueLabel: {
-					Text(progressDisplay)
-						.font(.caption)
-				}
+				// Only show progress details and bar for locked achievements
 				if !snapshot.isUnlocked {
+					// Show detailed progress text
+					if let detailedProgress = detailedProgressText {
+						Text(detailedProgress)
+							.font(.caption)
+							.foregroundStyle(.secondary)
+					}
+					ProgressView(value: min(max(snapshot.progressValue, 0), 1)) {
+						Text(L10n.Achievements.progressLabel)
+							.font(.caption)
+							.foregroundStyle(.secondary)
+					} currentValueLabel: {
+						Text(progressDisplay)
+							.font(.caption)
+					}
 					Text(L10n.Achievements.lockedBadge)
 						.font(.caption)
 						.foregroundStyle(.secondary)
+				} else {
+					// Show unlocked date for unlocked achievements
+					if let unlockedDate = snapshot.model.unlockedAt {
+						Text(L10n.Achievements.unlockedDate(unlockedDate))
+							.font(.caption)
+							.foregroundStyle(.secondary)
+					}
 				}
 			}
 		}

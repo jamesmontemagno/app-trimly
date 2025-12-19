@@ -448,6 +448,9 @@ enum L10n {
 			static let navigationTitle = LocalizedStringResource("achievements.navigation.title", defaultValue: "Achievements")
 			static let proBadge = LocalizedStringResource("achievements.pro.badge", defaultValue: "Pro")
 			static let lockedBadge = LocalizedStringResource("achievements.locked.badge", defaultValue: "Locked")
+			static func unlockedDate(_ date: Date) -> LocalizedStringResource {
+				LocalizedStringResource("achievements.unlocked.date", defaultValue: "Unlocked on \(date, format: Date.FormatStyle(date: .abbreviated, time: .omitted))")
+			}
 			static let progressLabel = LocalizedStringResource("achievements.progress.label", defaultValue: "Progress")
 			static let categoryLogging = LocalizedStringResource("achievements.category.logging", defaultValue: "Logging")
 			static let categoryStreaks = LocalizedStringResource("achievements.category.streaks", defaultValue: "Streaks")

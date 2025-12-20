@@ -437,7 +437,22 @@ struct SettingsView: View {
 			}
 			
 			settingsSection(title: String(localized: L10n.Settings.aboutTitle)) {
-				Button(String(localized: L10n.Settings.restorePurchases)) {
+				Button {
+					dataManager.requestAppStoreReview()
+				} label: {
+					settingsRow(
+						icon: "star.fill",
+						title: String(localized: L10n.Settings.reviewAppTitle),
+						subtitle: String(localized: L10n.Settings.reviewAppSubtitle),
+						showChevron: true,
+						iconTint: .orange
+					)
+				}
+				.buttonStyle(.plain)
+				
+				sectionDivider()
+				
+				Button {
 					Task {
 						let found = await storeManager.restore()
 						if found {
@@ -446,9 +461,16 @@ struct SettingsView: View {
 							showingRestoreNotFoundAlert = true
 						}
 					}
+				} label: {
+					settingsRow(
+						icon: "arrow.clockwise.circle.fill",
+						title: String(localized: L10n.Settings.restorePurchases),
+						subtitle: nil,
+						showChevron: true,
+						iconTint: .blue
+					)
 				}
 				.buttonStyle(.plain)
-				.foregroundStyle(.primary)
 				
 				sectionDivider()
 

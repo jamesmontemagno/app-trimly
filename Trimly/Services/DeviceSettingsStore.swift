@@ -36,6 +36,11 @@ final class DeviceSettingsStore: ObservableObject {
         var isPro: Bool
     }
     
+    struct ReviewSettings: Equatable {
+        var entryCount: Int
+        var hasPrompted: Bool
+    }
+    
     private enum Keys {
         static let primaryReminderTime = "device.reminders.primaryTime"
         static let secondaryReminderTime = "device.reminders.secondaryTime"
@@ -49,6 +54,8 @@ final class DeviceSettingsStore: ObservableObject {
         static let lastBackgroundSyncAt = "device.health.lastBackgroundSyncAt"
         static let iCloudSyncEnabled = "device.cloudSync.enabled"
         static let isPro = "device.pro.isPro"
+        static let reviewEntryCount = "device.review.entryCount"
+        static let reviewHasPrompted = "device.review.hasPrompted"
     }
     
     // MARK: - Published State
@@ -56,6 +63,7 @@ final class DeviceSettingsStore: ObservableObject {
     @Published private(set) var healthKit: HealthKitSettings
     @Published private(set) var cloudSync: CloudSyncSettings
     @Published private(set) var pro: ProSettings
+    @Published private(set) var review: ReviewSettings
     
     var remindersPublisher: AnyPublisher<RemindersSettings, Never> {
         $reminders.eraseToAnyPublisher()
@@ -71,6 +79,10 @@ final class DeviceSettingsStore: ObservableObject {
     
     var proPublisher: AnyPublisher<ProSettings, Never> {
         $pro.eraseToAnyPublisher()
+    }
+    
+    var reviewPublisher: AnyPublisher<ReviewSettings, Never> {
+        $review.eraseToAnyPublisher()
     }
     
     private let defaults: UserDefaults
@@ -99,6 +111,10 @@ final class DeviceSettingsStore: ObservableObject {
         // Default to false - user must purchase to become pro
         pro = ProSettings(
             isPro: defaults.object(forKey: Keys.isPro) as? Bool ?? false
+        )
+        review = ReviewSettings(
+            entryCount: defaults.object(forKey: Keys.reviewEntryCount) as? Int ?? 0,
+            hasPrompted: defaults.object(forKey: Keys.reviewHasPrompted) as? Bool ?? false
         )
     }
     
@@ -129,6 +145,13 @@ final class DeviceSettingsStore: ObservableObject {
         mutate(&copy)
         pro = copy
         persistPro(copy)
+    }
+    
+    func updateReview(_ mutate: (inout ReviewSettings) -> Void) {
+        var copy = review
+        mutate(&copy)
+        review = copy
+        persistReview(copy)
     }
     
     // MARK: - Persistence Helpers
@@ -170,5 +193,10 @@ final class DeviceSettingsStore: ObservableObject {
     
     private func persistPro(_ value: ProSettings) {
         defaults.set(value.isPro, forKey: Keys.isPro)
+    }
+    
+    private func persistReview(_ value: ReviewSettings) {
+        defaults.set(value.entryCount, forKey: Keys.reviewEntryCount)
+        defaults.set(value.hasPrompted, forKey: Keys.reviewHasPrompted)
     }
 }

@@ -36,6 +36,7 @@ final class DataManager: ObservableObject {
     let modelContext: ModelContext
     let deviceSettings: DeviceSettingsStore
     private let notificationService: NotificationService
+    private let reviewPromptService: ReviewPromptService
     
     @Published var settings: AppSettings?
     private var pendingGoalAchievementCelebration = false
@@ -63,6 +64,7 @@ final class DataManager: ObservableObject {
         }
 
         self.notificationService = notificationService ?? NotificationService()
+        self.reviewPromptService = ReviewPromptService(deviceSettings: self.deviceSettings)
         
         let schema = Schema([
             WeightEntry.self,
@@ -209,6 +211,13 @@ final class DataManager: ObservableObject {
         publishChange()
         markInitialCloudSyncCompletedIfNeeded()
         try evaluateGoalAchievementIfNeeded(latestWeightKg: entry.weightKg)
+        
+        // Increment review entry count and prompt if threshold reached
+        // Only track manual entries for review prompts
+        if source == .manual {
+            reviewPromptService.incrementEntryCountAndPromptIfNeeded()
+        }
+        
         Task(priority: .userInitiated) {
             await notificationService.cancelTodayReminderIfLogged(
                 dataManager: self,
@@ -632,6 +641,13 @@ final class DataManager: ObservableObject {
     /// Get pending notification requests (debug info)
     func getPendingNotifications() async -> [String] {
         return await notificationService.getPendingNotificationsDebugInfo()
+    }
+    
+    // MARK: - App Store Review
+    
+    /// Manually request an App Store review (e.g., from Settings button)
+    func requestAppStoreReview() {
+        reviewPromptService.requestReview()
     }
     
     // MARK: - Data Deletion

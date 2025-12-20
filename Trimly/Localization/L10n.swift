@@ -380,6 +380,8 @@ enum L10n {
 		static let restoreNotFoundMessage = LocalizedStringResource("settings.restore.notFound.message", defaultValue: "We couldn't find a previous TrimTally Pro purchase associated with your account.")
 		static let proStatus = LocalizedStringResource("settings.about.proStatus", defaultValue: "Pro")
 		static let proDescription = LocalizedStringResource("settings.about.proDescription", defaultValue: "You have TrimTally Pro")
+		static let reviewAppTitle = LocalizedStringResource("settings.about.reviewApp.title", defaultValue: "Review TrimTally")
+		static let reviewAppSubtitle = LocalizedStringResource("settings.about.reviewApp.subtitle", defaultValue: "Share your experience on the App Store.")
 	}
 
 	enum Goals {

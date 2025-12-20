@@ -68,8 +68,8 @@ struct DashboardView: View {
 							showingInfo: $showingConsistencyInfo,
 							score: dataManager.getConsistencyScore()
 						)
-						.alert("Consistency Score", isPresented: $showingConsistencyInfo) {
-							Button("OK", role: .cancel) {}
+						.alert(String(localized: L10n.Dashboard.consistencyScoreAlertTitle), isPresented: $showingConsistencyInfo) {
+							Button(String(localized: L10n.Common.okButton), role: .cancel) {}
 						} message: {
 							consistencyInfoMessage(dataManager: dataManager)
 						}

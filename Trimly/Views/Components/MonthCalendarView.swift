@@ -70,7 +70,7 @@ struct MonthCalendarView: View {
 						.padding()
 						.frame(maxWidth: 220)
 					} else {
-						Text("No entry for this day")
+						Text(L10n.Calendar.noEntry)
 							.font(.subheadline)
 							.padding()
 					}

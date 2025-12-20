@@ -18,12 +18,12 @@ struct CelebrationOverlayView: View {
 					.font(.system(size: 60))
 					.foregroundStyle(.yellow)
 					.symbolEffect(.bounce, isActive: !reduceMotion)
-					.accessibilityLabel("Achievement unlocked")
+					.accessibilityLabel(String(localized: L10n.Accessibility.achievementUnlocked))
 			} else {
 				Image(systemName: celebration.iconName)
 					.font(.system(size: 60))
 					.foregroundStyle(.yellow)
-					.accessibilityLabel("Achievement unlocked")
+					.accessibilityLabel(String(localized: L10n.Accessibility.achievementUnlocked))
 			}
 			
 			Text(celebration.message)
@@ -36,6 +36,6 @@ struct CelebrationOverlayView: View {
 		.clipShape(RoundedRectangle(cornerRadius: 20))
 		.shadow(radius: 10)
 		.accessibilityElement(children: .combine)
-		.accessibilityLabel("Celebration: \(celebration.message)")
+		.accessibilityLabel(String(localized: L10n.Accessibility.celebration(celebration.message)))
 	}
 }

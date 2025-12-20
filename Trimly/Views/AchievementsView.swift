@@ -56,7 +56,7 @@ struct AchievementsView: View {
 						Image(systemName: "plus")
 					}
 					.accessibilityLabel(Text(L10n.Common.addWeight))
-					.accessibilityHint("Opens form to log a new weight")
+					.accessibilityHint(String(localized: L10n.Accessibility.addWeightEntryHint))
 				}
 				#if os(iOS)
 				ToolbarItem(placement: .topBarLeading) {
@@ -64,7 +64,7 @@ struct AchievementsView: View {
 						Image(systemName: "arrow.clockwise")
 					}
 					.accessibilityLabel(Text(L10n.Common.refresh))
-					.accessibilityHint("Recalculates achievement progress")
+					.accessibilityHint(String(localized: L10n.Accessibility.recalculateAchievements))
 				}
 				#else
 				ToolbarItem(placement: .navigation) {
@@ -72,7 +72,7 @@ struct AchievementsView: View {
 						Image(systemName: "arrow.clockwise")
 					}
 					.accessibilityLabel(Text(L10n.Common.refresh))
-					.accessibilityHint("Recalculates achievement progress")
+					.accessibilityHint(String(localized: L10n.Accessibility.recalculateAchievements))
 				}
 				#endif
 			}
@@ -153,8 +153,8 @@ struct AchievementsView: View {
 		.background(.thinMaterial)
 		.clipShape(RoundedRectangle(cornerRadius: 16))
 		.accessibilityElement(children: .combine)
-		.accessibilityLabel("Achievement progress")
-		.accessibilityValue("\(unlockedCount) of \(totalCount) achievements unlocked")
+		.accessibilityLabel(String(localized: L10n.Accessibility.achievementProgress))
+		.accessibilityValue(String(localized: L10n.Accessibility.achievementProgressValue(unlockedCount, totalCount)))
 	}
 	
 	private var premiumUpsellHint: some View {
@@ -175,7 +175,7 @@ struct AchievementsView: View {
 			showingPaywall = true
 		}
 		.accessibilityElement(children: .combine)
-		.accessibilityHint("Opens TrimTally Pro upgrade page")
+		.accessibilityHint(String(localized: L10n.Accessibility.opensTrimTallyPro))
 	}
 	
 	private func refresh() {
@@ -253,7 +253,7 @@ private struct AchievementCard: View {
 					.symbolRenderingMode(.palette)
 					.foregroundStyle(.orange, .yellow)
 					.padding(8)
-					.accessibilityLabel("Unlocked")
+					.accessibilityLabel(String(localized: L10n.Accessibility.unlocked))
 			}
 		}
 		.accessibilityElement(children: .combine)

@@ -28,7 +28,7 @@ struct TrendSummaryCard: View {
 			.clipShape(RoundedRectangle(cornerRadius: 16))
 		}
 		.buttonStyle(.plain)
-		.accessibilityHint(Text("Opens charts"))
+		.accessibilityHint(String(localized: L10n.Accessibility.opensCharts))
 	}
 	
 	private func trendColor(_ trend: WeightAnalytics.TrendDirection) -> Color {

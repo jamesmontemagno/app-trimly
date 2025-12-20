@@ -88,11 +88,11 @@ struct SettingsView: View {
 				} message: {
 					Text(L10n.Settings.iCloudSyncRestartMessage)
 				}
-				.alert("Scheduled Notifications (\(pendingNotificationsInfo.count))", isPresented: $showingNotificationsDebug) {
-					Button("OK", role: .cancel) { }
+				.alert(String(localized: L10n.Settings.scheduledNotificationsTitle(pendingNotificationsInfo.count)), isPresented: $showingNotificationsDebug) {
+					Button(String(localized: L10n.Common.okButton), role: .cancel) { }
 				} message: {
 					if pendingNotificationsInfo.isEmpty {
-						Text("No notifications scheduled")
+						Text(L10n.Settings.noNotificationsScheduled)
 					} else {
 						Text(pendingNotificationsInfo.joined(separator: "\n"))
 					}
@@ -120,9 +120,9 @@ struct SettingsView: View {
 							TrimlyCardContainer(style: .elevated) {
 								HStack {
 									VStack(alignment: .leading, spacing: 4) {
-										Text("Upgrade to Pro")
+										Text(L10n.Settings.upgradeToProTitle)
 											.font(.headline)
-										Text("Unlock HealthKit sync, data export, and more.")
+										Text(L10n.Settings.upgradeToProDescription)
 											.font(.subheadline)
 											.foregroundStyle(.secondary)
 									}

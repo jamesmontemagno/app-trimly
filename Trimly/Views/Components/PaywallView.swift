@@ -19,13 +19,13 @@ struct PaywallView: View {
                                 Circle()
                                     .fill(Color.yellow.opacity(0.2))
                             )
-                            .accessibilityLabel("Premium feature")
+                            .accessibilityLabel(String(localized: L10n.Paywall.premiumFeatureLabel))
                         
-                        Text("Unlock TrimTally Pro")
+                        Text(L10n.Paywall.title)
                             .font(.largeTitle.bold())
                             .multilineTextAlignment(.center)
                         
-                        Text("Take your weight tracking to the next level with advanced features.")
+                        Text(L10n.Paywall.subtitle)
                             .font(.body)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
@@ -34,9 +34,9 @@ struct PaywallView: View {
                     
                     // Features
                     VStack(spacing: 24) {
-                        FeatureRow(icon: "heart.fill", title: "HealthKit Sync", description: "Automatically sync your weight data with Apple Health.", color: .pink)
-                        FeatureRow(icon: "square.and.arrow.up", title: "Data Export", description: "Export your complete history to CSV for analysis.", color: .blue)
-                        FeatureRow(icon: "chart.line.uptrend.xyaxis", title: "Advanced Analytics", description: "Gain deeper insights into your progress.", color: .purple)
+                        FeatureRow(icon: "heart.fill", title: String(localized: L10n.Paywall.featureHealthKitTitle), description: String(localized: L10n.Paywall.featureHealthKitDescription), color: .pink)
+                        FeatureRow(icon: "square.and.arrow.up", title: String(localized: L10n.Paywall.featureExportTitle), description: String(localized: L10n.Paywall.featureExportDescription), color: .blue)
+                        FeatureRow(icon: "chart.line.uptrend.xyaxis", title: String(localized: L10n.Paywall.featureAnalyticsTitle), description: String(localized: L10n.Paywall.featureAnalyticsDescription), color: .purple)
                     }
                     .padding(.horizontal)
                     
@@ -54,9 +54,9 @@ struct PaywallView: View {
                                 HStack {
                                     if storeManager.isPurchasing {
                                         ProgressView()
-                                            .accessibilityLabel("Processing purchase")
+                                            .accessibilityLabel(String(localized: L10n.Paywall.processingPurchaseLabel))
                                     }
-                                    Text("Upgrade - \(product.displayPrice)")
+                                    Text(L10n.Paywall.upgradeButton(product.displayPrice))
                                 }
                                 .font(.headline.bold())
                                 .frame(maxWidth: .infinity)
@@ -65,8 +65,8 @@ struct PaywallView: View {
                                 .foregroundStyle(.white)
                                 .clipShape(RoundedRectangle(cornerRadius: 12))
                             }
-                            .accessibilityLabel(storeManager.isPurchasing ? "Processing purchase" : "Upgrade to TrimTally Pro for \(product.displayPrice)")
-                            .accessibilityHint(storeManager.isPurchasing ? "" : "Activates in-app purchase")
+                            .accessibilityLabel(storeManager.isPurchasing ? String(localized: L10n.Paywall.processingPurchaseLabel) : String(localized: L10n.Paywall.upgradeButtonLabel(product.displayPrice)))
+                            .accessibilityHint(storeManager.isPurchasing ? "" : String(localized: L10n.Paywall.upgradeButtonHint))
                             .padding(.horizontal)
                             .disabled(storeManager.isPurchasing)
                         } else {
@@ -74,7 +74,7 @@ struct PaywallView: View {
                                 .padding()
                         }
                         
-                        Button("Restore Purchases") {
+                        Button(String(localized: L10n.Paywall.restorePurchases)) {
                             Task {
                                 await storeManager.restore()
                             }
@@ -82,7 +82,7 @@ struct PaywallView: View {
                         .font(.footnote)
                         .buttonStyle(.plain)
                         .foregroundStyle(.secondary)
-                        .accessibilityHint("Restores your previous TrimTally Pro purchase")
+                        .accessibilityHint(String(localized: L10n.Paywall.restoreButtonHint))
                     }
                 }
                 .padding(.bottom, 32)
@@ -92,7 +92,7 @@ struct PaywallView: View {
             #endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Close") {
+                    Button(String(localized: L10n.Common.closeButton)) {
                         dismiss()
                     }
                 }

@@ -169,12 +169,12 @@ Contributions are welcome! Please feel free to submit issues or pull requests.
 
 ## Localization
 
-TrimTally is available in three languages:
-- **English** (primary)
-- **Spanish** (Español)
-- **French** (Français)
+TrimTally is fully localized in three languages:
+- **English** (primary) - 474 strings
+- **Spanish** (Español) - 474 strings (100% complete)
+- **French** (Français) - 474 strings (100% complete)
 
-All user-facing strings are stored in `Trimly/Localization/Localizable.xcstrings` using the modern String Catalog format. The app automatically adapts to the device's language settings.
+All user-facing strings are stored in `Trimly/Localization/Localizable.xcstrings` using the modern String Catalog format. The app automatically adapts to the device's language settings. All translations have been professionally verified to ensure accuracy and natural phrasing.
 
 ## License
 

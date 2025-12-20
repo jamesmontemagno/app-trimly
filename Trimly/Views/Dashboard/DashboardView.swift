@@ -50,7 +50,7 @@ struct DashboardView: View {
 						onTap: onShowCharts
 					)
 					
-					if let projection = dataManager.getGoalProjection() {
+					if let projection = dataManager.getGoalProjection(), !isGoalAchieved {
 						GoalProjectionCard(projectionDate: projection)
 					}
 					
@@ -133,6 +133,14 @@ struct DashboardView: View {
 		return dailyData.reduce(into: [Date: String]()) { dict, item in
 			dict[item.date] = displayValue(item.weight)
 		}
+	}
+	
+	private var isGoalAchieved: Bool {
+		guard let goal = dataManager.fetchActiveGoal() else {
+			return false
+		}
+		
+		return goal.completionReason == .achieved
 	}
 	
 	private func displayValue(_ kg: Double) -> String {

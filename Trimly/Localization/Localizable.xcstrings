@@ -77,6 +77,16 @@
         }
       }
     },
+    "%@. %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@. %2$@"
+          }
+        }
+      }
+    },
     "%lld" : {
       "localizations" : {
         "es" : {
@@ -121,6 +131,215 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "1.0.0"
+          }
+        }
+      }
+    },
+    "accessibility.hint.addWeightEntry" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Opens form to log a new weight"
+          }
+        }
+      }
+    },
+    "accessibility.hint.consistencyScore" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Tap for more information about how consistency is calculated"
+          }
+        }
+      }
+    },
+    "accessibility.hint.notes" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Add optional notes about this weight entry"
+          }
+        }
+      }
+    },
+    "accessibility.hint.opensCharts" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Opens charts"
+          }
+        }
+      }
+    },
+    "accessibility.hint.opensChartSettings" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Opens chart display settings"
+          }
+        }
+      }
+    },
+    "accessibility.hint.opensTrimTallyPro" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Opens TrimTally Pro upgrade page"
+          }
+        }
+      }
+    },
+    "accessibility.hint.recalculateAchievements" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Recalculates achievement progress"
+          }
+        }
+      }
+    },
+    "accessibility.hint.saveEntry" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Saves this weight entry to your history"
+          }
+        }
+      }
+    },
+    "accessibility.hint.weightValue" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Enter your current weight in %@"
+          }
+        }
+      }
+    },
+    "accessibility.label.achievementProgress" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Achievement progress"
+          }
+        }
+      }
+    },
+    "accessibility.label.achievementUnlocked" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Achievement unlocked"
+          }
+        }
+      }
+    },
+    "accessibility.label.addWeightEntry" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Add weight entry"
+          }
+        }
+      }
+    },
+    "accessibility.label.celebration" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Celebration: %@"
+          }
+        }
+      }
+    },
+    "accessibility.label.consistencyScore" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Consistency score"
+          }
+        }
+      }
+    },
+    "accessibility.label.dateAndTime" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Date and time for this weight entry"
+          }
+        }
+      }
+    },
+    "accessibility.label.notes" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Notes"
+          }
+        }
+      }
+    },
+    "accessibility.label.unlocked" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Unlocked"
+          }
+        }
+      }
+    },
+    "accessibility.label.weightValue" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Weight value"
+          }
+        }
+      }
+    },
+    "accessibility.value.achievementProgress" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld of %2$lld achievements unlocked"
           }
         }
       }
@@ -2000,6 +2219,17 @@
         }
       }
     },
+    "calendar.tooltip.noEntry" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No entry for this day"
+          }
+        }
+      }
+    },
     "celebrations.consistency.70" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2341,6 +2571,149 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Paramètres du Graphique"
+          }
+        }
+      }
+    },
+    "charts.consistency.alertTitle" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Consistency Score"
+          }
+        }
+      }
+    },
+    "charts.consistency.info.daysWithEntries" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Days with entries"
+          }
+        }
+      }
+    },
+    "charts.consistency.info.explainer" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Track your logging habits over time. Higher consistency helps build sustainable weight management habits."
+          }
+        }
+      }
+    },
+    "charts.consistency.info.firstEntryDate" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "First entry date"
+          }
+        }
+      }
+    },
+    "charts.consistency.info.formula" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Formula"
+          }
+        }
+      }
+    },
+    "charts.consistency.info.goalBeforeWindow" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "How it's calculated:\n\nDays with entries: %1$lld\nWindow: %2$lld days (%3$@)\nFormula: %4$lld ÷ %5$lld = %6$lld%%\n\nGoal started before this window - using %7$@ period.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits."
+          }
+        }
+      }
+    },
+    "charts.consistency.info.goalStart" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Goal start"
+          }
+        }
+      }
+    },
+    "charts.consistency.info.goalStartDate" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Goal start date"
+          }
+        }
+      }
+    },
+    "charts.consistency.info.intro" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "How it's calculated:"
+          }
+        }
+      }
+    },
+    "charts.consistency.info.totalDays" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Total days since goal start"
+          }
+        }
+      }
+    },
+    "charts.consistency.info.window" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Window"
+          }
+        }
+      }
+    },
+    "charts.consistency.info.withGoal" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "How it's calculated:\n\nDays with entries: %1$lld\nTotal days since goal start: %2$lld\nFormula: %3$lld ÷ %4$lld = %5$lld%%\n\nGoal start: %6$@\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits."
+          }
+        }
+      }
+    },
+    "charts.consistency.info.withWindow" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "How it's calculated:\n\nDays with entries: %1$lld\nWindow: %2$lld days (%3$@)\nFormula: %4$lld ÷ %5$lld = %6$lld%%\n\nNo active goal - using %7$@ window.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits."
           }
         }
       }
@@ -2816,6 +3189,28 @@
         }
       }
     },
+    "charts.stats.checkIns" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Check-ins"
+          }
+        }
+      }
+    },
+    "charts.stats.consistency" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Consistency"
+          }
+        }
+      }
+    },
     "charts.stats.max" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -2881,6 +3276,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Intervalle"
+          }
+        }
+      }
+    },
+    "charts.stats.timeframe" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Timeframe"
+          }
+        }
+      }
+    },
+    "charts.stats.totalChange" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Total Change"
           }
         }
       }
@@ -3254,6 +3671,7 @@
       }
     },
     "Close" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -3380,6 +3798,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Annuler"
+          }
+        }
+      }
+    },
+    "common.button.close" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Close"
           }
         }
       }
@@ -3638,6 +4067,7 @@
       }
     },
     "Consistency Score" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -3738,6 +4168,28 @@
         }
       }
     },
+    "dashboard.consistency.info.withFirstEntry" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "How it's calculated:\n\nDays with entries: %1$lld\nTotal days since first entry: %2$lld\nFormula: %3$lld ÷ %4$lld = %5$lld%%\n\nFirst entry date: %6$@\n\nNo active goal - using all available history.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits."
+          }
+        }
+      }
+    },
+    "dashboard.consistency.info.withGoalStart" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "How it's calculated:\n\nDays with entries: %1$lld\nTotal days since goal start: %2$lld\nFormula: %3$lld ÷ %4$lld = %5$lld%%\n\nGoal start date: %6$@\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits."
+          }
+        }
+      }
+    },
     "dashboard.consistency.moderate" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -3757,6 +4209,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Modéré"
+          }
+        }
+      }
+    },
+    "dashboard.consistency.noEntries" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No entries yet. Start tracking your weight to see your consistency score!"
           }
         }
       }
@@ -3803,6 +4266,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Score de cohérence"
+          }
+        }
+      }
+    },
+    "dashboard.consistencyScoreAlertTitle" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Consistency Score"
           }
         }
       }
@@ -6825,6 +7299,7 @@
       }
     },
     "How it's calculated:\n\nDays with entries: %lld\nTotal days since first entry: %lld\nFormula: %lld ÷ %lld = %lld%%\n\nFirst entry date: %@\n\nNo active goal - using all available history.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6847,6 +7322,7 @@
       }
     },
     "How it's calculated:\n\nDays with entries: %lld\nTotal days since goal start: %lld\nFormula: %lld ÷ %lld = %lld%%\n\nGoal start date: %@\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6869,6 +7345,7 @@
       }
     },
     "How it's calculated:\n\nDays with entries: %lld\nTotal days since goal start: %lld\nFormula: %lld ÷ %lld = %lld%%\n\nGoal start: %@\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6914,6 +7391,7 @@
       }
     },
     "How it's calculated:\n\nDays with entries: %lld\nWindow: %lld days (%@)\nFormula: %lld ÷ %lld = %lld%%\n\nGoal started before this window - using %@ period.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6936,6 +7414,7 @@
       }
     },
     "How it's calculated:\n\nDays with entries: %lld\nWindow: %lld days (%@)\nFormula: %lld ÷ %lld = %lld%%\n\nNo active goal - using %@ window.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6990,6 +7469,7 @@
       }
     },
     "No entries yet. Start tracking your weight to see your consistency score!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -7006,6 +7486,7 @@
       }
     },
     "No entry for this day" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -7020,9 +7501,6 @@
           }
         }
       }
-    },
-    "No notifications scheduled" : {
-
     },
     "notifications.action.dismiss" : {
       "extractionState" : "extracted_with_value",
@@ -7209,6 +7687,7 @@
       }
     },
     "OK" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -8283,6 +8762,7 @@
       }
     },
     "Opens charts" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -8294,6 +8774,182 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ouvrir les graphiques"
+          }
+        }
+      }
+    },
+    "paywall.accessibility.premiumFeature" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Premium feature"
+          }
+        }
+      }
+    },
+    "paywall.accessibility.processing" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Processing purchase"
+          }
+        }
+      }
+    },
+    "paywall.accessibility.restoreHint" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Restores your previous TrimTally Pro purchase"
+          }
+        }
+      }
+    },
+    "paywall.accessibility.upgradeButton" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Upgrade to TrimTally Pro for %@"
+          }
+        }
+      }
+    },
+    "paywall.accessibility.upgradeHint" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Activates in-app purchase"
+          }
+        }
+      }
+    },
+    "paywall.button.close" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Close"
+          }
+        }
+      }
+    },
+    "paywall.button.restore" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Restore Purchases"
+          }
+        }
+      }
+    },
+    "paywall.button.upgrade" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Upgrade - %@"
+          }
+        }
+      }
+    },
+    "paywall.feature.analytics.description" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Gain deeper insights into your progress."
+          }
+        }
+      }
+    },
+    "paywall.feature.analytics.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Advanced Analytics"
+          }
+        }
+      }
+    },
+    "paywall.feature.export.description" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Export your complete history to CSV for analysis."
+          }
+        }
+      }
+    },
+    "paywall.feature.export.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Data Export"
+          }
+        }
+      }
+    },
+    "paywall.feature.healthkit.description" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Automatically sync your weight data with Apple Health."
+          }
+        }
+      }
+    },
+    "paywall.feature.healthkit.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "HealthKit Sync"
+          }
+        }
+      }
+    },
+    "paywall.subtitle" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Take your weight tracking to the next level with advanced features."
+          }
+        }
+      }
+    },
+    "paywall.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Unlock TrimTally Pro"
           }
         }
       }
@@ -8805,6 +9461,7 @@
       }
     },
     "Restore Purchases" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -8821,9 +9478,6 @@
       }
     },
     "Same Weight Days" : {
-
-    },
-    "Scheduled Notifications (%lld)" : {
 
     },
     "See your current weight at a glance" : {
@@ -9375,6 +10029,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Synchronisation iCloud"
+          }
+        }
+      }
+    },
+    "settings.debug.noNotifications" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No notifications scheduled"
+          }
+        }
+      }
+    },
+    "settings.debug.scheduledNotifications" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Scheduled Notifications (%lld)"
           }
         }
       }
@@ -9977,6 +10653,28 @@
         }
       }
     },
+    "settings.pro.upgradeDescription" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Unlock HealthKit sync, data export, and more."
+          }
+        }
+      }
+    },
+    "settings.pro.upgradeTitle" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Upgrade to Pro"
+          }
+        }
+      }
+    },
     "settings.restore.notFound.message" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -10458,6 +11156,7 @@
       }
     },
     "Take your weight tracking to the next level with advanced features." : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -10720,6 +11419,7 @@
       }
     },
     "Unlock HealthKit sync, data export, and more." : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -10736,6 +11436,7 @@
       }
     },
     "Unlock TrimTally Pro" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -10752,6 +11453,7 @@
       }
     },
     "Upgrade - %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -10768,6 +11470,7 @@
       }
     },
     "Upgrade to Pro" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {

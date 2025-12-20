@@ -452,9 +452,8 @@ See `Tests/TrimlyTests/` for implementation.
 
 Planned API additions:
 
-- HealthKit sync service
-- Notification service (reminders)
-- Widget data provider
-- Celebration engine
-- Plateau detection
 - Export formats (JSON, PDF)
+- More advanced analytics (body composition tracking)
+- Additional HealthKit metric integrations
+- Apple Watch complications
+- Live Activities support

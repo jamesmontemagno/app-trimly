@@ -119,7 +119,7 @@ An Xcode app project with:
     - English (primary)
     - Spanish (Español)
     - French (Français)
-    - 458 fully translated strings
+    - 474 fully translated strings (100% complete for all languages)
     - Automatic language adaptation
 
 ## Technical Implementation

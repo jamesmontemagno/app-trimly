@@ -404,20 +404,25 @@ This section summarizes the most important new v1.1/v1.2 surfaces; see the app f
 - Widget updates
 - Notifications
 
-## Localization (Future)
+## Localization (Implemented - v1.2)
 
-### Phase 1 Languages
-- English (US/UK)
-- Spanish
-- French
+### Supported Languages
+- English (primary) - 474 strings
+- Spanish (Español) - 474 strings (100% complete)
+- French (Français) - 474 strings (100% complete)
+
+### Implementation Details
+- Modern String Catalog format (.xcstrings)
+- Automatic language adaptation based on device settings
+- Number formatting respects locale (1,234.5 vs 1.234,5)
+- Date formats follow system preferences
+- Unit preferences configurable per user
+
+### Future Languages (Phase 2)
 - German
 - Japanese
-
-### Considerations
-- Number formatting (1,234.5 vs 1.234,5)
-- Date formats
-- Unit preferences by region
-- Right-to-left support (future: Arabic)
+- Portuguese
+- Italian
 
 ## Metrics & Success Criteria
 
@@ -449,30 +454,33 @@ This section summarizes the most important new v1.1/v1.2 surfaces; see the app f
 
 ## Version Roadmap
 
-### v1.0 (Current)
+### v1.0 (Released)
 - Core tracking
 - Dashboard, timeline, charts
 - Goals and analytics
 - Export and settings
 
-### v1.1 (Next)
+### v1.1 (Released)
 - HealthKit integration
 - Reminders with adaptation
 - Small widget
 
-### v1.2
+### v1.2 (Current - Released)
 - Micro celebrations
 - Plateau detection
 - Medium widget
+- Full internationalization (English, Spanish, French)
 
 ### v2.0 (Future)
 - Apple Watch app
 - Siri shortcuts
 - Advanced analytics
+- Additional widget sizes
+- Lock screen widgets
 - Social features (optional sharing)
 
 ---
 
-**Last Updated**: November 19, 2025
-**Version**: 1.0
-**Status**: Implementation Complete
+**Last Updated**: December 20, 2025
+**Version**: 1.2
+**Status**: v1.2 Implementation Complete, Production Ready

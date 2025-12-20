@@ -10,7 +10,7 @@ import Charts
 
 struct DashboardView: View {
 	@EnvironmentObject var dataManager: DataManager
-	@StateObject private var celebrationService = CelebrationService()
+	@EnvironmentObject var celebrationService: CelebrationService
 	@StateObject private var plateauService = PlateauDetectionService()
 	@State private var showingAddEntry = false
 	@State private var recentlySyncedToHealthKit = false
@@ -97,37 +97,17 @@ struct DashboardView: View {
 			}) {
 				AddWeightEntryView()
 			}
-			.overlay {
-				if let celebration = celebrationService.currentCelebration {
-					CelebrationOverlayView(celebration: celebration)
-						.transition(.scale.combined(with: .opacity))
-						.onTapGesture {
-							celebrationService.dismissCelebration()
-						}
-				}
-			}
 			.onAppear {
 				handleInitialCloudSyncState()
-				if let celebration = celebrationService.checkForCelebrations(dataManager: dataManager) {
-					celebrationService.showCelebration(celebration)
-				}
-				
 				plateauService.checkForPlateau(dataManager: dataManager)
 			}
 			.onChange(of: dataManager.hasFinishedInitialCloudSync) { _, _ in
-				handleInitialCloudSyncState()
-			}
-			.onChange(of: entryCount) { _, _ in
 				handleInitialCloudSyncState()
 			}
 		}
 	}
 	
 	// MARK: - Helpers
-	
-	private var entryCount: Int {
-		dataManager.fetchAllEntries().count
-	}
 	
 	private var todayEntries: [WeightEntry]? {
 		let entries = dataManager.fetchEntriesForDate(Date())
@@ -186,5 +166,6 @@ private extension DashboardView {
 	NavigationStack {
 		DashboardView()
 			.environmentObject(DataManager(inMemory: true))
+			.environmentObject(CelebrationService())
 	}
 }

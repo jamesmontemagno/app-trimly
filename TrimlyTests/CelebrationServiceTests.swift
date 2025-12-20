@@ -155,4 +155,39 @@ struct CelebrationServiceTests {
 			#expect(celebration.type != .goal100Percent)
 		}
 	}
+
+	@Test
+	func goalCelebration_largeProgressJump_celebratesHighestMilestoneFirst() async throws {
+		// Setup: User makes large progress jump (0% -> 80%) and should see 75% celebration (not 25%)
+		let manager = await makeInMemoryManager()
+		let service = CelebrationService()
+		
+		// Set start weight
+		let startDate = Date().addingTimeInterval(-30 * 24 * 60 * 60) // 30 days ago
+		try manager.addWeightEntry(weightKg: 100.0, timestamp: startDate, unit: .kilograms, notes: nil)
+		
+		// Create goal to lose weight (100kg -> 90kg = 10kg total)
+		try manager.setGoal(targetWeightKg: 90.0, startingWeightKg: 100.0)
+		
+		// Add current weight at 80% progress (92kg - 8kg lost out of 10kg goal)
+		let currentDate = Date()
+		try manager.addWeightEntry(weightKg: 92.0, timestamp: currentDate, unit: .kilograms, notes: nil)
+		
+		// Check for celebration - should get 75% milestone first
+		let celebration = service.checkForCelebrations(dataManager: manager)
+		
+		// Should celebrate 75% milestone (highest achieved)
+		#expect(celebration != nil)
+		#expect(celebration?.type == .goal75Percent)
+		
+		// Now mark it as shown and check again - should get nothing (lower milestones auto-marked)
+		service.showCelebration(celebration!)
+		let secondCelebration = service.checkForCelebrations(dataManager: manager)
+		
+		// Should not get 25% or 50% celebration since they were auto-marked as shown
+		if let second = secondCelebration {
+			#expect(second.type != .goal25Percent)
+			#expect(second.type != .goal50Percent)
+		}
+	}
 }

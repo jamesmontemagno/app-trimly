@@ -85,6 +85,41 @@ final class DeviceSettingsStoreTests: XCTestCase {
         XCTAssertFalse(reloaded2.pro.isPro, "Pro status should persist when set to false")
     }
     
+    func testReviewSettingsDefaultToZero() {
+        let (_, store) = makeStore()
+        XCTAssertEqual(store.review.entryCount, 0, "Entry count should default to 0")
+        XCTAssertFalse(store.review.hasPrompted, "hasPrompted should default to false")
+    }
+    
+    func testUpdateReviewPersistsAcrossInstances() {
+        let (defaults, store) = makeStore()
+        // Initially default values
+        XCTAssertEqual(store.review.entryCount, 0)
+        XCTAssertFalse(store.review.hasPrompted)
+        
+        // Update entry count
+        store.updateReview { review in
+            review.entryCount = 5
+        }
+        XCTAssertEqual(store.review.entryCount, 5)
+        
+        // Verify persistence across instances
+        let reloaded = DeviceSettingsStore(userDefaults: defaults)
+        XCTAssertEqual(reloaded.review.entryCount, 5, "Entry count should persist")
+        XCTAssertFalse(reloaded.review.hasPrompted, "hasPrompted should still be false")
+        
+        // Update to prompted
+        reloaded.updateReview { review in
+            review.entryCount = 10
+            review.hasPrompted = true
+        }
+        
+        // Verify both values persist
+        let reloaded2 = DeviceSettingsStore(userDefaults: defaults)
+        XCTAssertEqual(reloaded2.review.entryCount, 10, "Entry count should persist at 10")
+        XCTAssertTrue(reloaded2.review.hasPrompted, "hasPrompted should persist as true")
+    }
+    
     private func makeStore() -> (UserDefaults, DeviceSettingsStore) {
         let suiteName = "com.trimly.tests.devicesettings.\(UUID().uuidString)"
         guard let defaults = UserDefaults(suiteName: suiteName) else {

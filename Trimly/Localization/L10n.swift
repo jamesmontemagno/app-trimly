@@ -453,8 +453,12 @@ enum L10n {
 			static func unlockedDate(_ date: Date) -> LocalizedStringResource {
 				LocalizedStringResource("achievements.unlocked.date", defaultValue: "Unlocked on \(date, format: Date.FormatStyle(date: .abbreviated, time: .omitted))")
 			}
-			static let progressLabel = LocalizedStringResource("achievements.progress.label", defaultValue: "Progress")
-			static let categoryLogging = LocalizedStringResource("achievements.category.logging", defaultValue: "Logging")
+		static let progressLabel = LocalizedStringResource("achievements.progress.label", defaultValue: "Progress")
+		static func unlockedProgress(_ unlocked: Int, _ total: Int) -> LocalizedStringResource {
+			LocalizedStringResource("achievements.unlocked.progress", defaultValue: "\(unlocked) of \(total) Unlocked")
+		}
+		static let keepGoingHint = LocalizedStringResource("achievements.keepGoing.hint", defaultValue: "Keep tracking to unlock more!")
+		static let categoryLogging = LocalizedStringResource("achievements.category.logging", defaultValue: "Logging")
 			static let categoryStreaks = LocalizedStringResource("achievements.category.streaks", defaultValue: "Streaks")
 			static let categoryHabits = LocalizedStringResource("achievements.category.habits", defaultValue: "Habits")
 			static let categoryGoals = LocalizedStringResource("achievements.category.goals", defaultValue: "Goals")

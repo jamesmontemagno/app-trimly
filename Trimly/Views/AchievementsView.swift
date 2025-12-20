@@ -21,6 +21,9 @@ struct AchievementsView: View {
 		NavigationStack {
 			ScrollView {
 				LazyVStack(alignment: .leading, spacing: 24) {
+					// Unlock progress summary card
+					unlockProgressCard
+					
 					ForEach(groupedSnapshots) { group in
 						Section {
 							ForEach(group.snapshots) { snapshot in
@@ -104,6 +107,47 @@ struct AchievementsView: View {
 	
 	private var hasPremiumLock: Bool {
 		achievementService.snapshots.contains { $0.requiresPro }
+	}
+	
+	private var unlockedCount: Int {
+		achievementService.snapshots.filter { $0.isUnlocked }.count
+	}
+	
+	private var totalCount: Int {
+		achievementService.snapshots.count
+	}
+	
+	private var unlockProgressCard: some View {
+		HStack(spacing: 16) {
+			// Trophy icon
+			ZStack {
+				Circle()
+					.fill(.yellow.opacity(0.15))
+					.frame(width: 60, height: 60)
+				Image(systemName: "trophy.fill")
+					.font(.system(size: 28))
+					.symbolRenderingMode(.hierarchical)
+					.foregroundStyle(.yellow)
+			}
+			
+			VStack(alignment: .leading, spacing: 4) {
+				Text(L10n.Achievements.unlockedProgress(unlockedCount, totalCount))
+					.font(.headline)
+				
+				ProgressView(value: totalCount > 0 ? Double(unlockedCount) / Double(totalCount) : 0) {
+					Text(L10n.Achievements.progressLabel)
+				}
+				.tint(.yellow)
+				
+				Text(L10n.Achievements.keepGoingHint)
+					.font(.caption)
+					.foregroundStyle(.secondary)
+			}
+		}
+		.padding()
+		.frame(maxWidth: .infinity, alignment: .leading)
+		.background(.thinMaterial)
+		.clipShape(RoundedRectangle(cornerRadius: 16))
 	}
 	
 	private var premiumUpsellHint: some View {

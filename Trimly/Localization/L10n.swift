@@ -13,6 +13,7 @@ enum L10n {
 		static let deleteButton = LocalizedStringResource("common.button.delete", defaultValue: "Delete")
 		static let refresh = LocalizedStringResource("common.button.refresh", defaultValue: "Refresh")
 		static let addWeight = LocalizedStringResource("common.button.addWeight", defaultValue: "Add Weight")
+		static let closeButton = LocalizedStringResource("common.button.close", defaultValue: "Close")
 		static let booleanYes = LocalizedStringResource("common.value.yes", defaultValue: "Yes")
 		static let booleanNo = LocalizedStringResource("common.value.no", defaultValue: "No")
 		static let errorTitle = LocalizedStringResource("common.alert.errorTitle", defaultValue: "Error")
@@ -20,6 +21,38 @@ enum L10n {
 		static func days(_ count: Int) -> LocalizedStringResource {
 			LocalizedStringResource("common.value.days", defaultValue: "\(count) days")
 		}
+	}
+
+	enum Accessibility {
+		static let weightValue = LocalizedStringResource("accessibility.label.weightValue", defaultValue: "Weight value")
+		static func weightValueHint(_ unitSymbol: String) -> LocalizedStringResource {
+			LocalizedStringResource("accessibility.hint.weightValue", defaultValue: "Enter your current weight in \(unitSymbol)")
+		}
+		static let dateAndTime = LocalizedStringResource("accessibility.label.dateAndTime", defaultValue: "Date and time for this weight entry")
+		static let notes = LocalizedStringResource("accessibility.label.notes", defaultValue: "Notes")
+		static let notesHint = LocalizedStringResource("accessibility.hint.notes", defaultValue: "Add optional notes about this weight entry")
+		static let saveEntryHint = LocalizedStringResource("accessibility.hint.saveEntry", defaultValue: "Saves this weight entry to your history")
+		static let addWeightEntry = LocalizedStringResource("accessibility.label.addWeightEntry", defaultValue: "Add weight entry")
+		static let addWeightEntryHint = LocalizedStringResource("accessibility.hint.addWeightEntry", defaultValue: "Opens form to log a new weight")
+		static let achievementProgress = LocalizedStringResource("accessibility.label.achievementProgress", defaultValue: "Achievement progress")
+		static func achievementProgressValue(_ unlocked: Int, _ total: Int) -> LocalizedStringResource {
+			LocalizedStringResource("accessibility.value.achievementProgress", defaultValue: "\(unlocked) of \(total) achievements unlocked")
+		}
+		static let unlocked = LocalizedStringResource("accessibility.label.unlocked", defaultValue: "Unlocked")
+		static let consistencyScore = LocalizedStringResource("accessibility.label.consistencyScore", defaultValue: "Consistency score")
+		static let consistencyScoreHint = LocalizedStringResource("accessibility.hint.consistencyScore", defaultValue: "Tap for more information about how consistency is calculated")
+		static let achievementUnlocked = LocalizedStringResource("accessibility.label.achievementUnlocked", defaultValue: "Achievement unlocked")
+		static func celebration(_ message: String) -> LocalizedStringResource {
+			LocalizedStringResource("accessibility.label.celebration", defaultValue: "Celebration: \(message)")
+		}
+		static let opensCharts = LocalizedStringResource("accessibility.hint.opensCharts", defaultValue: "Opens charts")
+		static let opensChartSettings = LocalizedStringResource("accessibility.hint.opensChartSettings", defaultValue: "Opens chart display settings")
+		static let recalculateAchievements = LocalizedStringResource("accessibility.hint.recalculateAchievements", defaultValue: "Recalculates achievement progress")
+		static let opensTrimTallyPro = LocalizedStringResource("accessibility.hint.opensTrimTallyPro", defaultValue: "Opens TrimTally Pro upgrade page")
+	}
+
+	enum Calendar {
+		static let noEntry = LocalizedStringResource("calendar.tooltip.noEntry", defaultValue: "No entry for this day")
 	}
 
 	enum Tabs {
@@ -126,16 +159,39 @@ enum L10n {
 		static let statAvg = LocalizedStringResource("charts.stats.avg", defaultValue: "Avg")
 		static let statRange = LocalizedStringResource("charts.stats.range", defaultValue: "Range")
 		static let statAverageWeight = LocalizedStringResource("charts.stats.averageWeight", defaultValue: "Average Weight")
+		static let statTotalChange = LocalizedStringResource("charts.stats.totalChange", defaultValue: "Total Change")
+		static let statCheckIns = LocalizedStringResource("charts.stats.checkIns", defaultValue: "Check-ins")
+		static let statConsistency = LocalizedStringResource("charts.stats.consistency", defaultValue: "Consistency")
+		static let statTimeframe = LocalizedStringResource("charts.stats.timeframe", defaultValue: "Timeframe")
 		static let goalLabel = LocalizedStringResource("charts.goal.label", defaultValue: "Goal")
 		static let maInfoTitle = LocalizedStringResource("charts.info.ma.title", defaultValue: "Moving Average")
 		static let maInfoDescription = LocalizedStringResource("charts.info.ma.description", defaultValue: "A simple moving average smooths recent entries by averaging the last few days so you can spot direction without noise.")
 		static let emaInfoTitle = LocalizedStringResource("charts.info.ema.title", defaultValue: "Exponential Moving Average")
 		static let emaInfoDescription = LocalizedStringResource("charts.info.ema.description", defaultValue: "An exponential moving average reacts faster by giving more weight to your latest readings while still smoothing swings.")
 		static let legendInfoHint = LocalizedStringResource("charts.legend.info.hint", defaultValue: "Opens a short description of this overlay")
-			static let selectionTitle = LocalizedStringResource("charts.selection.title", defaultValue: "Selected Entry")
-			static let selectionHint = LocalizedStringResource("charts.selection.hint", defaultValue: "Tap a point to see the exact weight.")
-			static let tapToShowDotsHint = LocalizedStringResource("charts.tap.showDots.hint", defaultValue: "Tap the chart to show data points.")
+		static let selectionTitle = LocalizedStringResource("charts.selection.title", defaultValue: "Selected Entry")
+		static let selectionHint = LocalizedStringResource("charts.selection.hint", defaultValue: "Tap a point to see the exact weight.")
+		static let tapToShowDotsHint = LocalizedStringResource("charts.tap.showDots.hint", defaultValue: "Tap the chart to show data points.")
 		static let settingsButton = LocalizedStringResource("charts.button.settings", defaultValue: "Chart Settings")
+		static let consistencyScoreAlertTitle = LocalizedStringResource("charts.consistency.alertTitle", defaultValue: "Consistency Score")
+		static let consistencyInfoIntro = LocalizedStringResource("charts.consistency.info.intro", defaultValue: "How it's calculated:")
+		static let consistencyInfoDaysWithEntries = LocalizedStringResource("charts.consistency.info.daysWithEntries", defaultValue: "Days with entries")
+		static let consistencyInfoTotalDays = LocalizedStringResource("charts.consistency.info.totalDays", defaultValue: "Total days since goal start")
+		static let consistencyInfoWindow = LocalizedStringResource("charts.consistency.info.window", defaultValue: "Window")
+		static let consistencyInfoFormula = LocalizedStringResource("charts.consistency.info.formula", defaultValue: "Formula")
+		static let consistencyInfoGoalStart = LocalizedStringResource("charts.consistency.info.goalStart", defaultValue: "Goal start")
+		static let consistencyInfoGoalStartDate = LocalizedStringResource("charts.consistency.info.goalStartDate", defaultValue: "Goal start date")
+		static let consistencyInfoFirstEntryDate = LocalizedStringResource("charts.consistency.info.firstEntryDate", defaultValue: "First entry date")
+		static let consistencyInfoExplainer = LocalizedStringResource("charts.consistency.info.explainer", defaultValue: "Track your logging habits over time. Higher consistency helps build sustainable weight management habits.")
+		static func consistencyInfoWithGoal(_ uniqueDays: Int, _ totalDays: Int, _ percentage: Int, _ dateStr: String) -> LocalizedStringResource {
+			LocalizedStringResource("charts.consistency.info.withGoal", defaultValue: "How it's calculated:\n\nDays with entries: \(uniqueDays)\nTotal days since goal start: \(totalDays)\nFormula: \(uniqueDays) ÷ \(totalDays) = \(percentage)%\n\nGoal start: \(dateStr)\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits.")
+		}
+		static func consistencyInfoWithWindow(_ uniqueDays: Int, _ windowDays: Int, _ percentage: Int, _ rangeName: String) -> LocalizedStringResource {
+			LocalizedStringResource("charts.consistency.info.withWindow", defaultValue: "How it's calculated:\n\nDays with entries: \(uniqueDays)\nWindow: \(windowDays) days (\(rangeName))\nFormula: \(uniqueDays) ÷ \(windowDays) = \(percentage)%\n\nNo active goal - using \(rangeName) window.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits.")
+		}
+		static func consistencyInfoGoalBeforeWindow(_ uniqueDays: Int, _ windowDays: Int, _ percentage: Int, _ rangeName: String) -> LocalizedStringResource {
+			LocalizedStringResource("charts.consistency.info.goalBeforeWindow", defaultValue: "How it's calculated:\n\nDays with entries: \(uniqueDays)\nWindow: \(windowDays) days (\(rangeName))\nFormula: \(uniqueDays) ÷ \(windowDays) = \(percentage)%\n\nGoal started before this window - using \(rangeName) period.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits.")
+		}
 	}
 
 	enum ChartSettings {
@@ -190,10 +246,18 @@ enum L10n {
 		}
 		static let progressMetaSeparator = LocalizedStringResource("dashboard.progress.meta.separator", defaultValue: "|")
 		static let consistencyScore = LocalizedStringResource("dashboard.consistencyScore", defaultValue: "Consistency Score")
+		static let consistencyScoreAlertTitle = LocalizedStringResource("dashboard.consistencyScoreAlertTitle", defaultValue: "Consistency Score")
 		static let consistencyVery = LocalizedStringResource("dashboard.consistency.very", defaultValue: "Very consistent")
 		static let consistencyConsistent = LocalizedStringResource("dashboard.consistency.consistent", defaultValue: "Consistent")
 		static let consistencyModerate = LocalizedStringResource("dashboard.consistency.moderate", defaultValue: "Moderate")
 		static let consistencyBuilding = LocalizedStringResource("dashboard.consistency.building", defaultValue: "Building consistency")
+		static let consistencyNoEntriesMessage = LocalizedStringResource("dashboard.consistency.noEntries", defaultValue: "No entries yet. Start tracking your weight to see your consistency score!")
+		static func consistencyInfoWithGoalStart(_ uniqueDays: Int, _ totalDays: Int, _ percentage: Int, _ dateStr: String) -> LocalizedStringResource {
+			LocalizedStringResource("dashboard.consistency.info.withGoalStart", defaultValue: "How it's calculated:\n\nDays with entries: \(uniqueDays)\nTotal days since goal start: \(totalDays)\nFormula: \(uniqueDays) ÷ \(totalDays) = \(percentage)%\n\nGoal start date: \(dateStr)\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits.")
+		}
+		static func consistencyInfoWithFirstEntry(_ uniqueDays: Int, _ totalDays: Int, _ percentage: Int, _ dateStr: String) -> LocalizedStringResource {
+			LocalizedStringResource("dashboard.consistency.info.withFirstEntry", defaultValue: "How it's calculated:\n\nDays with entries: \(uniqueDays)\nTotal days since first entry: \(totalDays)\nFormula: \(uniqueDays) ÷ \(totalDays) = \(percentage)%\n\nFirst entry date: \(dateStr)\n\nNo active goal - using all available history.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits.")
+		}
 		static let trendTitle = LocalizedStringResource("dashboard.trend.title", defaultValue: "Trend")
 		static let estimatedGoalDate = LocalizedStringResource("dashboard.estimatedGoalDate", defaultValue: "Estimated Goal Date")
 		static func goalArrival(_ days: Int) -> LocalizedStringResource {
@@ -380,8 +444,37 @@ enum L10n {
 		static let restoreNotFoundMessage = LocalizedStringResource("settings.restore.notFound.message", defaultValue: "We couldn't find a previous TrimTally Pro purchase associated with your account.")
 		static let proStatus = LocalizedStringResource("settings.about.proStatus", defaultValue: "Pro")
 		static let proDescription = LocalizedStringResource("settings.about.proDescription", defaultValue: "You have TrimTally Pro")
+		static let upgradeToProTitle = LocalizedStringResource("settings.pro.upgradeTitle", defaultValue: "Upgrade to Pro")
+		static let upgradeToProDescription = LocalizedStringResource("settings.pro.upgradeDescription", defaultValue: "Unlock HealthKit sync, data export, and more.")
+		static let noNotificationsScheduled = LocalizedStringResource("settings.debug.noNotifications", defaultValue: "No notifications scheduled")
+		static func scheduledNotificationsTitle(_ count: Int) -> LocalizedStringResource {
+			LocalizedStringResource("settings.debug.scheduledNotifications", defaultValue: "Scheduled Notifications (\(count))")
+		}
 		static let reviewAppTitle = LocalizedStringResource("settings.about.reviewApp.title", defaultValue: "Review TrimTally")
 		static let reviewAppSubtitle = LocalizedStringResource("settings.about.reviewApp.subtitle", defaultValue: "Share your experience on the App Store.")
+	}
+
+	enum Paywall {
+		static let title = LocalizedStringResource("paywall.title", defaultValue: "Unlock TrimTally Pro")
+		static let subtitle = LocalizedStringResource("paywall.subtitle", defaultValue: "Take your weight tracking to the next level with advanced features.")
+		static let featureHealthKitTitle = LocalizedStringResource("paywall.feature.healthkit.title", defaultValue: "HealthKit Sync")
+		static let featureHealthKitDescription = LocalizedStringResource("paywall.feature.healthkit.description", defaultValue: "Automatically sync your weight data with Apple Health.")
+		static let featureExportTitle = LocalizedStringResource("paywall.feature.export.title", defaultValue: "Data Export")
+		static let featureExportDescription = LocalizedStringResource("paywall.feature.export.description", defaultValue: "Export your complete history to CSV for analysis.")
+		static let featureAnalyticsTitle = LocalizedStringResource("paywall.feature.analytics.title", defaultValue: "Advanced Analytics")
+		static let featureAnalyticsDescription = LocalizedStringResource("paywall.feature.analytics.description", defaultValue: "Gain deeper insights into your progress.")
+		static func upgradeButton(_ price: String) -> LocalizedStringResource {
+			LocalizedStringResource("paywall.button.upgrade", defaultValue: "Upgrade - \(price)")
+		}
+		static let restorePurchases = LocalizedStringResource("paywall.button.restore", defaultValue: "Restore Purchases")
+		static let closeButton = LocalizedStringResource("paywall.button.close", defaultValue: "Close")
+		static let premiumFeatureLabel = LocalizedStringResource("paywall.accessibility.premiumFeature", defaultValue: "Premium feature")
+		static let processingPurchaseLabel = LocalizedStringResource("paywall.accessibility.processing", defaultValue: "Processing purchase")
+		static func upgradeButtonLabel(_ price: String) -> LocalizedStringResource {
+			LocalizedStringResource("paywall.accessibility.upgradeButton", defaultValue: "Upgrade to TrimTally Pro for \(price)")
+		}
+		static let upgradeButtonHint = LocalizedStringResource("paywall.accessibility.upgradeHint", defaultValue: "Activates in-app purchase")
+		static let restoreButtonHint = LocalizedStringResource("paywall.accessibility.restoreHint", defaultValue: "Restores your previous TrimTally Pro purchase")
 	}
 
 	enum Goals {

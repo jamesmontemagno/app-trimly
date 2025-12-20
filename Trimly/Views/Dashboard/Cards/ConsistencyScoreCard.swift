@@ -45,9 +45,9 @@ struct ConsistencyScoreCard: View {
 			.clipShape(RoundedRectangle(cornerRadius: 16))
 		}
 		.buttonStyle(.plain)
-		.accessibilityLabel("Consistency score")
+		.accessibilityLabel(String(localized: L10n.Accessibility.consistencyScore))
 		.accessibilityValue(accessibilityValue)
-		.accessibilityHint("Tap for more information about how consistency is calculated")
+		.accessibilityHint(String(localized: L10n.Accessibility.consistencyScoreHint))
 	}
 	
 	private func consistencyColor(_ score: Double) -> Color {
@@ -88,16 +88,16 @@ func consistencyInfoMessage(dataManager: DataManager) -> Text {
 		let percentage = Int((Double(uniqueDays) / Double(totalDaysInclusive)) * 100)
 		let dateStr = startDate.formatted(date: .long, time: .omitted)
 		
-		return Text("How it's calculated:\n\nDays with entries: \(uniqueDays)\nTotal days since goal start: \(totalDaysInclusive)\nFormula: \(uniqueDays) ÷ \(totalDaysInclusive) = \(percentage)%\n\nGoal start date: \(dateStr)\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits.")
+		return Text(L10n.Dashboard.consistencyInfoWithGoalStart(uniqueDays, totalDaysInclusive, percentage, dateStr))
 	} else {
 		let visibleEntries = dataManager.fetchAllEntries().filter { !$0.isHidden }
 		guard !visibleEntries.isEmpty else {
-			return Text("No entries yet. Start tracking your weight to see your consistency score!")
+			return Text(L10n.Dashboard.consistencyNoEntriesMessage)
 		}
 		
 		let sortedEntries = visibleEntries.sorted { $0.normalizedDate < $1.normalizedDate }
 		guard let firstDate = sortedEntries.first?.normalizedDate else {
-			return Text("No entries yet. Start tracking your weight to see your consistency score!")
+			return Text(L10n.Dashboard.consistencyNoEntriesMessage)
 		}
 		
 		let effectiveStart = firstDate
@@ -107,6 +107,6 @@ func consistencyInfoMessage(dataManager: DataManager) -> Text {
 		let percentage = Int((Double(uniqueDays) / Double(totalDaysInclusive)) * 100)
 		let dateStr = firstDate.formatted(date: .long, time: .omitted)
 		
-		return Text("How it's calculated:\n\nDays with entries: \(uniqueDays)\nTotal days since first entry: \(totalDaysInclusive)\nFormula: \(uniqueDays) ÷ \(totalDaysInclusive) = \(percentage)%\n\nFirst entry date: \(dateStr)\n\nNo active goal - using all available history.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits.")
+		return Text(L10n.Dashboard.consistencyInfoWithFirstEntry(uniqueDays, totalDaysInclusive, percentage, dateStr))
 	}
 }

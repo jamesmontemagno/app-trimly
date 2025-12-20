@@ -43,7 +43,7 @@ struct AnalyticsDashboardView: View {
 				if let change = calculateChange() {
 					FunStatCard(
 						icon: change.value < 0 ? "arrow.down.right.circle.fill" : "arrow.up.right.circle.fill",
-						title: "Total Change",
+						title: String(localized: L10n.Charts.statTotalChange),
 						value: change.text,
 						color: change.value < 0 ? .green : .red
 					)
@@ -62,7 +62,7 @@ struct AnalyticsDashboardView: View {
 				// Check-ins
 				FunStatCard(
 					icon: "checkmark.circle.fill",
-					title: "Check-ins",
+					title: String(localized: L10n.Charts.statCheckIns),
 					value: "\(data.count)",
 					color: .blue
 				)
@@ -74,14 +74,14 @@ struct AnalyticsDashboardView: View {
 					} label: {
 						FunStatCard(
 							icon: "chart.bar.fill",
-							title: "Consistency",
+							title: String(localized: L10n.Charts.statConsistency),
 							value: consistency,
 							color: .indigo
 						)
 					}
 					.buttonStyle(.plain)
-					.alert("Consistency Score", isPresented: $showingConsistencyInfo) {
-						Button("OK", role: .cancel) {}
+					.alert(String(localized: L10n.Charts.consistencyScoreAlertTitle), isPresented: $showingConsistencyInfo) {
+						Button(String(localized: L10n.Common.okButton), role: .cancel) {}
 					} message: {
 						consistencyInfoMessage
 					}
@@ -90,7 +90,7 @@ struct AnalyticsDashboardView: View {
 				// Range Info
 				FunStatCard(
 					icon: "calendar",
-					title: "Timeframe",
+					title: String(localized: L10n.Charts.statTimeframe),
 					value: range.displayName,
 					color: .orange
 				)
@@ -233,14 +233,14 @@ struct AnalyticsDashboardView: View {
 				let percentage = Int((Double(uniqueDays) / Double(totalDaysInclusive)) * 100)
 				let dateStr = startDate.formatted(date: .long, time: .omitted)
 				
-				return Text("How it's calculated:\n\nDays with entries: \(uniqueDays)\nTotal days since goal start: \(totalDaysInclusive)\nFormula: \(uniqueDays) ÷ \(totalDaysInclusive) = \(percentage)%\n\nGoal start: \(dateStr)\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits.")
+				return Text(L10n.Charts.consistencyInfoWithGoal(uniqueDays, totalDaysInclusive, percentage, dateStr))
 			} else {
 				// Goal started before the window - use window limit
 				let effectiveStartDate = calendar.date(byAdding: .day, value: -windowDays + 1, to: today) ?? normalizedStartDate
 				let uniqueDays = Set(entries.filter { $0.normalizedDate >= effectiveStartDate && $0.normalizedDate <= today }.map { $0.normalizedDate }).count
 				let percentage = Int((Double(uniqueDays) / Double(windowDays)) * 100)
 				
-				return Text("How it's calculated:\n\nDays with entries: \(uniqueDays)\nWindow: \(windowDays) days (\(range.displayName.lowercased()))\nFormula: \(uniqueDays) ÷ \(windowDays) = \(percentage)%\n\nGoal started before this window - using \(range.displayName.lowercased()) period.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits.")
+				return Text(L10n.Charts.consistencyInfoGoalBeforeWindow(uniqueDays, windowDays, percentage, range.displayName.lowercased()))
 			}
 		} else {
 			// No goal - use window
@@ -249,7 +249,7 @@ struct AnalyticsDashboardView: View {
 			let uniqueDays = Set(entries.filter { $0.normalizedDate >= effectiveStartDate && $0.normalizedDate <= today }.map { $0.normalizedDate }).count
 			let percentage = Int((Double(uniqueDays) / Double(windowDays)) * 100)
 			
-			return Text("How it's calculated:\n\nDays with entries: \(uniqueDays)\nWindow: \(windowDays) days (\(range.displayName.lowercased()))\nFormula: \(uniqueDays) ÷ \(windowDays) = \(percentage)%\n\nNo active goal - using \(range.displayName.lowercased()) window.\n\nTrack your logging habits over time. Higher consistency helps build sustainable weight management habits.")
+			return Text(L10n.Charts.consistencyInfoWithWindow(uniqueDays, windowDays, percentage, range.displayName.lowercased()))
 		}
 	}
 	

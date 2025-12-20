@@ -73,7 +73,7 @@ struct ChartsView: View {
 						Image(systemName: "plus")
 					}
 					.accessibilityLabel(Text(L10n.Common.addWeight))
-					.accessibilityHint("Opens form to log a new weight")
+					.accessibilityHint(String(localized: L10n.Accessibility.addWeightEntryHint))
 				}
 				#if os(iOS)
 				ToolbarItem(placement: .topBarLeading) {
@@ -83,7 +83,7 @@ struct ChartsView: View {
 						Image(systemName: "slider.horizontal.3")
 					}
 					.accessibilityLabel(Text(L10n.Charts.settingsButton))
-					.accessibilityHint("Opens chart display settings")
+					.accessibilityHint(String(localized: L10n.Accessibility.opensChartSettings))
 				}
 				#else
 				ToolbarItem(placement: .navigation) {
@@ -93,7 +93,7 @@ struct ChartsView: View {
 						Image(systemName: "slider.horizontal.3")
 					}
 					.accessibilityLabel(Text(L10n.Charts.settingsButton))
-					.accessibilityHint("Opens chart display settings")
+					.accessibilityHint(String(localized: L10n.Accessibility.opensChartSettings))
 				}
 				#endif
 			}

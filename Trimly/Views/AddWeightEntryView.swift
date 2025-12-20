@@ -50,8 +50,8 @@ struct AddWeightEntryView: View {
 									}
 									.frame(maxWidth: .infinity, alignment: .leading)
 									.focused($focusedField, equals: .weight)
-									.accessibilityLabel("Weight value")
-									.accessibilityHint("Enter your current weight in \(unitSymbol)")
+									.accessibilityLabel(String(localized: L10n.Accessibility.weightValue))
+									.accessibilityHint(String(localized: L10n.Accessibility.weightValueHint(unitSymbol)))
 
 								Text(unitSymbol)
 									.font(.title2.weight(.semibold))
@@ -78,7 +78,7 @@ struct AddWeightEntryView: View {
 						#if os(iOS)
 							.datePickerStyle(.compact)
 						#endif
-							.accessibilityLabel("Date and time for this weight entry")
+							.accessibilityLabel(String(localized: L10n.Accessibility.dateAndTime))
 					}
 
 						TrimlyCardSection(
@@ -94,8 +94,8 @@ struct AddWeightEntryView: View {
 							.background(inputBackgroundColor)
 							.clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
 							.focused($focusedField, equals: .notes)
-							.accessibilityLabel("Notes")
-							.accessibilityHint("Add optional notes about this weight entry")
+							.accessibilityLabel(String(localized: L10n.Accessibility.notes))
+							.accessibilityHint(String(localized: L10n.Accessibility.notesHint))
 					}
 				}
 				.padding(24)
@@ -121,7 +121,7 @@ struct AddWeightEntryView: View {
 					.buttonStyle(.borderedProminent)
 					.tint(.accentColor)
 					.disabled(weightText.isEmpty)
-					.accessibilityHint("Saves this weight entry to your history")
+					.accessibilityHint(String(localized: L10n.Accessibility.saveEntryHint))
 				}
 #if os(iOS)
 				ToolbarItemGroup(placement: .keyboard) {

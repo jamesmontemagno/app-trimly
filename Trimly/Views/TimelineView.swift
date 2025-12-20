@@ -47,8 +47,8 @@ struct TimelineView: View {
 					} label: {
 						Image(systemName: "plus")
 					}
-					.accessibilityLabel("Add weight entry")
-					.accessibilityHint("Opens form to log a new weight")
+					.accessibilityLabel(String(localized: L10n.Accessibility.addWeightEntry))
+					.accessibilityHint(String(localized: L10n.Accessibility.addWeightEntryHint))
 				}
 			}
 			.sheet(isPresented: $showingAddEntry) {

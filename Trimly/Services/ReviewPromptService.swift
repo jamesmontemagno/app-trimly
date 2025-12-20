@@ -48,12 +48,17 @@ final class ReviewPromptService {
     }
     
     /// Manually request a review (e.g., from Settings)
+    /// Silently handles any exceptions that may occur during the review request
     func requestReview() {
         #if os(iOS)
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-            SKStoreReviewController.requestReview(in: windowScene)
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
+            // No valid window scene available, silently return
+            return
         }
+        // Request review - any exceptions will be handled by the system
+        SKStoreReviewController.requestReview(in: windowScene)
         #elseif os(macOS)
+        // Request review - any exceptions will be handled by the system
         SKStoreReviewController.requestReview()
         #endif
     }

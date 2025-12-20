@@ -13,6 +13,8 @@ import Combine
 final class CelebrationService: ObservableObject {
     
     @Published var currentCelebration: Celebration?
+    private var celebrationQueue: [Celebration] = []
+    private var isProcessingQueue = false
     
     // MARK: - Celebration Types
     
@@ -127,8 +129,7 @@ final class CelebrationService: ObservableObject {
     
     /// Check if any celebrations should be triggered
     func checkForCelebrations(dataManager: DataManager) -> Celebration? {
-        // Don't interrupt current celebration
-        if currentCelebration != nil { return nil }
+        // Allow checking even if celebration is showing - we'll queue it
         
         if let celebration = checkAchievementCelebration(dataManager: dataManager) {
             return celebration
@@ -155,6 +156,44 @@ final class CelebrationService: ObservableObject {
         }
         
         return nil
+    }
+    
+    /// Check for all pending celebrations (useful on app launch)
+    func checkAllCelebrations(dataManager: DataManager) {
+        var celebrations: [Celebration] = []
+        
+        // Check for achievement celebrations
+        while let celebration = checkAchievementCelebration(dataManager: dataManager) {
+            celebrations.append(celebration)
+        }
+        
+        let entries = dataManager.fetchAllEntries()
+        if entries.count >= 2 {
+            // Check for goal celebrations
+            if let celebration = checkGoalCelebration(dataManager: dataManager) {
+                celebrations.append(celebration)
+            }
+            
+            // Check for consistency celebrations
+            if let celebration = checkConsistencyCelebration(dataManager: dataManager) {
+                celebrations.append(celebration)
+            }
+            
+            // Check for streak celebrations
+            if let celebration = checkStreakCelebration(entries: entries) {
+                celebrations.append(celebration)
+            }
+            
+            // Check for entry milestones
+            if let celebration = checkEntriesMilestone(entries: entries) {
+                celebrations.append(celebration)
+            }
+        }
+        
+        // Queue all found celebrations
+        for celebration in celebrations {
+            queueCelebration(celebration)
+        }
     }
     
     // MARK: - Specific Celebration Checks
@@ -338,22 +377,55 @@ final class CelebrationService: ObservableObject {
         return celebration
     }
     
-    /// Show a celebration
+    /// Queue a celebration to be shown
+    private func queueCelebration(_ celebration: Celebration) {
+        celebrationQueue.append(celebration)
+        processQueue()
+    }
+    
+    /// Show a celebration (immediate or queued)
     func showCelebration(_ celebration: Celebration) {
+        queueCelebration(celebration)
+    }
+    
+    /// Process the celebration queue
+    private func processQueue() {
+        // Don't start processing if already processing
+        guard !isProcessingQueue else { return }
+        // Don't start if queue is empty
+        guard !celebrationQueue.isEmpty else { return }
+        // Don't start if currently showing a celebration
+        guard currentCelebration == nil else { return }
+        
+        isProcessingQueue = true
+        showNextCelebration()
+    }
+    
+    /// Show the next celebration in the queue
+    private func showNextCelebration() {
+        guard !celebrationQueue.isEmpty else {
+            isProcessingQueue = false
+            return
+        }
+        
+        let celebration = celebrationQueue.removeFirst()
         currentCelebration = celebration
         
-        // Auto-dismiss after 3 seconds
+        // Auto-dismiss after 3 seconds and show next
         Task {
             try? await Task.sleep(nanoseconds: 3_000_000_000)
             if currentCelebration?.id == celebration.id {
                 currentCelebration = nil
+                // Show next celebration in queue
+                showNextCelebration()
             }
         }
     }
     
-    /// Dismiss current celebration
+    /// Dismiss current celebration and show next in queue
     func dismissCelebration() {
         currentCelebration = nil
+        showNextCelebration()
     }
     
     // MARK: - Persistence

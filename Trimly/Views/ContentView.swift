@@ -109,8 +109,11 @@ struct MainTabView: View {
                     }
             }
         }
+        .onAppear {
+            celebrationService.checkAllCelebrations(dataManager: dataManager)
+        }
         .onChange(of: entryCount) { _, _ in
-            checkForCelebrations()
+            celebrationService.checkAllCelebrations(dataManager: dataManager)
         }
     }
     
@@ -118,12 +121,6 @@ struct MainTabView: View {
     
     private var entryCount: Int {
         dataManager.fetchAllEntries().count
-    }
-    
-    private func checkForCelebrations() {
-        if let celebration = celebrationService.checkForCelebrations(dataManager: dataManager) {
-            celebrationService.showCelebration(celebration)
-        }
     }
 }
 

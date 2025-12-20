@@ -10,6 +10,7 @@ import SwiftUI
 struct AddWeightEntryView: View {
 	@EnvironmentObject var dataManager: DataManager
 	@EnvironmentObject var deviceSettings: DeviceSettingsStore
+	@EnvironmentObject var celebrationService: CelebrationService
 	@StateObject private var healthKitService = HealthKitService()
 	@Environment(\.dismiss) var dismiss
     
@@ -180,6 +181,10 @@ struct AddWeightEntryView: View {
 				unit: unit,
 				notes: notes.isEmpty ? nil : notes
 			)
+			
+			// Check for all celebrations after saving entry
+			celebrationService.checkAllCelebrations(dataManager: dataManager)
+			
 			if deviceSettings.healthKit.writeEnabled {
 				Task {
 					do {
@@ -206,4 +211,5 @@ struct AddWeightEntryView: View {
 	AddWeightEntryView()
 		.environmentObject(DataManager(inMemory: true))
 		.environmentObject(DeviceSettingsStore())
+		.environmentObject(CelebrationService())
 }

@@ -13,6 +13,7 @@ struct TodayWeightCard: View {
 	let todayEntries: [WeightEntry]?
 	let recentlySyncedFromICloud: Bool
 	let recentlySyncedToHealthKit: Bool
+	@ScaledMetric(relativeTo: .largeTitle) private var weightFontSize: CGFloat = 56
 	
 	var body: some View {
 		VStack(spacing: 12) {
@@ -23,7 +24,7 @@ struct TodayWeightCard: View {
 			if let currentWeight {
 				let displayWeight = displayValue(currentWeight)
 				Text(displayWeight)
-					.font(.system(size: 56, weight: .bold, design: .rounded))
+					.font(.system(size: weightFontSize, weight: .bold, design: .rounded))
 					.contentTransition(.numericText())
 				
 				if let todayEntries, !todayEntries.isEmpty {
@@ -57,7 +58,7 @@ struct TodayWeightCard: View {
 				}
 			} else {
 				Text(L10n.Dashboard.placeholder)
-					.font(.system(size: 56, weight: .bold, design: .rounded))
+					.font(.system(size: weightFontSize, weight: .bold, design: .rounded))
 					.foregroundStyle(.secondary)
 				
 				if dataManager.isAwaitingInitialCloudSync {
@@ -75,6 +76,9 @@ struct TodayWeightCard: View {
 		.padding()
 		.background(.thinMaterial)
 		.clipShape(RoundedRectangle(cornerRadius: 16))
+		.accessibilityElement(children: .combine)
+		.accessibilityLabel(accessibilityLabel)
+		.accessibilityValue(accessibilityValue)
 	}
 	
 	private func primaryValueIndicator(entries: [WeightEntry]) -> some View {
@@ -121,5 +125,26 @@ struct TodayWeightCard: View {
 		// Calculate average of available days
 		let sum = last7Days.reduce(0.0) { $0 + $1.weight }
 		return sum / Double(last7Days.count)
+	}
+	
+	private var accessibilityLabel: String {
+		return "Current weight"
+	}
+	
+	private var accessibilityValue: String {
+		if let currentWeight {
+			var value = displayValue(currentWeight)
+			if let sevenDayAvg = calculateSevenDayAverage() {
+				value += ", 7-day average: \(displayValue(sevenDayAvg))"
+			}
+			if recentlySyncedFromICloud {
+				value += ", recently synced from iCloud"
+			}
+			if recentlySyncedToHealthKit {
+				value += ", synced to HealthKit"
+			}
+			return value
+		}
+		return "No weight entries yet"
 	}
 }

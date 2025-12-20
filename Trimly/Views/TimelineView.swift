@@ -47,6 +47,8 @@ struct TimelineView: View {
 					} label: {
 						Image(systemName: "plus")
 					}
+					.accessibilityLabel("Add weight entry")
+					.accessibilityHint("Opens form to log a new weight")
 				}
 			}
 			.sheet(isPresented: $showingAddEntry) {
@@ -145,6 +147,8 @@ struct DayHeader: View {
 					.foregroundStyle(.secondary)
 			}
 		}
+		.accessibilityElement(children: .combine)
+		.accessibilityAddTraits(.isHeader)
 	}
     
 	private var aggregatedWeight: Double? {
@@ -195,11 +199,32 @@ struct EntryRow: View {
 			}
 		}
 		.opacity(entry.isHidden ? 0.5 : 1.0)
+		.accessibilityElement(children: .combine)
+		.accessibilityLabel(accessibilityLabel)
+		.accessibilityValue(accessibilityValue)
 	}
     
 	private var displayValue: String {
 		let value = preferredUnit.convert(fromKg: entry.weightKg)
 		return String(format: "%.*f %@", decimalPrecision, value, preferredUnit.symbol as NSString)
+	}
+	
+	private var accessibilityLabel: String {
+		let timeFormatter = DateFormatter()
+		timeFormatter.timeStyle = .short
+		let time = timeFormatter.string(from: entry.timestamp)
+		var label = "Weight entry: \(displayValue) at \(time)"
+		if entry.source == .healthKit {
+			label += ", from HealthKit"
+		}
+		return label
+	}
+	
+	private var accessibilityValue: String {
+		if let notes = entry.notes, !notes.isEmpty {
+			return "Notes: \(notes)"
+		}
+		return ""
 	}
 }
 

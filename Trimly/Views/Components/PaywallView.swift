@@ -19,6 +19,7 @@ struct PaywallView: View {
                                 Circle()
                                     .fill(Color.yellow.opacity(0.2))
                             )
+                            .accessibilityLabel("Premium feature")
                         
                         Text("Unlock TrimTally Pro")
                             .font(.largeTitle.bold())
@@ -53,6 +54,7 @@ struct PaywallView: View {
                                 HStack {
                                     if storeManager.isPurchasing {
                                         ProgressView()
+                                            .accessibilityLabel("Processing purchase")
                                     }
                                     Text("Upgrade - \(product.displayPrice)")
                                 }
@@ -63,6 +65,8 @@ struct PaywallView: View {
                                 .foregroundStyle(.white)
                                 .clipShape(RoundedRectangle(cornerRadius: 12))
                             }
+                            .accessibilityLabel(storeManager.isPurchasing ? "Processing purchase" : "Upgrade to TrimTally Pro for \(product.displayPrice)")
+                            .accessibilityHint(storeManager.isPurchasing ? "" : "Activates in-app purchase")
                             .padding(.horizontal)
                             .disabled(storeManager.isPurchasing)
                         } else {
@@ -78,6 +82,7 @@ struct PaywallView: View {
                         .font(.footnote)
                         .buttonStyle(.plain)
                         .foregroundStyle(.secondary)
+                        .accessibilityHint("Restores your previous TrimTally Pro purchase")
                     }
                 }
                 .padding(.bottom, 32)
@@ -108,6 +113,7 @@ struct FeatureRow: View {
                 .font(.title2)
                 .foregroundStyle(color)
                 .frame(width: 32)
+                .accessibilityHidden(true)
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
@@ -118,5 +124,7 @@ struct FeatureRow: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(title). \(description)")
     }
 }

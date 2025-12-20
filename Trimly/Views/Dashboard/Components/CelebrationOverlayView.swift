@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CelebrationOverlayView: View {
 	let celebration: CelebrationService.Celebration
+	@Environment(\.accessibilityReduceMotion) private var reduceMotion
 	
 	var body: some View {
 		VStack(spacing: 16) {
@@ -16,11 +17,13 @@ struct CelebrationOverlayView: View {
 				Image(systemName: celebration.iconName)
 					.font(.system(size: 60))
 					.foregroundStyle(.yellow)
-					.symbolEffect(.bounce)
+					.symbolEffect(.bounce, isActive: !reduceMotion)
+					.accessibilityLabel("Achievement unlocked")
 			} else {
 				Image(systemName: celebration.iconName)
 					.font(.system(size: 60))
 					.foregroundStyle(.yellow)
+					.accessibilityLabel("Achievement unlocked")
 			}
 			
 			Text(celebration.message)
@@ -32,5 +35,7 @@ struct CelebrationOverlayView: View {
 		.background(.ultraThinMaterial)
 		.clipShape(RoundedRectangle(cornerRadius: 20))
 		.shadow(radius: 10)
+		.accessibilityElement(children: .combine)
+		.accessibilityLabel("Celebration: \(celebration.message)")
 	}
 }

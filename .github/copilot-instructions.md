@@ -93,6 +93,137 @@ TrimlyTests/          # Unit tests (DataManager, WeightAnalytics, etc.)
 - Core HealthKit import/sync, reminders, celebrations, plateau detection, and widgets are implemented for v1.2; see `docs/FEATURE_IMPLEMENTATION_V1.2.md` for details.
 - Future ideas (not yet implemented) still live in the roadmap section of `docs/DESIGN_DOCUMENT.md` (e.g., Apple Watch app, more widget sizes, Siri Shortcuts, social features).
 
+## Accessibility Requirements
+All UI elements must be accessible to users with disabilities. Follow these guidelines when creating or modifying views:
+
+### VoiceOver Support (Required)
+- **Interactive elements**: Add `.accessibilityLabel()` to all buttons, text fields, pickers, and tappable elements
+  - Example: `Button { ... } label: { Image(systemName: "plus") }.accessibilityLabel("Add weight entry")`
+- **Hints**: Add `.accessibilityHint()` to explain non-obvious actions
+  - Example: `.accessibilityHint("Opens form to log a new weight")`
+- **Values**: Add `.accessibilityValue()` for state-dependent elements (progress bars, scores, toggles)
+  - Example: `.accessibilityValue("\(percentage)%, Excellent consistency")`
+- **Decorative images**: Mark with `.accessibilityHidden(true)` if they provide no information
+  - Example: Decorative icons in feature rows, background images
+- **Complex views**: Use `.accessibilityElement(children: .combine)` to group related content
+  - Example: Entry rows that combine time, weight, and notes into single announcement
+
+### Dynamic Type Support (Required)
+- **Never use fixed font sizes** for user-visible text—use semantic fonts or `@ScaledMetric`
+  - ❌ Bad: `.font(.system(size: 56, weight: .bold))`
+  - ✅ Good: `.font(.largeTitle.bold())` or `@ScaledMetric(relativeTo: .largeTitle) private var size: CGFloat = 56`
+- **Critical displays** (weight values, scores, statistics) must scale with user's text size preferences
+- **Test at largest size**: Settings > Accessibility > Display & Text Size > Larger Text (AX5)
+- **Prefer semantic fonts**: Use `.largeTitle`, `.title`, `.headline`, `.body`, `.caption` over custom sizes
+
+### Reduce Motion Support (Required)
+- **Check before animating**: Add `@Environment(\.accessibilityReduceMotion) private var reduceMotion`
+- **Conditional animations**: Use `reduceMotion ? nil : .easeInOut` for animation parameters
+  - Example: `.animation(reduceMotion ? nil : .easeInOut, value: selectedPoint)`
+- **Symbol effects**: Pass `isActive: !reduceMotion` to conditionally enable
+  - Example: `.symbolEffect(.bounce, isActive: !reduceMotion)`
+- **Transitions**: Prefer simple opacity fades over complex motion when reduce motion is enabled
+- **Test**: Enable Reduce Motion in Settings > Accessibility > Motion and verify animations are simplified/disabled
+
+### Color & Contrast (Required)
+- **Never use color alone** to convey information—add text labels, icons, or patterns
+  - ❌ Bad: Green/red text only for positive/negative trends
+  - ✅ Good: Green text + "↓" symbol or "Decreasing" label
+- **Use system colors**: Prefer `.primary`, `.secondary`, `.accent` over hardcoded colors for better contrast
+- **Check `.secondary` usage**: Ensure readability, especially on `.thinMaterial` backgrounds
+- **Opacity**: Avoid very low opacity (<0.3) for informational content
+- **WCAG AA**: Aim for 4.5:1 contrast ratio for normal text, 3:1 for large text (18pt+)
+
+### Touch Target Sizes (Required)
+- **Minimum 44×44pt**: Ensure all interactive elements meet Apple's minimum tap target size
+- **Use default padding**: SwiftUI buttons have adequate padding by default—avoid removing it
+- **Chart interactions**: Dots and interactive marks should be sufficiently large or have expanded tap areas
+- **Info buttons**: Small icon buttons should have `.frame(minWidth: 44, minHeight: 44)` when needed
+
+### Semantic Structure (Required)
+- **Use semantic views**: Prefer `List`, `Section`, `Label`, `Form` over generic `VStack`/`HStack`
+- **Headers**: Add `.accessibilityAddTraits(.isHeader)` to section titles for better navigation
+- **Navigation**: Ensure logical reading order—VoiceOver should flow naturally top-to-bottom, left-to-right
+- **Grouping**: Related content should be grouped together for screen reader users
+
+### Common Patterns & Examples
+
+**Button with icon only:**
+```swift
+Button {
+    showingAddEntry = true
+} label: {
+    Image(systemName: "plus")
+}
+.accessibilityLabel("Add weight entry")
+.accessibilityHint("Opens form to log a new weight")
+```
+
+**Progress indicator with value:**
+```swift
+ProgressView(value: score)
+    .accessibilityLabel("Consistency score")
+    .accessibilityValue("\(Int(score * 100))%, Excellent")
+```
+
+**Dashboard card with combined accessibility:**
+```swift
+VStack {
+    Text("Current Weight")
+    Text(displayWeight)
+        .font(.largeTitle.bold()) // ✅ Scales with Dynamic Type
+}
+.accessibilityElement(children: .combine)
+.accessibilityLabel("Current weight")
+.accessibilityValue(displayWeight)
+```
+
+**Scalable custom font size:**
+```swift
+struct MyView: View {
+    @ScaledMetric(relativeTo: .largeTitle) private var weightFontSize: CGFloat = 56
+    
+    var body: some View {
+        Text(weight)
+            .font(.system(size: weightFontSize, weight: .bold, design: .rounded))
+    }
+}
+```
+
+**Conditional animation:**
+```swift
+struct MyView: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var isExpanded = false
+    
+    var body: some View {
+        VStack { ... }
+            .animation(reduceMotion ? nil : .spring(), value: isExpanded)
+    }
+}
+```
+
+**Complex row with structured accessibility:**
+```swift
+HStack {
+    Text(displayValue)
+    Spacer()
+    Text(entry.timestamp, style: .time)
+        .foregroundStyle(.secondary)
+}
+.accessibilityElement(children: .combine)
+.accessibilityLabel("Weight entry: \(displayValue) at \(timeString)")
+.accessibilityValue(entry.notes.isEmpty ? "" : "Notes: \(entry.notes)")
+```
+
+### Testing Accessibility
+Before submitting changes that affect UI:
+1. **Enable VoiceOver** and navigate through your view—verify all elements are announced correctly
+2. **Set text size to largest** (AX5) and check for truncation or layout issues
+3. **Enable Reduce Motion** and verify animations are simplified or removed
+4. **Run Accessibility Inspector** (Xcode > Developer Tools) to audit contrast and hierarchy
+5. **Test with color filters** to ensure information isn't conveyed by color alone
+
 ## Code Style
 - Use Swift naming conventions (camelCase for properties/methods)
 - Prefer `guard let` over force unwrapping

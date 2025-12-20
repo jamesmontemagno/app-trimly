@@ -21,6 +21,7 @@ struct AddWeightEntryView: View {
 	@State private var errorMessage = ""
 	@State private var showHealthKitSuccess = false
 	@FocusState private var focusedField: Field?
+	@ScaledMetric(relativeTo: .largeTitle) private var weightFontSize: CGFloat = 46
 
 	private enum Field: Hashable {
 		case weight
@@ -43,16 +44,19 @@ struct AddWeightEntryView: View {
 								#if os(iOS)
 									.keyboardType(.decimalPad)
 								#endif
-									.font(.system(size: 46, weight: .bold, design: .rounded))
+									.font(.system(size: weightFontSize, weight: .bold, design: .rounded))
 									.task {
 										focusedField = .weight
 									}
 									.frame(maxWidth: .infinity, alignment: .leading)
 									.focused($focusedField, equals: .weight)
+									.accessibilityLabel("Weight value")
+									.accessibilityHint("Enter your current weight in \(unitSymbol)")
 
 								Text(unitSymbol)
 									.font(.title2.weight(.semibold))
 									.foregroundStyle(.secondary)
+									.accessibilityHidden(true)
 							}
 							.padding(.vertical, 6)
 							.padding(.horizontal, 12)
@@ -74,6 +78,7 @@ struct AddWeightEntryView: View {
 						#if os(iOS)
 							.datePickerStyle(.compact)
 						#endif
+							.accessibilityLabel("Date and time for this weight entry")
 					}
 
 						TrimlyCardSection(
@@ -89,6 +94,8 @@ struct AddWeightEntryView: View {
 							.background(inputBackgroundColor)
 							.clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
 							.focused($focusedField, equals: .notes)
+							.accessibilityLabel("Notes")
+							.accessibilityHint("Add optional notes about this weight entry")
 					}
 				}
 				.padding(24)
@@ -114,6 +121,7 @@ struct AddWeightEntryView: View {
 					.buttonStyle(.borderedProminent)
 					.tint(.accentColor)
 					.disabled(weightText.isEmpty)
+					.accessibilityHint("Saves this weight entry to your history")
 				}
 #if os(iOS)
 				ToolbarItemGroup(placement: .keyboard) {

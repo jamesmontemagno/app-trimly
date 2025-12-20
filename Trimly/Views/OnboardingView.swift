@@ -18,6 +18,7 @@ struct OnboardingView: View {
     @State private var showInitialCloudSyncSuccess = false
     @State private var hasWaitedForInitialCloudSync = false
     @State private var didScheduleInitialCloudSyncWait = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private let onboardingSteps: [(title: LocalizedStringResource, symbol: String)] = [
         (L10n.Onboarding.stepWelcome, "figure.arms.open"),
@@ -72,7 +73,7 @@ struct OnboardingView: View {
                 }
             }
             .transition(.opacity)
-            .animation(.easeInOut, value: currentPage)
+            .animation(reduceMotion ? nil : .easeInOut, value: currentPage)
             #endif
 
             pageIndicator

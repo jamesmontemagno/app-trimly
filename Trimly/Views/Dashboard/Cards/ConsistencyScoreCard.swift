@@ -11,6 +11,7 @@ struct ConsistencyScoreCard: View {
 	@EnvironmentObject var dataManager: DataManager
 	@Binding var showingInfo: Bool
 	let score: Double?
+	@ScaledMetric(relativeTo: .title) private var scoreFontSize: CGFloat = 36
 	
 	var body: some View {
 		Button {
@@ -30,7 +31,7 @@ struct ConsistencyScoreCard: View {
 				if let score {
 					let percentage = Int(score * 100)
 					Text("\(percentage)%")
-						.font(.system(size: 36, weight: .bold, design: .rounded))
+						.font(.system(size: scoreFontSize, weight: .bold, design: .rounded))
 						.foregroundStyle(consistencyColor(score))
 					
 					Text(consistencyLabel(score))
@@ -44,6 +45,9 @@ struct ConsistencyScoreCard: View {
 			.clipShape(RoundedRectangle(cornerRadius: 16))
 		}
 		.buttonStyle(.plain)
+		.accessibilityLabel("Consistency score")
+		.accessibilityValue(accessibilityValue)
+		.accessibilityHint("Tap for more information about how consistency is calculated")
 	}
 	
 	private func consistencyColor(_ score: Double) -> Color {
@@ -58,6 +62,15 @@ struct ConsistencyScoreCard: View {
 		if score >= 0.70 { return String(localized: L10n.Dashboard.consistencyConsistent) }
 		if score >= 0.50 { return String(localized: L10n.Dashboard.consistencyModerate) }
 		return String(localized: L10n.Dashboard.consistencyBuilding)
+	}
+	
+	private var accessibilityValue: String {
+		if let score {
+			let percentage = Int(score * 100)
+			let label = consistencyLabel(score)
+			return "\(percentage)%, \(label)"
+		}
+		return "No data available"
 	}
 }
 

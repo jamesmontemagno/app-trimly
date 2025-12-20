@@ -56,6 +56,7 @@ struct AchievementsView: View {
 						Image(systemName: "plus")
 					}
 					.accessibilityLabel(Text(L10n.Common.addWeight))
+					.accessibilityHint("Opens form to log a new weight")
 				}
 				#if os(iOS)
 				ToolbarItem(placement: .topBarLeading) {
@@ -63,6 +64,7 @@ struct AchievementsView: View {
 						Image(systemName: "arrow.clockwise")
 					}
 					.accessibilityLabel(Text(L10n.Common.refresh))
+					.accessibilityHint("Recalculates achievement progress")
 				}
 				#else
 				ToolbarItem(placement: .navigation) {
@@ -70,6 +72,7 @@ struct AchievementsView: View {
 						Image(systemName: "arrow.clockwise")
 					}
 					.accessibilityLabel(Text(L10n.Common.refresh))
+					.accessibilityHint("Recalculates achievement progress")
 				}
 				#endif
 			}
@@ -129,6 +132,7 @@ struct AchievementsView: View {
 					.symbolRenderingMode(.hierarchical)
 					.foregroundStyle(.yellow)
 			}
+			.accessibilityHidden(true)
 			
 			VStack(alignment: .leading, spacing: 4) {
 				Text(L10n.Achievements.unlockedProgress(unlockedCount, totalCount))
@@ -148,12 +152,16 @@ struct AchievementsView: View {
 		.frame(maxWidth: .infinity, alignment: .leading)
 		.background(.thinMaterial)
 		.clipShape(RoundedRectangle(cornerRadius: 16))
+		.accessibilityElement(children: .combine)
+		.accessibilityLabel("Achievement progress")
+		.accessibilityValue("\(unlockedCount) of \(totalCount) achievements unlocked")
 	}
 	
 	private var premiumUpsellHint: some View {
 		HStack(alignment: .top, spacing: 12) {
 			Image(systemName: "star.fill")
 				.foregroundStyle(.yellow)
+				.accessibilityHidden(true)
 			Text(L10n.Achievements.sectionPremiumHint)
 				.font(.callout)
 				.foregroundStyle(.secondary)
@@ -166,6 +174,8 @@ struct AchievementsView: View {
 		.onTapGesture {
 			showingPaywall = true
 		}
+		.accessibilityElement(children: .combine)
+		.accessibilityHint("Opens TrimTally Pro upgrade page")
 	}
 	
 	private func refresh() {
@@ -187,6 +197,7 @@ private struct AchievementCard: View {
 				} icon: {
 					Image(systemName: snapshot.descriptor.iconName)
 						.symbolRenderingMode(.hierarchical)
+						.accessibilityHidden(true)
 				}
 				Spacer()
 				badgeStack
@@ -242,8 +253,13 @@ private struct AchievementCard: View {
 					.symbolRenderingMode(.palette)
 					.foregroundStyle(.orange, .yellow)
 					.padding(8)
+					.accessibilityLabel("Unlocked")
 			}
 		}
+		.accessibilityElement(children: .combine)
+		.accessibilityLabel(accessibilityLabel)
+		.accessibilityValue(accessibilityValue)
+		.accessibilityHint(accessibilityHint)
 	}
 	
 	private var badgeStack: some View {
@@ -262,6 +278,45 @@ private struct AchievementCard: View {
 	private var progressDisplay: String {
 		let percent = Int(snapshot.progressValue * 100)
 		return "\(percent)%"
+	}
+	
+	private var accessibilityLabel: String {
+		var label = "Achievement: \(snapshot.descriptor.title)"
+		if snapshot.isUnlocked {
+			label += ", unlocked"
+		} else {
+			label += ", locked"
+		}
+		if snapshot.descriptor.isPremium {
+			label += ", premium"
+		}
+		return label
+	}
+	
+	private var accessibilityValue: String {
+		if snapshot.requiresPro {
+			return "Requires TrimTally Pro to unlock"
+		}
+		if snapshot.isUnlocked {
+			if let unlockedDate = snapshot.model.unlockedAt {
+				let formatter = DateFormatter()
+				formatter.dateStyle = .medium
+				return "Unlocked on \(formatter.string(from: unlockedDate))"
+			}
+			return "Unlocked"
+		}
+		return "Progress: \(progressDisplay)"
+	}
+	
+	private var accessibilityHint: String {
+		if snapshot.requiresPro {
+			return "Tap to upgrade to TrimTally Pro"
+		}
+		#if DEBUG
+		return "Tap to view diagnostic details"
+		#else
+		return ""
+		#endif
 	}
 	
 	/// Provides detailed progress text based on achievement type and current status

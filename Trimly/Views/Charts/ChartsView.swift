@@ -27,6 +27,7 @@ struct ChartsView: View {
 	@State private var chartCache: [ChartRange: [ChartDataPoint]] = [:]
 	@State private var movingAverageCache: [ChartRange: [ChartDataPoint]] = [:]
 	@State private var emaCache: [ChartRange: [ChartDataPoint]] = [:]
+	@Environment(\.accessibilityReduceMotion) private var reduceMotion
 	private let minimumHighlightBandWidth: CGFloat = 24 // Keep the selection band visible on tight plots.
 	private let highlightBandWidthPercentage: CGFloat = 0.015 // Scale the selection band with the plot width.
 
@@ -72,6 +73,7 @@ struct ChartsView: View {
 						Image(systemName: "plus")
 					}
 					.accessibilityLabel(Text(L10n.Common.addWeight))
+					.accessibilityHint("Opens form to log a new weight")
 				}
 				#if os(iOS)
 				ToolbarItem(placement: .topBarLeading) {
@@ -81,6 +83,7 @@ struct ChartsView: View {
 						Image(systemName: "slider.horizontal.3")
 					}
 					.accessibilityLabel(Text(L10n.Charts.settingsButton))
+					.accessibilityHint("Opens chart display settings")
 				}
 				#else
 				ToolbarItem(placement: .navigation) {
@@ -90,6 +93,7 @@ struct ChartsView: View {
 						Image(systemName: "slider.horizontal.3")
 					}
 					.accessibilityLabel(Text(L10n.Charts.settingsButton))
+					.accessibilityHint("Opens chart display settings")
 				}
 				#endif
 			}
@@ -127,7 +131,7 @@ struct ChartsView: View {
 					selectionHintView
 				}
 			}
-			.animation(.easeInOut, value: selectedPoint?.id)
+			.animation(reduceMotion ? nil : .easeInOut, value: selectedPoint?.id)
 
 			Chart {
 				weightSeriesMarks(data: data)

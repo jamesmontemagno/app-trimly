@@ -34,6 +34,9 @@ struct ContentView: View {
 // MARK: - Main Tab View
 
 struct MainTabView: View {
+    @EnvironmentObject var dataManager: DataManager
+    @StateObject private var celebrationService = CelebrationService()
+    
     enum Tab: Hashable {
         case dashboard
         case timeline
@@ -55,7 +58,7 @@ struct MainTabView: View {
                     }
                 }
                 .tag(Tab.dashboard)
-			
+		
             TimelineView()
                 .tabItem {
                     Label {
@@ -65,7 +68,7 @@ struct MainTabView: View {
                     }
                 }
                 .tag(Tab.timeline)
-			
+		
             ChartsView()
                 .tabItem {
                     Label {
@@ -85,7 +88,7 @@ struct MainTabView: View {
                     }
                 }
                 .tag(Tab.achievements)
-			
+		
             SettingsView()
                 .tabItem {
                     Label {
@@ -95,6 +98,31 @@ struct MainTabView: View {
                     }
                 }
                 .tag(Tab.settings)
+        }
+        .environmentObject(celebrationService)
+        .overlay {
+            if let celebration = celebrationService.currentCelebration {
+                CelebrationOverlayView(celebration: celebration)
+                    .transition(.scale.combined(with: .opacity))
+                    .onTapGesture {
+                        celebrationService.dismissCelebration()
+                    }
+            }
+        }
+        .onChange(of: entryCount) { _, _ in
+            checkForCelebrations()
+        }
+    }
+    
+    // MARK: - Helpers
+    
+    private var entryCount: Int {
+        dataManager.fetchAllEntries().count
+    }
+    
+    private func checkForCelebrations() {
+        if let celebration = celebrationService.checkForCelebrations(dataManager: dataManager) {
+            celebrationService.showCelebration(celebration)
         }
     }
 }

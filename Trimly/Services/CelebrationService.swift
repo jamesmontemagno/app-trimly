@@ -205,17 +205,22 @@ final class CelebrationService: ObservableObject {
         
         let progress = abs(currentChange / totalChange)
         
-        // Check milestones
+        // Check milestones from highest to lowest to show the highest achieved milestone first
         let milestones: [(threshold: Double, type: CelebrationType)] = [
-            (0.25, .goal25Percent),
-            (0.50, .goal50Percent),
+            (1.00, .goal100Percent),
             (0.75, .goal75Percent),
-            (1.00, .goal100Percent)
+            (0.50, .goal50Percent),
+            (0.25, .goal25Percent)
         ]
         
         for milestone in milestones {
             if progress >= milestone.threshold && !hasShown(milestone.type) {
-                return createCelebration(type: milestone.type)
+                // Mark all lower milestones as shown to avoid out-of-order celebrations
+                let celebration = createCelebration(type: milestone.type)
+                milestones
+                    .filter { $0.threshold < milestone.threshold }
+                    .forEach { markAsShown($0.type) }
+                return celebration
             }
         }
         

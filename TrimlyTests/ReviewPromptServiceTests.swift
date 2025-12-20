@@ -13,17 +13,24 @@ final class ReviewPromptServiceTests: XCTestCase {
         XCTAssertFalse(service.hasPromptedForReview)
         
         // Increment a few times (below threshold)
-        for _ in 0..<5 {
+        for i in 1...5 {
             let prompted = service.incrementEntryCountAndPromptIfNeeded()
-            XCTAssertFalse(prompted, "Should not prompt before threshold")
+            XCTAssertFalse(prompted, "Should not prompt at entry \(i)")
         }
         XCTAssertEqual(service.currentEntryCount, 5)
         XCTAssertFalse(service.hasPromptedForReview)
         
-        // Increment to threshold (10 entries)
-        for _ in 5..<10 {
-            _ = service.incrementEntryCountAndPromptIfNeeded()
+        // Increment to just before threshold
+        for i in 6...9 {
+            let prompted = service.incrementEntryCountAndPromptIfNeeded()
+            XCTAssertFalse(prompted, "Should not prompt at entry \(i)")
         }
+        XCTAssertEqual(service.currentEntryCount, 9)
+        XCTAssertFalse(service.hasPromptedForReview)
+        
+        // Increment to threshold (10th entry) - should prompt
+        let promptedAt10 = service.incrementEntryCountAndPromptIfNeeded()
+        XCTAssertTrue(promptedAt10, "Should prompt at 10th entry")
         XCTAssertEqual(service.currentEntryCount, 10)
         XCTAssertTrue(service.hasPromptedForReview, "Should have prompted at 10 entries")
         

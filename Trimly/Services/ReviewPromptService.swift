@@ -15,10 +15,13 @@ import UIKit
 @MainActor
 final class ReviewPromptService {
     private let deviceSettings: DeviceSettingsStore
-    private let entryThreshold = 10
+    /// The number of manual entries required before prompting for review
+    static let defaultEntryThreshold = 10
+    private let entryThreshold: Int
     
-    init(deviceSettings: DeviceSettingsStore) {
+    init(deviceSettings: DeviceSettingsStore, entryThreshold: Int = defaultEntryThreshold) {
         self.deviceSettings = deviceSettings
+        self.entryThreshold = entryThreshold
     }
     
     /// Increments the entry count and checks if we should prompt for review

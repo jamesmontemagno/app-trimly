@@ -109,7 +109,7 @@ const LandingPage = ({ resolvedTheme, onLearnMore }: LandingPageProps) => {
               <span className="hero-highlight-pill">Optional iCloud backup</span>
             </div>
             <div className="hero-buttons">
-              <a href="#" className="btn btn-primary">
+              <a href="https://apps.apple.com/us/app/trimtally/id6755896878" className="btn btn-primary" target="_blank" rel="noopener noreferrer">
                 <Download size={20} />
                 Download on App Store
               </a>

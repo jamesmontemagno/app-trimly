@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { HashRouter as Router, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom'
-import { Sun, Moon, Monitor } from 'lucide-react'
+import { Sun, Moon, Monitor, Download } from 'lucide-react'
 import './App.css'
 import LandingPage from './pages/LandingPage'
 import PrivacyPage from './pages/Privacy'
@@ -46,6 +46,10 @@ const AppShell = ({ theme, setTheme, resolvedTheme }: AppShellProps) => {
           </div>
           <nav className="nav">
             <button type="button" onClick={scrollToFeatures}>Features</button>
+            <a href="https://apps.apple.com/us/app/trimtally/id6755896878" className="btn btn-primary btn-sm" target="_blank" rel="noopener noreferrer">
+              <Download size={16} />
+              Download
+            </a>
             <div className="theme-toggle">
               <button 
                 className={`theme-btn ${theme === 'light' ? 'active' : ''}`} 

@@ -89,11 +89,12 @@ button {
 
 .btn-primary {
   background-color: var(--primary);
-  color: white;
+  color: white !important;
 }
 
 .btn-primary:hover {
   background-color: var(--primary-dark);
+  color: white !important;
   transform: translateY(-1px);
 }
 

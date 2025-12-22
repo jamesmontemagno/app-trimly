@@ -64,6 +64,14 @@
   color: var(--primary);
 }
 
+.nav .btn-primary {
+  color: white !important;
+}
+
+.nav .btn-primary:hover {
+  color: white !important;
+}
+
 .theme-toggle {
   display: flex;
   background-color: var(--surface);

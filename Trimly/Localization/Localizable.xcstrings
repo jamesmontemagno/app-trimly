@@ -119,18 +119,18 @@
         }
       }
     },
-    "1.0.0" : {
+    "1.1.0" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "1.0.0"
+            "value" : "1.1.0"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "1.0.0"
+            "value" : "1.1.0"
           }
         }
       }
@@ -11519,5 +11519,5 @@
       }
     }
   },
-  "version" : "1.0"
+  "version" : "1."
 }

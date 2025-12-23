@@ -10,7 +10,7 @@
 /// This module contains all the core functionality for the TrimTally app,
 /// including data models, analytics, and views.
 public struct Trimly {
-    public static let version = "1.0.0"
+    public static let version = "1.1.0"
     
     public init() {}
 }

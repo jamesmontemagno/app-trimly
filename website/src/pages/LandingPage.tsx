@@ -85,6 +85,18 @@ const itemVariants = {
   }
 }
 
+// Helper function to get descriptive alt text for screenshots
+const getScreenshotAlt = (screenName: string): string => {
+  const descriptions: Record<string, string> = {
+    'dashboard': 'weight tracking overview',
+    'analytics': 'detailed charts and trends',
+    'add-entry': 'weight entry form'
+  }
+  const displayName = screenName.replace('-', ' ')
+  const description = descriptions[screenName] || displayName
+  return `TrimTally ${displayName} screen showing ${description}`
+}
+
 const LandingPage = ({ resolvedTheme, onLearnMore }: LandingPageProps) => {
   return (
     <>
@@ -172,7 +184,7 @@ const LandingPage = ({ resolvedTheme, onLearnMore }: LandingPageProps) => {
                 <img
                   key={`${name}-${resolvedTheme}`}
                   src={`${import.meta.env.BASE_URL}screenshots/${resolvedTheme}/${name}.png`}
-                  alt={`TrimTally ${name.replace('-', ' ')} screen showing ${name === 'dashboard' ? 'weight tracking overview' : name === 'analytics' ? 'detailed charts and trends' : 'weight entry form'}`}
+                  alt={getScreenshotAlt(name)}
                   loading="lazy"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none'

@@ -90,8 +90,20 @@ Primary schema for the app listing:
 **Update when:**
 - App version changes
 - New features are added
-- Rating/review count changes
+- Rating/review count changes (add aggregateRating when you have genuine reviews)
 - Pricing model changes
+
+**Note on Ratings:**
+The aggregateRating field has been intentionally omitted until genuine user reviews are available. When you accumulate real App Store reviews, add the aggregateRating object:
+```json
+"aggregateRating": {
+  "@type": "AggregateRating",
+  "ratingValue": "4.8",
+  "bestRating": "5",
+  "ratingCount": "150"
+}
+```
+Only include ratings with a meaningful number of reviews (at least 10+) to maintain credibility with search engines.
 
 ### 2. WebSite Schema
 

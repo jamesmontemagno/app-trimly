@@ -1,4 +1,57 @@
-# React + TypeScript + Vite
+# TrimTally Website
+
+Marketing website for TrimTally - a private weight tracking app for iOS and macOS.
+
+## Tech Stack
+
+- **Framework:** React 19 + TypeScript
+- **Build Tool:** Vite
+- **Styling:** Custom CSS with theme support
+- **Routing:** React Router (Hash routing for GitHub Pages)
+- **Animations:** Framer Motion
+- **Icons:** Lucide React
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start dev server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+
+# Lint code
+npm run lint
+```
+
+## SEO Optimization
+
+This website has been fully optimized for search engines. See [SEO_GUIDE.md](./SEO_GUIDE.md) for details on:
+- Meta tags and structured data
+- robots.txt and sitemap.xml configuration
+- Semantic HTML and accessibility
+- Performance optimization
+- Content strategy and maintenance
+
+### Key SEO Files
+
+- `index.html` - Meta tags, Open Graph, Twitter Cards, Schema.org structured data
+- `public/robots.txt` - Search engine crawling directives
+- `public/sitemap.xml` - Site structure for search engines
+- `public/humans.txt` - Team and technology credits
+
+## Deployment
+
+The site is deployed to GitHub Pages automatically. The production URL is:
+https://jamesmontemagno.github.io/app-trimly/
+
+## React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

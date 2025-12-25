@@ -38,46 +38,58 @@ const AppShell = ({ theme, setTheme, resolvedTheme }: AppShellProps) => {
 
   return (
     <div className="app">
-      <header className="header">
+      <header className="header" role="banner">
         <div className="container header-content">
           <div className="logo">
-            <img src={`${import.meta.env.BASE_URL}app-icon.svg`} className="logo-icon" alt="TrimTally Logo" />
+            <img src={`${import.meta.env.BASE_URL}app-icon.svg`} className="logo-icon" alt="TrimTally Logo" width="32" height="32" />
             <span className="logo-text">TrimTally</span>
           </div>
-          <nav className="nav">
-            <button type="button" onClick={scrollToFeatures}>Features</button>
-            <a href="https://apps.apple.com/us/app/trimtally/id6755896878" className="btn btn-primary btn-sm" target="_blank" rel="noopener noreferrer">
-              <Download size={16} />
+          <nav className="nav" role="navigation" aria-label="Main navigation">
+            <button type="button" onClick={scrollToFeatures} aria-label="Navigate to features section">Features</button>
+            <a 
+              href="https://apps.apple.com/us/app/trimtally/id6755896878" 
+              className="btn btn-primary btn-sm" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              aria-label="Download TrimTally from the App Store"
+            >
+              <Download size={16} aria-hidden="true" />
               Download
             </a>
-            <div className="theme-toggle">
+            <div className="theme-toggle" role="group" aria-label="Theme selection">
               <button 
                 className={`theme-btn ${theme === 'light' ? 'active' : ''}`} 
                 onClick={() => setTheme('light')}
                 title="Light Mode"
+                aria-label="Switch to light theme"
+                aria-pressed={theme === 'light'}
               >
-                <Sun size={18} />
+                <Sun size={18} aria-hidden="true" />
               </button>
               <button 
                 className={`theme-btn ${theme === 'dark' ? 'active' : ''}`} 
                 onClick={() => setTheme('dark')}
                 title="Dark Mode"
+                aria-label="Switch to dark theme"
+                aria-pressed={theme === 'dark'}
               >
-                <Moon size={18} />
+                <Moon size={18} aria-hidden="true" />
               </button>
               <button 
                 className={`theme-btn ${theme === 'system' ? 'active' : ''}`} 
                 onClick={() => setTheme('system')}
                 title="System Default"
+                aria-label="Use system theme"
+                aria-pressed={theme === 'system'}
               >
-                <Monitor size={18} />
+                <Monitor size={18} aria-hidden="true" />
               </button>
             </div>
           </nav>
         </div>
       </header>
 
-      <main>
+      <main role="main">
         <Routes>
           <Route path="/" element={<LandingPage resolvedTheme={resolvedTheme} onLearnMore={scrollToFeatures} />} />
           <Route path="/privacy" element={<PrivacyPage />} />
@@ -85,21 +97,21 @@ const AppShell = ({ theme, setTheme, resolvedTheme }: AppShellProps) => {
         </Routes>
       </main>
 
-      <footer className="footer">
+      <footer className="footer" role="contentinfo">
         <div className="container">
           <div className="footer-content">
             <div className="footer-brand">
               <div className="logo">
-                <img src={`${import.meta.env.BASE_URL}app-icon.svg`} className="logo-icon-sm" alt="TrimTally Logo" />
+                <img src={`${import.meta.env.BASE_URL}app-icon.svg`} className="logo-icon-sm" alt="TrimTally Logo" width="24" height="24" />
                 <span>TrimTally</span>
               </div>
               <p>© {new Date().getFullYear()} Refractored. All rights reserved.</p>
             </div>
-            <div className="footer-links">
+            <nav className="footer-links" aria-label="Footer navigation">
               <Link to="/terms">Terms of Service</Link>
               <Link to="/privacy">Privacy Policy</Link>
               <a href="https://github.com/jamesmontemagno/app-trimly" target="_blank" rel="noopener noreferrer">GitHub</a>
-            </div>
+            </nav>
           </div>
         </div>
       </footer>

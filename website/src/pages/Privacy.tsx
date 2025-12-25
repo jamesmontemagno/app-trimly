@@ -1,6 +1,6 @@
 const PrivacyPage = () => {
   return (
-    <section className="section">
+    <article className="section">
       <div className="container legal-page">
         <h1>Privacy Policy</h1>
         <p className="legal-meta">Last updated: December 18, 2025</p>
@@ -83,7 +83,7 @@ const PrivacyPage = () => {
           <a href="mailto:refractoredllc@gmail.com">refractoredllc@gmail.com</a>.
         </p>
       </div>
-    </section>
+    </article>
   )
 }
 

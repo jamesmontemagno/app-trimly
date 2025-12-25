@@ -1,0 +1,17 @@
+/* TEAM */
+Developer: James Montemagno
+Site: https://github.com/jamesmontemagno
+Twitter: @JamesMontemagno
+Location: USA
+
+/* THANKS */
+Thanks to all contributors and the open-source community
+
+/* SITE */
+Last update: 2024/12/25
+Language: English / Español / Français
+Standards: HTML5, CSS3, JavaScript, React
+Components: React, TypeScript, Vite, Tailwind CSS, Framer Motion
+Software: Visual Studio Code, Xcode
+Frameworks: SwiftUI, SwiftData
+Platform: iOS 17+, macOS 14+

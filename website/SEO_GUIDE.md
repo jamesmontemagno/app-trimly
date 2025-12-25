@@ -368,5 +368,5 @@ Consider adding:
 
 ---
 
-**Last Updated:** December 25, 2024
+**Last Updated:** December 25, 2025
 **Maintained By:** TrimTally Development Team

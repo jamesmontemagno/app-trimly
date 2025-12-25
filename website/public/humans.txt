@@ -8,7 +8,7 @@ Location: USA
 Thanks to all contributors and the open-source community
 
 /* SITE */
-Last update: 2024/12/25
+Last update: 2025/12/25
 Language: English / Español / Français
 Standards: HTML5, CSS3, JavaScript, React
 Components: React, TypeScript, Vite, Tailwind CSS, Framer Motion

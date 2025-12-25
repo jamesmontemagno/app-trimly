@@ -6,7 +6,7 @@
   <!-- Main landing page -->
   <url>
     <loc>https://jamesmontemagno.github.io/app-trimly/</loc>
-    <lastmod>2024-12-25</lastmod>
+    <lastmod>2025-12-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <mobile:mobile/>
@@ -35,7 +35,7 @@
   <!-- Privacy Policy -->
   <url>
     <loc>https://jamesmontemagno.github.io/app-trimly/#/privacy</loc>
-    <lastmod>2024-12-25</lastmod>
+    <lastmod>2025-12-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -43,7 +43,7 @@
   <!-- Terms of Service -->
   <url>
     <loc>https://jamesmontemagno.github.io/app-trimly/#/terms</loc>
-    <lastmod>2024-12-25</lastmod>
+    <lastmod>2025-12-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

@@ -1,6 +1,6 @@
 const TermsPage = () => {
   return (
-    <section className="section">
+    <article className="section">
       <div className="container legal-page">
         <h1>Terms of Service</h1>
         <p className="legal-meta">Last updated: December 18, 2025</p>
@@ -73,7 +73,7 @@ const TermsPage = () => {
           <a href="mailto:refractoredllc@gmail.com">refractoredllc@gmail.com</a>.
         </p>
       </div>
-    </section>
+    </article>
   )
 }
 

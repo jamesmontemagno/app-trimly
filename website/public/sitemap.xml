@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0">
+  
+  <!-- Main landing page -->
+  <url>
+    <loc>https://jamesmontemagno.github.io/app-trimly/</loc>
+    <lastmod>2025-12-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <mobile:mobile/>
+    <image:image>
+      <image:loc>https://jamesmontemagno.github.io/app-trimly/app-icon.png</image:loc>
+      <image:title>TrimTally App Icon</image:title>
+      <image:caption>TrimTally - Private Weight Tracking App</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://jamesmontemagno.github.io/app-trimly/screenshots/light/dashboard.png</image:loc>
+      <image:title>TrimTally Dashboard</image:title>
+      <image:caption>TrimTally app dashboard showing weight tracking features</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://jamesmontemagno.github.io/app-trimly/screenshots/light/analytics.png</image:loc>
+      <image:title>TrimTally Analytics</image:title>
+      <image:caption>TrimTally advanced analytics and charts</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://jamesmontemagno.github.io/app-trimly/screenshots/light/add-entry.png</image:loc>
+      <image:title>TrimTally Add Entry</image:title>
+      <image:caption>Add weight entry in TrimTally app</image:caption>
+    </image:image>
+  </url>
+  
+  <!-- Privacy Policy -->
+  <url>
+    <loc>https://jamesmontemagno.github.io/app-trimly/#/privacy</loc>
+    <lastmod>2025-12-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <!-- Terms of Service -->
+  <url>
+    <loc>https://jamesmontemagno.github.io/app-trimly/#/terms</loc>
+    <lastmod>2025-12-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+</urlset>

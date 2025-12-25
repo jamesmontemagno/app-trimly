@@ -1,0 +1,22 @@
+# robots.txt for TrimTally Website
+# https://jamesmontemagno.github.io/app-trimly/
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://jamesmontemagno.github.io/app-trimly/sitemap.xml
+
+# Disallow common paths
+Disallow: /node_modules/
+Disallow: /src/
+Disallow: /.git/
+Disallow: /.github/
+
+# Allow all crawlers to index the main pages
+Allow: /index.html
+Allow: /privacy
+Allow: /terms
+
+# Crawl-delay (optional, but polite to crawlers)
+Crawl-delay: 1

@@ -48,8 +48,8 @@ This website has been fully optimized for search engines. See [SEO_GUIDE.md](./S
 
 ## Deployment
 
-The site is deployed to GitHub Pages automatically. The production URL is:
-https://jamesmontemagno.github.io/app-trimly/
+The site is deployed to a custom domain. The production URL is:
+https://trimtally.app
 
 ## React + TypeScript + Vite
 

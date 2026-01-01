@@ -5,28 +5,28 @@
   
   <!-- Main landing page -->
   <url>
-    <loc>https://jamesmontemagno.github.io/app-trimly/</loc>
+    <loc>https://trimtally.app/</loc>
     <lastmod>2025-12-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <mobile:mobile/>
     <image:image>
-      <image:loc>https://jamesmontemagno.github.io/app-trimly/app-icon.png</image:loc>
+      <image:loc>https://trimtally.app/app-icon.png</image:loc>
       <image:title>TrimTally App Icon</image:title>
       <image:caption>TrimTally - Private Weight Tracking App</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://jamesmontemagno.github.io/app-trimly/screenshots/light/dashboard.png</image:loc>
+      <image:loc>https://trimtally.app/screenshots/light/dashboard.png</image:loc>
       <image:title>TrimTally Dashboard</image:title>
       <image:caption>TrimTally app dashboard showing weight tracking features</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://jamesmontemagno.github.io/app-trimly/screenshots/light/analytics.png</image:loc>
+      <image:loc>https://trimtally.app/screenshots/light/analytics.png</image:loc>
       <image:title>TrimTally Analytics</image:title>
       <image:caption>TrimTally advanced analytics and charts</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://jamesmontemagno.github.io/app-trimly/screenshots/light/add-entry.png</image:loc>
+      <image:loc>https://trimtally.app/screenshots/light/add-entry.png</image:loc>
       <image:title>TrimTally Add Entry</image:title>
       <image:caption>Add weight entry in TrimTally app</image:caption>
     </image:image>
@@ -34,7 +34,7 @@
   
   <!-- Privacy Policy -->
   <url>
-    <loc>https://jamesmontemagno.github.io/app-trimly/#/privacy</loc>
+    <loc>https://trimtally.app/#/privacy</loc>
     <lastmod>2025-12-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -42,7 +42,7 @@
   
   <!-- Terms of Service -->
   <url>
-    <loc>https://jamesmontemagno.github.io/app-trimly/#/terms</loc>
+    <loc>https://trimtally.app/#/terms</loc>
     <lastmod>2025-12-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

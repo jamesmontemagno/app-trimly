@@ -1,11 +1,11 @@
 # robots.txt for TrimTally Website
-# https://jamesmontemagno.github.io/app-trimly/
+# https://trimtally.app/
 
 User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://jamesmontemagno.github.io/app-trimly/sitemap.xml
+Sitemap: https://trimtally.app/sitemap.xml
 
 # Disallow common paths
 Disallow: /node_modules/

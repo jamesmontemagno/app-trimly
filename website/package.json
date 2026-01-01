@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://jamesmontemagno.github.io/app-trimly",
+  "homepage": "https://trimtally.app",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

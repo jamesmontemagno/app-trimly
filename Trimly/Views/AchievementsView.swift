@@ -12,7 +12,7 @@ import Foundation
 struct AchievementsView: View {
 	@EnvironmentObject var dataManager: DataManager
 	@EnvironmentObject var storeManager: StoreManager
-	@StateObject private var achievementService = AchievementService()
+	@EnvironmentObject var achievementService: AchievementService
 	@State private var selectedSnapshot: AchievementSnapshot?
 	@State private var showingAddEntry = false
 	@State private var showingPaywall = false
@@ -518,5 +518,6 @@ private struct AchievementCategoryGroup: Identifiable {
 		AchievementsView()
 			.environmentObject(DataManager(inMemory: true))
 			.environmentObject(StoreManager())
+			.environmentObject(AchievementService())
 	}
 }

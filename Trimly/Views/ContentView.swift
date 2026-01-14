@@ -35,7 +35,9 @@ struct ContentView: View {
 
 struct MainTabView: View {
     @EnvironmentObject var dataManager: DataManager
+    @EnvironmentObject var storeManager: StoreManager
     @StateObject private var celebrationService = CelebrationService()
+    @StateObject private var achievementService = AchievementService()
     
     enum Tab: Hashable {
         case dashboard
@@ -100,6 +102,7 @@ struct MainTabView: View {
                 .tag(Tab.settings)
         }
         .environmentObject(celebrationService)
+        .environmentObject(achievementService)
         .overlay {
             if let celebration = celebrationService.currentCelebration {
                 CelebrationOverlayView(celebration: celebration)
@@ -110,10 +113,15 @@ struct MainTabView: View {
             }
         }
         .onAppear {
+            achievementService.refresh(using: dataManager, isPro: storeManager.isPro)
             celebrationService.checkAllCelebrations(dataManager: dataManager)
         }
         .onChange(of: entryCount) { _, _ in
+            achievementService.refresh(using: dataManager, isPro: storeManager.isPro)
             celebrationService.checkAllCelebrations(dataManager: dataManager)
+        }
+        .onChange(of: storeManager.isPro) { _, _ in
+            achievementService.refresh(using: dataManager, isPro: storeManager.isPro)
         }
     }
     
@@ -127,4 +135,5 @@ struct MainTabView: View {
 #Preview {
     ContentView()
         .environmentObject(DataManager(inMemory: true))
+        .environmentObject(StoreManager())
 }

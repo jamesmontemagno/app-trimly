@@ -11,6 +11,8 @@ struct AddWeightEntryView: View {
 	@EnvironmentObject var dataManager: DataManager
 	@EnvironmentObject var deviceSettings: DeviceSettingsStore
 	@EnvironmentObject var celebrationService: CelebrationService
+	@EnvironmentObject var storeManager: StoreManager
+	@EnvironmentObject var achievementService: AchievementService
 	@StateObject private var healthKitService = HealthKitService()
 	@Environment(\.dismiss) var dismiss
     
@@ -190,7 +192,10 @@ struct AddWeightEntryView: View {
 				notes: notes.isEmpty ? nil : notes
 			)
 			
-			// Check for all celebrations after saving entry
+			// Refresh achievements to ensure newly unlocked achievements are available
+			achievementService.refresh(using: dataManager, isPro: storeManager.isPro)
+			
+			// Check for all celebrations after saving entry and refreshing achievements
 			celebrationService.checkAllCelebrations(dataManager: dataManager)
 			
 			if deviceSettings.healthKit.writeEnabled {
@@ -220,4 +225,6 @@ struct AddWeightEntryView: View {
 		.environmentObject(DataManager(inMemory: true))
 		.environmentObject(DeviceSettingsStore())
 		.environmentObject(CelebrationService())
+		.environmentObject(StoreManager())
+		.environmentObject(AchievementService())
 }

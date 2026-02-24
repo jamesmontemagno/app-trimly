@@ -1,6 +1,6 @@
 //
 //  GoalHistoryView.swift
-//  TrimTally
+//  Weigh
 //
 //  Created by Trimly on 12/07/2025.
 //
@@ -46,7 +46,7 @@ struct GoalHistoryView: View {
 	}
     
 	private func historyCard(_ goal: Goal) -> some View {
-		TrimlyCardContainer(style: .popup) {
+		WeighCardContainer(style: .popup) {
 			VStack(alignment: .leading, spacing: 10) {
 				HStack(alignment: .firstTextBaseline) {
 					Text(displayValue(goal.targetWeightKg))

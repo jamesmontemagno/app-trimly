@@ -1,6 +1,6 @@
 # Building Swift iOS and Mac Apps with VS Code, GitHub Copilot, and Cloud Agents
 
-Hey friends! James here. I've been getting a lot of questions lately about my development setup for building iOS and Mac apps—specifically how I've been using VS Code instead of Xcode, and how GitHub Copilot and its new Cloud Agent features have completely transformed my workflow. So I wanted to share my experience building TrimTally, a weight tracking app for iOS and macOS, using this modern setup.
+Hey friends! James here. I've been getting a lot of questions lately about my development setup for building iOS and Mac apps—specifically how I've been using VS Code instead of Xcode, and how GitHub Copilot and its new Cloud Agent features have completely transformed my workflow. So I wanted to share my experience building Weigh, a weight tracking app for iOS and macOS, using this modern setup.
 
 ## Why VS Code for Swift?
 
@@ -95,9 +95,9 @@ This setup gives me:
 
 Now, here's where things get really interesting. GitHub Copilot's Cloud Agent feature is like having an AI engineer on your team who can actually make commits, open PRs, and implement entire features.
 
-### Real Examples from TrimTally
+### Real Examples from Weigh
 
-Let me show you some actual PRs that Copilot Cloud Agent created for my TrimTally app:
+Let me show you some actual PRs that Copilot Cloud Agent created for my Weigh app:
 
 #### PR #20: Complete Translation Support
 I asked Copilot to "update all documentation and add Spanish and French translations for all strings." The agent:
@@ -176,7 +176,7 @@ jobs:
           xcode-version: '26.0'
       
       - name: Build iOS app
-        run: xcodebuild -scheme TrimTally -destination "platform=iOS Simulator,name=iPhone 17" build
+        run: xcodebuild -scheme Weigh -destination "platform=iOS Simulator,name=iPhone 17" build
 ```
 
 This runs on every push and PR, ensuring that:
@@ -186,9 +186,9 @@ This runs on every push and PR, ensuring that:
 
 When Copilot opens a PR, the CI automatically validates the changes. If something breaks, I can either ask Copilot to fix it or handle it myself.
 
-## The TrimTally Tech Stack
+## The Weigh Tech Stack
 
-For context, TrimTally is built with:
+For context, Weigh is built with:
 - **Swift 6** with strict concurrency checking
 - **SwiftUI** for all UI (iOS and macOS)
 - **SwiftData** for persistence with iCloud sync
@@ -240,7 +240,7 @@ Here's how a typical feature implementation flows:
 
 ## Tips for Success
 
-Based on my experience with TrimTally, here are my top tips:
+Based on my experience with Weigh, here are my top tips:
 
 ### 1. Document Your Architecture
 Create a `.github/copilot-instructions.md` that explains:
@@ -284,7 +284,7 @@ I'll be honest: this setup has changed how I build apps. The combination of:
 
 ## Real-World Impact
 
-TrimTally went from concept to a feature-complete v1.2 app in about three weeks. It has:
+Weigh went from concept to a feature-complete v1.2 app in about three weeks. It has:
 - 14 major features implemented
 - ~1,800 lines of service layer code
 - Comprehensive analytics
@@ -306,7 +306,7 @@ I'm continuing to refine this workflow. Some areas I'm exploring:
 
 ## Wrapping Up
 
-Look, I get it—this might sound too good to be true. But I'm shipping real code to real users using this setup. TrimTally is available at [trimtally.app](http://trimtally.app/), and you can see all the PRs, commits, and code at [github.com/jamesmontemagno/app-trimly](https://github.com/jamesmontemagno/app-trimly).
+Look, I get it—this might sound too good to be true. But I'm shipping real code to real users using this setup. Weigh is available at [weigh.app](http://weigh.app/), and you can see all the PRs, commits, and code at [github.com/jamesmontemagno/app-trimly](https://github.com/jamesmontemagno/app-trimly).
 
 The future of development isn't about AI replacing developers—it's about AI amplifying what we can build. With GitHub Copilot Cloud Agent, MCP servers, and a solid VS Code setup, I'm building better apps faster than ever before.
 
@@ -318,6 +318,6 @@ Happy coding!
 
 ---
 
-*P.S. If you want to see the actual code and PRs I referenced, check out the TrimTally repository. All the GitHub Copilot PRs are right there with full commit history. It's pretty wild to see how much an AI can actually build when given proper context and direction.*
+*P.S. If you want to see the actual code and PRs I referenced, check out the Weigh repository. All the GitHub Copilot PRs are right there with full commit history. It's pretty wild to see how much an AI can actually build when given proper context and direction.*
 
-*P.P.S. TrimTally is open source under MIT license, so feel free to dig into the code, see how the SwiftData models are structured, check out the analytics implementations, or learn from the HealthKit integration. It's all there!*
+*P.P.S. Weigh is open source under MIT license, so feel free to dig into the code, see how the SwiftData models are structured, check out the analytics implementations, or learn from the HealthKit integration. It's all there!*

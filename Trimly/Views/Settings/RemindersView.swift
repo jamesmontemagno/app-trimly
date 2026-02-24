@@ -18,7 +18,7 @@ struct RemindersView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
-                    TrimlyCardSection(title: String(localized: L10n.Reminders.authorizationTitle)) {
+                    WeighCardSection(title: String(localized: L10n.Reminders.authorizationTitle)) {
                         if isAuthorized {
                             Label(String(localized: L10n.Reminders.notificationsEnabled), systemImage: "checkmark.circle.fill")
                                 .font(.headline)
@@ -40,7 +40,7 @@ struct RemindersView: View {
                     }
 
                     if isAuthorized {
-                        TrimlyCardSection(title: String(localized: L10n.Reminders.dailyTitle), description: String(localized: L10n.Reminders.dailyDescription)) {
+                        WeighCardSection(title: String(localized: L10n.Reminders.dailyTitle), description: String(localized: L10n.Reminders.dailyDescription)) {
                             Toggle(L10n.Reminders.dailyToggle, isOn: $primaryReminderEnabled)
                                 .onChange(of: primaryReminderEnabled) { _, _ in
                                     hasChanges = true
@@ -61,7 +61,7 @@ struct RemindersView: View {
                         }
 
                         if primaryReminderEnabled {
-                            TrimlyCardSection(title: String(localized: L10n.Reminders.adaptiveTitle), description: String(localized: L10n.Reminders.adaptiveDescription)) {
+                            WeighCardSection(title: String(localized: L10n.Reminders.adaptiveTitle), description: String(localized: L10n.Reminders.adaptiveDescription)) {
                                 Toggle(L10n.Reminders.smartToggle, isOn: $adaptiveEnabled)
                                     .onChange(of: adaptiveEnabled) { _, _ in
                                         hasChanges = true
@@ -93,7 +93,7 @@ struct RemindersView: View {
                             }
                         }
 
-                        TrimlyCardSection(title: String(localized: L10n.Reminders.secondaryTitle), description: String(localized: L10n.Reminders.secondaryDescription)) {
+                        WeighCardSection(title: String(localized: L10n.Reminders.secondaryTitle), description: String(localized: L10n.Reminders.secondaryDescription)) {
                             Toggle(L10n.Reminders.secondaryToggle, isOn: $secondaryReminderEnabled)
                                 .onChange(of: secondaryReminderEnabled) { _, _ in
                                     hasChanges = true

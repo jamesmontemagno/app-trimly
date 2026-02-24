@@ -1,4 +1,4 @@
-# TrimTally Project Structure
+# Weigh Project Structure
 
 ```
 app-trimly/
@@ -12,7 +12,7 @@ app-trimly/
 │   ├── DESIGN_DOCUMENT.md             # Design specifications
 │   └── ...
 │
-├── TrimTally.xcodeproj/               # Shared iOS + macOS project
+├── Weigh.xcodeproj/               # Shared iOS + macOS project
 │
 ├── Trimly/                            # Main application target
 │   │
@@ -338,7 +338,7 @@ Supporting Frameworks:
     • Swift Charts (Visualization)
     • HealthKit (Import + sync)
     • UserNotifications (Adaptive reminders)
-    • WidgetKit (TrimTally widgets)
+    • WidgetKit (Weigh widgets)
     • CloudKit (SwiftData sync)
 ```
 
@@ -355,7 +355,7 @@ Source Code (Trimly target / Widget)
         │
         ├─────────────┬──────────────┐
         ▼             ▼              ▼
-  TrimTally.app   Widget Extension   XCTest Bundles
+  Weigh.app   Widget Extension   XCTest Bundles
         │                              │
         │                              ▼
         │                          XCTest Runner (⌘U / xcodebuild test)

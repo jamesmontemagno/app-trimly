@@ -1,6 +1,6 @@
 //
 //  DebugFlags.swift
-//  TrimTally
+//  Weigh
 //
 //  Created by Trimly on 12/17/2025.
 //

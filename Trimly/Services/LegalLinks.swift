@@ -1,7 +1,7 @@
 import Foundation
 
 enum LegalLinks {
-	/// Hosted legal pages for TrimTally. Uses hash-based routing for GitHub Pages compatibility.
+	/// Hosted legal pages for Weigh. Uses hash-based routing for GitHub Pages compatibility.
 	private static let base = "https://trimtally.app/#"
 	
 	static let privacyPolicy: URL = {

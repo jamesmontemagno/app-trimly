@@ -1,6 +1,6 @@
 //
 //  TrimlyApp.swift
-//  TrimTally
+//  Weigh
 //
 //  Created by James Montemagno on 11/27/25.
 //
@@ -58,7 +58,7 @@ struct AppRootView: View {
 }
 
 @main
-struct TrimlyApp: App {
+struct WeighApp: App {
     @StateObject private var dataManager = DataManager()
     #if os(iOS)
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate

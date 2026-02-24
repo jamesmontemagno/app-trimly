@@ -1,6 +1,6 @@
 //
 //  DeviceSettingsStore.swift
-//  TrimTally
+//  Weigh
 //
 //  Created by Trimly on 11/30/2025.
 //

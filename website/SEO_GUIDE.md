@@ -1,10 +1,10 @@
-# SEO Best Practices for TrimTally Website
+# SEO Best Practices for Weigh Website
 
-This document outlines the SEO strategies and best practices implemented on the TrimTally website to ensure optimal search engine visibility and discoverability.
+This document outlines the SEO strategies and best practices implemented on the Weigh website to ensure optimal search engine visibility and discoverability.
 
 ## Overview
 
-The TrimTally website has been optimized for search engines with a focus on:
+The Weigh website has been optimized for search engines with a focus on:
 - **Mobile-first indexing** - Fully responsive design
 - **Semantic HTML** - Proper use of HTML5 elements and ARIA attributes
 - **Structured data** - Rich snippets for better search results
@@ -18,11 +18,11 @@ The TrimTally website has been optimized for search engines with a focus on:
 Located in `/website/index.html`:
 
 ```html
-<title>TrimTally - Private Weight Tracking App for iOS & macOS | No Account Required</title>
+<title>Weigh - Private Weight Tracking App for iOS & macOS | No Account Required</title>
 <meta name="description" content="..." />
 <meta name="keywords" content="weight tracking app, iOS weight tracker, ..." />
 <meta name="robots" content="index, follow" />
-<link rel="canonical" href="https://trimtally.app/" />
+<link rel="canonical" href="https://weigh.app/" />
 ```
 
 **Best Practices:**
@@ -37,9 +37,9 @@ For social media sharing (Facebook, LinkedIn, etc.):
 
 ```html
 <meta property="og:type" content="website" />
-<meta property="og:title" content="TrimTally - Private Weight Tracking App for iOS & macOS" />
+<meta property="og:title" content="Weigh - Private Weight Tracking App for iOS & macOS" />
 <meta property="og:description" content="..." />
-<meta property="og:image" content="https://trimtally.app/app-icon.png" />
+<meta property="og:image" content="https://weigh.app/app-icon.png" />
 ```
 
 **Best Practices:**
@@ -74,7 +74,7 @@ Primary schema for the app listing:
 {
   "@context": "https://schema.org",
   "@type": "MobileApplication",
-  "name": "TrimTally",
+  "name": "Weigh",
   "applicationCategory": "HealthApplication",
   "operatingSystem": "iOS 17.0+, macOS 14.0+",
   "offers": {
@@ -113,8 +113,8 @@ General website information:
 {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "name": "TrimTally",
-  "url": "https://trimtally.app/"
+  "name": "Weigh",
+  "url": "https://weigh.app/"
 }
 ```
 
@@ -126,7 +126,7 @@ Alternative app schema for broader coverage:
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "TrimTally",
+  "name": "Weigh",
   "applicationCategory": "HealthApplication"
 }
 ```
@@ -144,7 +144,7 @@ Location: `/website/public/robots.txt`
 ```
 User-agent: *
 Allow: /
-Sitemap: https://trimtally.app/sitemap.xml
+Sitemap: https://weigh.app/sitemap.xml
 ```
 
 **Best Practices:**
@@ -209,7 +209,7 @@ All images have descriptive alt text:
 ```tsx
 <img 
   src="..." 
-  alt="TrimTally dashboard screen showing weight tracking overview"
+  alt="Weigh dashboard screen showing weight tracking overview"
   loading="lazy"
 />
 ```
@@ -381,4 +381,4 @@ Consider adding:
 ---
 
 **Last Updated:** December 25, 2025
-**Maintained By:** TrimTally Development Team
+**Maintained By:** Weigh Development Team

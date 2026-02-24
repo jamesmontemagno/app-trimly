@@ -6,28 +6,28 @@ const TermsPage = () => {
         <p className="legal-meta">Last updated: December 18, 2025</p>
 
         <p>
-          These Terms of Service ("Terms") govern your use of TrimTally, including the mobile applications and this
+          These Terms of Service ("Terms") govern your use of Weigh, including the mobile applications and this
           website (collectively, the "Service"), operated by Refractored LLC ("we", "us"). By downloading, installing, or
-          using TrimTally you agree to these Terms. If you do not agree, do not use the Service.
+          using Weigh you agree to these Terms. If you do not agree, do not use the Service.
         </p>
 
         <h2>License and Use</h2>
         <p>
-          We grant you a limited, non-exclusive, non-transferable license to install and use TrimTally for your personal
+          We grant you a limited, non-exclusive, non-transferable license to install and use Weigh for your personal
           weight-tracking needs on Apple-branded devices you own or control. You may not modify, reverse engineer, copy, or
-          redistribute TrimTally except as permitted by Apple App Store terms and applicable law.
+          redistribute Weigh except as permitted by Apple App Store terms and applicable law.
         </p>
 
         <h2>User Responsibilities</h2>
         <ul>
-          <li>You must be at least 13 years old to use TrimTally.</li>
+          <li>You must be at least 13 years old to use Weigh.</li>
           <li>You are responsible for safeguarding your device, Apple ID credentials, and any data you enter.</li>
-          <li>You agree not to use TrimTally for unlawful, harmful, or abusive activities.</li>
+          <li>You agree not to use Weigh for unlawful, harmful, or abusive activities.</li>
         </ul>
 
         <h2>Data and Sync</h2>
         <p>
-          TrimTally stores your entries locally on your device by default. Optional iCloud sync keeps information in your
+          Weigh stores your entries locally on your device by default. Optional iCloud sync keeps information in your
           personal Apple account; Apple controls the availability, encryption, and retention of that data. We do not access
           or manage your iCloud content. If you connect to Apple Health, all Health data flows through the HealthKit
           framework under Apple&apos;s policies and your explicit permissions.
@@ -42,22 +42,22 @@ const TermsPage = () => {
 
         <h2>Disclaimer of Warranties</h2>
         <p>
-          TrimTally is provided "as is" without warranties of any kind. You rely on the Service at your own risk. We make
-          no guarantees about accuracy, fitness for a particular purpose, or availability. TrimTally is not a substitute for
+          Weigh is provided "as is" without warranties of any kind. You rely on the Service at your own risk. We make
+          no guarantees about accuracy, fitness for a particular purpose, or availability. Weigh is not a substitute for
           medical advice; consult a qualified professional for health-related decisions.
         </p>
 
         <h2>Limitation of Liability</h2>
         <p>
           To the maximum extent permitted by law, Refractored LLC is not liable for indirect, incidental, special, or
-          consequential damages arising from your use of TrimTally. Our total liability for any claim is limited to the
+          consequential damages arising from your use of Weigh. Our total liability for any claim is limited to the
           amount you paid (if any) for the Service.
         </p>
 
         <h2>Changes to These Terms</h2>
         <p>
           We may revise these Terms from time to time. When we do, we will update the "Last updated" date at the top of
-          this page. Continued use of TrimTally after changes become effective means you accept the revised Terms.
+          this page. Continued use of Weigh after changes become effective means you accept the revised Terms.
         </p>
 
         <h2>Governing Law</h2>

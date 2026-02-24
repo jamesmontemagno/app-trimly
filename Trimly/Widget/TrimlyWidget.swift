@@ -1,6 +1,6 @@
 //
 //  TrimlyWidget.swift
-//  TrimTally
+//  Weigh
 //
 //  Created by Trimly on 11/19/2025.
 //
@@ -8,7 +8,7 @@
 import SwiftUI
 import WidgetKit
 
-struct TrimlyWidget: Widget {
+struct WeighWidget: Widget {
 	let kind: String = "TrimlyWidget"
     
 	var body: some WidgetConfiguration {
@@ -211,7 +211,7 @@ struct MediumWidgetView: View {
 }
 
 #Preview(as: .systemSmall) {
-	TrimlyWidget()
+	WeighWidget()
 } timeline: {
 	WidgetTimelineEntry(
 		date: Date(),
@@ -223,7 +223,7 @@ struct MediumWidgetView: View {
 }
 
 #Preview(as: .systemMedium) {
-	TrimlyWidget()
+	WeighWidget()
 } timeline: {
 	WidgetTimelineEntry(
 		date: Date(),

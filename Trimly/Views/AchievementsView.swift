@@ -1,6 +1,6 @@
 //
 //  AchievementsView.swift
-//  TrimTally
+//  Weigh
 //
 //  Created by Trimly on 11/29/25.
 //
@@ -175,7 +175,7 @@ struct AchievementsView: View {
 			showingPaywall = true
 		}
 		.accessibilityElement(children: .combine)
-		.accessibilityHint(String(localized: L10n.Accessibility.opensTrimTallyPro))
+		.accessibilityHint(String(localized: L10n.Accessibility.opensWeighPro))
 	}
 	
 	private func refresh() {
@@ -295,7 +295,7 @@ private struct AchievementCard: View {
 	
 	private var accessibilityValue: String {
 		if snapshot.requiresPro {
-			return "Requires TrimTally Pro to unlock"
+			return "Requires Weigh Pro to unlock"
 		}
 		if snapshot.isUnlocked {
 			if let unlockedDate = snapshot.model.unlockedAt {
@@ -310,7 +310,7 @@ private struct AchievementCard: View {
 	
 	private var accessibilityHint: String {
 		if snapshot.requiresPro {
-			return "Tap to upgrade to TrimTally Pro"
+			return "Tap to upgrade to Weigh Pro"
 		}
 		#if DEBUG
 		return "Tap to view diagnostic details"

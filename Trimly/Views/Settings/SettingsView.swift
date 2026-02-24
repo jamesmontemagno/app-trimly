@@ -1,6 +1,6 @@
 //
 //  SettingsView.swift
-//  TrimTally
+//  Weigh
 //
 //  Created by Trimly on 11/19/2025.
 //
@@ -117,7 +117,7 @@ struct SettingsView: View {
 						Button {
 							showingPaywall = true
 						} label: {
-							TrimlyCardContainer(style: .elevated) {
+							WeighCardContainer(style: .elevated) {
 								HStack {
 									VStack(alignment: .leading, spacing: 4) {
 										Text(L10n.Settings.upgradeToProTitle)
@@ -135,7 +135,7 @@ struct SettingsView: View {
 						}
 						.buttonStyle(.plain)
 					} else {
-						TrimlyCardContainer(style: .elevated) {
+						WeighCardContainer(style: .elevated) {
 							HStack {
 								RoundedRectangle(cornerRadius: 14, style: .continuous)
 									.fill(Color.yellow.opacity(0.15))
@@ -519,7 +519,7 @@ struct SettingsView: View {
 		formatter.dateStyle = .medium
 		formatter.timeStyle = .short
 		let timestamp = formatter.string(from: Date())
-		let subject = "TrimTally Support - \(timestamp)"
+		let subject = "Weigh Support - \(timestamp)"
 		let bodyLines = [
 			"App Version: \(appVersion)",
 			"Device: \(deviceDescription)",
@@ -617,7 +617,7 @@ struct SettingsView: View {
 					.font(.callout)
 					.foregroundStyle(.secondary)
 			}
-			TrimlyCardContainer(style: .elevated) {
+			WeighCardContainer(style: .elevated) {
 				VStack(spacing: 0) {
 					content()
 				}

@@ -1,6 +1,6 @@
-# TrimTally Website
+# Weigh Website
 
-Marketing website for TrimTally - a private weight tracking app for iOS and macOS.
+Marketing website for Weigh - a private weight tracking app for iOS and macOS.
 
 ## Tech Stack
 
@@ -49,7 +49,7 @@ This website has been fully optimized for search engines. See [SEO_GUIDE.md](./S
 ## Deployment
 
 The site is deployed to a custom domain. The production URL is:
-https://trimtally.app
+https://weigh.app
 
 ## React + TypeScript + Vite
 

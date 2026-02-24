@@ -1,6 +1,6 @@
 //
 //  HealthKitView.swift
-//  TrimTally
+//  Weigh
 //
 //  Created by Trimly on 11/19/2025.
 //
@@ -33,7 +33,7 @@ struct HealthKitView: View {
 		NavigationStack {
 			ScrollView {
 				VStack(spacing: 24) {
-					TrimlyCardSection(
+					WeighCardSection(
 						title: String(localized: L10n.Health.authorizationTitle),
 						description: String(localized: L10n.Health.authorizationDescription)
 					) {
@@ -74,7 +74,7 @@ struct HealthKitView: View {
 						}
 					}
 
-					TrimlyCardSection(
+					WeighCardSection(
 						title: String(localized: L10n.Health.syncDirectionTitle),
 						description: String(localized: L10n.Health.syncDirectionDescription)
 					) {
@@ -89,7 +89,7 @@ struct HealthKitView: View {
 					}
 					
 					if healthKitService.isAuthorized {
-						TrimlyCardSection(
+						WeighCardSection(
 							title: String(localized: L10n.Health.historicalImportTitle),
 							description: String(localized: L10n.Health.historicalImportDescription)
 						) {
@@ -148,7 +148,7 @@ struct HealthKitView: View {
 						}
 						
 						if healthKitService.isImporting {
-							TrimlyCardSection(title: String(localized: L10n.Health.importProgressTitle)) {
+							WeighCardSection(title: String(localized: L10n.Health.importProgressTitle)) {
 								VStack(alignment: .leading, spacing: 8) {
 									ProgressView(value: healthKitService.importProgress)
 									Text(L10n.Health.importProgressStatus(Int(healthKitService.importProgress * 100)))
@@ -159,7 +159,7 @@ struct HealthKitView: View {
 						}
 						
 						if let count = importedCount {
-							TrimlyCardSection(title: String(localized: L10n.Health.recentImportTitle)) {
+							WeighCardSection(title: String(localized: L10n.Health.recentImportTitle)) {
 								Label(String(localized: L10n.Health.recentImportStatus(count)), systemImage: "checkmark.circle.fill")
 									.foregroundStyle(.green)
 								Text(L10n.Health.recentImportHint)
@@ -168,7 +168,7 @@ struct HealthKitView: View {
 							}
 						}
 						
-						TrimlyCardSection(
+						WeighCardSection(
 							title: String(localized: L10n.Health.backgroundSyncTitle),
 							description: String(localized: L10n.Health.backgroundSyncDescription)
 						) {

@@ -1,6 +1,6 @@
 //
 //  ChartSettingsView.swift
-//  TrimTally
+//  Weigh
 //
 //  Created by Trimly on 12/7/2025.
 //
@@ -15,7 +15,7 @@ struct ChartSettingsView: View {
 		NavigationStack {
 			ScrollView {
 				VStack(spacing: 20) {
-					TrimlyCardSection(
+					WeighCardSection(
 						title: String(localized: L10n.ChartSettings.displayModeTitle),
 						description: String(localized: L10n.ChartSettings.displayModeDescription),
 						style: .popup
@@ -27,7 +27,7 @@ struct ChartSettingsView: View {
 						.pickerStyle(.segmented)
 					}
 
-					TrimlyCardSection(
+					WeighCardSection(
 						title: String(localized: L10n.ChartSettings.trendLayersTitle),
 						description: String(localized: L10n.ChartSettings.trendLayersDescription),
 						style: .popup

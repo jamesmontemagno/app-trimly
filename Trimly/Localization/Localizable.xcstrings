@@ -190,13 +190,13 @@
         }
       }
     },
-    "accessibility.hint.opensTrimTallyPro" : {
+    "accessibility.hint.opensWeighPro" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Opens TrimTally Pro upgrade page"
+            "value" : "Opens Weigh Pro upgrade page"
           }
         }
       }
@@ -1178,19 +1178,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Unlock this achievement with TrimTally Pro."
+            "value" : "Unlock this achievement with Weigh Pro."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Desbloquea este logro con TrimTally Pro."
+            "value" : "Desbloquea este logro con Weigh Pro."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Débloquez cette réalisation avec TrimTally Pro."
+            "value" : "Débloquez cette réalisation avec Weigh Pro."
           }
         }
       }
@@ -1569,19 +1569,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Upgrade to TrimTally Pro to unlock premium achievements."
+            "value" : "Upgrade to Weigh Pro to unlock premium achievements."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mejora a TrimTally Pro para desbloquear logros premium."
+            "value" : "Mejora a Weigh Pro para desbloquear logros premium."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Passez à TrimTally Pro pour débloquer les réalisations premium."
+            "value" : "Passez à Weigh Pro pour débloquer les réalisations premium."
           }
         }
       }
@@ -5027,19 +5027,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Requires TrimTally Pro"
+            "value" : "Requires Weigh Pro"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Requiere TrimTally Pro"
+            "value" : "Requiere Weigh Pro"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nécessite TrimTally Pro"
+            "value" : "Nécessite Weigh Pro"
           }
         }
       }
@@ -6315,19 +6315,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Allow TrimTally to securely read your Health app weight data."
+            "value" : "Allow Weigh to securely read your Health app weight data."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Permite que TrimTally lea de forma segura los datos de peso de tu app Salud."
+            "value" : "Permite que Weigh lea de forma segura los datos de peso de tu app Salud."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Autoriser TrimTally à lire en toute sécurité les données de poids de l'app Santé."
+            "value" : "Autoriser Weigh à lire en toute sécurité les données de poids de l'app Santé."
           }
         }
       }
@@ -6384,19 +6384,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Connect to Health so TrimTally can keep everything in one place."
+            "value" : "Connect to Health so Weigh can keep everything in one place."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Conéctate a Salud para que TrimTally pueda mantener todo en un solo lugar."
+            "value" : "Conéctate a Salud para que Weigh pueda mantener todo en un solo lugar."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Connectez à Santé pour que TrimTally puisse tout garder au même endroit."
+            "value" : "Connectez à Santé pour que Weigh puisse tout garder au même endroit."
           }
         }
       }
@@ -6545,19 +6545,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Saved in TrimTally, but couldn't write to Health. Check Health permissions if you want syncing."
+            "value" : "Saved in Weigh, but couldn't write to Health. Check Health permissions if you want syncing."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se guardó en TrimTally, pero no se pudo escribir en Salud. Revisa los permisos de Salud si quieres sincronización."
+            "value" : "Se guardó en Weigh, pero no se pudo escribir en Salud. Revisa los permisos de Salud si quieres sincronización."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enregistré dans TrimTally, mais impossible d’écrire dans Santé. Vérifiez les autorisations Santé si vous souhaitez la synchronisation."
+            "value" : "Enregistré dans Weigh, mais impossible d’écrire dans Santé. Vérifiez les autorisations Santé si vous souhaitez la synchronisation."
           }
         }
       }
@@ -6614,19 +6614,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choose a range and pull past weights into TrimTally. Duplicates are automatically skipped."
+            "value" : "Choose a range and pull past weights into Weigh. Duplicates are automatically skipped."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Elige un rango y trae pesos anteriores a TrimTally. Los duplicados se omiten automáticamente."
+            "value" : "Elige un rango y trae pesos anteriores a Weigh. Los duplicados se omiten automáticamente."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choisissez une plage et importez les poids précédents dans TrimTally. Les doublons sont automatiquement ignorés."
+            "value" : "Choisissez une plage et importez les poids précédents dans Weigh. Les doublons sont automatiquement ignorés."
           }
         }
       }
@@ -7051,19 +7051,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Let TrimTally watch for new Health weight samples and keep things tidy."
+            "value" : "Let Weigh watch for new Health weight samples and keep things tidy."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Permite que TrimTally vigile nuevas muestras de peso de Salud y mantenga todo ordenado."
+            "value" : "Permite que Weigh vigile nuevas muestras de peso de Salud y mantenga todo ordenado."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Permettez à TrimTally de surveiller les nouveaux échantillons de poids Health et de garder tout propre."
+            "value" : "Permettez à Weigh de surveiller les nouveaux échantillons de poids Health et de garder tout propre."
           }
         }
       }
@@ -7166,19 +7166,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "TrimTally can read your weight from Health, and optionally write new manual entries back."
+            "value" : "Weigh can read your weight from Health, and optionally write new manual entries back."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "TrimTally puede leer tu peso desde Salud y, opcionalmente, escribir nuevas entradas manuales de vuelta."
+            "value" : "Weigh puede leer tu peso desde Salud y, opcionalmente, escribir nuevas entradas manuales de vuelta."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "TrimTally peut lire votre poids depuis Santé et, en option, écrire de nouvelles entrées manuelles."
+            "value" : "Weigh peut lire votre poids depuis Santé et, en option, écrire de nouvelles entrées manuelles."
           }
         }
       }
@@ -7709,19 +7709,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Looking for your previous TrimTally data..."
+            "value" : "Looking for your previous Weigh data..."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Buscando tus datos anteriores de TrimTally..."
+            "value" : "Buscando tus datos anteriores de Weigh..."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Recherche de vos données TrimTally précédentes..."
+            "value" : "Recherche de vos données Weigh précédentes..."
           }
         }
       }
@@ -7755,19 +7755,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "No TrimTally data found in iCloud yet—start fresh and we'll sync new entries."
+            "value" : "No Weigh data found in iCloud yet—start fresh and we'll sync new entries."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aún no se encontraron datos de TrimTally en iCloud: comienza de nuevo y sincronizaremos las nuevas entradas."
+            "value" : "Aún no se encontraron datos de Weigh en iCloud: comienza de nuevo y sincronizaremos las nuevas entradas."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aucune donnée TrimTally trouvée dans iCloud pour le moment — commencez à zéro et nous synchroniserons les nouvelles entrées."
+            "value" : "Aucune donnée Weigh trouvée dans iCloud pour le moment — commencez à zéro et nous synchroniserons les nouvelles entrées."
           }
         }
       }
@@ -8744,19 +8744,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Welcome to TrimTally"
+            "value" : "Welcome to Weigh"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bienvenido a TrimTally"
+            "value" : "Bienvenido a Weigh"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bienvenue dans TrimTally"
+            "value" : "Bienvenue dans Weigh"
           }
         }
       }
@@ -8806,7 +8806,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Restores your previous TrimTally Pro purchase"
+            "value" : "Restores your previous Weigh Pro purchase"
           }
         }
       }
@@ -8817,7 +8817,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Upgrade to TrimTally Pro for %@"
+            "value" : "Upgrade to Weigh Pro for %@"
           }
         }
       }
@@ -8949,7 +8949,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Unlock TrimTally Pro"
+            "value" : "Unlock Weigh Pro"
           }
         }
       }
@@ -9029,19 +9029,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Let TrimTally learn your habits and recommend smarter reminder times."
+            "value" : "Let Weigh learn your habits and recommend smarter reminder times."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Permite que TrimTally aprenda tus hábitos y recomiende horarios de recordatorio más inteligentes."
+            "value" : "Permite que Weigh aprenda tus hábitos y recomiende horarios de recordatorio más inteligentes."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Laissez TrimTally apprendre vos habitudes et recommander des heures de rappel plus pertinentes."
+            "value" : "Laissez Weigh apprendre vos habitudes et recommander des heures de rappel plus pertinentes."
           }
         }
       }
@@ -9144,19 +9144,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "TrimTally can send you reminders on this device."
+            "value" : "Weigh can send you reminders on this device."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "TrimTally puede enviarte recordatorios en este dispositivo."
+            "value" : "Weigh puede enviarte recordatorios en este dispositivo."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "TrimTally peut vous envoyer des rappels sur cet appareil."
+            "value" : "Weigh peut vous envoyer des rappels sur cet appareil."
           }
         }
       }
@@ -9259,19 +9259,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Choose the best time for TrimTally to nudge you to log your weight."
+            "value" : "Choose the best time for Weigh to nudge you to log your weight."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Elige el mejor momento para que TrimTally te recuerde registrar tu peso."
+            "value" : "Elige el mejor momento para que Weigh te recuerde registrar tu peso."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choisissez l'heure idéale pour que TrimTally vous incite à enregistrer votre poids."
+            "value" : "Choisissez l'heure idéale pour que Weigh vous incite à enregistrer votre poids."
           }
         }
       }
@@ -9557,19 +9557,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "You have TrimTally Pro"
+            "value" : "You have Weigh Pro"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tienes TrimTally Pro"
+            "value" : "Tienes Weigh Pro"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vous avez TrimTally Pro"
+            "value" : "Vous avez Weigh Pro"
           }
         }
       }
@@ -9637,7 +9637,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Review TrimTally"
+            "value" : "Review Weigh"
           }
         }
       }
@@ -9947,19 +9947,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Please restart TrimTally for this change to take effect. Your data is securely encrypted and only accessible from your devices."
+            "value" : "Please restart Weigh for this change to take effect. Your data is securely encrypted and only accessible from your devices."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Por favor reinicia TrimTally para que este cambio surta efecto. Tus datos están cifrados de forma segura y solo accesibles desde tus dispositivos."
+            "value" : "Por favor reinicia Weigh para que este cambio surta efecto. Tus datos están cifrados de forma segura y solo accesibles desde tus dispositivos."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Veuillez redémarrer TrimTally pour que ce changement prenne effet. Vos données sont chiffrées en toute sécurité et uniquement accessibles depuis vos appareils."
+            "value" : "Veuillez redémarrer Weigh pour que ce changement prenne effet. Vos données sont chiffrées en toute sécurité et uniquement accessibles depuis vos appareils."
           }
         }
       }
@@ -10567,19 +10567,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Choose TrimTally's appearance."
+            "value" : "Choose Weigh's appearance."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Elige la apariencia de TrimTally."
+            "value" : "Elige la apariencia de Weigh."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choisissez l'apparence de TrimTally."
+            "value" : "Choisissez l'apparence de Weigh."
           }
         }
       }
@@ -10681,19 +10681,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "We couldn't find a previous TrimTally Pro purchase associated with your account."
+            "value" : "We couldn't find a previous Weigh Pro purchase associated with your account."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No pudimos encontrar una compra anterior de TrimTally Pro asociada con tu cuenta."
+            "value" : "No pudimos encontrar una compra anterior de Weigh Pro asociada con tu cuenta."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nous n'avons pas trouvé d'achat TrimTally Pro précédent associé à votre compte."
+            "value" : "Nous n'avons pas trouvé d'achat Weigh Pro précédent associé à votre compte."
           }
         }
       }
@@ -10727,19 +10727,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Your TrimTally Pro purchase has been restored successfully."
+            "value" : "Your Weigh Pro purchase has been restored successfully."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tu compra de TrimTally Pro ha sido restaurada exitosamente."
+            "value" : "Tu compra de Weigh Pro ha sido restaurada exitosamente."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Votre achat TrimTally Pro a été restauré avec succès."
+            "value" : "Votre achat Weigh Pro a été restauré avec succès."
           }
         }
       }
@@ -10773,19 +10773,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "About TrimTally"
+            "value" : "About Weigh"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Acerca de TrimTally"
+            "value" : "Acerca de Weigh"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "À propos de TrimTally"
+            "value" : "À propos de Weigh"
           }
         }
       }
@@ -10796,19 +10796,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Choose how TrimTally treats multiple entries recorded in the same day."
+            "value" : "Choose how Weigh treats multiple entries recorded in the same day."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Elige cómo TrimTally trata múltiples entradas registradas en el mismo día."
+            "value" : "Elige cómo Weigh trata múltiples entradas registradas en el mismo día."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choisissez comment TrimTally traite plusieurs entrées enregistrées le même jour."
+            "value" : "Choisissez comment Weigh traite plusieurs entrées enregistrées le même jour."
           }
         }
       }
@@ -10934,19 +10934,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Fine-tune how TrimTally displays your weight, decimals, and appearance."
+            "value" : "Fine-tune how Weigh displays your weight, decimals, and appearance."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ajusta cómo TrimTally muestra tu peso, decimales y apariencia."
+            "value" : "Ajusta cómo Weigh muestra tu peso, decimales y apariencia."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Affinez la façon dont TrimTally affiche votre poids, les décimales et l'apparence."
+            "value" : "Affinez la façon dont Weigh affiche votre poids, les décimales et l'apparence."
           }
         }
       }
@@ -10980,7 +10980,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Reach out for help or share feedback with the TrimTally team."
+            "value" : "Reach out for help or share feedback with the Weigh team."
           }
         }
       }
@@ -11435,19 +11435,19 @@
         }
       }
     },
-    "Unlock TrimTally Pro" : {
+    "Unlock Weigh Pro" : {
       "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Desbloquear TrimTally Pro"
+            "value" : "Desbloquear Weigh Pro"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Débloquer TrimTally Pro"
+            "value" : "Débloquer Weigh Pro"
           }
         }
       }

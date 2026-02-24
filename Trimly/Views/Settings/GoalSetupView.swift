@@ -1,6 +1,6 @@
 //
 //  GoalSetupView.swift
-//  TrimTally
+//  Weigh
 //
 //  Created by Trimly on 12/07/2025.
 //
@@ -29,7 +29,7 @@ struct GoalSetupView: View {
 			ScrollView {
 				VStack(spacing: 24) {
 
-					TrimlyCardSection(
+					WeighCardSection(
 						title: String(localized: L10n.Goals.targetTitle),
 						description: String(localized: L10n.Goals.targetDescription(preferredUnit.symbol)),
 						style: .popup
@@ -44,7 +44,7 @@ struct GoalSetupView: View {
 						}
 					}
 
-						TrimlyCardSection(
+						WeighCardSection(
 						title: String(localized: L10n.Goals.startTitle),
 						description: String(localized: L10n.Goals.startDescription(preferredUnit.symbol)),
 						style: .popup
@@ -59,7 +59,7 @@ struct GoalSetupView: View {
 						}
 					}
 					
-					TrimlyCardSection(
+					WeighCardSection(
 						title: String(localized: L10n.Goals.notesTitle),
 						description: String(localized: L10n.Goals.notesDescription),
 						style: .popup

@@ -23,7 +23,7 @@ The `USER_ERROR: BAD_REQUEST` error occurs when CloudKit rejects requests due to
 1. Build and run the app once on a simulator or device
 2. Check the console for: `[CloudKit] Schema initialization triggered`
 3. Verify the schema in CloudKit Dashboard: https://icloud.developer.apple.com/dashboard
-4. Navigate to: iCloud.com.refractored.trimtally > Schema > Record Types
+4. Navigate to: iCloud.com.refractored.weigh > Schema > Record Types
 5. You should see: `CD_WeightEntry`, `CD_Goal`, `CD_AppSettings`, `CD_Achievement`
 6. After successful initialization, comment out the schema init code in `AppDelegate`
 
@@ -38,7 +38,7 @@ The `USER_ERROR: BAD_REQUEST` error occurs when CloudKit rejects requests due to
 ```xml
 <key>com.apple.developer.icloud-container-identifiers</key>
 <array>
-    <string>iCloud.com.refractored.trimtally</string>
+    <string>iCloud.com.refractored.weigh</string>
 </array>
 <key>com.apple.developer.icloud-services</key>
 <array>
@@ -49,7 +49,7 @@ The `USER_ERROR: BAD_REQUEST` error occurs when CloudKit rejects requests due to
 **What to check:**
 - Xcode → Project → Signing & Capabilities → iCloud
 - Ensure CloudKit is checked
-- Ensure the container `iCloud.com.refractored.trimtally` is selected
+- Ensure the container `iCloud.com.refractored.weigh` is selected
 - Background Modes: Enable "Remote notifications"
 
 ### 3. Model Compatibility with CloudKit
@@ -98,7 +98,7 @@ SwiftData models are compatible with CloudKit, but certain features are NOT supp
 **Problem:** App uses wrong container or multiple containers
 
 **Current Configuration:**
-- Container: `iCloud.com.refractored.trimtally`
+- Container: `iCloud.com.refractored.weigh`
 - Mode: `.automatic` (uses first container in entitlements)
 
 **If you have multiple containers:**
@@ -106,7 +106,7 @@ SwiftData models are compatible with CloudKit, but certain features are NOT supp
 // Explicitly specify container
 let config = ModelConfiguration(
     schema: schema,
-    cloudKitDatabase: .init(containerIdentifier: "iCloud.com.refractored.trimtally")
+    cloudKitDatabase: .init(containerIdentifier: "iCloud.com.refractored.weigh")
 )
 ```
 
@@ -117,7 +117,7 @@ let config = ModelConfiguration(
 ### Step 1: Verify Container Access
 ```swift
 // Add to AppDelegate for testing
-CKContainer(identifier: "iCloud.com.refractored.trimtally")
+CKContainer(identifier: "iCloud.com.refractored.weigh")
     .accountStatus { status, error in
         print("[CloudKit] Account status: \(status.rawValue)")
         if let error = error {
@@ -175,7 +175,7 @@ When you're ready to ship:
 
 1. **Deploy Schema to Production**
    - Go to [CloudKit Dashboard](https://icloud.developer.apple.com/dashboard)
-   - Select container: `iCloud.com.refractored.trimtally`
+   - Select container: `iCloud.com.refractored.weigh`
    - Navigate to: **Development → Schema**
    - Click **"Deploy Schema to Production"** button
    - **CAREFULLY REVIEW** all record types and fields (this is irreversible!)
@@ -237,7 +237,7 @@ For major schema changes, you must:
 ### Migration Strategies
 
 **Option 1: New Container (Breaking Change)**
-- Create `iCloud.com.refractored.trimtally.v2`
+- Create `iCloud.com.refractored.weigh.v2`
 - Implement data migration logic
 - Migrate users gradually
 - Maintain backward compatibility temporarily

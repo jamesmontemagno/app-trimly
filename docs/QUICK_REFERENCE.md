@@ -1,4 +1,4 @@
-# TrimTally Quick Reference
+# Weigh Quick Reference
 
 ## 🚀 Quick Start
 
@@ -6,7 +6,7 @@
 # Clone and open
 git clone https://github.com/jamesmontemagno/app-trimly.git
 cd app-trimly
-open TrimTally.xcodeproj
+open Weigh.xcodeproj
 
 # Build and run in Xcode
 ⌘R
@@ -134,7 +134,7 @@ let trend = WeightAnalytics.classifyTrend(
 ⌘U
 
 # From command line (CI)
-xcodebuild -scheme TrimTally -destination 'platform=iOS Simulator,name=iPhone 15 Pro' test
+xcodebuild -scheme Weigh -destination 'platform=iOS Simulator,name=iPhone 15 Pro' test
 ```
 
 ## 📚 Documentation
@@ -252,6 +252,6 @@ See LICENSE file
 
 ---
 
-**TrimTally** - Your supportive companion for mindful weight tracking
+**Weigh** - Your supportive companion for mindful weight tracking
 
 Version 1.2.0 | Built with SwiftUI & SwiftData

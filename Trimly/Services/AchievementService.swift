@@ -1,6 +1,6 @@
 //
 //  AchievementService.swift
-//  TrimTally
+//  Weigh
 //
 //  Created by Trimly on 11/29/25.
 //
@@ -21,7 +21,7 @@ final class AchievementService: ObservableObject {
 #endif
 	
 	private let definitions: [AchievementDescriptor] = AchievementDescriptor.catalog
-	private let logger = Logger(subsystem: "com.trimly.TrimTally", category: "Achievements")
+	private let logger = Logger(subsystem: "com.trimly.Weigh", category: "Achievements")
 	
 	func refresh(using dataManager: DataManager, isPro: Bool) {
 		let context = EvaluationContext(dataManager: dataManager)

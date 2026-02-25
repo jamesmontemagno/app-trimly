@@ -1,6 +1,6 @@
 //
 //  AddWeightEntryView.swift
-//  TrimTally
+//  Weigh
 //
 //  Created by Trimly on 11/19/2025.
 //
@@ -34,7 +34,7 @@ struct AddWeightEntryView: View {
 		NavigationStack {
 			ScrollView {
 				VStack(spacing: 20) {
-					TrimlyCardSection(
+					WeighCardSection(
 						title: String(localized: L10n.AddEntry.weightCardTitle),
 						description: String(localized: L10n.AddEntry.weightDescription(unitSymbol)),
 						style: .popup
@@ -71,7 +71,7 @@ struct AddWeightEntryView: View {
 						}
 					}
 
-						TrimlyCardSection(
+						WeighCardSection(
 							title: String(localized: L10n.AddEntry.dateTitle),
 							description: String(localized: L10n.AddEntry.dateDescription),
 							style: .popup
@@ -83,7 +83,7 @@ struct AddWeightEntryView: View {
 							.accessibilityLabel(String(localized: L10n.Accessibility.dateAndTime))
 					}
 
-						TrimlyCardSection(
+						WeighCardSection(
 							title: String(localized: L10n.AddEntry.notesTitle),
 							description: String(localized: L10n.AddEntry.notesDescription),
 							style: .popup

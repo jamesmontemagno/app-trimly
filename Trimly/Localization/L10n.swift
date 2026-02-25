@@ -48,7 +48,7 @@ enum L10n {
 		static let opensCharts = LocalizedStringResource("accessibility.hint.opensCharts", defaultValue: "Opens charts")
 		static let opensChartSettings = LocalizedStringResource("accessibility.hint.opensChartSettings", defaultValue: "Opens chart display settings")
 		static let recalculateAchievements = LocalizedStringResource("accessibility.hint.recalculateAchievements", defaultValue: "Recalculates achievement progress")
-		static let opensTrimTallyPro = LocalizedStringResource("accessibility.hint.opensTrimTallyPro", defaultValue: "Opens TrimTally Pro upgrade page")
+		static let opensWeighPro = LocalizedStringResource("accessibility.hint.opensWeighPro", defaultValue: "Opens Weigh Pro upgrade page")
 	}
 
 	enum Calendar {
@@ -94,12 +94,12 @@ enum L10n {
 		static let stepCloudSync = LocalizedStringResource("onboarding.step.cloudSync", defaultValue: "iCloud Sync")
 		static let stepFinish = LocalizedStringResource("onboarding.step.finish", defaultValue: "Finish")
 		
-		static let welcomeTitle = LocalizedStringResource("onboarding.welcome.title", defaultValue: "Welcome to TrimTally")
+		static let welcomeTitle = LocalizedStringResource("onboarding.welcome.title", defaultValue: "Welcome to Weigh")
 		static let welcomeSubtitle = LocalizedStringResource("onboarding.welcome.subtitle", defaultValue: "Your supportive companion for mindful weight tracking")
-			static let cloudSyncChecking = LocalizedStringResource("onboarding.cloudSync.checking", defaultValue: "Looking for your previous TrimTally data...")
+			static let cloudSyncChecking = LocalizedStringResource("onboarding.cloudSync.checking", defaultValue: "Looking for your previous Weigh data...")
 			static let cloudSyncStillChecking = LocalizedStringResource("onboarding.cloudSync.stillChecking", defaultValue: "Still checking iCloud—tap Get Started to continue manually.")
 			static let cloudSyncFound = LocalizedStringResource("onboarding.cloudSync.found", defaultValue: "Found your history! Restoring it now...")
-			static let cloudSyncNoData = LocalizedStringResource("onboarding.cloudSync.noData", defaultValue: "No TrimTally data found in iCloud yet—start fresh and we'll sync new entries.")
+			static let cloudSyncNoData = LocalizedStringResource("onboarding.cloudSync.noData", defaultValue: "No Weigh data found in iCloud yet—start fresh and we'll sync new entries.")
 		
 		static let unitTitle = LocalizedStringResource("onboarding.unit.title", defaultValue: "Choose Your Unit")
 		static let unitSubtitle = LocalizedStringResource("onboarding.unit.subtitle", defaultValue: "Select your preferred weight unit")
@@ -274,15 +274,15 @@ enum L10n {
 		static let navigationTitle = LocalizedStringResource("reminders.navigation.title", defaultValue: "Reminders")
 		static let authorizationTitle = LocalizedStringResource("reminders.authorization.title", defaultValue: "Authorization")
 		static let notificationsEnabled = LocalizedStringResource("reminders.authorization.enabled", defaultValue: "Notifications Enabled")
-		static let authorizedDescription = LocalizedStringResource("reminders.authorization.description", defaultValue: "TrimTally can send you reminders on this device.")
+		static let authorizedDescription = LocalizedStringResource("reminders.authorization.description", defaultValue: "Weigh can send you reminders on this device.")
 		static let enablePrompt = LocalizedStringResource("reminders.authorization.prompt", defaultValue: "Stay on track with gentle nudges. Enable notifications so we can remind you when it counts.")
 		static let grantAccess = LocalizedStringResource("reminders.authorization.grant", defaultValue: "Grant Access")
 		static let dailyTitle = LocalizedStringResource("reminders.daily.title", defaultValue: "Daily Reminder")
-		static let dailyDescription = LocalizedStringResource("reminders.daily.description", defaultValue: "Choose the best time for TrimTally to nudge you to log your weight.")
+		static let dailyDescription = LocalizedStringResource("reminders.daily.description", defaultValue: "Choose the best time for Weigh to nudge you to log your weight.")
 		static let dailyToggle = LocalizedStringResource("reminders.daily.toggle", defaultValue: "Enable Daily Reminder")
 		static let reminderTimeLabel = LocalizedStringResource("reminders.daily.timeLabel", defaultValue: "Reminder Time")
 		static let adaptiveTitle = LocalizedStringResource("reminders.adaptive.title", defaultValue: "Adaptive Suggestions")
-		static let adaptiveDescription = LocalizedStringResource("reminders.adaptive.description", defaultValue: "Let TrimTally learn your habits and recommend smarter reminder times.")
+		static let adaptiveDescription = LocalizedStringResource("reminders.adaptive.description", defaultValue: "Let Weigh learn your habits and recommend smarter reminder times.")
 		static let smartToggle = LocalizedStringResource("reminders.adaptive.toggle", defaultValue: "Smart Time Suggestions")
 		static let suggestionTitle = LocalizedStringResource("reminders.adaptive.suggestion.title", defaultValue: "Suggested time")
 		static let suggestionHint = LocalizedStringResource("reminders.adaptive.suggestion.hint", defaultValue: "Based on your recent logging")
@@ -295,13 +295,13 @@ enum L10n {
 		enum Health {
 			static let navigationTitle = LocalizedStringResource("health.navigation.title", defaultValue: "HealthKit Integration")
 			static let authorizationTitle = LocalizedStringResource("health.authorization.title", defaultValue: "Authorization")
-			static let authorizationDescription = LocalizedStringResource("health.authorization.description", defaultValue: "Allow TrimTally to securely read your Health app weight data.")
+			static let authorizationDescription = LocalizedStringResource("health.authorization.description", defaultValue: "Allow Weigh to securely read your Health app weight data.")
 			static let statusEnabled = LocalizedStringResource("health.authorization.enabled", defaultValue: "HealthKit Enabled")
 			static let statusEnabledDescription = LocalizedStringResource("health.authorization.enabledDescription", defaultValue: "You can now import history and sync future entries.")
-			static let connectPrompt = LocalizedStringResource("health.authorization.prompt", defaultValue: "Connect to Health so TrimTally can keep everything in one place.")
+			static let connectPrompt = LocalizedStringResource("health.authorization.prompt", defaultValue: "Connect to Health so Weigh can keep everything in one place.")
 		static let requestAccessButton = LocalizedStringResource("health.authorization.requestAccess", defaultValue: "Request Access")
 		static let historicalImportTitle = LocalizedStringResource("health.import.title", defaultValue: "Historical Import")
-			static let historicalImportDescription = LocalizedStringResource("health.import.description", defaultValue: "Choose a range and pull past weights into TrimTally. Duplicates are automatically skipped.")
+			static let historicalImportDescription = LocalizedStringResource("health.import.description", defaultValue: "Choose a range and pull past weights into Weigh. Duplicates are automatically skipped.")
 		static let startDateLabel = LocalizedStringResource("health.import.startDate", defaultValue: "Start")
 		static let endDateLabel = LocalizedStringResource("health.import.endDate", defaultValue: "End")
 		static let countingSamples = LocalizedStringResource("health.import.counting", defaultValue: "Counting samples")
@@ -321,7 +321,7 @@ enum L10n {
 		static let importRecentExplainer = LocalizedStringResource("health.import.recent.explainer", defaultValue: "Imports the last 30 days or since your last import—no date picking required.")
 		static let importDateRangeExplainer = LocalizedStringResource("health.import.range.explainer", defaultValue: "Uses the start/end dates above to pull your exact range.")
 		static let backgroundSyncTitle = LocalizedStringResource("health.sync.title", defaultValue: "Background Sync")
-			static let backgroundSyncDescription = LocalizedStringResource("health.sync.description", defaultValue: "Let TrimTally watch for new Health weight samples and keep things tidy.")
+			static let backgroundSyncDescription = LocalizedStringResource("health.sync.description", defaultValue: "Let Weigh watch for new Health weight samples and keep things tidy.")
 		static let backgroundSyncToggle = LocalizedStringResource("health.sync.toggle", defaultValue: "Enable Background Sync")
 		static let autoHideToggle = LocalizedStringResource("health.sync.autoHide", defaultValue: "Auto-hide Duplicates")
 		static let writeToHealthToggle = LocalizedStringResource("health.sync.writeToHealth", defaultValue: "Write new entries to Health")
@@ -333,7 +333,7 @@ enum L10n {
 			LocalizedStringResource("health.summary.lastImport", defaultValue: "Last manual import: \(date)")
 		}
 		static let syncDirectionTitle = LocalizedStringResource("health.syncDirection.title", defaultValue: "How sync works")
-		static let syncDirectionDescription = LocalizedStringResource("health.syncDirection.description", defaultValue: "TrimTally can read your weight from Health, and optionally write new manual entries back.")
+		static let syncDirectionDescription = LocalizedStringResource("health.syncDirection.description", defaultValue: "Weigh can read your weight from Health, and optionally write new manual entries back.")
 		static let syncDirectionRead = LocalizedStringResource("health.syncDirection.read", defaultValue: "Reads weight entries from the Health app.")
 		static let syncDirectionWrite = LocalizedStringResource("health.syncDirection.write", defaultValue: "When enabled, writes new manual entries to Health.")
 		static func lastBackgroundSync(_ date: String) -> LocalizedStringResource {
@@ -349,7 +349,7 @@ enum L10n {
 		static func importFailed(_ message: String) -> LocalizedStringResource {
 			LocalizedStringResource("health.error.import", defaultValue: "Failed to import data: \(message)")
 		}
-		static let writeFailedHint = LocalizedStringResource("health.error.writeFailedHint", defaultValue: "Saved in TrimTally, but couldn't write to Health. Check Health permissions if you want syncing.")
+		static let writeFailedHint = LocalizedStringResource("health.error.writeFailedHint", defaultValue: "Saved in Weigh, but couldn't write to Health. Check Health permissions if you want syncing.")
 	}
 
 	enum Timeline {
@@ -372,7 +372,7 @@ enum L10n {
 	enum Settings {
 		static let navigationTitle = LocalizedStringResource("settings.navigation.title", defaultValue: "Settings")
 		static let personalizationTitle = LocalizedStringResource("settings.section.personalization.title", defaultValue: "Personalization")
-		static let personalizationDescription = LocalizedStringResource("settings.section.personalization.description", defaultValue: "Fine-tune how TrimTally displays your weight, decimals, and appearance.")
+		static let personalizationDescription = LocalizedStringResource("settings.section.personalization.description", defaultValue: "Fine-tune how Weigh displays your weight, decimals, and appearance.")
 		static let weightUnitTitle = LocalizedStringResource("settings.personalization.weightUnit.title", defaultValue: "Weight Unit")
 		static let weightUnitSubtitle = LocalizedStringResource("settings.personalization.weightUnit.subtitle", defaultValue: "Display entries in your preferred unit.")
 		static let decimalPrecisionTitle = LocalizedStringResource("settings.personalization.decimal.title", defaultValue: "Decimal Precision")
@@ -383,7 +383,7 @@ enum L10n {
 		static let themeSystem = LocalizedStringResource("settings.personalization.theme.option.system", defaultValue: "System")
 		static let themeLight = LocalizedStringResource("settings.personalization.theme.option.light", defaultValue: "Light")
 		static let themeDark = LocalizedStringResource("settings.personalization.theme.option.dark", defaultValue: "Dark")
-		static let themeSubtitle = LocalizedStringResource("settings.personalization.theme.subtitle", defaultValue: "Choose TrimTally's appearance.")
+		static let themeSubtitle = LocalizedStringResource("settings.personalization.theme.subtitle", defaultValue: "Choose Weigh's appearance.")
 		static let goalsTitle = LocalizedStringResource("settings.section.goals.title", defaultValue: "Goals")
 		static let currentGoalTitle = LocalizedStringResource("settings.goals.current.title", defaultValue: "Current Goal")
 		static func currentGoalSubtitle(_ target: String, _ start: String?) -> LocalizedStringResource {
@@ -398,7 +398,7 @@ enum L10n {
 		static let setGoalTitle = LocalizedStringResource("settings.goals.set.title", defaultValue: "Set Goal")
 		static let setGoalSubtitle = LocalizedStringResource("settings.goals.set.subtitle", defaultValue: "Track progress toward a target weight.")
 		static let dailyValueTitle = LocalizedStringResource("settings.section.dailyValue.title", defaultValue: "Daily Value")
-		static let dailyValueDescription = LocalizedStringResource("settings.section.dailyValue.description", defaultValue: "Choose how TrimTally treats multiple entries recorded in the same day.")
+		static let dailyValueDescription = LocalizedStringResource("settings.section.dailyValue.description", defaultValue: "Choose how Weigh treats multiple entries recorded in the same day.")
 		static let dailyCalculationTitle = LocalizedStringResource("settings.dailyValue.calculation.title", defaultValue: "Daily Calculation")
 		static let dailyCalculationSubtitle = LocalizedStringResource("settings.dailyValue.calculation.subtitle", defaultValue: "Latest entry or daily average.")
 		static let dailyLatest = LocalizedStringResource("settings.dailyValue.option.latest", defaultValue: "Latest")
@@ -419,17 +419,17 @@ enum L10n {
 		static let iCloudSyncEnabled = LocalizedStringResource("settings.data.iCloudSync.enabled", defaultValue: "On")
 		static let iCloudSyncDisabled = LocalizedStringResource("settings.data.iCloudSync.disabled", defaultValue: "Off")
 		static let iCloudSyncRestartTitle = LocalizedStringResource("settings.data.iCloudSync.restart.title", defaultValue: "Restart Required")
-		static let iCloudSyncRestartMessage = LocalizedStringResource("settings.data.iCloudSync.restart.message", defaultValue: "Please restart TrimTally for this change to take effect. Your data is securely encrypted and only accessible from your devices.")
+		static let iCloudSyncRestartMessage = LocalizedStringResource("settings.data.iCloudSync.restart.message", defaultValue: "Please restart Weigh for this change to take effect. Your data is securely encrypted and only accessible from your devices.")
 		static let exportTitle = LocalizedStringResource("settings.data.export.title", defaultValue: "Export Data")
 		static let exportSubtitle = LocalizedStringResource("settings.data.export.subtitle", defaultValue: "Create a CSV copy of your entries.")
 		static let deleteAllTitle = LocalizedStringResource("settings.data.delete.title", defaultValue: "Delete All Data")
 		static let deleteAllSubtitle = LocalizedStringResource("settings.data.delete.subtitle", defaultValue: "Remove every entry from this device.")
-		static let aboutTitle = LocalizedStringResource("settings.section.about.title", defaultValue: "About TrimTally")
+		static let aboutTitle = LocalizedStringResource("settings.section.about.title", defaultValue: "About Weigh")
 		static let versionLabel = LocalizedStringResource("settings.about.version", defaultValue: "Version")
 		static let privacyPolicy = LocalizedStringResource("settings.about.privacy", defaultValue: "Privacy Policy")
 		static let termsOfService = LocalizedStringResource("settings.about.terms", defaultValue: "Terms of Service")
 		static let supportTitle = LocalizedStringResource("settings.section.support.title", defaultValue: "Support")
-		static let supportDescription = LocalizedStringResource("settings.section.support.description", defaultValue: "Reach out for help or share feedback with the TrimTally team.")
+		static let supportDescription = LocalizedStringResource("settings.section.support.description", defaultValue: "Reach out for help or share feedback with the Weigh team.")
 		static let contactSupport = LocalizedStringResource("settings.support.contact", defaultValue: "Contact Support")
 		static let contactSupportSubtitle = LocalizedStringResource("settings.support.contact.subtitle", defaultValue: "Opens your email app with helpful diagnostics attached.")
 		static let supportFallbackTitle = LocalizedStringResource("settings.support.fallback.title", defaultValue: "Email App Unavailable")
@@ -439,23 +439,23 @@ enum L10n {
 		static let deleteWarning = LocalizedStringResource("settings.data.delete.warning", defaultValue: "This will permanently delete all your weight entries and goals. This action cannot be undone.")
 		static let restorePurchases = LocalizedStringResource("settings.about.restorePurchases", defaultValue: "Restore Purchases")
 		static let restoreSuccessTitle = LocalizedStringResource("settings.restore.success.title", defaultValue: "Purchase Restored")
-		static let restoreSuccessMessage = LocalizedStringResource("settings.restore.success.message", defaultValue: "Your TrimTally Pro purchase has been restored successfully.")
+		static let restoreSuccessMessage = LocalizedStringResource("settings.restore.success.message", defaultValue: "Your Weigh Pro purchase has been restored successfully.")
 		static let restoreNotFoundTitle = LocalizedStringResource("settings.restore.notFound.title", defaultValue: "No Purchase Found")
-		static let restoreNotFoundMessage = LocalizedStringResource("settings.restore.notFound.message", defaultValue: "We couldn't find a previous TrimTally Pro purchase associated with your account.")
+		static let restoreNotFoundMessage = LocalizedStringResource("settings.restore.notFound.message", defaultValue: "We couldn't find a previous Weigh Pro purchase associated with your account.")
 		static let proStatus = LocalizedStringResource("settings.about.proStatus", defaultValue: "Pro")
-		static let proDescription = LocalizedStringResource("settings.about.proDescription", defaultValue: "You have TrimTally Pro")
+		static let proDescription = LocalizedStringResource("settings.about.proDescription", defaultValue: "You have Weigh Pro")
 		static let upgradeToProTitle = LocalizedStringResource("settings.pro.upgradeTitle", defaultValue: "Upgrade to Pro")
 		static let upgradeToProDescription = LocalizedStringResource("settings.pro.upgradeDescription", defaultValue: "Unlock HealthKit sync, data export, and more.")
 		static let noNotificationsScheduled = LocalizedStringResource("settings.debug.noNotifications", defaultValue: "No notifications scheduled")
 		static func scheduledNotificationsTitle(_ count: Int) -> LocalizedStringResource {
 			LocalizedStringResource("settings.debug.scheduledNotifications", defaultValue: "Scheduled Notifications (\(count))")
 		}
-		static let reviewAppTitle = LocalizedStringResource("settings.about.reviewApp.title", defaultValue: "Review TrimTally")
+		static let reviewAppTitle = LocalizedStringResource("settings.about.reviewApp.title", defaultValue: "Review Weigh")
 		static let reviewAppSubtitle = LocalizedStringResource("settings.about.reviewApp.subtitle", defaultValue: "Share your experience on the App Store.")
 	}
 
 	enum Paywall {
-		static let title = LocalizedStringResource("paywall.title", defaultValue: "Unlock TrimTally Pro")
+		static let title = LocalizedStringResource("paywall.title", defaultValue: "Unlock Weigh Pro")
 		static let subtitle = LocalizedStringResource("paywall.subtitle", defaultValue: "Take your weight tracking to the next level with advanced features.")
 		static let featureHealthKitTitle = LocalizedStringResource("paywall.feature.healthkit.title", defaultValue: "HealthKit Sync")
 		static let featureHealthKitDescription = LocalizedStringResource("paywall.feature.healthkit.description", defaultValue: "Automatically sync your weight data with Apple Health.")
@@ -471,10 +471,10 @@ enum L10n {
 		static let premiumFeatureLabel = LocalizedStringResource("paywall.accessibility.premiumFeature", defaultValue: "Premium feature")
 		static let processingPurchaseLabel = LocalizedStringResource("paywall.accessibility.processing", defaultValue: "Processing purchase")
 		static func upgradeButtonLabel(_ price: String) -> LocalizedStringResource {
-			LocalizedStringResource("paywall.accessibility.upgradeButton", defaultValue: "Upgrade to TrimTally Pro for \(price)")
+			LocalizedStringResource("paywall.accessibility.upgradeButton", defaultValue: "Upgrade to Weigh Pro for \(price)")
 		}
 		static let upgradeButtonHint = LocalizedStringResource("paywall.accessibility.upgradeHint", defaultValue: "Activates in-app purchase")
-		static let restoreButtonHint = LocalizedStringResource("paywall.accessibility.restoreHint", defaultValue: "Restores your previous TrimTally Pro purchase")
+		static let restoreButtonHint = LocalizedStringResource("paywall.accessibility.restoreHint", defaultValue: "Restores your previous Weigh Pro purchase")
 	}
 
 	enum Goals {
@@ -556,8 +556,8 @@ enum L10n {
 			static let categoryHabits = LocalizedStringResource("achievements.category.habits", defaultValue: "Habits")
 			static let categoryGoals = LocalizedStringResource("achievements.category.goals", defaultValue: "Goals")
 			static let categoryHealth = LocalizedStringResource("achievements.category.health", defaultValue: "Health")
-			static let sectionPremiumHint = LocalizedStringResource("achievements.section.premiumHint", defaultValue: "Upgrade to TrimTally Pro to unlock premium achievements.")
-			static let proUnlockLine = LocalizedStringResource("achievements.pro.unlockLine", defaultValue: "Unlock this achievement with TrimTally Pro.")
+			static let sectionPremiumHint = LocalizedStringResource("achievements.section.premiumHint", defaultValue: "Upgrade to Weigh Pro to unlock premium achievements.")
+			static let proUnlockLine = LocalizedStringResource("achievements.pro.unlockLine", defaultValue: "Unlock this achievement with Weigh Pro.")
 			static let loggingNewcomerTitle = LocalizedStringResource("achievements.logging.newcomer.title", defaultValue: "First Steps")
 			static let loggingNewcomerDetail = LocalizedStringResource("achievements.logging.newcomer.detail", defaultValue: "Log 10 weight entries")
 			static let loggingRegularTitle = LocalizedStringResource("achievements.logging.regular.title", defaultValue: "Routine Recorder")
@@ -677,7 +677,7 @@ enum L10n {
 			static let metricSection = LocalizedStringResource("debug.achievements.section.metric", defaultValue: "Metric Inputs")
 			static let contextSection = LocalizedStringResource("debug.achievements.section.context", defaultValue: "Evaluation Context")
 			static let unlockStatus = LocalizedStringResource("debug.achievements.unlock.status", defaultValue: "Unlock status")
-			static let requiresPro = LocalizedStringResource("debug.achievements.requiresPro", defaultValue: "Requires TrimTally Pro")
+			static let requiresPro = LocalizedStringResource("debug.achievements.requiresPro", defaultValue: "Requires Weigh Pro")
 			static let totalEntries = LocalizedStringResource("debug.achievements.totalEntries", defaultValue: "Visible entries")
 			static let uniqueDays = LocalizedStringResource("debug.achievements.uniqueDays", defaultValue: "Unique days logged")
 			static let currentStreak = LocalizedStringResource("debug.achievements.longestStreak", defaultValue: "Current streak")

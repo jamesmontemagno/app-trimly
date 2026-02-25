@@ -1,6 +1,6 @@
 //
 //  DashboardView.swift
-//  TrimTally
+//  Weigh
 //
 //  Created by Trimly on 11/19/2025.
 //

@@ -1,6 +1,6 @@
 import SwiftUI
 
-enum TrimlyCardStyle {
+enum WeighCardStyle {
 	case surface
 	case elevated
 	case popup
@@ -93,12 +93,12 @@ enum TrimlyCardStyle {
 	}
 }
 
-struct TrimlyCardContainer<Content: View>: View {
-	private let style: TrimlyCardStyle
+struct WeighCardContainer<Content: View>: View {
+	private let style: WeighCardStyle
 	private let contentPadding: CGFloat?
 	@ViewBuilder private let contentBuilder: () -> Content
     
-	init(style: TrimlyCardStyle = .surface, padding: CGFloat? = nil, @ViewBuilder content: @escaping () -> Content) {
+	init(style: WeighCardStyle = .surface, padding: CGFloat? = nil, @ViewBuilder content: @escaping () -> Content) {
 		self.style = style
 		self.contentPadding = padding
 		self.contentBuilder = content
@@ -124,14 +124,14 @@ struct TrimlyCardContainer<Content: View>: View {
 	}
 }
 
-struct TrimlyCardSection<Content: View>: View {
+struct WeighCardSection<Content: View>: View {
 	private let title: String
 	private let description: String?
-	private let style: TrimlyCardStyle
+	private let style: WeighCardStyle
 	private let spacing: CGFloat
 	@ViewBuilder private let contentBuilder: () -> Content
     
-	init(title: String, description: String? = nil, style: TrimlyCardStyle = .surface, spacing: CGFloat? = nil, @ViewBuilder content: @escaping () -> Content) {
+	init(title: String, description: String? = nil, style: WeighCardStyle = .surface, spacing: CGFloat? = nil, @ViewBuilder content: @escaping () -> Content) {
 		self.title = title
 		self.description = description
 		self.style = style
@@ -140,7 +140,7 @@ struct TrimlyCardSection<Content: View>: View {
 	}
     
 	var body: some View {
-		TrimlyCardContainer(style: style) {
+		WeighCardContainer(style: style) {
 			VStack(alignment: .leading, spacing: spacing) {
 				Text(title)
 					.font(style.titleFont)

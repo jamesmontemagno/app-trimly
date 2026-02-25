@@ -41,8 +41,8 @@ const AppShell = ({ theme, setTheme, resolvedTheme }: AppShellProps) => {
       <header className="header" role="banner">
         <div className="container header-content">
           <div className="logo">
-            <img src={`${import.meta.env.BASE_URL}app-icon.svg`} className="logo-icon" alt="TrimTally Logo" width="32" height="32" />
-            <span className="logo-text">TrimTally</span>
+            <img src={`${import.meta.env.BASE_URL}app-icon.svg`} className="logo-icon" alt="Weigh Logo" width="32" height="32" />
+            <span className="logo-text">Weigh</span>
           </div>
           <nav className="nav" role="navigation" aria-label="Main navigation">
             <button type="button" onClick={scrollToFeatures} aria-label="Navigate to features section">Features</button>
@@ -51,7 +51,7 @@ const AppShell = ({ theme, setTheme, resolvedTheme }: AppShellProps) => {
               className="btn btn-primary btn-sm" 
               target="_blank" 
               rel="noopener noreferrer"
-              aria-label="Download TrimTally from the App Store"
+              aria-label="Download Weigh from the App Store"
             >
               <Download size={16} aria-hidden="true" />
               Download
@@ -102,8 +102,8 @@ const AppShell = ({ theme, setTheme, resolvedTheme }: AppShellProps) => {
           <div className="footer-content">
             <div className="footer-brand">
               <div className="logo">
-                <img src={`${import.meta.env.BASE_URL}app-icon.svg`} className="logo-icon-sm" alt="TrimTally Logo" width="24" height="24" />
-                <span>TrimTally</span>
+                <img src={`${import.meta.env.BASE_URL}app-icon.svg`} className="logo-icon-sm" alt="Weigh Logo" width="24" height="24" />
+                <span>Weigh</span>
               </div>
               <p>© {new Date().getFullYear()} Refractored. All rights reserved.</p>
             </div>

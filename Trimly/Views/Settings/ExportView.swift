@@ -1,6 +1,6 @@
 //
 //  ExportView.swift
-//  TrimTally
+//  Weigh
 //
 //  Created by Trimly on 12/07/2025.
 //
@@ -35,7 +35,7 @@ struct ExportView: View {
 						.multilineTextAlignment(.leading)
 
 					if hasContent {
-						TrimlyCardContainer(style: .popup) {
+						WeighCardContainer(style: .popup) {
 							ScrollView(.horizontal, showsIndicators: true) {
 								Text(verbatim: csvData)
 									.font(.system(.caption, design: .monospaced))

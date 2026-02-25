@@ -1,6 +1,6 @@
-# TrimTally API Documentation
+# Weigh API Documentation
 
-This document describes the internal APIs and architecture of TrimTally.
+This document describes the internal APIs and architecture of Weigh.
 
 ## Table of Contents
 

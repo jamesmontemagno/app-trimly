@@ -11,12 +11,12 @@
       "localizations" : [
         {
           "description" : "Unlock HealthKit sync and data export.",
-          "displayName" : "TrimTally Pro",
+          "displayName" : "Weigh Pro",
           "locale" : "en_US"
         }
       ],
       "productID" : "trimtallypro",
-      "referenceName" : "TrimTally Pro",
+      "referenceName" : "Weigh Pro",
       "type" : "NonConsumable"
     }
   ],

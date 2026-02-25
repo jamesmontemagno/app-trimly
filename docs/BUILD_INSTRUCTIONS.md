@@ -1,8 +1,8 @@
-# Build Instructions for TrimTally
+# Build Instructions for Weigh
 
 ## Prerequisites
 
-Before building TrimTally, ensure you have:
+Before building Weigh, ensure you have:
 
 - **macOS 14.0 or later** (Sonoma or newer)
 - **Xcode 15.0 or later**
@@ -20,15 +20,15 @@ Before building TrimTally, ensure you have:
 
 2. Open the Xcode project or workspace:
    ```bash
-   open TrimTally.xcodeproj
+   open Weigh.xcodeproj
    ```
-   or double-click `TrimTally.xcodeproj` in Finder.
+   or double-click `Weigh.xcodeproj` in Finder.
 
 3. Wait for Xcode to finish indexing and resolving packages.
 
 4. Select your scheme and destination:
-   - **iOS**: `TrimTally` scheme with an iOS simulator or connected device
-   - **macOS**: `TrimTally` scheme with "My Mac"
+   - **iOS**: `Weigh` scheme with an iOS simulator or connected device
+   - **macOS**: `Weigh` scheme with "My Mac"
 
 5. Build and run: Press `⌘R`.
 
@@ -40,7 +40,7 @@ For most development, use Xcode directly. For CI or scripted builds you can use 
 git clone https://github.com/jamesmontemagno/app-trimly.git
 cd app-trimly
 
-xcodebuild -scheme TrimTally \
+xcodebuild -scheme Weigh \
            -destination 'platform=iOS Simulator,name=iPhone 15 Pro' \
            clean build
 ```
@@ -49,7 +49,7 @@ xcodebuild -scheme TrimTally \
 
 ```
 app-trimly/
-├── TrimTally.xcodeproj/         # Xcode project + schemes
+├── Weigh.xcodeproj/         # Xcode project + schemes
 ├── Trimly/                      # Shared iOS + macOS sources
 │   ├── TrimlyApp.swift          # App entry point
 │   ├── Trimly.swift             # Scene wiring
@@ -69,15 +69,15 @@ app-trimly/
 
 ### iOS
 
-1. Open `TrimTally.xcodeproj` in Xcode.
-2. Select the `TrimTally` scheme.
+1. Open `Weigh.xcodeproj` in Xcode.
+2. Select the `Weigh` scheme.
 3. Choose an iOS Simulator (e.g., iPhone 15 Pro) or a physical device.
 4. Press `⌘R` to build and run.
 
 ### macOS
 
-1. Open `TrimTally.xcodeproj` in Xcode.
-2. Select the `TrimTally` scheme.
+1. Open `Weigh.xcodeproj` in Xcode.
+2. Select the `Weigh` scheme.
 3. Choose "My Mac" as the destination.
 4. Press `⌘R` to build and run.
 
@@ -89,7 +89,7 @@ app-trimly/
 
 ### Command Line (CI)
 ```bash
-xcodebuild -scheme TrimTally -destination 'platform=iOS Simulator,name=iPhone 15 Pro' test
+xcodebuild -scheme Weigh -destination 'platform=iOS Simulator,name=iPhone 15 Pro' test
 ```
 
 ## Common Issues
@@ -161,7 +161,7 @@ For automated builds (GitHub Actions, etc.), prefer `xcodebuild`:
 ```yaml
 - name: Build
    run: |
-      xcodebuild -scheme TrimTally \
+      xcodebuild -scheme Weigh \
                       -destination 'platform=iOS Simulator,name=iPhone 15 Pro' \
                       clean build
 ```

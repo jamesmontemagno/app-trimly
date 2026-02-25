@@ -6,8 +6,8 @@ const PrivacyPage = () => {
         <p className="legal-meta">Last updated: December 18, 2025</p>
 
         <p>
-          This Privacy Policy explains how TrimTally, a product of Refractored LLC ("we", "our", or "us"), handles
-          information when you use the TrimTally mobile applications and website. TrimTally is designed to respect your
+          This Privacy Policy explains how Weigh, a product of Refractored LLC ("we", "our", or "us"), handles
+          information when you use the Weigh mobile applications and website. Weigh is designed to respect your
           privacy by default. We do not create user accounts, we do not profile you, and we do not sell or share your
           information with advertisers.
         </p>
@@ -20,7 +20,7 @@ const PrivacyPage = () => {
             our servers.
           </li>
           <li>
-            <strong>Optional iCloud sync.</strong> You can choose to sync TrimTally data with your personal iCloud account
+            <strong>Optional iCloud sync.</strong> You can choose to sync Weigh data with your personal iCloud account
             to keep entries available across your devices. When enabled, storage and transmission are managed entirely by
             Apple. Your information remains encrypted in transit and at rest according to Apple&#39;s policies, and Refractored
             LLC cannot access it.
@@ -30,13 +30,13 @@ const PrivacyPage = () => {
         <h2>Information We Do Not Collect</h2>
         <p>
           We do not collect personal identifiers, contact information, location, biometrics, payment details, or device
-          analytics. TrimTally does not use third-party analytics SDKs, ad networks, or tracking pixels. The only network
+          analytics. Weigh does not use third-party analytics SDKs, ad networks, or tracking pixels. The only network
           calls the app makes are those required by Apple services you explicitly enable (such as iCloud or HealthKit).
         </p>
 
         <h2>Health Data</h2>
         <p>
-          If you connect to Apple Health, TrimTally writes and reads weight data through the HealthKit framework with your
+          If you connect to Apple Health, Weigh writes and reads weight data through the HealthKit framework with your
           permission. Apple Health controls access, auditing, and revocation. Refractored LLC never sees your Health data
           and does not store it on external servers.
         </p>
@@ -44,29 +44,29 @@ const PrivacyPage = () => {
         <h2>Your Choices and Control</h2>
         <ul>
           <li>
-            <strong>Stay local.</strong> Simply avoid enabling iCloud sync to keep all TrimTally data stored only on the
+            <strong>Stay local.</strong> Simply avoid enabling iCloud sync to keep all Weigh data stored only on the
             device you are using.
           </li>
           <li>
-            <strong>Disable sync at any time.</strong> You can turn iCloud off in TrimTally or in iOS/macOS Settings &gt;
+            <strong>Disable sync at any time.</strong> You can turn iCloud off in Weigh or in iOS/macOS Settings &gt;
             Apple ID &gt; iCloud. Existing iCloud backups remain under your Apple account until you delete them.
           </li>
           <li>
-            <strong>Delete your data.</strong> Remove entries individually inside TrimTally or delete the app to remove all
-            locally stored information. If iCloud sync was enabled, delete TrimTally data from iCloud Drive or Health app as
+            <strong>Delete your data.</strong> Remove entries individually inside Weigh or delete the app to remove all
+            locally stored information. If iCloud sync was enabled, delete Weigh data from iCloud Drive or Health app as
             needed.
           </li>
         </ul>
 
         <h2>Children&apos;s Privacy</h2>
         <p>
-          TrimTally is not marketed to children under 13. If you learn that a child under 13 has provided us with
+          Weigh is not marketed to children under 13. If you learn that a child under 13 has provided us with
           information, please contact us and we will help you delete it.
         </p>
 
         <h2>Security</h2>
         <p>
-          TrimTally relies on Apple&#39;s platform security, including full-disk encryption and secure enclave protections,
+          Weigh relies on Apple&#39;s platform security, including full-disk encryption and secure enclave protections,
           to safeguard on-device data. All optional sync features use Apple-managed encryption. We encourage you to protect
           your devices with a passcode and keep your Apple ID secure.
         </p>

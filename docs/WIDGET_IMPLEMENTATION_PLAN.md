@@ -1,13 +1,13 @@
-# TrimTally Widget Implementation Plan
+# Weigh Widget Implementation Plan
 
-This document outlines a concrete, end-to-end plan for integrating the TrimTally home screen widget with the existing SwiftData + CloudKit stack. The goal is to make the widget show the user	s current weight, delta, and trend using the same underlying data and analytics as the main app, while keeping the implementation maintainable.
+This document outlines a concrete, end-to-end plan for integrating the Weigh home screen widget with the existing SwiftData + CloudKit stack. The goal is to make the widget show the user	s current weight, delta, and trend using the same underlying data and analytics as the main app, while keeping the implementation maintainable.
 
 ## Goals
 
 - Show current weight, recent change (delta), and trend in small/medium widgets.
 - Use the same data source as the main app:
   - SwiftData models: `WeightEntry`, `Goal`, `AppSettings`.
-  - CloudKit-backed storage using `iCloud.com.refractored.trimtally`.
+  - CloudKit-backed storage using `iCloud.com.refractored.weigh`.
 - Minimize duplication of analytics logic (re-use `WeightAnalytics` where practical).
 - Keep widget reads lightweight and read-only.
 - Ensure widgets stay fresh when the user logs new entries.
@@ -15,7 +15,7 @@ This document outlines a concrete, end-to-end plan for integrating the TrimTally
 ## High-Level Architecture
 
 - **Widget extension target**
-  - New target: `TrimTallyWidgetExtension` (name can be adjusted).
+  - New target: `WeighWidgetExtension` (name can be adjusted).
   - Platform: iOS (or Multiplatform if desired); hosts home screen widgets.
   - Contains a `WidgetBundle` + `Widget` type and `TimelineProvider` implementation.
 
@@ -23,7 +23,7 @@ This document outlines a concrete, end-to-end plan for integrating the TrimTally
   - Option A (recommended for v1): The widget creates its own `ModelContainer` using the same SwiftData schema and CloudKit configuration as the main app.
     - Pros: No extra storage format; multi-device sync built in.
     - Cons: Slightly heavier initialization cost versus a simple UserDefaults read.
-  - Option B (optional optimization later): Main app writes a summary payload into `UserDefaults(suiteName: "group.com.refractored.trimtally")`, widget reads that summary.
+  - Option B (optional optimization later): Main app writes a summary payload into `UserDefaults(suiteName: "group.com.refractored.weigh")`, widget reads that summary.
 
 - **Analytics**
   - Re-use `WeightAnalytics` or a subset of its logic to compute:
@@ -39,19 +39,19 @@ This document outlines a concrete, end-to-end plan for integrating the TrimTally
 
 ## Step 1: Create the Widget Extension Target
 
-1. Open `TrimTally.xcodeproj` in Xcode.
+1. Open `Weigh.xcodeproj` in Xcode.
 2. Go to **File → New → Target...**.
 3. Select **Widget Extension** (under iOS or Multiplatform → Application Extension).
 4. Configure the new target:
-   - Product Name: `TrimTallyWidgetExtension`.
-   - Embedded in Application: `TrimTally`.
+   - Product Name: `WeighWidgetExtension`.
+   - Embedded in Application: `Weigh`.
    - Language: Swift.
    - Disable the option to include a separate host app (if prompted).
 5. Finish the wizard.
 
 Xcode will add:
-- A new target `TrimTallyWidgetExtension` to the project.
-- A starter Swift file (e.g., `TrimTallyWidgetExtension.swift`) containing a `WidgetBundle` and basic widget.
+- A new target `WeighWidgetExtension` to the project.
+- A starter Swift file (e.g., `WeighWidgetExtension.swift`) containing a `WidgetBundle` and basic widget.
 
 > **Note:** The existing file `Trimly/Widget/TrimlyWidget.swift` is not currently part of any widget extension. It should be wired into this new target in a later step.
 
@@ -60,8 +60,8 @@ Xcode will add:
 ## Step 2: Wire Up the Existing Widget Swift File
 
 1. In Xcode Project Navigator, locate [Trimly/Widget/TrimlyWidget.swift](../Trimly/Widget/TrimlyWidget.swift).
-2. Open the **File Inspector** and under **Target Membership**, check the box for the new `TrimTallyWidgetExtension` target.
-3. Optionally uncheck the main `TrimTally` app target for this file, so it lives purely in the extension.
+2. Open the **File Inspector** and under **Target Membership**, check the box for the new `WeighWidgetExtension` target.
+3. Optionally uncheck the main `Weigh` app target for this file, so it lives purely in the extension.
 4. In the widget extension target’s source group, you can either:
    - Move `TrimlyWidget.swift` into the widget target group, **or**
    - Leave it physically in the `Trimly/Widget` folder and just rely on target membership.
@@ -75,20 +75,20 @@ At this point, the extension target should build with the placeholder widget dat
 ## Step 3: Configure Widget Entitlements
 
 The widget extension must have compatible entitlements with the main app so it can access:
-- The same CloudKit container: `iCloud.com.refractored.trimtally`.
-- The same app group: `group.com.refractored.trimtally` (for any future shared storage).
+- The same CloudKit container: `iCloud.com.refractored.weigh`.
+- The same app group: `group.com.refractored.weigh` (for any future shared storage).
 
-1. Select the `TrimTallyWidgetExtension` target in Xcode.
+1. Select the `WeighWidgetExtension` target in Xcode.
 2. Go to **Signing & Capabilities**.
 3. Add **App Groups** capability:
-   - Check or add the group: `group.com.refractored.trimtally`.
+   - Check or add the group: `group.com.refractored.weigh`.
 4. Add **iCloud** capability:
    - Enable **CloudKit** under Services.
-   - Under Containers, select `iCloud.com.refractored.trimtally`.
+   - Under Containers, select `iCloud.com.refractored.weigh`.
 5. Confirm that Xcode generates a widget entitlements file (e.g., `TrimlyWidgetExtension.entitlements`) with:
-   - `com.apple.developer.icloud-container-identifiers = ["iCloud.com.refractored.trimtally"]`
+   - `com.apple.developer.icloud-container-identifiers = ["iCloud.com.refractored.weigh"]`
    - `com.apple.developer.icloud-services = ["CloudKit"]`
-   - `com.apple.security.application-groups = ["group.com.refractored.trimtally"]`
+   - `com.apple.security.application-groups = ["group.com.refractored.weigh"]`
 
 No Swift code changes are needed at this step; this is purely configuration.
 
@@ -105,9 +105,9 @@ To reuse these types in the widget:
 1. Identify their definitions:
    - `WeightUnit` is likely defined in a model or utility file in `Trimly/Models` or `Trimly/Services`.
    - `WeightAnalytics.TrendDirection` is defined in [Trimly/Services/WeightAnalytics.swift](../Trimly/Services/WeightAnalytics.swift).
-2. In Xcode, ensure the files containing these types are added to the `TrimTallyWidgetExtension` target:
+2. In Xcode, ensure the files containing these types are added to the `WeighWidgetExtension` target:
    - Select each relevant Swift file (e.g., `WeightEntry.swift`, `WeightAnalytics.swift`, any file defining `WeightUnit`).
-   - In File Inspector → **Target Membership**, check `TrimTallyWidgetExtension`.
+   - In File Inspector → **Target Membership**, check `WeighWidgetExtension`.
 3. Keep an eye on dependencies: any file you add to the widget target must compile in that context.
    - Avoid pulling in heavy dependencies that are not available in a widget environment (e.g., direct HealthKit usage if not strictly needed).
    - If `WeightAnalytics` has HealthKit-related code, consider:
@@ -193,7 +193,7 @@ This ensures widgets re-query the data source soon after important changes, rath
 
 1. **Build and run the app** in Debug with widgets enabled.
 2. On an iOS simulator or device:
-   - Long-press on the home screen → **Edit Home Screen** → `+` → add TrimTally widget.
+   - Long-press on the home screen → **Edit Home Screen** → `+` → add Weigh widget.
 3. Verify:
    - Widget loads without errors (check Xcode console for extension logs).
    - Weight, delta, and trend match what the main app shows.
@@ -212,7 +212,7 @@ If SwiftData initialization overhead in the widget becomes a concern, you can in
 1. Define a small, codable `WeightSummary` struct (weight, unit, delta, trend, timestamp).
 2. In the main app, after computing analytics for dashboard, write `WeightSummary` to:
 
-   - `UserDefaults(suiteName: "group.com.refractored.trimtally")` or a small file inside the app group container.
+   - `UserDefaults(suiteName: "group.com.refractored.weigh")` or a small file inside the app group container.
 
 3. In the widget extension:
    - Read the latest `WeightSummary` from the app group.
@@ -226,7 +226,7 @@ This can coexist with CloudKit: the app remains responsible for computing the su
 
 When you	re ready to implement, use this as a quick checklist:
 
-- [ ] Create `TrimTallyWidgetExtension` target in Xcode.
+- [ ] Create `WeighWidgetExtension` target in Xcode.
 - [ ] Add `Trimly/Widget/TrimlyWidget.swift` to the widget target.
 - [ ] Remove/merge the default starter widget file from the extension.
 - [ ] Add App Groups + iCloud (CloudKit) capabilities to the widget extension.
@@ -236,4 +236,4 @@ When you	re ready to implement, use this as a quick checklist:
 - [ ] Call `WidgetCenter.shared.reloadTimelines(ofKind: "TrimlyWidget")` from the main app after relevant data changes.
 - [ ] Test adding the widget on device/simulator and validate correct values & updates.
 
-Once these steps are complete, TrimTally will have a fully integrated, data-driven widget that stays in sync across devices via CloudKit.
+Once these steps are complete, Weigh will have a fully integrated, data-driven widget that stays in sync across devices via CloudKit.

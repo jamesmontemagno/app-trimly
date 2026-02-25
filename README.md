@@ -1,10 +1,10 @@
-# TrimTally
+# Weigh
 
 A modern, supportive weight tracking app for iOS and macOS built with SwiftUI and SwiftData.
 
 ## Overview
 
-TrimTally is designed to be your mindful companion for weight tracking, featuring:
+Weigh is designed to be your mindful companion for weight tracking, featuring:
 
 - **Multi-entry per day** with flexible daily aggregation (latest or average)
 - **Comprehensive analytics** including moving averages, EMA, and trend analysis
@@ -51,7 +51,7 @@ All data is stored using SwiftData with iCloud sync enabled:
 
 ## Architecture
 
-TrimTally follows modern iOS/macOS development best practices:
+Weigh follows modern iOS/macOS development best practices:
 
 - **SwiftUI** for declarative UI
 - **SwiftData** for persistent storage with iCloud sync
@@ -63,7 +63,7 @@ TrimTally follows modern iOS/macOS development best practices:
 
 ```
 app-trimly/
-├── TrimTally.xcodeproj/                # Shared iOS + macOS project
+├── Weigh.xcodeproj/                # Shared iOS + macOS project
 ├── Trimly/                             # App sources
 │   ├── TrimlyApp.swift                 # App entry point (@main)
 │   ├── Trimly.swift                    # Shared scene setup
@@ -98,10 +98,10 @@ app-trimly/
 	```
 2. Open the project:
 	```bash
-	open TrimTally.xcodeproj
+	open Weigh.xcodeproj
 	```
 	or launch Xcode and select **File → Open...**.
-3. Choose the `TrimTally` scheme and a destination:
+3. Choose the `Weigh` scheme and a destination:
 	- **iOS**: Any simulator or connected device
 	- **macOS**: `My Mac`
 4. Press `⌘R` to build and run, `⌘U` to run unit tests.
@@ -112,7 +112,7 @@ app-trimly/
 git clone https://github.com/jamesmontemagno/app-trimly.git
 cd app-trimly
 
-xcodebuild -scheme TrimTally \
+xcodebuild -scheme Weigh \
 			  -destination 'platform=iOS Simulator,name=iPhone 15 Pro' \
 			  clean test
 ```
@@ -142,7 +142,7 @@ xcodebuild -scheme TrimTally \
 
 ## Data Privacy
 
-TrimTally respects your privacy:
+Weigh respects your privacy:
 
 - All data stored locally with optional iCloud sync
 - No third-party analytics or tracking
@@ -169,7 +169,7 @@ Contributions are welcome! Please feel free to submit issues or pull requests.
 
 ## Localization
 
-TrimTally is fully localized in three languages:
+Weigh is fully localized in three languages:
 - **English** (primary) - 474 strings
 - **Spanish** (Español) - 474 strings (100% complete)
 - **French** (Français) - 474 strings (100% complete)
@@ -191,4 +191,4 @@ Built with modern Apple technologies:
 
 ---
 
-**TrimTally** - Your supportive companion for mindful weight tracking.
+**Weigh** - Your supportive companion for mindful weight tracking.

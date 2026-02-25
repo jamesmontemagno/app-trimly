@@ -1,6 +1,6 @@
 //
 //  GoalProjectionCard.swift
-//  TrimTally
+//  Weigh
 //
 //  Created by Trimly on 12/7/2025.
 //

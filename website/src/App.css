@@ -72,6 +72,11 @@
   color: white !important;
 }
 
+.btn-sm {
+  padding: 8px 14px;
+  font-size: 0.875rem;
+}
+
 .theme-toggle {
   display: flex;
   background-color: var(--surface);
@@ -350,5 +355,22 @@
   .footer-links {
     flex-direction: column;
     gap: 12px;
+  }
+
+  /* Compact header on mobile */
+  .header-content {
+    height: 52px;
+  }
+
+  .logo-text {
+    display: none;
+  }
+
+  .nav {
+    gap: 8px;
+  }
+
+  .theme-btn {
+    padding: 4px;
   }
 }

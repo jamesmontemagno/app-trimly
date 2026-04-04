@@ -5,45 +5,60 @@
   
   <!-- Main landing page -->
   <url>
-    <loc>https://trimtally.app/</loc>
-    <lastmod>2025-12-25</lastmod>
+    <loc>https://weigh.app/</loc>
+    <lastmod>2026-04-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <mobile:mobile/>
     <image:image>
-      <image:loc>https://trimtally.app/app-icon.png</image:loc>
-      <image:title>TrimTally App Icon</image:title>
-      <image:caption>TrimTally - Private Weight Tracking App</image:caption>
+      <image:loc>https://weigh.app/app-icon.png</image:loc>
+      <image:title>Weigh App Icon</image:title>
+      <image:caption>Weigh - Private Weight Tracking App</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://trimtally.app/screenshots/light/dashboard.png</image:loc>
-      <image:title>TrimTally Dashboard</image:title>
-      <image:caption>TrimTally app dashboard showing weight tracking features</image:caption>
+      <image:loc>https://weigh.app/screenshots/light/dashboard.png</image:loc>
+      <image:title>Weigh Dashboard</image:title>
+      <image:caption>Weigh app dashboard showing weight tracking features</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://trimtally.app/screenshots/light/analytics.png</image:loc>
-      <image:title>TrimTally Analytics</image:title>
-      <image:caption>TrimTally advanced analytics and charts</image:caption>
+      <image:loc>https://weigh.app/screenshots/light/analytics.png</image:loc>
+      <image:title>Weigh Analytics</image:title>
+      <image:caption>Weigh advanced analytics and charts</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://trimtally.app/screenshots/light/add-entry.png</image:loc>
-      <image:title>TrimTally Add Entry</image:title>
-      <image:caption>Add weight entry in TrimTally app</image:caption>
+      <image:loc>https://weigh.app/screenshots/light/add-entry.png</image:loc>
+      <image:title>Weigh Add Entry</image:title>
+      <image:caption>Add weight entry in Weigh app</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://weigh.app/screenshots/dark/dashboard.png</image:loc>
+      <image:title>Weigh Dashboard (Dark Mode)</image:title>
+      <image:caption>Weigh app dashboard in dark mode</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://weigh.app/screenshots/dark/analytics.png</image:loc>
+      <image:title>Weigh Analytics (Dark Mode)</image:title>
+      <image:caption>Weigh advanced analytics in dark mode</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://weigh.app/screenshots/dark/add-entry.png</image:loc>
+      <image:title>Weigh Add Entry (Dark Mode)</image:title>
+      <image:caption>Add weight entry in Weigh app dark mode</image:caption>
     </image:image>
   </url>
   
   <!-- Privacy Policy -->
   <url>
-    <loc>https://trimtally.app/#/privacy</loc>
-    <lastmod>2025-12-25</lastmod>
+    <loc>https://weigh.app/#/privacy</loc>
+    <lastmod>2026-04-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <!-- Terms of Service -->
   <url>
-    <loc>https://trimtally.app/#/terms</loc>
-    <lastmod>2025-12-25</lastmod>
+    <loc>https://weigh.app/#/terms</loc>
+    <lastmod>2026-04-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

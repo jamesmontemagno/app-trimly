@@ -122,7 +122,7 @@ const LandingPage = ({ resolvedTheme, onLearnMore }: LandingPageProps) => {
             </div>
             <div className="hero-buttons">
               <a 
-                href="https://apps.apple.com/us/app/trimtally/id6755896878" 
+                href="https://apps.apple.com/us/app/weigh/id6755896878" 
                 className="btn btn-primary" 
                 target="_blank" 
                 rel="noopener noreferrer"

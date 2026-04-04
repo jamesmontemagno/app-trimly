@@ -47,7 +47,7 @@ const AppShell = ({ theme, setTheme, resolvedTheme }: AppShellProps) => {
           <nav className="nav" role="navigation" aria-label="Main navigation">
             <button type="button" onClick={scrollToFeatures} aria-label="Navigate to features section">Features</button>
             <a 
-              href="https://apps.apple.com/us/app/trimtally/id6755896878" 
+              href="https://apps.apple.com/us/app/weigh/id6755896878" 
               className="btn btn-primary btn-sm" 
               target="_blank" 
               rel="noopener noreferrer"

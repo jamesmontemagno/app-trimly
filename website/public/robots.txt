@@ -1,11 +1,11 @@
-# robots.txt for TrimTally Website
-# https://trimtally.app/
+# robots.txt for Weigh Website
+# https://weigh.app/
 
 User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://trimtally.app/sitemap.xml
+Sitemap: https://weigh.app/sitemap.xml
 
 # Disallow common paths
 Disallow: /node_modules/

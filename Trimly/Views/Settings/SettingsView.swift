@@ -161,13 +161,14 @@ struct SettingsView: View {
 										.foregroundStyle(.secondary)
 									Image(systemName: "chevron.right")
 										.foregroundStyle(.secondary)
+										.accessibilityHidden(true)
 								}
 								.padding(.vertical, 4)
 							}
 						}
 						.buttonStyle(.plain)
 						.accessibilityLabel(String(localized: L10n.Settings.proStatus))
-						.accessibilityHint(String(localized: L10n.Settings.proDescription))
+						.accessibilityHint(String(localized: L10n.Settings.manageProButtonHint))
 					}
 
 					settingsSection(

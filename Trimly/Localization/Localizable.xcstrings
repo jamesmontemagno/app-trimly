@@ -9630,6 +9630,17 @@
         }
       }
     },
+    "settings.pro.manageButtonHint" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Opens subscription management options"
+          }
+        }
+      }
+    },
     "settings.about.restorePurchases" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {

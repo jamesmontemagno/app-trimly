@@ -444,6 +444,8 @@ enum L10n {
 		static let restoreNotFoundMessage = LocalizedStringResource("settings.restore.notFound.message", defaultValue: "We couldn't find a previous Weigh Pro purchase associated with your account.")
 		static let proStatus = LocalizedStringResource("settings.about.proStatus", defaultValue: "Pro")
 		static let proDescription = LocalizedStringResource("settings.about.proDescription", defaultValue: "You have Weigh Pro")
+		static let manageProButton = LocalizedStringResource("settings.pro.manageButton", defaultValue: "Manage")
+		static let manageProButtonHint = LocalizedStringResource("settings.pro.manageButtonHint", defaultValue: "Opens subscription management options")
 		static let upgradeToProTitle = LocalizedStringResource("settings.pro.upgradeTitle", defaultValue: "Upgrade to Pro")
 		static let upgradeToProDescription = LocalizedStringResource("settings.pro.upgradeDescription", defaultValue: "Unlock HealthKit sync, data export, and more.")
 		static let noNotificationsScheduled = LocalizedStringResource("settings.debug.noNotifications", defaultValue: "No notifications scheduled")
@@ -475,6 +477,8 @@ enum L10n {
 		}
 		static let upgradeButtonHint = LocalizedStringResource("paywall.accessibility.upgradeHint", defaultValue: "Activates in-app purchase")
 		static let restoreButtonHint = LocalizedStringResource("paywall.accessibility.restoreHint", defaultValue: "Restores your previous Weigh Pro purchase")
+		static let manageSubscription = LocalizedStringResource("paywall.button.manageSubscription", defaultValue: "Manage Subscription")
+		static let manageSubscriptionHint = LocalizedStringResource("paywall.accessibility.manageSubscriptionHint", defaultValue: "Opens Apple support page to manage your subscription")
 	}
 
 	enum Goals {

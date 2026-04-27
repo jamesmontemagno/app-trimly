@@ -83,6 +83,13 @@ struct PaywallView: View {
                         .buttonStyle(.plain)
                         .foregroundStyle(.secondary)
                         .accessibilityHint(String(localized: L10n.Paywall.restoreButtonHint))
+                        
+                        if let manageURL = URL(string: "https://support.apple.com/118428") {
+                            Link(String(localized: L10n.Paywall.manageSubscription), destination: manageURL)
+                                .font(.footnote)
+                                .foregroundStyle(.secondary)
+                                .accessibilityHint(String(localized: L10n.Paywall.manageSubscriptionHint))
+                        }
                     }
                 }
                 .padding(.bottom, 32)

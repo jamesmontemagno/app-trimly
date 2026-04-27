@@ -135,27 +135,40 @@ struct SettingsView: View {
 						}
 						.buttonStyle(.plain)
 					} else {
-						WeighCardContainer(style: .elevated) {
-							HStack {
-								RoundedRectangle(cornerRadius: 14, style: .continuous)
-									.fill(Color.yellow.opacity(0.15))
-									.frame(width: 52, height: 52)
-									.overlay(
-										Image(systemName: "crown.fill")
-											.font(.title3)
-											.foregroundStyle(.yellow)
-									)
-								VStack(alignment: .leading, spacing: 4) {
-									Text(L10n.Settings.proStatus)
-										.font(.headline)
-									Text(L10n.Settings.proDescription)
+						Button {
+							showingPaywall = true
+						} label: {
+							WeighCardContainer(style: .elevated) {
+								HStack {
+									RoundedRectangle(cornerRadius: 14, style: .continuous)
+										.fill(Color.yellow.opacity(0.15))
+										.frame(width: 52, height: 52)
+										.overlay(
+											Image(systemName: "crown.fill")
+												.font(.title3)
+												.foregroundStyle(.yellow)
+										)
+									VStack(alignment: .leading, spacing: 4) {
+										Text(L10n.Settings.proStatus)
+											.font(.headline)
+										Text(L10n.Settings.proDescription)
+											.font(.subheadline)
+											.foregroundStyle(.secondary)
+									}
+									Spacer()
+									Text(L10n.Settings.manageProButton)
 										.font(.subheadline)
 										.foregroundStyle(.secondary)
+									Image(systemName: "chevron.right")
+										.foregroundStyle(.secondary)
+										.accessibilityHidden(true)
 								}
-								Spacer()
+								.padding(.vertical, 4)
 							}
-							.padding(.vertical, 4)
 						}
+						.buttonStyle(.plain)
+						.accessibilityLabel(String(localized: L10n.Settings.proStatus))
+						.accessibilityHint(String(localized: L10n.Settings.manageProButtonHint))
 					}
 
 					settingsSection(

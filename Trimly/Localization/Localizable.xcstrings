@@ -8811,6 +8811,17 @@
         }
       }
     },
+    "paywall.accessibility.manageSubscriptionHint" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Opens Apple support page to manage your subscription"
+          }
+        }
+      }
+    },
     "paywall.accessibility.upgradeButton" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -8840,6 +8851,17 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Close"
+          }
+        }
+      }
+    },
+    "paywall.button.manageSubscription" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Manage Subscription"
           }
         }
       }
@@ -9593,6 +9615,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pro"
+          }
+        }
+      }
+    },
+    "settings.pro.manageButton" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Manage"
+          }
+        }
+      }
+    },
+    "settings.pro.manageButtonHint" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Opens subscription management options"
           }
         }
       }

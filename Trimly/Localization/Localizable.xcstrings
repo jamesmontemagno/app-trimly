@@ -9619,6 +9619,17 @@
         }
       }
     },
+    "settings.pro.manageButton" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Manage"
+          }
+        }
+      }
+    },
     "settings.about.restorePurchases" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {

@@ -475,6 +475,8 @@ enum L10n {
 		}
 		static let upgradeButtonHint = LocalizedStringResource("paywall.accessibility.upgradeHint", defaultValue: "Activates in-app purchase")
 		static let restoreButtonHint = LocalizedStringResource("paywall.accessibility.restoreHint", defaultValue: "Restores your previous Weigh Pro purchase")
+		static let manageSubscription = LocalizedStringResource("paywall.button.manageSubscription", defaultValue: "Manage Subscription")
+		static let manageSubscriptionHint = LocalizedStringResource("paywall.accessibility.manageSubscriptionHint", defaultValue: "Opens Apple support page to manage your subscription")
 	}
 
 	enum Goals {

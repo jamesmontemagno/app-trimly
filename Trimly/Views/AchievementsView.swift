@@ -295,7 +295,7 @@ private struct AchievementCard: View {
 	
 	private var accessibilityValue: String {
 		if snapshot.requiresPro {
-			return "Requires Weigh Pro to unlock"
+			return "Requires My Weight Pro to unlock"
 		}
 		if snapshot.isUnlocked {
 			if let unlockedDate = snapshot.model.unlockedAt {
@@ -310,7 +310,7 @@ private struct AchievementCard: View {
 	
 	private var accessibilityHint: String {
 		if snapshot.requiresPro {
-			return "Tap to upgrade to Weigh Pro"
+			return "Tap to upgrade to My Weight Pro"
 		}
 		#if DEBUG
 		return "Tap to view diagnostic details"

@@ -1,8 +1,8 @@
-# Weigh - Implementation Summary
+# My Weight - Implementation Summary
 
 ## Project Overview
 
-**Weigh** is a modern, supportive weight tracking application for iOS and macOS, built with SwiftUI and SwiftData. This implementation represents a complete Version 1.2 with all core features, analytics, HealthKit integration, widgets, and full internationalization.
+**My Weight** is a modern, supportive weight tracking application for iOS and macOS, built with SwiftUI and SwiftData. This implementation represents a complete Version 1.2 with all core features, analytics, HealthKit integration, widgets, and full internationalization.
 
 ## What Has Been Built
 
@@ -282,9 +282,9 @@ git clone https://github.com/jamesmontemagno/app-trimly.git
 cd app-trimly
 
 # 2. Open in Xcode
-open Weigh.xcodeproj
+open TrimTally.xcodeproj
 
-# 3. Select platform (iOS/macOS) via the Weigh scheme
+# 3. Select platform (iOS/macOS) via the TrimTally scheme
 # 4. Press ⌘R to build and run
 ```
 
@@ -295,7 +295,7 @@ open Weigh.xcodeproj
 ⌘U
 
 # Or from command line (CI)
-xcodebuild -scheme Weigh -destination 'platform=iOS Simulator,name=iPhone 15 Pro' test
+xcodebuild -scheme TrimTally -destination 'platform=iOS Simulator,name=iPhone 15 Pro' test
 ```
 
 ## Project Statistics
@@ -393,7 +393,7 @@ From the Product Requirements Framework:
 
 ## Conclusion
 
-This is a **complete, production-ready foundation** for Weigh. All core features are implemented with:
+This is a **complete, production-ready foundation** for My Weight. All core features are implemented with:
 
 - ✅ Clean architecture
 - ✅ Comprehensive tests

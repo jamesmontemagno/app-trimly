@@ -1,6 +1,6 @@
 //
 //  ChartLegend.swift
-//  Weigh
+//  My Weight
 //
 //  Created by Trimly on 12/7/2025.
 //

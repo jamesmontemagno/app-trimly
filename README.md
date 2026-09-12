@@ -65,7 +65,7 @@ Manual measurements can be edited. Imported HealthKit measurements support app-l
 
 ## Architecture
 
-Weigh follows modern iOS/macOS development best practices:
+My Weight follows modern iOS/macOS development best practices:
 
 - **SwiftUI** for declarative UI
 - **SwiftData** for persistent storage with iCloud sync
@@ -162,7 +162,7 @@ xcodebuild -scheme TrimTally \
 
 ## Data Privacy
 
-Weigh respects your privacy:
+My Weight respects your privacy:
 
 - All data stored locally with optional iCloud sync
 - No third-party analytics or tracking
@@ -194,7 +194,7 @@ Contributions are welcome! Please feel free to submit issues or pull requests.
 
 ## Localization
 
-Weigh is fully localized in three languages:
+My Weight is fully localized in three languages:
 - **English** (primary) - 474 strings
 - **Spanish** (Español) - 474 strings (100% complete)
 - **French** (Français) - 474 strings (100% complete)
@@ -216,4 +216,4 @@ Built with modern Apple technologies:
 
 ---
 
-**Weigh** - Your supportive companion for mindful weight tracking.
+**My Weight** - Your supportive companion for mindful weight tracking.

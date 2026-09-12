@@ -1,6 +1,6 @@
 //
 //  GoalHistoryView.swift
-//  Weigh
+//  My Weight
 //
 //  Created by Trimly on 12/07/2025.
 //

@@ -36,7 +36,7 @@ private struct MainWindowKey: FocusedValueKey {
 }
 
 extension FocusedValues {
-    var isTrimTallyMainWindow: Bool? {
+    var isMyWeightMainWindow: Bool? {
         get { self[MainWindowKey.self] }
         set { self[MainWindowKey.self] = newValue }
     }
@@ -45,7 +45,7 @@ extension FocusedValues {
 struct QuickLogCommands: Commands {
     @ObservedObject var router: AppRouter
     @Environment(\.openWindow) private var openWindow
-    @FocusedValue(\.isTrimTallyMainWindow) private var isMainWindow
+    @FocusedValue(\.isMyWeightMainWindow) private var isMainWindow
 
     var body: some Commands {
         CommandGroup(replacing: .newItem) {

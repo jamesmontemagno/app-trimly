@@ -1,16 +1,19 @@
 //
 //  Trimly.swift
-//  Weigh
+//  My Weight
 //
-//  Created by Weigh on 11/19/2025.
+//  Created by My Weight on 11/19/2025.
 //
 
-/// Weigh - A modern weight tracking app for iOS and macOS
+/// My Weight - A modern weight tracking app for iOS and macOS
 /// 
-/// This module contains all the core functionality for the Weigh app,
+/// This module contains all the core functionality for the My Weight app,
 /// including data models, analytics, and views.
-public struct Weigh {
+public struct MyWeight {
     public static let version = "1.1.0"
     
     public init() {}
 }
+
+@available(*, deprecated, renamed: "MyWeight")
+public typealias Weigh = MyWeight

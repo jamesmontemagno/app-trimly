@@ -1,4 +1,4 @@
-# robots.txt for Weigh Website
+# robots.txt for My Weight Website
 # https://weigh.app/
 
 User-agent: *

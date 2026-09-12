@@ -1,6 +1,6 @@
-# Weigh Website
+# My Weight Website
 
-Marketing website for Weigh - a private weight tracking app for iOS and macOS.
+Marketing website for My Weight - a private weight tracking app for iOS and macOS.
 
 ## Tech Stack
 

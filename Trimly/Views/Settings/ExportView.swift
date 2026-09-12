@@ -80,7 +80,7 @@ struct ExportView: View {
             isPresented: $showingExporter,
             document: document,
             contentType: .commaSeparatedText,
-            defaultFilename: "TrimTally-weights.csv"
+            defaultFilename: String(localized: L10n.Portability.exportFilename)
         ) { result in
             switch result {
             case .success(let url):

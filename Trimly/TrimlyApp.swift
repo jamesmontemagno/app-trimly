@@ -1,6 +1,6 @@
 //
 //  TrimlyApp.swift
-//  Weigh
+//  My Weight
 //
 //  Created by James Montemagno on 11/27/25.
 //
@@ -97,7 +97,7 @@ struct WeighApp: App {
                 .environmentObject(router)
                 .onOpenURL { router.handle($0) }
                 #if os(macOS)
-                .focusedSceneValue(\.isTrimTallyMainWindow, true)
+                .focusedSceneValue(\.isMyWeightMainWindow, true)
                 #endif
         }
         .modelContainer(dataManager.modelContainer)

@@ -1,6 +1,6 @@
 //
 //  AchievementsView.swift
-//  Weigh
+//  My Weight
 //
 //  Created by Trimly on 11/29/25.
 //
@@ -180,7 +180,7 @@ struct AchievementsView: View {
 			showingPaywall = true
 		}
 		.accessibilityElement(children: .combine)
-		.accessibilityHint(String(localized: L10n.Accessibility.opensWeighPro))
+		.accessibilityHint(String(localized: L10n.Accessibility.opensMyWeightPro))
 		.accessibilityAddTraits(.isButton)
 	}
 	
@@ -316,7 +316,7 @@ private struct AchievementCard: View {
 	
 	private var accessibilityHint: String {
 		if snapshot.requiresPro {
-			return String(localized: L10n.Accessibility.opensWeighPro)
+			return String(localized: L10n.Accessibility.opensMyWeightPro)
 		}
 		return onInspect == nil ? "" : String(localized: L10n.CoreFeatures.achievementDetails)
 	}

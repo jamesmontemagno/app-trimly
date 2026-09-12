@@ -1,8 +1,8 @@
-# Weigh Design Document
+# My Weight Design Document
 
 ## Product Overview
 
-Weigh is a modern weight tracking application for iOS and macOS that provides a supportive, mindful approach to weight management. The app emphasizes consistency, progress visualization, and gentle encouragement rather than judgment.
+My Weight is a modern weight tracking application for iOS and macOS that provides a supportive, mindful approach to weight management. The app emphasizes consistency, progress visualization, and gentle encouragement rather than judgment.
 
 ## Design Principles
 
@@ -40,7 +40,7 @@ Weigh is a modern weight tracking application for iOS and macOS that provides a 
 
 ### First-Time User Flow
 
-1. **Welcome**: Friendly introduction to Weigh
+1. **Welcome**: Friendly introduction to My Weight
 2. **Unit Selection**: Choose pounds or kilograms
 3. **Starting Weight** (optional): Log initial measurement
 4. **Goal Setting** (optional): Set target weight
@@ -351,7 +351,7 @@ This section summarizes the most important new v1.1/v1.2 surfaces; see the app f
 - **App Store**: Standard EULA and privacy policy
 
 ### Data Handling
-- **No Collection**: Weigh doesn't collect data
+- **No Collection**: My Weight doesn't collect data
 - **No Sharing**: Data never leaves user's control
 - **No Analytics**: No crash reports or usage tracking
 - **Encryption**: iCloud data encrypted in transit and at rest

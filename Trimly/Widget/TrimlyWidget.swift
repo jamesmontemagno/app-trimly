@@ -3,11 +3,11 @@ import WidgetKit
 import Charts
 
 @main
-struct TrimTallyWidgetBundle: WidgetBundle {
-    var body: some Widget { WeighWidget() }
+struct MyWeightWidgetBundle: WidgetBundle {
+    var body: some Widget { MyWeightWidget() }
 }
 
-struct WeighWidget: Widget {
+struct MyWeightWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: WidgetSnapshotStore.widgetKind, provider: WeightProvider()) { entry in
             WeightWidgetEntryView(entry: entry)

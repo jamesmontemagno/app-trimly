@@ -81,7 +81,12 @@ struct ReportView: View {
         .onDisappear(perform: releaseExportAccess)
         .sheet(isPresented: $showingPaywall) { PaywallView() }
         .quickLookPreview($previewURL)
-        .fileExporter(isPresented: $showingExporter, document: document, contentType: .pdf, defaultFilename: "TrimTally-progress.pdf") { result in
+        .fileExporter(
+            isPresented: $showingExporter,
+            document: document,
+            contentType: .pdf,
+            defaultFilename: String(localized: L10n.Portability.reportFilename)
+        ) { result in
             switch result {
             case .success(let url):
                 releaseExportAccess()

@@ -21,7 +21,7 @@ nonisolated struct OpenWeightLogIntent: AppIntent {
     }
 }
 
-nonisolated struct TrimTallyShortcuts: AppShortcutsProvider {
+nonisolated struct MyWeightShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(
             intent: OpenWeightLogIntent(),

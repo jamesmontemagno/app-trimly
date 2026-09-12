@@ -132,9 +132,9 @@
     "platform.health.localOnly": {
       "extractionState": "manual",
       "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "Edits and deletions in TrimTally affect this app only. They do not change or delete records in Apple Health. Deleted imports may return on a later import." } },
-        "es": { "stringUnit": { "state": "translated", "value": "Los cambios y eliminaciones en TrimTally solo afectan a esta app. No modifican ni eliminan registros en Salud de Apple. Los registros importados que elimines pueden reaparecer al volver a importar." } },
-        "fr": { "stringUnit": { "state": "translated", "value": "Les modifications et suppressions dans TrimTally concernent uniquement cette app. Elles ne modifient ni ne suppriment les données d’Apple Santé. Les données importées supprimées peuvent réapparaître lors d’un nouvel import." } }
+        "en": { "stringUnit": { "state": "translated", "value": "Edits and deletions in My Weight affect this app only. They do not change or delete records in Apple Health. Deleted imports may return on a later import." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Los cambios y eliminaciones en My Weight solo afectan a esta app. No modifican ni eliminan registros en Salud de Apple. Los registros importados que elimines pueden reaparecer al volver a importar." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Les modifications et suppressions dans My Weight concernent uniquement cette app. Elles ne modifient ni ne suppriment les données d’Apple Santé. Les données importées supprimées peuvent réapparaître lors d’un nouvel import." } }
       }
     },
     "platform.health.duplicateExplanation": {

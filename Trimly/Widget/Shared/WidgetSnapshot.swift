@@ -77,7 +77,7 @@ nonisolated enum WidgetSnapshotStore {
         let url = directory.appendingPathComponent(fileName)
         let data = try JSONEncoder().encode(snapshot)
         #if os(iOS)
-        try data.write(to: url, options: [.atomic, .completeUntilFirstUserAuthentication])
+        try data.write(to: url, options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
         #else
         try data.write(to: url, options: .atomic)
         #endif

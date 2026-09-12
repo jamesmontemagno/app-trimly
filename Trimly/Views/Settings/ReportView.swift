@@ -268,7 +268,7 @@ private struct WeightReportContent: View {
                         @State private var includeCurrent = false
                         @State private var includeChange = false
                         @State private var includeGoalDetails = false
-                        @State private var snapshot: ShareCheckInSnapshot?
+                        @State private var snapshot: WeightReport.ShareCheckInSnapshot?
                         @State private var shareURL: URL?
                         @State private var errorMessage: String?
 
@@ -374,7 +374,7 @@ private struct WeightReportContent: View {
 
                         private func refreshSnapshot() {
                             let entries = dataManager.fetchAllEntries()
-                            snapshot = ShareCheckInSnapshot(
+                            snapshot = WeightReport.ShareCheckInSnapshot(
                                 entries: entries,
                                 goal: dataManager.fetchActiveGoal(),
                                 unit: dataManager.settings?.preferredUnit ?? .kilograms,
@@ -432,7 +432,7 @@ private struct WeightReportContent: View {
                 }
 
                 private struct ShareCardContent: View {
-                        let snapshot: ShareCheckInSnapshot
+                        let snapshot: WeightReport.ShareCheckInSnapshot
                         let format: ShareCardFormat
                         let privacy: SharePrivacy
                         let showFooter: Bool
@@ -443,7 +443,7 @@ private struct WeightReportContent: View {
                         @ScaledMetric(relativeTo: .body) private var chartHeight = 190
 
                         private var showsValues: Bool { privacy == .detailed }
-                        private var graphPoints: [ShareCheckInSnapshot.Day] {
+                        private var graphPoints: [WeightReport.ShareCheckInSnapshot.Day] {
                             snapshot.days.filter { $0.weightKg != nil }
                         }
 

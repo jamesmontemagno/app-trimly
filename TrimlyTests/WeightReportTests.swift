@@ -81,7 +81,7 @@ struct WeightReportTests {
             WeightEntry(timestamp: calendar.date(byAdding: .day, value: 1, to: today)!, weightKg: 70, displayUnitAtEntry: .kilograms),
             WeightEntry(timestamp: today, weightKg: 90, displayUnitAtEntry: .kilograms, isHidden: true)
         ]
-        let snapshot = ShareCheckInSnapshot(
+        let snapshot = WeightReport.ShareCheckInSnapshot(
             entries: entries,
             goal: nil,
             unit: .kilograms,
@@ -98,7 +98,7 @@ struct WeightReportTests {
     }
 
     @Test func shareSnapshotDoesNotClaimChangeWithOneRecordedDay() {
-        let snapshot = ShareCheckInSnapshot(
+        let snapshot = WeightReport.ShareCheckInSnapshot(
             entries: [entry(80, offset: 100)],
             goal: nil,
             unit: .kilograms,

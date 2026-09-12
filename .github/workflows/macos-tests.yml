@@ -23,7 +23,7 @@ jobs:
           xcode-version: '26.6'
 
       - name: Build macOS app
-        run: xcodebuild -scheme TrimTally -destination "platform=macOS,arch=arm64" build
+        run: xcodebuild -scheme TrimTally -destination "platform=macOS,arch=arm64" CODE_SIGNING_ALLOWED=NO build
 
   tests-ios:
     runs-on: macos-26
@@ -38,7 +38,7 @@ jobs:
           xcode-version: '26.6'
 
       - name: Build iOS app
-        run: xcodebuild -scheme TrimTally -destination "platform=iOS Simulator,name=iPhone 17" build
+        run: xcodebuild -scheme TrimTally -destination "platform=iOS Simulator,name=iPhone 17" CODE_SIGNING_ALLOWED=NO build
 
       - name: Run iOS unit tests
-        run: xcodebuild -scheme TrimTally -destination "platform=iOS Simulator,name=iPhone 17" test
+        run: xcodebuild -scheme TrimTally -destination "platform=iOS Simulator,name=iPhone 17" CODE_SIGNING_ALLOWED=NO test

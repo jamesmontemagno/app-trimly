@@ -28,6 +28,8 @@ struct TrendSummaryCard: View {
 			.clipShape(RoundedRectangle(cornerRadius: 16))
 		}
 		.buttonStyle(.plain)
+		.accessibilityLabel(Text(L10n.Dashboard.trendTitle))
+		.accessibilityValue(trend.description)
 		.accessibilityHint(String(localized: L10n.Accessibility.opensCharts))
 	}
 	

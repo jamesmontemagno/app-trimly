@@ -135,7 +135,7 @@ final class CelebrationService: ObservableObject {
             return celebration
         }
 
-        let entries = dataManager.fetchAllEntries()
+        let entries = dataManager.fetchAllEntries().filter { !$0.isHidden }
         guard entries.count >= 2 else { return nil }
         
         // Check in order of importance
@@ -167,7 +167,7 @@ final class CelebrationService: ObservableObject {
             celebrations.append(celebration)
         }
         
-        let entries = dataManager.fetchAllEntries()
+        let entries = dataManager.fetchAllEntries().filter { !$0.isHidden }
         if entries.count >= 2 {
             // Check for goal celebrations
             if let celebration = checkGoalCelebration(dataManager: dataManager) {
@@ -300,7 +300,7 @@ final class CelebrationService: ObservableObject {
     
     /// Check for streak celebrations
     private func checkStreakCelebration(entries: [WeightEntry]) -> Celebration? {
-        let sortedDays = Array(Set(entries.map { $0.normalizedDate })).sorted()
+        let sortedDays = Array(Set(entries.map { WeightEntry.normalizeDate($0.timestamp) })).sorted()
         guard !sortedDays.isEmpty else { return nil }
 		
         let milestones: [(length: Int, type: CelebrationType)] = [

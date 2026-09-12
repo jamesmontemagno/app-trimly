@@ -6,7 +6,23 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A71000000000000000000001 /* TrimlyWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A71000000000000000000011 /* TrimlyWidget.swift */; };
+		A71000000000000000000002 /* WidgetSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A71000000000000000000012 /* WidgetSnapshot.swift */; };
+		A71000000000000000000003 /* QuickLogLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = A71000000000000000000013 /* QuickLogLink.swift */; };
+		A71000000000000000000004 /* WidgetText.swift in Sources */ = {isa = PBXBuildFile; fileRef = A71000000000000000000014 /* WidgetText.swift */; };
+		A71000000000000000000005 /* PlatformFeatures.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A71000000000000000000015 /* PlatformFeatures.xcstrings */; };
+		A71000000000000000000006 /* TrimTallyWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A71000000000000000000016 /* TrimTallyWidget.appex */; platformFilters = (ios, macos, ); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
+		A71000000000000000000021 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B392274E2ED9703A00C14B08 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A71000000000000000000031;
+			remoteInfo = TrimTallyWidget;
+		};
 		B39227662ED9703D00C14B08 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B392274E2ED9703A00C14B08 /* Project object */;
@@ -23,7 +39,27 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		A71000000000000000000022 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				A71000000000000000000006 /* TrimTallyWidget.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		A71000000000000000000011 /* TrimlyWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trimly/Widget/TrimlyWidget.swift; sourceTree = SOURCE_ROOT; };
+		A71000000000000000000012 /* WidgetSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trimly/Widget/Shared/WidgetSnapshot.swift; sourceTree = SOURCE_ROOT; };
+		A71000000000000000000013 /* QuickLogLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trimly/Widget/Shared/QuickLogLink.swift; sourceTree = SOURCE_ROOT; };
+		A71000000000000000000014 /* WidgetText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trimly/Widget/Shared/WidgetText.swift; sourceTree = SOURCE_ROOT; };
+		A71000000000000000000015 /* PlatformFeatures.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Trimly/Localization/PlatformFeatures.xcstrings; sourceTree = SOURCE_ROOT; };
+		A71000000000000000000016 /* TrimTallyWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TrimTallyWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		B307961F2EDB4C0E008042C8 /* TrimTally.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TrimTally.xctestplan; sourceTree = "<group>"; };
 		B39227562ED9703A00C14B08 /* TrimTally.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrimTally.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B39227652ED9703D00C14B08 /* TrimTallyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrimTallyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -33,6 +69,12 @@
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
 		B3AEF6422EE6A0E300E396C8 /* Exceptions for "Trimly" folder in "TrimTally" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+				Widget/Info.plist,
+				Widget/TrimlyWidget.swift,
+				Widget/TrimTallyWidget.entitlements,
+			);
 			platformFiltersByRelativePath = {
 				LaunchScreen.storyboard = (ios, xros, );
 			};
@@ -62,6 +104,12 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		A71000000000000000000023 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B39227532ED9703A00C14B08 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -86,6 +134,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A71000000000000000000024 /* Widget Extension */ = {
+			isa = PBXGroup;
+			children = (
+				A71000000000000000000011 /* TrimlyWidget.swift */,
+				A71000000000000000000012 /* WidgetSnapshot.swift */,
+				A71000000000000000000013 /* QuickLogLink.swift */,
+				A71000000000000000000014 /* WidgetText.swift */,
+				A71000000000000000000015 /* PlatformFeatures.xcstrings */,
+			);
+			name = "Widget Extension";
+			sourceTree = "<group>";
+		};
 		B352DB8D2EDA02D2004E4B46 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
@@ -100,6 +160,7 @@
 				B39227582ED9703A00C14B08 /* Trimly */,
 				B39227682ED9703D00C14B08 /* TrimlyTests */,
 				B39227722ED9703D00C14B08 /* TrimlyUITests */,
+				A71000000000000000000024 /* Widget Extension */,
 				B39227572ED9703A00C14B08 /* Products */,
 				B352DB8D2EDA02D2004E4B46 /* Recovered References */,
 			);
@@ -111,6 +172,7 @@
 				B39227562ED9703A00C14B08 /* TrimTally.app */,
 				B39227652ED9703D00C14B08 /* TrimTallyTests.xctest */,
 				B392276F2ED9703D00C14B08 /* TrimTallyUITests.xctest */,
+				A71000000000000000000016 /* TrimTallyWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -118,6 +180,21 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		A71000000000000000000031 /* TrimTallyWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A71000000000000000000041 /* Build configuration list for PBXNativeTarget "TrimTallyWidget" */;
+			buildPhases = (
+				A71000000000000000000025 /* Sources */,
+				A71000000000000000000023 /* Frameworks */,
+				A71000000000000000000026 /* Resources */,
+			);
+			buildRules = ();
+			dependencies = ();
+			name = TrimTallyWidget;
+			productName = TrimTallyWidget;
+			productReference = A71000000000000000000016 /* TrimTallyWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		B39227552ED9703A00C14B08 /* TrimTally */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B39227792ED9703D00C14B08 /* Build configuration list for PBXNativeTarget "TrimTally" */;
@@ -125,10 +202,12 @@
 				B39227522ED9703A00C14B08 /* Sources */,
 				B39227532ED9703A00C14B08 /* Frameworks */,
 				B39227542ED9703A00C14B08 /* Resources */,
+				A71000000000000000000022 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				A71000000000000000000027 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				B39227582ED9703A00C14B08 /* Trimly */,
@@ -196,8 +275,17 @@
 				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
+					A71000000000000000000031 = {
+						CreatedOnToolsVersion = 26.0.1;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {enabled = 1; };
+						};
+					};
 					B39227552ED9703A00C14B08 = {
 						CreatedOnToolsVersion = 26.0.1;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {enabled = 1; };
+						};
 					};
 					B39227642ED9703D00C14B08 = {
 						CreatedOnToolsVersion = 26.0.1;
@@ -225,6 +313,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				A71000000000000000000031 /* TrimTallyWidget */,
 				B39227552ED9703A00C14B08 /* TrimTally */,
 				B39227642ED9703D00C14B08 /* TrimTallyTests */,
 				B392276E2ED9703D00C14B08 /* TrimTallyUITests */,
@@ -233,6 +322,14 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		A71000000000000000000026 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A71000000000000000000005 /* PlatformFeatures.xcstrings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B39227542ED9703A00C14B08 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -257,6 +354,17 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		A71000000000000000000025 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A71000000000000000000001 /* TrimlyWidget.swift in Sources */,
+				A71000000000000000000002 /* WidgetSnapshot.swift in Sources */,
+				A71000000000000000000003 /* QuickLogLink.swift in Sources */,
+				A71000000000000000000004 /* WidgetText.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B39227522ED9703A00C14B08 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -281,6 +389,12 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		A71000000000000000000027 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			platformFilters = (ios, macos, );
+			target = A71000000000000000000031 /* TrimTallyWidget */;
+			targetProxy = A71000000000000000000021 /* PBXContainerItemProxy */;
+		};
 		B39227672ED9703D00C14B08 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B39227552ED9703A00C14B08 /* TrimTally */;
@@ -294,6 +408,66 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		A71000000000000000000042 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = Trimly/Widget/TrimTallyWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Trimly/Widget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TrimTally;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.refractored.trimtally.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = auto;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A71000000000000000000043 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = Trimly/Widget/TrimTallyWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Trimly/Widget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TrimTally;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.refractored.trimtally.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = auto;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		B39227772ED9703D00C14B08 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -423,9 +597,10 @@
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
+				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "My Weight";
+				INFOPLIST_FILE = Trimly/Info.plist;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Read weight records with HealthKit.";
@@ -440,10 +615,10 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.refractored.trimtally;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -474,9 +649,10 @@
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
+				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "My Weight";
+				INFOPLIST_FILE = Trimly/Info.plist;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Read weight records with HealthKit.";
@@ -491,10 +667,10 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.refractored.trimtally;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -520,8 +696,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 8P95D2238B;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.refractored.TrimTallyTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -546,8 +722,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 8P95D2238B;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.refractored.TrimTallyTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -571,8 +747,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 8P95D2238B;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.refractored.TrimTallyUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -596,8 +772,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 8P95D2238B;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.refractored.TrimTallyUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -617,6 +793,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		A71000000000000000000041 /* Build configuration list for PBXNativeTarget "TrimTallyWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A71000000000000000000042 /* Debug */,
+				A71000000000000000000043 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		B39227512ED9703A00C14B08 /* Build configuration list for PBXProject "TrimTally" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

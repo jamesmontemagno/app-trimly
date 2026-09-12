@@ -14,7 +14,15 @@ struct ChartLegend: View {
 	let onEMAInfo: () -> Void
 	
 	var body: some View {
-		HStack(spacing: 16) {
+		ViewThatFits(in: .horizontal) {
+			HStack(spacing: 16) { items }
+			VStack(alignment: .leading, spacing: 8) { items }
+		}
+		.font(.caption)
+	}
+
+	private var items: some View {
+		Group {
 			LegendItem(color: weightLinePrimary, label: String(localized: L10n.Charts.legendWeight), style: .solid)
 			
 			if showMovingAverage {
@@ -35,7 +43,6 @@ struct ChartLegend: View {
 				)
 			}
 		}
-		.font(.caption)
 	}
 	
 	private func legendItemWithInfo(color: Color, label: String, style: LineStyle, onInfo: @escaping () -> Void) -> some View {
@@ -45,6 +52,7 @@ struct ChartLegend: View {
 				Image(systemName: "info.circle")
 					.font(.caption)
 					.foregroundStyle(.secondary)
+					.frame(minWidth: 44, minHeight: 44)
 			}
 			.accessibilityLabel(Text(label))
 			.accessibilityHint(Text(L10n.Charts.legendInfoHint))

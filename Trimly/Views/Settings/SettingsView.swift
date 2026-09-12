@@ -23,11 +23,14 @@ struct SettingsView: View {
 	@State private var showingGoalActions = false
 	@State private var goalMode: GoalMode = .new
 	@State private var showingExport = false
+	@State private var showingImport = false
+	@State private var showingReport = false
+	@State private var showingPresentation = false
 	@State private var showingPaywall = false
 	@State private var showingRemindersSheet = false
 	@State private var showingHealthSheet = false
 	@State private var showingDeleteConfirmation = false
-	@State private var exportedData = ""
+	@State private var mutationError: String?
 	@State private var showingRestoreSuccessAlert = false
 	@State private var showingRestoreNotFoundAlert = false
 	@State private var showingRestartRequiredAlert = false
@@ -63,7 +66,10 @@ struct SettingsView: View {
 				.navigationTitle(Text(L10n.Settings.navigationTitle))
 				.sheet(isPresented: $showingGoalSheet) { GoalSetupView(mode: goalMode) }
 				.sheet(isPresented: $showingGoalHistory) { GoalHistoryView() }
-				.sheet(isPresented: $showingExport) { ExportView(initialCSV: exportedData) }
+				.sheet(isPresented: $showingExport) { ExportView() }
+				.sheet(isPresented: $showingImport) { ImportView() }
+				.sheet(isPresented: $showingReport) { ReportView() }
+				.sheet(isPresented: $showingPresentation) { PresentationSettingsView() }
 				.sheet(isPresented: $showingPaywall) { PaywallView() }
 				.sheet(isPresented: $showingRemindersSheet) { RemindersView() }
 				.sheet(isPresented: $showingHealthSheet) { HealthKitView() }
@@ -107,6 +113,7 @@ struct SettingsView: View {
 				} message: {
 					Text(String(localized: L10n.Settings.supportFallbackMessage("contact@refractored.com")))
 				}
+				.portabilityError($mutationError)
 		}
 	}
 	
@@ -222,6 +229,19 @@ struct SettingsView: View {
 							.labelsHidden()
 							.pickerStyle(.segmented)
 						}
+						sectionDivider()
+						Button {
+							showingPresentation = true
+						} label: {
+							settingsRow(
+								icon: "rectangle.3.group",
+								title: String(localized: L10n.Portability.presentationTitle),
+								subtitle: String(localized: L10n.Portability.deviceLocal),
+								showChevron: true
+							)
+						}
+						.buttonStyle(.plain)
+						.accessibilityLabel(Text(L10n.Portability.presentationTitle))
 					}
 					
 					settingsSection(title: String(localized: L10n.Settings.goalsTitle)) {
@@ -268,6 +288,7 @@ struct SettingsView: View {
 							.buttonStyle(.plain)
 						} else {
 							Button {
+								goalMode = .new
 								showingGoalSheet = true
 							} label: {
 								settingsRow(
@@ -278,6 +299,21 @@ struct SettingsView: View {
 								)
 							}
 							.buttonStyle(.plain)
+							if !dataManager.fetchGoalHistory().isEmpty {
+								sectionDivider()
+								Button {
+									showingGoalHistory = true
+								} label: {
+									settingsRow(
+										icon: "clock.arrow.circlepath",
+										title: String(localized: L10n.Settings.goalHistoryTitle),
+										subtitle: String(localized: L10n.Settings.goalHistorySubtitle),
+										showChevron: true
+									)
+								}
+								.buttonStyle(.plain)
+								.accessibilityLabel(Text(L10n.Settings.goalHistoryTitle))
+							}
 						}
 					}
 					
@@ -387,7 +423,20 @@ struct SettingsView: View {
 							}
 						}
 						.buttonStyle(.plain)
+						.accessibilityLabel(Text(L10n.Settings.exportTitle))
 						
+						sectionDivider()
+						portabilityButton(
+							title: L10n.Portability.importTitle,
+							subtitle: L10n.Portability.importSubtitle,
+							icon: "square.and.arrow.down"
+						) { showingImport = true }
+						sectionDivider()
+						portabilityButton(
+							title: L10n.Portability.reportTitle,
+							subtitle: L10n.Portability.reportSubtitle,
+							icon: "chart.xyaxis.line"
+						) { showingReport = true }
 						sectionDivider()
 						
 						Button(role: .destructive) {
@@ -602,13 +651,36 @@ struct SettingsView: View {
 	}
     
 	private func exportData() {
-		exportedData = dataManager.exportToCSV()
 		showingExport = true
+	}
+
+	private func portabilityButton(title: LocalizedStringResource, subtitle: LocalizedStringResource, icon: String, action: @escaping () -> Void) -> some View {
+		Button {
+			if storeManager.isPro { action() }
+			else { showingPaywall = true }
+		} label: {
+			settingsRow(
+				icon: icon,
+				title: String(localized: title),
+				subtitle: String(localized: subtitle),
+				showChevron: true
+			) {
+				if !storeManager.isPro {
+					Image(systemName: "lock.fill").foregroundStyle(.secondary).accessibilityHidden(true)
+				}
+			}
+		}
+		.buttonStyle(.plain)
+		.accessibilityLabel(Text(title))
 	}
     
 	private func deleteAllData() {
-		notificationService.cancelAllReminders()
-		try? dataManager.deleteAllData()
+		do {
+			try dataManager.deleteAllData()
+			notificationService.cancelAllReminders()
+		} catch {
+			mutationError = error.localizedDescription
+		}
 	}
 
 	private func generateSampleData() {

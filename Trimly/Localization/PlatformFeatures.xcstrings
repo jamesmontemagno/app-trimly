@@ -1,0 +1,198 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "platform.quickLog.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Log Weight" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Registrar peso" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Noter le poids" } }
+      }
+    },
+    "platform.quickLog.description": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Open the weight entry form. Nothing is saved until you confirm." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Abre el formulario de peso. No se guarda nada hasta que confirmes." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Ouvre le formulaire de poids. Rien n’est enregistré avant votre confirmation." } }
+      }
+    },
+    "platform.widget.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Latest Weight" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Último peso" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Dernier poids" } }
+      }
+    },
+    "platform.widget.description": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Your latest visible weight and daily trend. Tap to log a weight." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Tu último peso visible y la tendencia diaria. Toca para registrar un peso." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Votre dernier poids visible et la tendance quotidienne. Touchez pour noter un poids." } }
+      }
+    },
+    "platform.widget.hidden": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Weights hidden" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Pesos ocultos" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Poids masqués" } }
+      }
+    },
+    "platform.widget.empty": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Open the app to log a weight" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Abre la app para registrar un peso" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Ouvrez l’app pour noter un poids" } }
+      }
+    },
+    "platform.widget.stale": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Older data · Open app" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Datos antiguos · Abre la app" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Données anciennes · Ouvrir l’app" } }
+      }
+    },
+    "platform.widget.current": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Recent data" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Datos recientes" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Données récentes" } }
+      }
+    },
+    "platform.widget.trendTitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "14-day trend" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Tendencia de 14 días" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Tendance sur 14 jours" } }
+      }
+    },
+    "platform.widget.insufficientTrend": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Log on more days for a trend" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Registra más días para ver una tendencia" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Notez votre poids sur plus de jours pour voir une tendance" } }
+      }
+    },
+    "platform.widget.downward": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Decreasing" } },
+        "es": { "stringUnit": { "state": "translated", "value": "En descenso" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "En baisse" } }
+      }
+    },
+    "platform.widget.upward": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Increasing" } },
+        "es": { "stringUnit": { "state": "translated", "value": "En aumento" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "En hausse" } }
+      }
+    },
+    "platform.widget.stable": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Stable" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Estable" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Stable" } }
+      }
+    },
+    "platform.widget.weight": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "%@ %@" } },
+        "es": { "stringUnit": { "state": "translated", "value": "%@ %@" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "%@ %@" } }
+      }
+    },
+    "platform.widget.inlineWeight": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "%@ %@" } },
+        "es": { "stringUnit": { "state": "translated", "value": "%@ %@" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "%@ %@" } }
+      }
+    },
+    "platform.widget.accessibility": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Latest weight: %@. Logged %@. %@. %@." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Último peso: %@. Registrado el %@. %@. %@." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Dernier poids : %@. Noté le %@. %@. %@." } }
+      }
+    },
+    "platform.health.localOnly": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Edits and deletions in TrimTally affect this app only. They do not change or delete records in Apple Health. Deleted imports may return on a later import." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Los cambios y eliminaciones en TrimTally solo afectan a esta app. No modifican ni eliminan registros en Salud de Apple. Los registros importados que elimines pueden reaparecer al volver a importar." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Les modifications et suppressions dans TrimTally concernent uniquement cette app. Elles ne modifient ni ne suppriment les données d’Apple Santé. Les données importées supprimées peuvent réapparaître lors d’un nouvel import." } }
+      }
+    },
+    "platform.health.duplicateExplanation": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Duplicate checking compares weight and time (within 5 minutes), not Apple Health record IDs. Matching samples are skipped, not imported as hidden entries. Turning this off may import duplicates." } },
+        "es": { "stringUnit": { "state": "translated", "value": "La detección de duplicados compara el peso y la hora (con un margen de 5 minutos), no los identificadores de Salud de Apple. Las muestras coincidentes se omiten, no se importan como entradas ocultas. Desactivar esta opción puede importar duplicados." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "La détection des doublons compare le poids et l’heure (à 5 minutes près), pas les identifiants d’Apple Santé. Les mesures correspondantes sont ignorées, et non importées comme entrées masquées. Désactiver cette option peut importer des doublons." } }
+      }
+    },
+    "platform.health.skipDuplicates": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Skip matching samples" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Omitir muestras coincidentes" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Ignorer les mesures correspondantes" } }
+      }
+    },
+    "platform.health.notAuthorized": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "HealthKit access not authorized" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Acceso a HealthKit no autorizado" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Accès à HealthKit non autorisé" } }
+      }
+    },
+    "platform.health.notAvailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "HealthKit is not available on this device" } },
+        "es": { "stringUnit": { "state": "translated", "value": "HealthKit no está disponible en este dispositivo" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "HealthKit n’est pas disponible sur cet appareil" } }
+      }
+    },
+    "platform.health.skipped": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Matching samples skipped: %lld" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Muestras coincidentes omitidas: %lld" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Mesures correspondantes ignorées : %lld" } }
+      }
+    },
+    "platform.widget.delta": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Since previous logged day: %@" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Desde el día registrado anterior: %@" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Depuis le jour de suivi précédent : %@" } }
+      }
+    },
+    "platform.health.importFailed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Import failed: %@" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Error al importar: %@" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Échec de l’import : %@" } }
+      }
+    }
+  },
+  "version": "1.0"
+}

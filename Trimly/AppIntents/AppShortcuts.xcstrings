@@ -1,0 +1,22 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "Log my weight in ${applicationName}": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Log my weight in ${applicationName}" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Registrar mi peso en ${applicationName}" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Noter mon poids dans ${applicationName}" } }
+      }
+    },
+    "Open weight log in ${applicationName}": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Open weight log in ${applicationName}" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Abrir el registro de peso en ${applicationName}" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Ouvrir le journal de poids dans ${applicationName}" } }
+      }
+    }
+  },
+  "version": "1.0"
+}

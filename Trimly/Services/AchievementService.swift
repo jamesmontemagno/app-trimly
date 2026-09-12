@@ -13,21 +13,14 @@ import OSLog
 @MainActor
 final class AchievementService: ObservableObject {
 	@Published private(set) var snapshots: [AchievementSnapshot] = []
-#if DEBUG
 	@Published private(set) var diagnostics: AchievementDiagnostics?
-#else
-	// Diagnostics are debug-only; expose a nil placeholder in release builds
-	var diagnostics: AchievementDiagnostics? { nil }
-#endif
 	
 	private let definitions: [AchievementDescriptor] = AchievementDescriptor.catalog
 	private let logger = Logger(subsystem: "com.trimly.Weigh", category: "Achievements")
 	
-	func refresh(using dataManager: DataManager, isPro: Bool) {
+	func refresh(using dataManager: DataManager, isPro: Bool, celebrateUnlocks: Bool = true) {
 		let context = EvaluationContext(dataManager: dataManager)
-		#if DEBUG
 		diagnostics = context.makeDiagnosticsSnapshot()
-		#endif
 		logger.debug(
 			"Refresh stats — entries: \(context.totalEntries, privacy: .public), unique days: \(context.uniqueDayCount, privacy: .public), consistency: \(context.consistencyScore, privacy: .public)"
 		)
@@ -35,11 +28,15 @@ final class AchievementService: ObservableObject {
 		for descriptor in definitions {
 			let evaluation = evaluate(descriptor, context: context)
 			let canUnlock = !descriptor.isPremium || isPro
+			let wasUnlocked = dataManager.achievement(
+				forKey: descriptor.key, createIfMissing: false, isPremium: descriptor.isPremium
+			)?.unlockedAt != nil
 			let achievement = dataManager.updateAchievement(
 				key: descriptor.key,
 				isPremium: descriptor.isPremium,
 				progress: evaluation.progress,
-				unlocked: evaluation.unlocked && canUnlock
+				unlocked: evaluation.unlocked && canUnlock,
+				markCelebrated: !celebrateUnlocks && !wasUnlocked && evaluation.unlocked && canUnlock ? true : nil
 			)
 			let snapshot = AchievementSnapshot(
 				descriptor: descriptor,
@@ -108,6 +105,24 @@ struct AchievementDescriptor: Identifiable {
 	var id: String { key }
 	
 	static let catalog: [AchievementDescriptor] = [
+		AchievementDescriptor(
+			key: "habits.firstDay",
+			title: L10n.CoreFeatures.firstDayTitle,
+			detail: L10n.CoreFeatures.firstDayDetail,
+			iconName: "sunrise.fill",
+			category: .habits,
+			metric: .uniqueDays(1),
+			isPremium: false
+		),
+		AchievementDescriptor(
+			key: "habits.sevenDays",
+			title: L10n.CoreFeatures.sevenDaysTitle,
+			detail: L10n.CoreFeatures.sevenDaysDetail,
+			iconName: "calendar.badge.checkmark",
+			category: .habits,
+			metric: .uniqueDays(7),
+			isPremium: false
+		),
 		AchievementDescriptor(
 			key: "logging.newcomer",
 			title: L10n.Achievements.loggingNewcomerTitle,
@@ -351,7 +366,7 @@ private struct EvaluationContext {
 		let allEntries = dataManager.fetchAllEntries()
 		let entries = allEntries.filter { !$0.isHidden }
 		totalEntries = entries.count
-		let uniqueDays = Set(entries.map { $0.normalizedDate })
+		let uniqueDays = Set(entries.map { WeightEntry.normalizeDate($0.timestamp) })
 		uniqueDayCount = uniqueDays.count
 		currentStreak = EvaluationContext.calculateCurrentStreak(from: uniqueDays)
 		consistencyScore = dataManager.getConsistencyScore() ?? 0
@@ -378,7 +393,7 @@ private struct EvaluationContext {
 	
 	private static func recentReminderCompletionRatio(entries: [WeightEntry]) -> Double {
 		let calendar = Calendar.current
-		let uniqueDates = Set(entries.map { $0.normalizedDate })
+		let uniqueDates = Set(entries.map { WeightEntry.normalizeDate($0.timestamp) })
 		guard !uniqueDates.isEmpty else { return 0 }
 		let startOfToday = calendar.startOfDay(for: Date())
 		let windowDays = 21
@@ -420,14 +435,14 @@ private struct EvaluationContext {
 		// Group by normalized date and get most recent entry per day
 		var entriesByDay: [Date: WeightEntry] = [:]
 		for entry in sortedEntries {
-			let normalized = entry.normalizedDate
+			let normalized = WeightEntry.normalizeDate(entry.timestamp)
 			if entriesByDay[normalized] == nil {
 				entriesByDay[normalized] = entry
 			}
 		}
 		
 		// Get unique days sorted in reverse chronological order
-		let uniqueDays = Array(Set(sortedEntries.map { $0.normalizedDate })).sorted(by: >)
+		let uniqueDays = Array(Set(sortedEntries.map { WeightEntry.normalizeDate($0.timestamp) })).sorted(by: >)
 		guard uniqueDays.count >= 2 else { return uniqueDays.count }
 		
 		let calendar = Calendar.current
@@ -461,7 +476,6 @@ private struct EvaluationContext {
 		return streak
 	}
 
-	#if DEBUG
 	func makeDiagnosticsSnapshot() -> AchievementDiagnostics {
 		AchievementDiagnostics(
 			totalEntries: totalEntries,
@@ -476,7 +490,6 @@ private struct EvaluationContext {
 			evaluatedAt: Date()
 		)
 	}
-	#endif
 }
 
 struct AchievementDiagnostics {

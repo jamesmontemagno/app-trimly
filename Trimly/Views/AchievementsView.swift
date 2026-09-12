@@ -36,9 +36,16 @@ struct AchievementsView: View {
 								}
 							}
 						} header: {
-							Text(group.category.title)
-								.font(.headline)
-								.frame(maxWidth: .infinity, alignment: .leading)
+							VStack(alignment: .leading) {
+								Text(group.category.title)
+									.font(.headline)
+									.accessibilityAddTraits(.isHeader)
+								Text(L10n.Achievements.unlockedProgress(
+									group.snapshots.filter(\.isUnlocked).count, group.snapshots.count
+								))
+								.font(.caption)
+							}
+							.frame(maxWidth: .infinity, alignment: .leading)
 						}
 					}
 					if hasPremiumLock && !storeManager.isPro {
@@ -83,20 +90,18 @@ struct AchievementsView: View {
 				PaywallView()
 			}
 			.onAppear(perform: refresh)
-			.onReceive(dataManager.objectWillChange) { _ in
+			.onChange(of: dataManager.dataRevision) { _, _ in
 				refresh()
 			}
 			.onChange(of: storeManager.isPro) { _, _ in
 				refresh()
 			}
-			#if DEBUG
 			.sheet(item: $selectedSnapshot) { snapshot in
-				AchievementDiagnosticsSheet(
+				AchievementExplanationSheet(
 					snapshot: snapshot,
 					diagnostics: achievementService.diagnostics
 				)
 			}
-			#endif
 		}
 	}
 	
@@ -176,10 +181,14 @@ struct AchievementsView: View {
 		}
 		.accessibilityElement(children: .combine)
 		.accessibilityHint(String(localized: L10n.Accessibility.opensWeighPro))
+		.accessibilityAddTraits(.isButton)
 	}
 	
 	private func refresh() {
-		achievementService.refresh(using: dataManager, isPro: storeManager.isPro)
+		achievementService.refresh(
+			using: dataManager, isPro: storeManager.isPro,
+			celebrateUnlocks: dataManager.lastChangeAllowsCelebration
+		)
 	}
 }
 
@@ -260,6 +269,7 @@ private struct AchievementCard: View {
 		.accessibilityLabel(accessibilityLabel)
 		.accessibilityValue(accessibilityValue)
 		.accessibilityHint(accessibilityHint)
+		.accessibilityAddTraits(onInspect == nil ? [] : .isButton)
 	}
 	
 	private var badgeStack: some View {
@@ -281,47 +291,31 @@ private struct AchievementCard: View {
 	}
 	
 	private var accessibilityLabel: String {
-		var label = "Achievement: \(snapshot.descriptor.title)"
-		if snapshot.isUnlocked {
-			label += ", unlocked"
-		} else {
-			label += ", locked"
-		}
-		if snapshot.descriptor.isPremium {
-			label += ", premium"
-		}
-		return label
+		String(localized: snapshot.descriptor.title)
 	}
 	
 	private var accessibilityValue: String {
 		if snapshot.requiresPro {
-			return "Requires My Weight Pro to unlock"
+			return String(localized: L10n.Achievements.proUnlockLine)
 		}
 		if snapshot.isUnlocked {
 			if let unlockedDate = snapshot.model.unlockedAt {
-				let formatter = DateFormatter()
-				formatter.dateStyle = .medium
-				return "Unlocked on \(formatter.string(from: unlockedDate))"
+				return String(localized: L10n.Achievements.unlockedDate(unlockedDate))
 			}
-			return "Unlocked"
+			return String(localized: L10n.Accessibility.unlocked)
 		}
-		return "Progress: \(progressDisplay)"
+		return detailedProgressText ?? progressDisplay
 	}
 	
 	private var accessibilityHint: String {
 		if snapshot.requiresPro {
-			return "Tap to upgrade to My Weight Pro"
+			return String(localized: L10n.Accessibility.opensWeighPro)
 		}
-		#if DEBUG
-		return "Tap to view diagnostic details"
-		#else
-		return ""
-		#endif
+		return onInspect == nil ? "" : String(localized: L10n.CoreFeatures.achievementDetails)
 	}
 	
 	/// Provides detailed progress text based on achievement type and current status
 	private var detailedProgressText: String? {
-		#if DEBUG
 		guard let diag = diagnostics else { return nil }
 		switch snapshot.descriptor.metric {
 		case .totalEntries(let target):
@@ -356,9 +350,32 @@ private struct AchievementCard: View {
 			let targetPercent = Int((targetRatio * 100).rounded())
 			return String(localized: L10n.Achievements.progressReminderConsistency(currentPercent, targetPercent))
 		}
-		#else
-		return nil
-		#endif
+	}
+}
+
+private struct AchievementExplanationSheet: View {
+	let snapshot: AchievementSnapshot
+	let diagnostics: AchievementDiagnostics?
+	@Environment(\.dismiss) private var dismiss
+
+	var body: some View {
+		NavigationStack {
+			ScrollView {
+				VStack(alignment: .leading, spacing: 20) {
+					AchievementCard(snapshot: snapshot, diagnostics: diagnostics)
+					Text(L10n.CoreFeatures.achievementExplanation)
+						.font(.body)
+				}
+				.padding()
+			}
+			.navigationTitle(Text(L10n.CoreFeatures.achievementDetails))
+			.toolbar {
+				ToolbarItem(placement: .confirmationAction) {
+					Button(L10n.Common.doneButton, action: dismiss.callAsFunction)
+						.accessibilityLabel(Text(L10n.Common.doneButton))
+				}
+			}
+		}
 	}
 }
 

@@ -11,7 +11,10 @@ import UserNotifications
 
 /// Service for managing local notifications and reminders
 @MainActor
-final class NotificationService: ObservableObject {
+final class NotificationService: NSObject, ObservableObject, UNUserNotificationCenterDelegate {
+    static let shared = NotificationService()
+    private weak var responseDataManager: DataManager?
+    private var pendingDismissals: [Date] = []
     
     private let notificationCenter = UNUserNotificationCenter.current()
     
@@ -79,7 +82,7 @@ final class NotificationService: ObservableObject {
     
     /// Suggest a new reminder time based on logging patterns
     func suggestReminderTime(dataManager: DataManager) -> Date? {
-        let entries = dataManager.fetchAllEntries()
+        let entries = dataManager.fetchAllEntries().filter { !$0.isHidden && $0.timestamp <= Date() }
         let recentEntries = entries.filter {
             let daysSince = Calendar.current.dateComponents([.day], from: $0.timestamp, to: Date()).day ?? 0
             return daysSince <= 10
@@ -102,6 +105,7 @@ final class NotificationService: ObservableObject {
     
     /// Handle reminder dismissal
     func handleReminderDismissal(deviceSettings: DeviceSettingsStore, didLogWithinWindow: Bool) {
+        guard deviceSettings.reminders.adaptiveEnabled else { return }
         if didLogWithinWindow {
             deviceSettings.updateReminders { reminders in
                 reminders.consecutiveDismissals = 0
@@ -112,11 +116,64 @@ final class NotificationService: ObservableObject {
             }
         }
     }
+
+    /// Install at launch, before any notification response can be delivered.
+    func installResponseHandler() {
+        notificationCenter.delegate = self
+        setupNotificationCategories()
+    }
+
+    func configure(dataManager: DataManager) {
+        responseDataManager = dataManager
+        for date in pendingDismissals {
+            recordDismissal(at: date, dataManager: dataManager)
+        }
+        pendingDismissals.removeAll()
+    }
+
+    func handleResponse(categoryIdentifier: String, actionIdentifier: String, deliveredAt: Date, router: AppRouter? = nil) {
+        guard categoryIdentifier == "WEIGHT_REMINDER" else { return }
+        switch actionIdentifier {
+        case "QUICK_LOG", UNNotificationDefaultActionIdentifier:
+            (router ?? .shared).requestQuickLog()
+        case "DISMISS", UNNotificationDismissActionIdentifier:
+            if let responseDataManager {
+                recordDismissal(at: deliveredAt, dataManager: responseDataManager)
+            } else {
+                pendingDismissals.append(deliveredAt)
+            }
+        default:
+            break
+        }
+    }
+
+    private func recordDismissal(at date: Date, dataManager: DataManager) {
+        let didLog = dataManager.fetchEntriesForDate(date).contains { !$0.isHidden }
+        handleReminderDismissal(deviceSettings: dataManager.deviceSettings, didLogWithinWindow: didLog)
+    }
+
+    nonisolated func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse
+    ) async {
+        await handleResponse(
+            categoryIdentifier: response.notification.request.content.categoryIdentifier,
+            actionIdentifier: response.actionIdentifier,
+            deliveredAt: response.notification.date
+        )
+    }
+
+    nonisolated func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification
+    ) async -> UNNotificationPresentationOptions {
+        [.banner, .sound]
+    }
     
     /// Cancel reminder occurrences for today if the user already logged, then top-up future occurrences
     func cancelTodayReminderIfLogged(dataManager: DataManager, reminders: DeviceSettingsStore.RemindersSettings) async {
         let todayEntries = dataManager.fetchEntriesForDate(Date())
-        guard !todayEntries.isEmpty else { return }
+        guard todayEntries.contains(where: { !$0.isHidden }) else { return }
         
         let idsForToday = todayReminderIdentifiers()
         notificationCenter.removeDeliveredNotifications(withIdentifiers: idsForToday)
@@ -139,7 +196,7 @@ final class NotificationService: ObservableObject {
         
         // Check if user has already logged weight for today
         let todayEntries = dataManager.fetchEntriesForDate(Date())
-        let skipToday = !todayEntries.isEmpty
+        let skipToday = todayEntries.contains { !$0.isHidden }
         
         if let primaryTime = reminders.primaryTime {
             try? await scheduleSeries(baseID: primaryReminderID, time: primaryTime, title: L10n.Notifications.primaryTitle, body: L10n.Notifications.primaryBody, sound: .default, skipToday: skipToday)
@@ -270,7 +327,7 @@ extension NotificationService {
             identifier: "WEIGHT_REMINDER",
             actions: [quickLogAction, dismissAction],
             intentIdentifiers: [],
-            options: []
+            options: .customDismissAction
         )
         
         notificationCenter.setNotificationCategories([category])

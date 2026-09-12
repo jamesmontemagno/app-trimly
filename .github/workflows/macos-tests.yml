@@ -20,7 +20,7 @@ jobs:
       - name: Select Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '26.6'
+          xcode-version: '26.3'
 
       - name: Build macOS app
         run: xcodebuild -scheme TrimTally -destination "platform=macOS,arch=arm64" build
@@ -35,7 +35,7 @@ jobs:
       - name: Select Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '26.6'
+          xcode-version: '26.3'
 
       - name: Build iOS app
         run: xcodebuild -scheme TrimTally -destination "platform=iOS Simulator,name=iPhone 17" build

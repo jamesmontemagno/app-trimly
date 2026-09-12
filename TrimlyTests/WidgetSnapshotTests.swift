@@ -163,11 +163,10 @@ struct WidgetSnapshotTests {
     func inMemoryRefreshDoesNotAccessSharedContainer() throws {
         let manager = DataManager(inMemory: true)
         try manager.addWeightEntry(weightKg: 80, unit: .kilograms)
-        var requestedContainer = false
-        WidgetSnapshotWriter.refresh(using: manager, resolveContainer: {
-            requestedContainer = true
+        let refreshTask = WidgetSnapshotWriter.refresh(using: manager, resolveContainer: {
+            Issue.record("In-memory refresh should not resolve the shared container")
             return nil
         })
-        #expect(!requestedContainer)
+        #expect(refreshTask == nil)
     }
 }

@@ -291,7 +291,14 @@ private struct AchievementCard: View {
 	}
 	
 	private var accessibilityLabel: String {
-		String(localized: snapshot.descriptor.title)
+		var components = [
+			String(localized: snapshot.descriptor.title),
+			String(localized: snapshot.isUnlocked ? L10n.Accessibility.unlocked : L10n.Achievements.lockedBadge)
+		]
+		if snapshot.descriptor.isPremium {
+			components.append(String(localized: L10n.Achievements.proBadge))
+		}
+		return components.joined(separator: ", ")
 	}
 	
 	private var accessibilityValue: String {

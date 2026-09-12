@@ -48,6 +48,8 @@ final class DataManager: ObservableObject {
     private let reviewPromptService: ReviewPromptService
     let isInMemory: Bool
     private var presentationSubscription: AnyCancellable?
+    private var settingsNeedsInsertion = false
+    private var widgetRefreshTask: Task<Void, Never>?
     
     @Published var settings: AppSettings?
     @Published private(set) var dataRevision = 0
@@ -65,7 +67,7 @@ final class DataManager: ObservableObject {
             lastChangeAllowsCelebration = celebrate
             dataRevision += 1
             if !isInMemory {
-                WidgetSnapshotWriter.refresh(using: self)
+                widgetRefreshTask = WidgetSnapshotWriter.refresh(using: self)
                 Task { await refreshReminderSchedule() }
             }
         }
@@ -131,7 +133,7 @@ final class DataManager: ObservableObject {
                 .sink { [weak self] _ in
                     guard let self else { return }
                     if !self.isInMemory {
-                        WidgetSnapshotWriter.refresh(using: self)
+                        self.widgetRefreshTask = WidgetSnapshotWriter.refresh(using: self)
                     }
                 }
         } catch {
@@ -142,22 +144,31 @@ final class DataManager: ObservableObject {
     // MARK: - Settings Management
     
     private func loadSettings() {
-        let descriptor = FetchDescriptor<AppSettings>()
+        var descriptor = FetchDescriptor<AppSettings>(
+            sortBy: [SortDescriptor(\.updatedAt, order: .reverse)]
+        )
+        descriptor.fetchLimit = 1
         
         do {
             let existingSettings = try modelContext.fetch(descriptor)
             if let first = existingSettings.first {
                 settings = first
+                settingsNeedsInsertion = false
             } else {
                 // Create default settings
                 let newSettings = AppSettings()
                 modelContext.insert(newSettings)
                 try modelContext.save()
                 settings = newSettings
+                settingsNeedsInsertion = false
             }
         } catch {
             modelContext.rollback()
             persistenceErrorMessage = error.localizedDescription
+            if settings == nil {
+                settings = AppSettings()
+                settingsNeedsInsertion = true
+            }
         }
     }
     
@@ -165,10 +176,18 @@ final class DataManager: ObservableObject {
         guard var settings = settings else { return }
         update(&settings)
         settings.updatedAt = Date()
+        let insertsFallback = settingsNeedsInsertion
+        if insertsFallback {
+            modelContext.insert(settings)
+        }
         do {
             try saveChanges()
+            settingsNeedsInsertion = false
             publishChange(refreshData: true)
         } catch {
+            if insertsFallback {
+                settingsNeedsInsertion = true
+            }
             persistenceErrorMessage = error.localizedDescription
         }
     }
@@ -187,6 +206,10 @@ final class DataManager: ObservableObject {
         loadSettings()
         refreshInitialCloudSyncState()
         publishChange(refreshData: true)
+    }
+
+    func waitForPendingWidgetRefresh() async {
+        await widgetRefreshTask?.value
     }
 
     // MARK: - Initial Cloud Sync State
@@ -297,10 +320,9 @@ final class DataManager: ObservableObject {
     }
     
     func fetchEntriesForDate(_ date: Date) -> [WeightEntry] {
-        let start = WeightEntry.normalizeDate(date)
-        guard let end = Calendar.current.date(byAdding: .day, value: 1, to: start) else { return [] }
+        let normalizedDate = WeightEntry.normalizeDate(date)
         let descriptor = FetchDescriptor<WeightEntry>(
-            predicate: #Predicate { $0.timestamp >= start && $0.timestamp < end && !$0.isHidden },
+            predicate: #Predicate { $0.normalizedDate == normalizedDate },
             sortBy: [SortDescriptor(\.timestamp, order: .forward)]
         )
         return (try? modelContext.fetch(descriptor)) ?? []
@@ -396,6 +418,29 @@ final class DataManager: ObservableObject {
         return drafts.count
     }
 
+    /// Insert validated HealthKit measurements in one transaction and publish one refresh.
+    @discardableResult
+    func importHealthKitEntries(_ drafts: [WeightEntryDraft]) throws -> Int {
+        guard !drafts.isEmpty else { return 0 }
+        for draft in drafts {
+            try validateMeasurement(weightKg: draft.weightKg, timestamp: draft.timestamp)
+        }
+        for draft in drafts {
+            modelContext.insert(WeightEntry(
+                timestamp: draft.timestamp,
+                weightKg: draft.weightKg,
+                displayUnitAtEntry: draft.unit,
+                source: .healthKit,
+                notes: draft.notes
+            ))
+        }
+        _ = evaluateGoalAchievementIfNeeded()
+        try saveChanges()
+        publishChange(refreshData: true)
+        markInitialCloudSyncCompletedIfNeeded()
+        return drafts.count
+    }
+
     private func validateMeasurement(weightKg: Double, timestamp: Date) throws {
         guard weightKg.isFinite, weightKg > 0 else { throw DataManagerError.invalidWeight }
         guard timestamp.timeIntervalSinceReferenceDate.isFinite else { throw DataManagerError.invalidDateRange }
@@ -405,8 +450,42 @@ final class DataManager: ObservableObject {
     // MARK: - Goal Management
     
     func setGoal(
-        targetWeightKg: Double, startingWeightKg: Double?, targetDate: Date? = nil,
-        notes: String? = nil, startingEntryUnit: WeightUnit? = nil
+        targetWeightKg: Double,
+        startingWeightKg: Double?,
+        targetDate: Date? = nil,
+        notes: String? = nil
+    ) throws {
+        try createGoal(
+            targetWeightKg: targetWeightKg,
+            startingWeightKg: startingWeightKg,
+            targetDate: targetDate,
+            notes: notes,
+            startingEntryUnit: nil
+        )
+    }
+
+    func setGoalAndCreateStartingEntry(
+        targetWeightKg: Double,
+        startingWeightKg: Double,
+        targetDate: Date? = nil,
+        notes: String? = nil,
+        unit: WeightUnit
+    ) throws {
+        try createGoal(
+            targetWeightKg: targetWeightKg,
+            startingWeightKg: startingWeightKg,
+            targetDate: targetDate,
+            notes: notes,
+            startingEntryUnit: unit
+        )
+    }
+
+    private func createGoal(
+        targetWeightKg: Double,
+        startingWeightKg: Double?,
+        targetDate: Date?,
+        notes: String?,
+        startingEntryUnit: WeightUnit?
     ) throws {
         guard let resolvedStartingWeight = startingWeightKg ?? getCurrentWeight() else {
             throw DataManagerError.missingStartingWeight
@@ -442,7 +521,38 @@ final class DataManager: ObservableObject {
         markInitialCloudSyncCompletedIfNeeded()
     }
     
-    func updateGoal(targetWeightKg: Double, startingWeightKg: Double?, targetDate: Date? = nil, notes: String? = nil) throws {
+    func updateGoal(targetWeightKg: Double, startingWeightKg: Double?, notes: String? = nil) throws {
+        try updateGoal(
+            targetWeightKg: targetWeightKg,
+            startingWeightKg: startingWeightKg,
+            targetDate: nil,
+            notes: notes,
+            updatesTargetDate: false
+        )
+    }
+
+    func updateGoal(
+        targetWeightKg: Double,
+        startingWeightKg: Double?,
+        targetDate: Date?,
+        notes: String? = nil
+    ) throws {
+        try updateGoal(
+            targetWeightKg: targetWeightKg,
+            startingWeightKg: startingWeightKg,
+            targetDate: targetDate,
+            notes: notes,
+            updatesTargetDate: true
+        )
+    }
+
+    private func updateGoal(
+        targetWeightKg: Double,
+        startingWeightKg: Double?,
+        targetDate: Date?,
+        notes: String?,
+        updatesTargetDate: Bool
+    ) throws {
         guard let activeGoal = fetchActiveGoal() else {
             throw DataManagerError.noActiveGoal
         }
@@ -454,7 +564,9 @@ final class DataManager: ObservableObject {
         }
         
         activeGoal.targetWeightKg = targetWeightKg
-        activeGoal.targetDate = targetDate
+        if updatesTargetDate {
+            activeGoal.targetDate = targetDate
+        }
         if let startingWeight = startingWeightKg {
             activeGoal.startingWeightKg = startingWeight
         }
@@ -501,7 +613,7 @@ final class DataManager: ObservableObject {
     }
     
     func completeGoal(reason: CompletionReason) throws {
-        guard let activeGoal = fetchActiveGoal() else { throw DataManagerError.noActiveGoal }
+        guard let activeGoal = fetchActiveGoal() else { return }
         if reason == .achieved {
             activeGoal.markAchieved()
         } else {
@@ -525,6 +637,10 @@ final class DataManager: ObservableObject {
     }
     
     func getCurrentWeight() -> Double? {
+        fetchAllEntries().first?.weightKg
+    }
+
+    func getCurrentVisibleWeight() -> Double? {
         var descriptor = FetchDescriptor<WeightEntry>(
             predicate: #Predicate { !$0.isHidden },
             sortBy: [SortDescriptor(\.timestamp, order: .reverse)]
@@ -534,6 +650,10 @@ final class DataManager: ObservableObject {
     }
     
     func getStartWeight() -> Double? {
+        fetchAllEntries().last?.weightKg
+    }
+
+    func getStartVisibleWeight() -> Double? {
         var descriptor = FetchDescriptor<WeightEntry>(
             predicate: #Predicate { !$0.isHidden },
             sortBy: [SortDescriptor(\.timestamp, order: .forward)]

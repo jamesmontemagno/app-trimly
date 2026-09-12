@@ -2,9 +2,44 @@ import Foundation
 import WidgetKit
 import OSLog
 
+private actor WidgetSnapshotPersistence {
+    private var latestSequence = 0
+
+    func persist(
+        _ snapshot: WidgetSnapshot,
+        sequence: Int,
+        resolveContainer: @Sendable () -> URL?
+    ) {
+        guard sequence >= latestSequence else { return }
+        latestSequence = sequence
+        guard let directory = resolveContainer() else {
+            Logger(subsystem: "com.refractored.trimtally", category: "Widget").error("The widget App Group container is unavailable.")
+            return
+        }
+        do {
+            try WidgetSnapshotStore.write(snapshot, to: directory)
+        } catch {
+            // Invalidate the old cache rather than leaving deleted/private weights on disk.
+            let cacheURL = directory.appendingPathComponent(WidgetSnapshotStore.fileName)
+            if FileManager.default.fileExists(atPath: cacheURL.path) {
+                do {
+                    try FileManager.default.removeItem(at: cacheURL)
+                } catch {
+                    Logger(subsystem: "com.refractored.trimtally", category: "Widget").error("Unable to invalidate the widget cache.")
+                }
+            }
+            Logger(subsystem: "com.refractored.trimtally", category: "Widget").error("Unable to refresh the widget cache.")
+        }
+        WidgetCenter.shared.reloadTimelines(ofKind: WidgetSnapshotStore.widgetKind)
+    }
+}
+
 /// App-only bridge from SwiftData to the extension's value-only cache.
 @MainActor
 enum WidgetSnapshotWriter {
+    private static let persistence = WidgetSnapshotPersistence()
+    private static var sequence = 0
+
     static func makeSnapshot(using dataManager: DataManager, at date: Date = Date()) -> WidgetSnapshot {
         let hidesWeights = dataManager.deviceSettings.presentation.hideWeights
         guard !hidesWeights else { return .empty(at: date, hidesWeights: true) }
@@ -39,30 +74,26 @@ enum WidgetSnapshotWriter {
     }
 
     /// Cache failures must never cause an otherwise successful data mutation to fail.
-    static func refresh(using dataManager: DataManager) {
+    @discardableResult
+    static func refresh(using dataManager: DataManager) -> Task<Void, Never>? {
         refresh(using: dataManager, resolveContainer: { WidgetSnapshotStore.containerURL })
     }
 
-    static func refresh(using dataManager: DataManager, resolveContainer: () -> URL?) {
-        guard !dataManager.isInMemory else { return }
-        guard let directory = resolveContainer() else {
-            Logger(subsystem: "com.refractored.trimtally", category: "Widget").error("The widget App Group container is unavailable.")
-            return
+    @discardableResult
+    static func refresh(
+        using dataManager: DataManager,
+        resolveContainer: @escaping @Sendable () -> URL?
+    ) -> Task<Void, Never>? {
+        guard !dataManager.isInMemory else { return nil }
+        sequence += 1
+        let currentSequence = sequence
+        let snapshot = makeSnapshot(using: dataManager)
+        return Task.detached(priority: .utility) {
+            await persistence.persist(
+                snapshot,
+                sequence: currentSequence,
+                resolveContainer: resolveContainer
+            )
         }
-        do {
-            try WidgetSnapshotStore.write(makeSnapshot(using: dataManager), to: directory)
-        } catch {
-            // Invalidate the old cache rather than leaving deleted/private weights on disk.
-            let cacheURL = directory.appendingPathComponent(WidgetSnapshotStore.fileName)
-            if FileManager.default.fileExists(atPath: cacheURL.path) {
-                do {
-                    try FileManager.default.removeItem(at: cacheURL)
-                } catch {
-                    Logger(subsystem: "com.refractored.trimtally", category: "Widget").error("Unable to invalidate the widget cache.")
-                }
-            }
-            Logger(subsystem: "com.refractored.trimtally", category: "Widget").error("Unable to refresh the widget cache.")
-        }
-        WidgetCenter.shared.reloadTimelines(ofKind: WidgetSnapshotStore.widgetKind)
     }
 }

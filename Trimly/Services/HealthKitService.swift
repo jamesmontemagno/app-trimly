@@ -141,8 +141,24 @@ final class HealthKitService: ObservableObject {
         }
         
         // Process samples and check for duplicates
-        var importedCount = 0
         let totalSamples = samples.count
+        let healthSettings = dataManager.deviceSettings.healthKit
+        var duplicateCandidates: [Int: [(timestamp: Date, weightKg: Double)]] = [:]
+        if healthSettings.autoHideDuplicates {
+            let existingEntries = try dataManager.fetchEntries(
+                startDate: startDate.addingTimeInterval(-300),
+                endDate: endDate.addingTimeInterval(301),
+                includeHidden: true
+            )
+            for entry in existingEntries {
+                addDuplicateCandidate(
+                    timestamp: entry.timestamp,
+                    weightKg: entry.weightKg,
+                    to: &duplicateCandidates
+                )
+            }
+        }
+        var drafts: [WeightEntryDraft] = []
         
         for (index, sample) in samples.enumerated() {
             // Update progress
@@ -151,24 +167,30 @@ final class HealthKitService: ObservableObject {
             let weightKg = sample.quantity.doubleValue(for: .gramUnit(with: .kilo))
             let timestamp = sample.startDate
             
-            // Check if this is a duplicate
-            if try isDuplicate(
+            let isDuplicate = healthSettings.autoHideDuplicates && containsDuplicate(
                 weightKg: weightKg,
                 timestamp: timestamp,
-                dataManager: dataManager
-            ) == false {
-                try dataManager.addWeightEntry(
+                tolerance: healthSettings.duplicateToleranceKg,
+                candidates: duplicateCandidates
+            )
+            if isDuplicate {
+                skippedSampleCount += 1
+            } else {
+                drafts.append(WeightEntryDraft(
                     weightKg: weightKg,
                     timestamp: timestamp,
                     unit: unit,
-                    source: .healthKit
+                    notes: nil
+                ))
+                addDuplicateCandidate(
+                    timestamp: timestamp,
+                    weightKg: weightKg,
+                    to: &duplicateCandidates
                 )
-                importedCount += 1
-            } else {
-                skippedSampleCount += 1
             }
         }
         
+        let importedCount = try dataManager.importHealthKitEntries(drafts)
         importProgress = 1.0
         return importedCount
     }
@@ -281,6 +303,7 @@ final class HealthKitService: ObservableObject {
                 dataManager: dataManager,
                 unit: dataManager.settings?.preferredUnit ?? unit
             )
+            await dataManager.waitForPendingWidgetRefresh()
             dataManager.deviceSettings.updateHealthKit { settings in
                 settings.lastBackgroundSyncAt = now
             }
@@ -327,6 +350,37 @@ final class HealthKitService: ObservableObject {
         }
         
         return false
+    }
+
+    private func containsDuplicate(
+        weightKg: Double,
+        timestamp: Date,
+        tolerance: Double,
+        candidates: [Int: [(timestamp: Date, weightKg: Double)]]
+    ) -> Bool {
+        let bucket = duplicateBucket(for: timestamp)
+        for candidateBucket in (bucket - 1)...(bucket + 1) {
+            guard let entries = candidates[candidateBucket] else { continue }
+            if entries.contains(where: {
+                abs($0.weightKg - weightKg) <= tolerance
+                    && abs($0.timestamp.timeIntervalSince(timestamp)) <= 300
+            }) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private func addDuplicateCandidate(
+        timestamp: Date,
+        weightKg: Double,
+        to candidates: inout [Int: [(timestamp: Date, weightKg: Double)]]
+    ) {
+        candidates[duplicateBucket(for: timestamp), default: []].append((timestamp, weightKg))
+    }
+
+    private func duplicateBucket(for timestamp: Date) -> Int {
+        Int(floor(timestamp.timeIntervalSinceReferenceDate / 300))
     }
 
     /// Determine the start date for the next sync using the most recent sync/import anchor and a small overlap window

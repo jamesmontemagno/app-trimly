@@ -105,11 +105,11 @@ struct DashboardView: View {
 	private func dashboardCard(_ card: DashboardCard) -> some View {
 		switch card {
 		case .today:
-			TodayWeightCard(currentWeight: dataManager.getCurrentWeight(), todayEntries: todayEntries,
+			TodayWeightCard(currentWeight: dataManager.getCurrentVisibleWeight(), todayEntries: todayEntries,
 							recentlySyncedFromICloud: recentlySyncedFromICloud, recentlySyncedToHealthKit: recentlySyncedToHealthKit)
 		case .progress:
-			ProgressSummaryCard(goal: dataManager.fetchActiveGoal(), currentWeight: dataManager.getCurrentWeight(),
-								startWeight: dataManager.fetchActiveGoal()?.startingWeightKg ?? dataManager.getStartWeight())
+			ProgressSummaryCard(goal: dataManager.fetchActiveGoal(), currentWeight: dataManager.getCurrentVisibleWeight(),
+								startWeight: dataManager.fetchActiveGoal()?.startingWeightKg ?? dataManager.getStartVisibleWeight())
 		case .sparkline:
 			MiniSparklineCard(last7DaysData: last7DaysData, onTap: onShowCharts)
 		case .consistency:
@@ -162,7 +162,7 @@ struct DashboardView: View {
 	}
 	
 	private var todayEntries: [WeightEntry]? {
-		let entries = dataManager.fetchEntriesForDate(Date())
+		let entries = dataManager.fetchEntriesForDate(Date()).filter { !$0.isHidden }
 		return entries.isEmpty ? nil : entries
 	}
 	
@@ -214,7 +214,7 @@ private extension DashboardView {
 		dataManager.refreshInitialCloudSyncState()
 		guard dataManager.hasFinishedInitialCloudSync else { return }
 		guard dataManager.hasShownInitialCloudSyncSuccess == false else { return }
-		guard dataManager.getCurrentWeight() != nil else { return }
+		guard dataManager.getCurrentVisibleWeight() != nil else { return }
 		recentlySyncedFromICloud = true
 		dataManager.markInitialCloudSyncSuccessShown()
 		DispatchQueue.main.asyncAfter(deadline: .now() + 3) {

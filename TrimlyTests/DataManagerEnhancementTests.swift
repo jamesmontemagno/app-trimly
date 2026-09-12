@@ -40,10 +40,12 @@ struct DataManagerEnhancementTests {
         try manager.updateEntry(entry, notes: "Local context")
         try manager.setEntryHidden(entry, isHidden: true)
         #expect(entry.notes == "Local context")
-        #expect(manager.getCurrentWeight() == nil)
-        #expect(manager.getStartWeight() == nil)
+        #expect(manager.getCurrentWeight() == 80)
+        #expect(manager.getStartWeight() == 80)
+        #expect(manager.getCurrentVisibleWeight() == nil)
+        #expect(manager.getStartVisibleWeight() == nil)
         #expect(manager.getDailyWeights().isEmpty)
-        #expect(manager.fetchEntriesForDate(Date()).isEmpty)
+        #expect(manager.fetchEntriesForDate(Date()).count == 1)
         #expect(try manager.fetchEntries(includeHidden: true).count == 1)
         try manager.setEntryHidden(entry, isHidden: false)
         #expect(manager.getCurrentWeight() == 80)
@@ -73,6 +75,30 @@ struct DataManagerEnhancementTests {
         ]
         #expect(throws: DataManagerError.self) { try manager.importWeightEntries(drafts) }
         #expect(manager.fetchAllEntries().isEmpty)
+    }
+
+    @Test func healthKitBatchImportsOnceWithHealthKitSource() throws {
+        let manager = DataManager(inMemory: true)
+        let initialRevision = manager.dataRevision
+        let drafts = [
+            WeightEntryDraft(weightKg: 80, timestamp: Date().addingTimeInterval(-60), unit: .kilograms, notes: nil),
+            WeightEntryDraft(weightKg: 79, timestamp: Date(), unit: .kilograms, notes: nil)
+        ]
+
+        #expect(try manager.importHealthKitEntries(drafts) == 2)
+        #expect(manager.fetchAllEntries().allSatisfy { $0.source == .healthKit })
+        #expect(manager.dataRevision == initialRevision + 1)
+    }
+
+    @Test func healthKitBatchDoesNotQueueManualGoalCelebration() throws {
+        let manager = DataManager(inMemory: true)
+        try manager.setGoal(targetWeightKg: 75, startingWeightKg: 80)
+        try manager.importHealthKitEntries([
+            WeightEntryDraft(weightKg: 75, timestamp: Date(), unit: .kilograms, notes: nil)
+        ])
+
+        #expect(manager.fetchActiveGoal()?.completionReason == .achieved)
+        #expect(!manager.consumeGoalAchievementCelebrationIfNeeded())
     }
 
     @Test func editsAndImportsDoNotTriggerLoggingCelebrations() throws {
@@ -109,13 +135,38 @@ struct DataManagerEnhancementTests {
         #expect(manager.fetchActiveGoal()?.targetDate == nil)
     }
 
+    @Test func existingUpdateGoalAPIKeepsDeadline() throws {
+        let manager = DataManager(inMemory: true)
+        let deadline = Calendar.current.date(byAdding: .day, value: 90, to: Date())!
+        try manager.setGoal(targetWeightKg: 75, startingWeightKg: 80, targetDate: deadline)
+        try manager.updateGoal(targetWeightKg: 76, startingWeightKg: 80, notes: nil)
+        #expect(manager.fetchActiveGoal()?.targetDate == deadline)
+    }
+
+    @Test func completingMissingGoalRemainsNoOp() throws {
+        let manager = DataManager(inMemory: true)
+        try manager.completeGoal(reason: .abandoned)
+        #expect(manager.fetchActiveGoal() == nil)
+    }
+
     @Test func newGoalAndStartingEntryAreSavedTogether() throws {
         let manager = DataManager(inMemory: true)
-        try manager.setGoal(targetWeightKg: 75, startingWeightKg: 80, startingEntryUnit: .kilograms)
+        try manager.setGoalAndCreateStartingEntry(
+            targetWeightKg: 75,
+            startingWeightKg: 80,
+            unit: .kilograms
+        )
         let goal = try #require(manager.fetchActiveGoal())
         let entry = try #require(manager.fetchAllEntries().first)
         #expect(entry.timestamp == goal.startDate)
         #expect(entry.weightKg == goal.startingWeightKg)
         #expect(manager.celebrationRevision == 0)
+    }
+
+    @Test func creatingGoalWithExistingHistoryDoesNotAddMeasurement() throws {
+        let manager = DataManager(inMemory: true)
+        try manager.addWeightEntry(weightKg: 80, unit: .kilograms)
+        try manager.setGoal(targetWeightKg: 75, startingWeightKg: 80)
+        #expect(manager.fetchAllEntries().count == 1)
     }
 }

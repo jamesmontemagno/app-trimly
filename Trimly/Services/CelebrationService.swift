@@ -226,8 +226,8 @@ final class CelebrationService: ObservableObject {
         }
 
         guard let goal = dataManager.fetchActiveGoal(),
-              let currentWeight = dataManager.getCurrentWeight(),
-              let startWeight = goal.startingWeightKg ?? dataManager.getStartWeight() else {
+              let currentWeight = dataManager.getCurrentVisibleWeight(),
+              let startWeight = goal.startingWeightKg ?? dataManager.getStartVisibleWeight() else {
             return nil
         }
         

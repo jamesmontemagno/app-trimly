@@ -155,7 +155,7 @@ struct GoalSetupView: View {
 			deadline = goal.targetDate ?? deadline
 			originalTargetText = targetWeightText
 			originalStartText = startingWeightText
-		} else if startingWeightText.isEmpty, let current = dataManager.getCurrentWeight() {
+		} else if startingWeightText.isEmpty, let current = dataManager.getCurrentVisibleWeight() {
 			startingWeightText = formattedDisplayWeight(fromKg: current)
 		}
 	}
@@ -191,11 +191,22 @@ struct GoalSetupView: View {
 					notes: notes.isEmpty ? nil : notes
 				)
 			} else {
-				try dataManager.setGoal(targetWeightKg: weightKg,
-								startingWeightKg: startingKg,
-									targetDate: hasDeadline ? deadline : nil,
-									notes: notes.isEmpty ? nil : notes,
-									startingEntryUnit: preferredUnit)
+				if dataManager.hasAnyEntries() {
+					try dataManager.setGoal(
+						targetWeightKg: weightKg,
+						startingWeightKg: startingKg,
+						targetDate: hasDeadline ? deadline : nil,
+						notes: notes.isEmpty ? nil : notes
+					)
+				} else {
+					try dataManager.setGoalAndCreateStartingEntry(
+						targetWeightKg: weightKg,
+						startingWeightKg: startingKg,
+						targetDate: hasDeadline ? deadline : nil,
+						notes: notes.isEmpty ? nil : notes,
+						unit: preferredUnit
+					)
+				}
 			}
 			dismiss()
 		} catch {

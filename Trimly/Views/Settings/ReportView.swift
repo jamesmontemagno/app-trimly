@@ -194,6 +194,55 @@ private struct WeightReportContent: View {
                         .accessibilityValue(report.formattedWeight(point.weightKg))
                     }
 
+                    if let goal = report.goalWeightKg {
+                        RuleMark(y: .value(String(localized: L10n.Portability.goal), report.unit.convert(fromKg: goal)))
+                            .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [5, 4]))
+                            .foregroundStyle(.secondary)
+                            .accessibilityLabel(Text(L10n.Portability.goal))
+                            .accessibilityValue(report.formattedWeight(goal))
+                    }
+                }
+                .chartYScale(domain: .automatic(includesZero: false))
+                .chartYAxisLabel(report.unit.symbol)
+                .frame(height: chartHeight)
+                .accessibilityLabel(Text(L10n.Portability.reportChart))
+            }
+            VStack(spacing: 10) {
+                summary(L10n.Portability.firstWeight, value: report.firstWeightKg.map { report.formattedWeight($0) })
+                summary(L10n.Portability.latestWeight, value: report.latestWeightKg.map { report.formattedWeight($0) })
+                summary(L10n.Portability.change, value: report.changeKg.map { report.formattedWeight($0, signed: true) })
+                summary(L10n.Portability.dailyAverage, value: report.averageKg.map { report.formattedWeight($0) })
+                if let goal = report.goalWeightKg {
+                    summary(L10n.Portability.goal, value: report.formattedWeight(goal))
+                }
+            }
+            Text(L10n.Portability.entryCount(report.entryCount))
+            Text(L10n.Portability.loggedDays(report.points.count))
+            Text(report.aggregation == .latest ? L10n.Portability.reportLatest : L10n.Portability.reportAverage)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    @ViewBuilder
+    private func summary(_ label: LocalizedStringResource, value: String?) -> some View {
+        if let value {
+            ViewThatFits(in: .horizontal) {
+                HStack {
+                    Text(label)
+                    Spacer()
+                    Text(value).fontWeight(.semibold)
+                }
+                VStack(alignment: .leading) {
+                    Text(label)
+                    Text(value).fontWeight(.semibold)
+                }
+            }
+            .accessibilityElement(children: .combine)
+        }
+    }
+}
+
                     private enum ShareCardFormat: String, CaseIterable, Identifiable {
                         case checkIns
                         case goal
@@ -469,51 +518,3 @@ private struct WeightReportContent: View {
                             .accessibilityElement(children: .combine)
                         }
                     }
-                    if let goal = report.goalWeightKg {
-                        RuleMark(y: .value(String(localized: L10n.Portability.goal), report.unit.convert(fromKg: goal)))
-                            .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [5, 4]))
-                            .foregroundStyle(.secondary)
-                            .accessibilityLabel(Text(L10n.Portability.goal))
-                            .accessibilityValue(report.formattedWeight(goal))
-                    }
-                }
-                .chartYScale(domain: .automatic(includesZero: false))
-                .chartYAxisLabel(report.unit.symbol)
-                .frame(height: chartHeight)
-                .accessibilityLabel(Text(L10n.Portability.reportChart))
-            }
-            VStack(spacing: 10) {
-                summary(L10n.Portability.firstWeight, value: report.firstWeightKg.map { report.formattedWeight($0) })
-                summary(L10n.Portability.latestWeight, value: report.latestWeightKg.map { report.formattedWeight($0) })
-                summary(L10n.Portability.change, value: report.changeKg.map { report.formattedWeight($0, signed: true) })
-                summary(L10n.Portability.dailyAverage, value: report.averageKg.map { report.formattedWeight($0) })
-                if let goal = report.goalWeightKg {
-                    summary(L10n.Portability.goal, value: report.formattedWeight(goal))
-                }
-            }
-            Text(L10n.Portability.entryCount(report.entryCount))
-            Text(L10n.Portability.loggedDays(report.points.count))
-            Text(report.aggregation == .latest ? L10n.Portability.reportLatest : L10n.Portability.reportAverage)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-        }
-    }
-
-    @ViewBuilder
-    private func summary(_ label: LocalizedStringResource, value: String?) -> some View {
-        if let value {
-            ViewThatFits(in: .horizontal) {
-                HStack {
-                    Text(label)
-                    Spacer()
-                    Text(value).fontWeight(.semibold)
-                }
-                VStack(alignment: .leading) {
-                    Text(label)
-                    Text(value).fontWeight(.semibold)
-                }
-            }
-            .accessibilityElement(children: .combine)
-        }
-    }
-}

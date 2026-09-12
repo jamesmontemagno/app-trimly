@@ -13,7 +13,7 @@ struct CelebrationOverlayView: View {
 	
 	var body: some View {
 		VStack(spacing: 16) {
-			if #available(macOS 15.0, *) {
+			if #available(iOS 18.0, macOS 15.0, visionOS 2.0, *) {
 				Image(systemName: celebration.iconName)
 					.font(.system(size: 60))
 					.foregroundStyle(.yellow)

@@ -1,6 +1,6 @@
 //
 //  MiniSparklineCard.swift
-//  Weigh
+//  My Weight
 //
 //  Created by Trimly on 12/7/2025.
 //
@@ -9,6 +9,7 @@ import SwiftUI
 import Charts
 
 struct MiniSparklineCard: View {
+	@EnvironmentObject private var dataManager: DataManager
 	let last7DaysData: [(date: Date, weight: Double)]?
 	let onTap: () -> Void
 	
@@ -21,6 +22,7 @@ struct MiniSparklineCard: View {
 							.font(.subheadline)
 						Image(systemName: "arrow.up.right.square")
 							.font(.caption2)
+							.accessibilityHidden(true)
 					}
 					.foregroundStyle(.secondary)
 					
@@ -32,25 +34,27 @@ struct MiniSparklineCard: View {
 					Chart {
 						ForEach(last7Days, id: \.date) { data in
 							LineMark(
-								x: .value("Date", data.date),
-								y: .value("Weight", data.weight)
+								x: .value(String(localized: L10n.Insights.dateAxis), data.date),
+								y: .value(String(localized: L10n.Charts.legendWeight), converted(data.weight))
 							)
 							.foregroundStyle(.blue.gradient)
 							.interpolationMethod(.catmullRom)
 
 							AreaMark(
-								x: .value("Date", data.date),
-								y: .value("Weight", data.weight)
+								x: .value(String(localized: L10n.Insights.dateAxis), data.date),
+								y: .value(String(localized: L10n.Charts.legendWeight), converted(data.weight))
 							)
 							.foregroundStyle(.blue.opacity(0.1).gradient)
 							.interpolationMethod(.catmullRom)
 							
 							PointMark(
-								x: .value("Date", data.date),
-								y: .value("Weight", data.weight)
+								x: .value(String(localized: L10n.Insights.dateAxis), data.date),
+								y: .value(String(localized: L10n.Charts.legendWeight), converted(data.weight))
 							)
 							.symbolSize(30)
 							.foregroundStyle(Color.blue)
+							.accessibilityLabel(Text(data.date, format: .dateTime.day().month()))
+							.accessibilityValue(Text(InsightFormatting.weight(data.weight, unit: dataManager.settings?.preferredUnit ?? .kilograms)))
 						}
 					}
 					.chartXAxis(.hidden)
@@ -60,7 +64,7 @@ struct MiniSparklineCard: View {
 				} else {
 					Text(L10n.Dashboard.notEnoughData)
 						.font(.caption)
-						.foregroundStyle(.tertiary)
+						.foregroundStyle(.secondary)
 						.frame(height: 80)
 				}
 			}
@@ -70,10 +74,16 @@ struct MiniSparklineCard: View {
 			.clipShape(RoundedRectangle(cornerRadius: 16))
 		}
 		.buttonStyle(.plain)
+		.accessibilityLabel(Text(L10n.Dashboard.lastSevenDays))
+		.accessibilityHint(Text(L10n.Accessibility.opensCharts))
+	}
+
+	private func converted(_ kg: Double) -> Double {
+		(dataManager.settings?.preferredUnit ?? .kilograms).convert(fromKg: kg)
 	}
 	
 	private func sparklineYDomain(for data: [(date: Date, weight: Double)]) -> ClosedRange<Double> {
-		let weights = data.map { $0.weight }
+		let weights = data.map { converted($0.weight) }
 		guard let minWeight = weights.min(), let maxWeight = weights.max() else {
 			return 0...1
 		}

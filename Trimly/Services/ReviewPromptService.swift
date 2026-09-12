@@ -1,6 +1,6 @@
 //
 //  ReviewPromptService.swift
-//  Weigh
+//  My Weight
 //
 //  Created by Trimly on 12/20/2025.
 //

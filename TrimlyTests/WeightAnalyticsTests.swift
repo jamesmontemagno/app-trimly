@@ -221,7 +221,7 @@ struct WeightAnalyticsTests {
 		for offset in (0..<10).reversed() {
 			let day = calendar.date(byAdding: .day, value: -offset, to: today) ?? today
 			// First 3 days: 85kg, last 7 days: 80kg
-			let weight = offset < 3 ? 85.0 : 80.0
+			let weight = offset >= 7 ? 85.0 : 80.0
 			series.append((date: day, weight: weight))
 		}
 		
@@ -232,5 +232,79 @@ struct WeightAnalyticsTests {
 		
 		// Average should be 80.0, not affected by the earlier 85.0 entries
 		#expect(abs(calculatedAverage - 80.0) < 0.0001)
+	}
+
+	@Test func regression_usesElapsedCalendarDaysAcrossGaps() throws {
+		let today = Calendar.current.startOfDay(for: Date())
+		let data = [0, 5, 10].map { offset in
+			(date: Calendar.current.date(byAdding: .day, value: offset, to: today)!, weight: 90 - Double(offset) * 0.2)
+		}
+		let result = WeightAnalytics.calculateLinearRegression(dailyWeights: data)
+		let slope = try #require(result.slope)
+		#expect(abs(slope + 0.2) < 0.000001)
+		#expect(abs(try #require(result.intercept) - 90) < 0.000001)
+		#expect(abs(try #require(result.correlation) - 1) < 0.000001)
+	}
+
+	@Test func regression_usesCalendarDaysAcrossDaylightSaving() throws {
+		var calendar = Calendar(identifier: .gregorian)
+		calendar.timeZone = try #require(TimeZone(identifier: "America/New_York"))
+		let start = try #require(calendar.date(from: DateComponents(year: 2026, month: 3, day: 7)))
+		let data = (0..<4).map { offset in
+			(date: calendar.date(byAdding: .day, value: offset, to: start)!, weight: 90 - Double(offset))
+		}
+		let slope = try #require(WeightAnalytics.calculateLinearRegression(dailyWeights: data, calendar: calendar).slope)
+		#expect(abs(slope + 1) < 0.000001)
+	}
+
+	@Test func regression_rejectsDegenerateAndNonfiniteData() throws {
+		let today = Calendar.current.startOfDay(for: Date())
+		let tomorrow = try #require(Calendar.current.date(byAdding: .day, value: 1, to: today))
+		#expect(WeightAnalytics.calculateLinearRegression(dailyWeights: [(today, 80), (today, 81)]).slope == nil)
+		let result = WeightAnalytics.calculateLinearRegression(dailyWeights: [(today, 80), (tomorrow, .nan), (tomorrow, .infinity)])
+		#expect(result.slope == nil)
+		let flat = WeightAnalytics.calculateLinearRegression(dailyWeights: [(today, 80), (tomorrow, 80)])
+		#expect(flat.slope == 0)
+		#expect(flat.correlation == nil)
+	}
+
+	@Test func movingAverages_keepLoggingSampleSemanticsWithGaps() throws {
+		let today = Calendar.current.startOfDay(for: Date())
+		let data = [0, 10, 20].enumerated().map { index, offset in
+			(date: Calendar.current.date(byAdding: .day, value: offset, to: today)!, weight: 80 + Double(index) * 2)
+		}
+		let sma = WeightAnalytics.calculateMovingAverage(dailyWeights: data, period: 3)
+		#expect(sma.count == 1)
+		#expect(sma.first?.value == 82)
+		let ema = WeightAnalytics.calculateEMA(dailyWeights: data, period: 3)
+		#expect(ema.map { $0.value } == [80, 81, 82.5])
+		let invalid = WeightAnalytics.calculateEMA(dailyWeights: [(today, .nan), (today, 80)], period: Int.max)
+		#expect(invalid.count == 1)
+		#expect(invalid.first?.value == 80)
+	}
+
+	@Test func goalProjection_usesGapAwareSlopeAndRejectsStaleHistory() throws {
+		let calendar = Calendar.current
+		let today = calendar.startOfDay(for: Date())
+		let data = (0..<10).map { index in
+			(date: calendar.date(byAdding: .day, value: -(18 - index * 2), to: today)!, weight: 90 - Double(index) * 0.2)
+		}
+		let projected = try #require(WeightAnalytics.calculateGoalProjection(dailyWeights: data, targetWeightKg: 87, now: today))
+		let days = calendar.dateComponents([.day], from: today, to: projected).day ?? 0
+		#expect((12...13).contains(days))
+		let later = try #require(calendar.date(byAdding: .day, value: 10, to: today))
+		#expect(WeightAnalytics.calculateGoalProjection(dailyWeights: data, targetWeightKg: 87, now: later) == nil)
+		#expect(WeightAnalytics.calculateGoalProjection(dailyWeights: data, targetWeightKg: .nan, now: today) == nil)
+	}
+
+	@Test func aggregation_ignoresInvalidWeightsAndHiddenEntries() {
+		let valid = makeEntry(daysAgo: 0)
+		let invalid = makeEntry(daysAgo: 0)
+		invalid.weightKg = .infinity
+		let hidden = makeEntry(daysAgo: 0, hidden: true)
+		hidden.weightKg = 150
+		let result = WeightAnalytics.aggregateByDay(entries: [valid, invalid, hidden], mode: .average)
+		#expect(result.count == 1)
+		#expect(result.values.first == 80)
 	}
 }

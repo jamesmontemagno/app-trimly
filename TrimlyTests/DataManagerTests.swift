@@ -216,7 +216,7 @@ struct DataManagerTests {
 	@Test
 	func getDailyWeights_respectsAggregationMode() async throws {
 		let manager = await makeInMemoryManager()
-		let now = Date()
+		let now = Calendar.current.startOfDay(for: Date()).addingTimeInterval(-24 * 60 * 60)
 		// Two entries same day, different weights
 		try manager.addWeightEntry(weightKg: 80.0, timestamp: now, unit: .kilograms)
 		try manager.addWeightEntry(weightKg: 82.0, timestamp: now.addingTimeInterval(3600), unit: .kilograms)

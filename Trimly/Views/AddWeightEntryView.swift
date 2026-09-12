@@ -1,6 +1,6 @@
 //
 //  AddWeightEntryView.swift
-//  Weigh
+//  My Weight
 //
 //  Created by Trimly on 11/19/2025.
 //
@@ -10,9 +10,6 @@ import SwiftUI
 struct AddWeightEntryView: View {
 	@EnvironmentObject var dataManager: DataManager
 	@EnvironmentObject var deviceSettings: DeviceSettingsStore
-	@EnvironmentObject var celebrationService: CelebrationService
-	@EnvironmentObject var storeManager: StoreManager
-	@EnvironmentObject var achievementService: AchievementService
 	@StateObject private var healthKitService = HealthKitService()
 	@Environment(\.dismiss) var dismiss
     
@@ -21,13 +18,24 @@ struct AddWeightEntryView: View {
 	@State private var notes = ""
 	@State private var showingError = false
 	@State private var errorMessage = ""
-	@State private var showHealthKitSuccess = false
+	@State private var didLoad = false
+	@State private var isSaving = false
+	@State private var hasSaved = false
+	@State private var originalWeightText = ""
+	@State private var entryUnit: WeightUnit = .kilograms
+	private let entry: WeightEntry?
+	private let initialDate: Date?
 	@FocusState private var focusedField: Field?
 	@ScaledMetric(relativeTo: .largeTitle) private var weightFontSize: CGFloat = 46
 
 	private enum Field: Hashable {
 		case weight
 		case notes
+	}
+
+	init(entry: WeightEntry? = nil, initialDate: Date? = nil) {
+		self.entry = entry
+		self.initialDate = initialDate
 	}
     
 	var body: some View {
@@ -81,6 +89,17 @@ struct AddWeightEntryView: View {
 							.datePickerStyle(.compact)
 						#endif
 							.accessibilityLabel(String(localized: L10n.Accessibility.dateAndTime))
+							HStack {
+								Button(L10n.EntryFeatures.now) { selectedDate = Date() }
+									.accessibilityLabel(Text(L10n.EntryFeatures.now))
+								Button(L10n.EntryFeatures.yesterday) {
+									if let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date()) {
+										selectedDate = yesterday
+									}
+								}
+								.accessibilityLabel(Text(L10n.EntryFeatures.yesterday))
+							}
+							.buttonStyle(.bordered)
 					}
 
 						WeighCardSection(
@@ -105,7 +124,7 @@ struct AddWeightEntryView: View {
 #if os(iOS)
 			.scrollDismissesKeyboard(.interactively)
 #endif
-				.navigationTitle(Text(L10n.AddEntry.navigationTitle))
+				.navigationTitle(Text(entry == nil ? L10n.AddEntry.navigationTitle : L10n.EntryFeatures.edit))
 			#if os(iOS)
 			.navigationBarTitleDisplayMode(.inline)
 			#endif
@@ -114,15 +133,18 @@ struct AddWeightEntryView: View {
 					Button(String(localized: L10n.Common.cancelButton)) {
 						dismiss()
 					}
+					.disabled(isSaving)
+					.accessibilityLabel(Text(L10n.Common.cancelButton))
 				}
                 
 				ToolbarItem(placement: .confirmationAction) {
 					Button(String(localized: L10n.Common.saveButton)) {
-						saveEntry()
+						Task { await saveEntry() }
 					}
 					.buttonStyle(.borderedProminent)
 					.tint(.accentColor)
-					.disabled(weightText.isEmpty)
+					.disabled(weightText.isEmpty || isSaving || hasSaved)
+					.accessibilityLabel(Text(L10n.Common.saveButton))
 					.accessibilityHint(String(localized: L10n.Accessibility.saveEntryHint))
 				}
 #if os(iOS)
@@ -137,15 +159,33 @@ struct AddWeightEntryView: View {
 #endif
 			}
 				.alert(L10n.Common.errorTitle, isPresented: $showingError) {
-					Button(String(localized: L10n.Common.okButton), role: .cancel) { }
+					Button(String(localized: L10n.Common.okButton), role: .cancel) {
+						if hasSaved { dismiss() }
+					}
 			} message: {
 				Text(errorMessage)
+			}
+			.interactiveDismissDisabled(isSaving)
+			.task {
+				guard !didLoad else { return }
+				didLoad = true
+				entryUnit = dataManager.settings?.preferredUnit ?? .kilograms
+				if let entry {
+					selectedDate = entry.timestamp
+					notes = entry.notes ?? ""
+					weightText = EntryInput.display(
+						entryUnit.convert(fromKg: entry.weightKg), precision: dataManager.settings?.decimalPrecision ?? 1
+					)
+					originalWeightText = weightText
+				} else if let initialDate {
+					selectedDate = min(initialDate, Date())
+				}
 			}
 		}
 	}
 
 	private var unitSymbol: String {
-		dataManager.settings?.preferredUnit.symbol ?? "kg"
+		entryUnit.symbol
 	}
 
 	private var inputBackgroundColor: Color {
@@ -156,8 +196,9 @@ struct AddWeightEntryView: View {
 		#endif
 	}
     
-	private func saveEntry() {
-		guard let weight = Double(weightText) else {
+	@MainActor
+	private func saveEntry() async {
+		guard let weight = EntryInput.weight(weightText) else {
 			errorMessage = String(localized: L10n.AddEntry.errorInvalidWeight)
 			showingError = true
 			return
@@ -175,48 +216,35 @@ struct AddWeightEntryView: View {
 			return
 		}
         
-		guard let unit = dataManager.settings?.preferredUnit else {
-			errorMessage = String(localized: L10n.AddEntry.errorMissingSettings)
-			showingError = true
-			return
-		}
-        
-		let weightKg = unit.convertToKg(weight)
+		let unit = entryUnit
+		let weightKg = entry.flatMap { weightText == originalWeightText ? $0.weightKg : nil }
+			?? unit.convertToKg(weight)
+		isSaving = true
+		defer { isSaving = false }
 		
 		do {
 			focusedField = nil
-			try dataManager.addWeightEntry(
-				weightKg: weightKg,
-				timestamp: selectedDate,
-				unit: unit,
-				notes: notes.isEmpty ? nil : notes
-			)
-			
-			// Refresh achievements to ensure newly unlocked achievements are available
-			achievementService.refresh(using: dataManager, isPro: storeManager.isPro)
-			
-			// Check for all celebrations after saving entry and refreshing achievements
-			celebrationService.checkAllCelebrations(dataManager: dataManager)
-			
-			if deviceSettings.healthKit.writeEnabled {
-				Task {
-					do {
-						try await healthKitService.saveWeightToHealthKit(weightKg: weightKg, timestamp: selectedDate)
-						showHealthKitSuccess = true
-					} catch {
-						// Show a gentle, one-time warning if HealthKit write fails
-						if !showHealthKitSuccess {
-							errorMessage = String(localized: L10n.Health.writeFailedHint)
-							showingError = true
-						}
-					}
-				}
+			if let entry {
+				try dataManager.updateEntry(entry, weightKg: weightKg, timestamp: selectedDate, unit: unit, notes: notes.isEmpty ? nil : notes)
+			} else {
+				try dataManager.addWeightEntry(weightKg: weightKg, timestamp: selectedDate, unit: unit, notes: notes.isEmpty ? nil : notes)
 			}
-			dismiss()
+			hasSaved = true
 		} catch {
 			errorMessage = String(localized: L10n.AddEntry.errorSaveFailure(error.localizedDescription))
 			showingError = true
+			return
 		}
+		if entry == nil && deviceSettings.healthKit.writeEnabled {
+			do {
+				try await healthKitService.saveWeightToHealthKit(weightKg: weightKg, timestamp: selectedDate)
+			} catch {
+				errorMessage = String(localized: L10n.EntryFeatures.savedHealthFailed)
+				showingError = true
+				return
+			}
+		}
+		dismiss()
 	}
 }
 

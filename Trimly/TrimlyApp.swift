@@ -1,6 +1,6 @@
 //
 //  TrimlyApp.swift
-//  Weigh
+//  My Weight
 //
 //  Created by James Montemagno on 11/27/25.
 //
@@ -8,11 +8,12 @@
 import SwiftUI
 import Combine
 import SwiftData
+import CoreData
 
 struct AppRootView: View {
     @EnvironmentObject var dataManager: DataManager
     @StateObject private var storeManager: StoreManager
-    @StateObject private var healthKitService = HealthKitService()
+    @StateObject private var healthKitService = HealthKitService.shared
     @Environment(\.scenePhase) private var scenePhase
     
     init(dataManager: DataManager) {
@@ -25,7 +26,9 @@ struct AppRootView: View {
             .environmentObject(storeManager)
             .preferredColorScheme(colorScheme(for: dataManager.settings?.appearance))
             .task {
-                await dataManager.refreshReminderSchedule()
+                NotificationService.shared.installResponseHandler()
+                NotificationService.shared.configure(dataManager: dataManager)
+                dataManager.refreshAfterExternalChanges()
                 // Register HealthKit background observer on app launch if enabled
                 #if os(iOS)
                 healthKitService.registerBackgroundDeliveryIfEnabled(dataManager: dataManager)
@@ -33,15 +36,33 @@ struct AppRootView: View {
             }
             .onChange(of: scenePhase) { _, phase in
                 if phase == .active {
-                    Task {
-                        await dataManager.refreshReminderSchedule()
-                    }
+                    dataManager.refreshAfterExternalChanges()
                 }
+            }
+            .onReceive(
+                NotificationCenter.default.publisher(for: NSPersistentCloudKitContainer.eventChangedNotification)
+                    .receive(on: DispatchQueue.main)
+                    .compactMap { $0.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event }
+                    .filter { $0.type == .import && $0.endDate != nil && $0.succeeded }
+                    .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
+            ) { _ in
+                // Import completion only: reacting to our own saves/exports would loop.
+                dataManager.refreshAfterExternalChanges()
             }
             .onReceive(dataManager.deviceSettings.remindersPublisher.debounce(for: .milliseconds(250), scheduler: DispatchQueue.main)) { _ in
                 Task {
                     await dataManager.refreshReminderSchedule()
                 }
+            }
+            .alert(String(localized: L10n.Common.errorTitle), isPresented: Binding(
+                get: { dataManager.persistenceErrorMessage != nil },
+                set: { if !$0 { dataManager.persistenceErrorMessage = nil } }
+            )) {
+                Button(String(localized: L10n.Common.okButton), role: .cancel) {
+                    dataManager.persistenceErrorMessage = nil
+                }
+            } message: {
+                Text(dataManager.persistenceErrorMessage ?? "")
             }
     }
     
@@ -60,6 +81,7 @@ struct AppRootView: View {
 @main
 struct WeighApp: App {
     @StateObject private var dataManager = DataManager()
+    @StateObject private var router = AppRouter.shared
     #if os(iOS)
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     #elseif os(macOS)
@@ -67,13 +89,23 @@ struct WeighApp: App {
     #endif
     
     var body: some Scene {
-        WindowGroup {
+        WindowGroup(id: "main") {
             AppRootView(dataManager: dataManager)
                 .environment(\.modelContext, dataManager.modelContext)
                 .environmentObject(dataManager)
                 .environmentObject(dataManager.deviceSettings)
+                .environmentObject(router)
+                .onOpenURL { router.handle($0) }
+                #if os(macOS)
+                .focusedSceneValue(\.isMyWeightMainWindow, true)
+                #endif
         }
         .modelContainer(dataManager.modelContainer)
+        #if os(macOS)
+        .commands {
+            QuickLogCommands(router: router)
+        }
+        #endif
         
         #if os(macOS)
         Settings {

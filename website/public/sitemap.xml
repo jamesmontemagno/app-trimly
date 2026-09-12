@@ -12,38 +12,38 @@
     <mobile:mobile/>
     <image:image>
       <image:loc>https://weigh.app/app-icon.png</image:loc>
-      <image:title>Weigh App Icon</image:title>
-      <image:caption>Weigh - Private Weight Tracking App</image:caption>
+      <image:title>My Weight App Icon</image:title>
+      <image:caption>My Weight - Private Weight Tracking App</image:caption>
     </image:image>
     <image:image>
       <image:loc>https://weigh.app/screenshots/light/dashboard.png</image:loc>
-      <image:title>Weigh Dashboard</image:title>
-      <image:caption>Weigh app dashboard showing weight tracking features</image:caption>
+      <image:title>My Weight Dashboard</image:title>
+      <image:caption>My Weight app dashboard showing weight tracking features</image:caption>
     </image:image>
     <image:image>
       <image:loc>https://weigh.app/screenshots/light/analytics.png</image:loc>
-      <image:title>Weigh Analytics</image:title>
-      <image:caption>Weigh advanced analytics and charts</image:caption>
+      <image:title>My Weight Analytics</image:title>
+      <image:caption>My Weight advanced analytics and charts</image:caption>
     </image:image>
     <image:image>
       <image:loc>https://weigh.app/screenshots/light/add-entry.png</image:loc>
-      <image:title>Weigh Add Entry</image:title>
-      <image:caption>Add weight entry in Weigh app</image:caption>
+      <image:title>My Weight Add Entry</image:title>
+      <image:caption>Add weight entry in My Weight app</image:caption>
     </image:image>
     <image:image>
       <image:loc>https://weigh.app/screenshots/dark/dashboard.png</image:loc>
-      <image:title>Weigh Dashboard (Dark Mode)</image:title>
-      <image:caption>Weigh app dashboard in dark mode</image:caption>
+      <image:title>My Weight Dashboard (Dark Mode)</image:title>
+      <image:caption>My Weight app dashboard in dark mode</image:caption>
     </image:image>
     <image:image>
       <image:loc>https://weigh.app/screenshots/dark/analytics.png</image:loc>
-      <image:title>Weigh Analytics (Dark Mode)</image:title>
-      <image:caption>Weigh advanced analytics in dark mode</image:caption>
+      <image:title>My Weight Analytics (Dark Mode)</image:title>
+      <image:caption>My Weight advanced analytics in dark mode</image:caption>
     </image:image>
     <image:image>
       <image:loc>https://weigh.app/screenshots/dark/add-entry.png</image:loc>
-      <image:title>Weigh Add Entry (Dark Mode)</image:title>
-      <image:caption>Add weight entry in Weigh app dark mode</image:caption>
+      <image:title>My Weight Add Entry (Dark Mode)</image:title>
+      <image:caption>Add weight entry in My Weight app dark mode</image:caption>
     </image:image>
   </url>
   

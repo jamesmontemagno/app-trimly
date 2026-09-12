@@ -48,7 +48,7 @@ enum L10n {
 		static let opensCharts = LocalizedStringResource("accessibility.hint.opensCharts", defaultValue: "Opens charts")
 		static let opensChartSettings = LocalizedStringResource("accessibility.hint.opensChartSettings", defaultValue: "Opens chart display settings")
 		static let recalculateAchievements = LocalizedStringResource("accessibility.hint.recalculateAchievements", defaultValue: "Recalculates achievement progress")
-		static let opensWeighPro = LocalizedStringResource("accessibility.hint.opensWeighPro", defaultValue: "Opens My Weight Pro upgrade page")
+		static let opensMyWeightPro = LocalizedStringResource("accessibility.hint.opensMyWeightPro", defaultValue: "Opens My Weight Pro upgrade page")
 	}
 
 	enum Calendar {

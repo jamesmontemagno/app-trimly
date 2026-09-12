@@ -1,6 +1,6 @@
-# Contributing to Weigh
+# Contributing to My Weight
 
-Thank you for your interest in contributing to Weigh!
+Thank you for your interest in contributing to My Weight!
 
 ## Development Environment
 
@@ -10,7 +10,7 @@ Thank you for your interest in contributing to Weigh!
 - Xcode 15.0 or later
 - Swift 5.9 or later
 
-**Note**: Weigh uses Apple-platform specific frameworks (SwiftUI, SwiftData) and cannot be built on Linux. Development and building must be done on macOS with Xcode.
+**Note**: My Weight uses Apple-platform specific frameworks (SwiftUI, SwiftData) and cannot be built on Linux. Development and building must be done on macOS with Xcode.
 
 ## Building the Project
 
@@ -22,10 +22,10 @@ Thank you for your interest in contributing to Weigh!
 
 2. Open in Xcode:
    ```bash
-   open Weigh.xcodeproj
+   open TrimTally.xcodeproj
    ```
    
-   Or simply double-click `Weigh.xcodeproj` in Finder.
+   Or simply double-click `TrimTally.xcodeproj` in Finder.
 
 3. Select your target platform (iOS or macOS) from the scheme selector
 
@@ -40,14 +40,14 @@ In Xcode:
 
 Or from the command line on macOS:
 ```bash
-xcodebuild -scheme Weigh -destination 'platform=macOS,arch=arm64' test
+xcodebuild -scheme TrimTally -destination 'platform=macOS,arch=arm64' test
 ```
 
 ## Project Structure
 
 ```
 app-trimly/
-├── Weigh.xcodeproj/         # Xcode project
+├── TrimTally.xcodeproj/     # Xcode project
 ├── Trimly/
 │   ├── Models/                  # Data models (SwiftData)
 │   ├── Services/                # Business logic & analytics
@@ -79,7 +79,7 @@ app-trimly/
 
 ## Localization
 
-Weigh supports multiple languages using String Catalogs (.xcstrings):
+My Weight supports multiple languages using String Catalogs (.xcstrings):
 
 - All user-facing strings must use `NSLocalizedString` or the `L10n` helper
 - Never hard-code strings in views
@@ -149,7 +149,7 @@ Please open an issue to discuss new features before starting work on them.
 
 When reporting bugs, please include:
 - iOS/macOS version
-- Weigh version
+- My Weight version
 - Steps to reproduce
 - Expected vs actual behavior
 - Screenshots if applicable
@@ -158,4 +158,4 @@ When reporting bugs, please include:
 
 Feel free to open an issue for any questions about contributing.
 
-Thank you for contributing to Weigh! 🎉
+Thank you for contributing to My Weight! 🎉

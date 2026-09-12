@@ -1,266 +1,255 @@
-//
-//  TimelineView.swift
-//  Weigh
-//
-//  Created by Trimly on 11/19/2025.
-//
-
 import SwiftUI
 
 struct TimelineView: View {
-	@EnvironmentObject var dataManager: DataManager
-	@State private var showingAddEntry = false
-	@State private var pendingDeletionIDs = Set<UUID>()
-	@State private var activeAlert: TimelineAlert?
-    
-	var body: some View {
-		NavigationStack {
-			List {
-				ForEach(groupedEntries, id: \.date) { group in
-					Section {
-						ForEach(group.entries) { entry in
-							EntryRow(
-								entry: entry,
-								preferredUnit: dataManager.settings?.preferredUnit ?? .kilograms,
-								decimalPrecision: dataManager.settings?.decimalPrecision ?? 1
-							)
-						}
-						.onDelete { indexSet in
-							deleteEntries(at: indexSet, in: group.entries)
-						}
-					} header: {
-						DayHeader(
-							date: group.date,
-							entries: group.entries,
-							preferredUnit: dataManager.settings?.preferredUnit ?? .kilograms,
-							decimalPrecision: dataManager.settings?.decimalPrecision ?? 1,
-							dailyAggregationMode: dataManager.settings?.dailyAggregationMode ?? .latest
-						)
-					}
-				}
-			}
-			.navigationTitle(Text(L10n.Timeline.navigationTitle))
-			.toolbar {
-				ToolbarItem(placement: .primaryAction) {
-					Button {
-						showingAddEntry = true
-					} label: {
-						Image(systemName: "plus")
-					}
-					.accessibilityLabel(String(localized: L10n.Accessibility.addWeightEntry))
-					.accessibilityHint(String(localized: L10n.Accessibility.addWeightEntryHint))
-				}
-			}
-			.sheet(isPresented: $showingAddEntry) {
-				AddWeightEntryView()
-			}
-			.overlay {
-				if groupedEntries.isEmpty {
-					ContentUnavailableView(
-						String(localized: L10n.Timeline.emptyTitle),
-						systemImage: "chart.line.uptrend.xyaxis",
-						description: Text(L10n.Timeline.emptyDescription)
-					)
-				}
-			}
-		}
-		.alert(item: $activeAlert) { alert in
-			Alert(
-				title: Text(alert.title),
-				message: Text(alert.message),
-				dismissButton: .default(Text(L10n.Common.okButton))
-			)
-		}
-	}
-    
-	private var groupedEntries: [DayGroup] {
-		let entries = dataManager.fetchAllEntries()
-			.filter { !pendingDeletionIDs.contains($0.id) }
-		let grouped = Dictionary(grouping: entries) { $0.normalizedDate }
-		return grouped.map { date, entries in
-			DayGroup(date: date,
-					 entries: entries.sorted { $0.timestamp > $1.timestamp })
-		}
-		.sorted { $0.date > $1.date }
-	}
-    
-	private func deleteEntries(at offsets: IndexSet, in entries: [WeightEntry]) {
-		let entriesToDelete = offsets.compactMap { index -> WeightEntry? in
-			guard entries.indices.contains(index) else { return nil }
-			return entries[index]
-		}
-		guard !entriesToDelete.isEmpty else { return }
+    @EnvironmentObject var dataManager: DataManager
+    @EnvironmentObject private var deviceSettings: DeviceSettingsStore
+    @State private var showingAddEntry = false
+    @State private var showingFilters = false
+    @State private var selectedEntry: WeightEntry?
+    @State private var selectedDay: IdentifiableDate?
+    @State private var searchText = ""
+    @State private var sourceFilter = EntrySourceFilter.all
+    @State private var hiddenOnly = false
+    @State private var notesOnly = false
+    @State private var dateFilter = false
+    @State private var startDate = Calendar.current.startOfDay(for: Date())
+    @State private var endDate = Date()
+    @State private var jumpDate = Date()
+    @State private var entries: [WeightEntry] = []
+    @State private var errorMessage: String?
 
-		let totalEntries = dataManager.fetchAllEntries().count
-		let remainingEntries = max(0, totalEntries - entriesToDelete.count)
-		guard remainingEntries >= 1 else {
-			activeAlert = TimelineAlert(kind: .lastEntryRestriction)
-			return
-		}
+    var body: some View {
+        NavigationStack {
+            List {
+                ForEach(groupedEntries, id: \.date) { group in
+                    Section {
+                        ForEach(group.entries) { entry in
+                            Button { selectedEntry = entry } label: {
+                                EntryRow(entry: entry,
+                                         preferredUnit: dataManager.settings?.preferredUnit ?? .kilograms,
+                                         decimalPrecision: dataManager.settings?.decimalPrecision ?? 1,
+                                         hideWeight: deviceSettings.presentation.hideWeights)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityHint(Text(L10n.EntryFeatures.details))
+                        }
+                        .onDelete { deleteEntries(at: $0, in: group.entries) }
+                    } header: {
+                        DayHeader(date: group.date, entries: group.entries,
+                                  preferredUnit: dataManager.settings?.preferredUnit ?? .kilograms,
+                                  decimalPrecision: dataManager.settings?.decimalPrecision ?? 1,
+                                  dailyAggregationMode: dataManager.settings?.dailyAggregationMode ?? .latest,
+                                  hideWeight: deviceSettings.presentation.hideWeights)
+                    }
+                }
+            }
+            .searchable(text: $searchText, prompt: Text(L10n.EntryFeatures.search))
+            .navigationTitle(Text(L10n.Timeline.navigationTitle))
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button { showingAddEntry = true } label: { Image(systemName: "plus") }
+                        .accessibilityLabel(Text(L10n.Accessibility.addWeightEntry))
+                }
+                ToolbarItem {
+                    Button { showingFilters = true } label: { Image(systemName: "line.3.horizontal.decrease") }
+                        .accessibilityLabel(Text(L10n.EntryFeatures.filters))
+                }
+            }
+            .sheet(isPresented: $showingAddEntry) { AddWeightEntryView() }
+            .sheet(item: $selectedEntry) { EntryDetailView(entry: $0) }
+            .sheet(item: $selectedDay) { EntryDayDetailView(date: $0.date) }
+            .sheet(isPresented: $showingFilters, onDismiss: {
+                if let pendingDay {
+                    selectedDay = IdentifiableDate(date: pendingDay)
+                    self.pendingDay = nil
+                }
+            }) { filters }
+            .overlay {
+                if entries.isEmpty {
+                    ContentUnavailableView(
+                        String(localized: L10n.EntryFeatures.noMatches),
+                        systemImage: "magnifyingglass",
+                        description: Text(L10n.EntryFeatures.noMatchesHint)
+                    )
+                }
+            }
+            .task(id: queryID) { reload() }
+            .onChange(of: dataManager.dataRevision) { _, _ in reload() }
+            .alert(L10n.Common.errorTitle, isPresented: errorPresented) {
+                Button(L10n.Common.okButton, role: .cancel) { errorMessage = nil }
+            } message: { Text(errorMessage ?? "") }
+        }
+    }
 
-		let idsToDelete = Set(entriesToDelete.map(\.id))
+    private var filters: some View {
+        NavigationStack {
+            Form {
+                Picker(selection: $sourceFilter) {
+                    ForEach(EntrySourceFilter.allCases) { Text($0.title).tag($0) }
+                } label: { Text(L10n.EntryFeatures.source) }
+                .accessibilityLabel(Text(L10n.EntryFeatures.source))
+                Toggle(isOn: $hiddenOnly) { Text(L10n.EntryFeatures.hiddenOnly) }
+                    .accessibilityLabel(Text(L10n.EntryFeatures.hiddenOnly))
+                Toggle(isOn: $notesOnly) { Text(L10n.EntryFeatures.notesOnly) }
+                    .accessibilityLabel(Text(L10n.EntryFeatures.notesOnly))
+                Toggle(isOn: $dateFilter) { Text(L10n.EntryFeatures.dateRange) }
+                    .accessibilityLabel(Text(L10n.EntryFeatures.dateRange))
+                if dateFilter {
+                    DatePicker(selection: $startDate, in: ...Date(), displayedComponents: .date) { Text(L10n.EntryFeatures.from) }
+                        .accessibilityLabel(Text(L10n.EntryFeatures.from))
+                    DatePicker(selection: $endDate, in: ...Date(), displayedComponents: .date) { Text(L10n.EntryFeatures.through) }
+                        .accessibilityLabel(Text(L10n.EntryFeatures.through))
+                }
+                Section {
+                    DatePicker(selection: $jumpDate, in: ...Date(), displayedComponents: .date) { Text(L10n.EntryFeatures.day) }
+                        .accessibilityLabel(Text(L10n.EntryFeatures.day))
+                    Button(L10n.EntryFeatures.openDay) {
+                        pendingDay = jumpDate
+                        showingFilters = false
+                    }
+                    .accessibilityLabel(Text(L10n.EntryFeatures.openDay))
+                }
+                Button(L10n.EntryFeatures.clearFilters) {
+                    searchText = ""
+                    sourceFilter = .all
+                    hiddenOnly = false
+                    notesOnly = false
+                    dateFilter = false
+                }
+                .accessibilityLabel(Text(L10n.EntryFeatures.clearFilters))
+            }
+            .navigationTitle(Text(L10n.EntryFeatures.filters))
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(L10n.Common.doneButton) { showingFilters = false }
+                        .accessibilityLabel(Text(L10n.Common.doneButton))
+                }
+            }
+        }
+    }
 
-		withAnimation {
-			pendingDeletionIDs.formUnion(idsToDelete)
-		}
+    @State private var pendingDay: Date?
 
-		var encounteredError: Error?
-		for entry in entriesToDelete {
-			do {
-				try dataManager.deleteEntry(entry)
-			} catch {
-				encounteredError = error
-				break
-			}
-		}
+    private var queryID: String {
+        "\(searchText)|\(sourceFilter.rawValue)|\(hiddenOnly)|\(notesOnly)|\(dateFilter)|\(startDate)|\(endDate)"
+    }
 
-		withAnimation {
-			pendingDeletionIDs.subtract(idsToDelete)
-		}
+    private var groupedEntries: [DayGroup] {
+        Dictionary(grouping: entries) { WeightEntry.normalizeDate($0.timestamp) }
+            .map { DayGroup(date: $0.key, entries: $0.value.sorted { $0.timestamp > $1.timestamp }) }
+            .sorted { $0.date > $1.date }
+    }
 
-		if let error = encounteredError {
-			activeAlert = TimelineAlert(kind: .deletionError(message: error.localizedDescription))
-		}
-	}
+    private var errorPresented: Binding<Bool> {
+        Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })
+    }
+
+    private func reload() {
+        do {
+            let end = Calendar.current.date(byAdding: .day, value: 1, to: Calendar.current.startOfDay(for: endDate))
+            let results = try dataManager.fetchEntries(
+                startDate: dateFilter ? Calendar.current.startOfDay(for: startDate) : nil,
+                endDate: dateFilter ? end : nil, source: sourceFilter.source,
+                includeHidden: hiddenOnly, notesOnly: notesOnly, searchText: searchText
+            )
+            entries = hiddenOnly ? results.filter(\.isHidden) : results
+        } catch {
+            entries = []
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    private func deleteEntries(at offsets: IndexSet, in group: [WeightEntry]) {
+        let selected = offsets.compactMap { group.indices.contains($0) ? group[$0] : nil }
+        guard dataManager.fetchAllEntries().count > selected.count else {
+            errorMessage = String(localized: L10n.Timeline.lastEntryMessage)
+            return
+        }
+        do {
+            for entry in selected { try dataManager.deleteEntry(entry) }
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+        reload()
+    }
+}
+
+private enum EntrySourceFilter: String, CaseIterable, Identifiable {
+    case all, manual, healthKit
+    var id: String { rawValue }
+    var source: EntrySource? {
+        switch self {
+        case .all: return nil
+        case .manual: return .manual
+        case .healthKit: return .healthKit
+        }
+    }
+    var title: LocalizedStringResource {
+        switch self {
+        case .all: return L10n.EntryFeatures.allSources
+        case .manual: return L10n.EntryFeatures.manual
+        case .healthKit: return L10n.Timeline.healthKitLabel
+        }
+    }
 }
 
 struct DayGroup {
-	let date: Date
-	let entries: [WeightEntry]
+    let date: Date
+    let entries: [WeightEntry]
 }
 
 struct DayHeader: View {
-	let date: Date
-	let entries: [WeightEntry]
-	let preferredUnit: WeightUnit
-	let decimalPrecision: Int
-	let dailyAggregationMode: DailyAggregationMode
-    
-	var body: some View {
-		VStack(alignment: .leading, spacing: 4) {
-			Text(date, style: .date)
-				.font(.headline)
-			if let aggregatedWeight = aggregatedWeight {
-				let displayWeight = displayValue(aggregatedWeight)
-				Text(L10n.Timeline.dailyValue(displayWeight))
-					.font(.subheadline)
-					.foregroundStyle(.secondary)
-			}
-		}
-		.accessibilityElement(children: .combine)
-		.accessibilityAddTraits(.isHeader)
-	}
-    
-	private var aggregatedWeight: Double? {
-		guard !entries.isEmpty else { return nil }
-		switch dailyAggregationMode {
-		case .latest:
-			return entries.first?.weightKg
-		case .average:
-			let sum = entries.reduce(0.0) { $0 + $1.weightKg }
-			return sum / Double(entries.count)
-		}
-	}
-    
-	private func displayValue(_ kg: Double) -> String {
-		let value = preferredUnit.convert(fromKg: kg)
-		return String(format: "%.*f %@", decimalPrecision, value, preferredUnit.symbol as NSString)
-	}
+    let date: Date
+    let entries: [WeightEntry]
+    let preferredUnit: WeightUnit
+    let decimalPrecision: Int
+    let dailyAggregationMode: DailyAggregationMode
+    var hideWeight = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(date, style: .date).font(.headline)
+            if !hideWeight, let weight = WeightAnalytics.aggregateByDay(entries: entries, mode: dailyAggregationMode)[WeightEntry.normalizeDate(date)] {
+                Text(L10n.Timeline.dailyValue("\(EntryInput.display(preferredUnit.convert(fromKg: weight), precision: decimalPrecision)) \(preferredUnit.symbol)"))
+                    .font(.subheadline).foregroundStyle(.secondary)
+            }
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isHeader)
+    }
 }
 
 struct EntryRow: View {
-	let entry: WeightEntry
-	let preferredUnit: WeightUnit
-	let decimalPrecision: Int
-    
-	var body: some View {
-		VStack(alignment: .leading, spacing: 4) {
-			HStack {
-				Text(displayValue)
-					.font(.title3.bold())
-				Spacer()
-				Text(entry.timestamp, style: .time)
-					.font(.subheadline)
-					.foregroundStyle(.secondary)
-			}
-            
-			HStack {
-				if entry.source == .healthKit {
-					Label(String(localized: L10n.Timeline.healthKitLabel), systemImage: "heart.fill")
-						.font(.caption)
-						.foregroundStyle(.pink)
-				}
-				if let notes = entry.notes, !notes.isEmpty {
-					Text(notes)
-						.font(.caption)
-						.foregroundStyle(.secondary)
-						.lineLimit(2)
-				}
-			}
-		}
-		.opacity(entry.isHidden ? 0.5 : 1.0)
-		.accessibilityElement(children: .combine)
-		.accessibilityLabel(accessibilityLabel)
-		.accessibilityValue(accessibilityValue)
-	}
-    
-	private var displayValue: String {
-		let value = preferredUnit.convert(fromKg: entry.weightKg)
-		return String(format: "%.*f %@", decimalPrecision, value, preferredUnit.symbol as NSString)
-	}
-	
-	private var accessibilityLabel: String {
-		let timeFormatter = DateFormatter()
-		timeFormatter.timeStyle = .short
-		let time = timeFormatter.string(from: entry.timestamp)
-		var label = "Weight entry: \(displayValue) at \(time)"
-		if entry.source == .healthKit {
-			label += ", from HealthKit"
-		}
-		return label
-	}
-	
-	private var accessibilityValue: String {
-		if let notes = entry.notes, !notes.isEmpty {
-			return "Notes: \(notes)"
-		}
-		return ""
-	}
-}
+    let entry: WeightEntry
+    let preferredUnit: WeightUnit
+    let decimalPrecision: Int
+    var hideWeight = false
 
-private struct TimelineAlert: Identifiable {
-	enum Kind {
-		case deletionError(message: String)
-		case lastEntryRestriction
-	}
-
-	let id = UUID()
-	let kind: Kind
-
-	var title: LocalizedStringResource {
-		switch kind {
-		case .deletionError:
-			return L10n.Timeline.deleteErrorTitle
-		case .lastEntryRestriction:
-			return L10n.Timeline.lastEntryTitle
-		}
-	}
-
-	var message: LocalizedStringResource {
-		switch kind {
-		case .deletionError(let message):
-			let trimmed = message.trimmingCharacters(in: .whitespacesAndNewlines)
-			if trimmed.isEmpty {
-				return L10n.Timeline.deleteErrorFallback
-			}
-			return L10n.Timeline.deleteErrorMessage(trimmed)
-		case .lastEntryRestriction:
-			return L10n.Timeline.lastEntryMessage
-		}
-	}
-}
-
-#Preview {
-	TimelineView()
-		.environmentObject(DataManager(inMemory: true))
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                if hideWeight {
+                    Label(String(localized: L10n.Insights.privacyTitle), systemImage: "eye.slash")
+                } else {
+                    Text("\(EntryInput.display(preferredUnit.convert(fromKg: entry.weightKg), precision: decimalPrecision)) \(preferredUnit.symbol)")
+                        .font(.title3.bold())
+                }
+                Spacer()
+                Text(entry.timestamp, style: .time).foregroundStyle(.secondary)
+            }
+            if entry.source == .healthKit {
+                Label(String(localized: L10n.Timeline.healthKitLabel), systemImage: "heart")
+                    .font(.caption)
+            }
+            if entry.isHidden {
+                Label(String(localized: L10n.EntryFeatures.hidden), systemImage: "eye.slash")
+                    .font(.caption)
+            }
+            if !hideWeight, let notes = entry.notes, !notes.isEmpty {
+                Text(notes).font(.caption).foregroundStyle(.secondary).lineLimit(2)
+            }
+        }
+        .frame(minHeight: 44)
+        .accessibilityElement(children: .combine)
+    }
 }

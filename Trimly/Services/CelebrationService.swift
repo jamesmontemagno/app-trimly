@@ -1,6 +1,6 @@
 //
 //  CelebrationService.swift
-//  Weigh
+//  My Weight
 //
 //  Created by Trimly on 11/19/2025.
 //
@@ -120,8 +120,10 @@ final class CelebrationService: ObservableObject {
     // Track which celebrations have been shown
     private var shownCelebrations: Set<String> = []
     private let userDefaultsKey = "trimly.celebrations.shown"
+    private let userDefaults: UserDefaults
     
-    init() {
+    init(userDefaults: UserDefaults = .standard) {
+        self.userDefaults = userDefaults
         loadShownCelebrations()
     }
     
@@ -135,7 +137,7 @@ final class CelebrationService: ObservableObject {
             return celebration
         }
 
-        let entries = dataManager.fetchAllEntries()
+        let entries = dataManager.fetchAllEntries().filter { !$0.isHidden }
         guard entries.count >= 2 else { return nil }
         
         // Check in order of importance
@@ -167,7 +169,7 @@ final class CelebrationService: ObservableObject {
             celebrations.append(celebration)
         }
         
-        let entries = dataManager.fetchAllEntries()
+        let entries = dataManager.fetchAllEntries().filter { !$0.isHidden }
         if entries.count >= 2 {
             // Check for goal celebrations
             if let celebration = checkGoalCelebration(dataManager: dataManager) {
@@ -224,8 +226,8 @@ final class CelebrationService: ObservableObject {
         }
 
         guard let goal = dataManager.fetchActiveGoal(),
-              let currentWeight = dataManager.getCurrentWeight(),
-              let startWeight = goal.startingWeightKg ?? dataManager.getStartWeight() else {
+              let currentWeight = dataManager.getCurrentVisibleWeight(),
+              let startWeight = goal.startingWeightKg ?? dataManager.getStartVisibleWeight() else {
             return nil
         }
         
@@ -300,7 +302,7 @@ final class CelebrationService: ObservableObject {
     
     /// Check for streak celebrations
     private func checkStreakCelebration(entries: [WeightEntry]) -> Celebration? {
-        let sortedDays = Array(Set(entries.map { $0.normalizedDate })).sorted()
+        let sortedDays = Array(Set(entries.map { WeightEntry.normalizeDate($0.timestamp) })).sorted()
         guard !sortedDays.isEmpty else { return nil }
 		
         let milestones: [(length: Int, type: CelebrationType)] = [
@@ -452,12 +454,12 @@ final class CelebrationService: ObservableObject {
     }
     
     private func loadShownCelebrations() {
-        if let data = UserDefaults.standard.array(forKey: userDefaultsKey) as? [String] {
+        if let data = userDefaults.array(forKey: userDefaultsKey) as? [String] {
             shownCelebrations = Set(data)
         }
     }
     
     private func saveShownCelebrations() {
-        UserDefaults.standard.set(Array(shownCelebrations), forKey: userDefaultsKey)
+        userDefaults.set(Array(shownCelebrations), forKey: userDefaultsKey)
     }
 }

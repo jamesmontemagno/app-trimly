@@ -1,6 +1,6 @@
 //
 //  AppSettings.swift
-//  Weigh
+//  My Weight
 //
 //  Created by Trimly on 11/19/2025.
 //

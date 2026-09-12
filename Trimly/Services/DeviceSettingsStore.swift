@@ -1,6 +1,6 @@
 //
 //  DeviceSettingsStore.swift
-//  Weigh
+//  My Weight
 //
 //  Created by Trimly on 11/30/2025.
 //
@@ -8,10 +8,21 @@
 import Foundation
 import Combine
 
+enum DashboardCard: String, CaseIterable, Identifiable {
+    case today, progress, sparkline, consistency, trend, calendar, plateau, projection, recap
+
+    var id: String { rawValue }
+}
+
 /// Persists device-scoped preferences that should not sync via CloudKit
 @MainActor
 final class DeviceSettingsStore: ObservableObject {
     // MARK: - Nested Types
+    struct PresentationSettings: Equatable {
+        var dashboardCards: [DashboardCard]
+        var hideWeights: Bool
+    }
+
     struct RemindersSettings: Equatable {
         var primaryTime: Date?
         var secondaryTime: Date?
@@ -56,6 +67,8 @@ final class DeviceSettingsStore: ObservableObject {
         static let isPro = "device.pro.isPro"
         static let reviewEntryCount = "device.review.entryCount"
         static let reviewHasPrompted = "device.review.hasPrompted"
+        static let dashboardCards = "device.presentation.dashboardCards"
+        static let hideWeights = "device.presentation.hideWeights"
     }
     
     // MARK: - Published State
@@ -64,6 +77,7 @@ final class DeviceSettingsStore: ObservableObject {
     @Published private(set) var cloudSync: CloudSyncSettings
     @Published private(set) var pro: ProSettings
     @Published private(set) var review: ReviewSettings
+    @Published private(set) var presentation: PresentationSettings
     
     var remindersPublisher: AnyPublisher<RemindersSettings, Never> {
         $reminders.eraseToAnyPublisher()
@@ -90,6 +104,14 @@ final class DeviceSettingsStore: ObservableObject {
     // MARK: - Init
     init(userDefaults: UserDefaults = .standard) {
         defaults = userDefaults
+        let storedCards = defaults.stringArray(forKey: Keys.dashboardCards)
+        var seenCards = Set<DashboardCard>()
+        let cards = storedCards?.compactMap(DashboardCard.init(rawValue:))
+            .filter { seenCards.insert($0).inserted } ?? DashboardCard.allCases
+        presentation = PresentationSettings(
+            dashboardCards: cards,
+            hideWeights: defaults.bool(forKey: Keys.hideWeights)
+        )
         reminders = RemindersSettings(
             primaryTime: defaults.object(forKey: Keys.primaryReminderTime) as? Date,
             secondaryTime: defaults.object(forKey: Keys.secondaryReminderTime) as? Date,
@@ -119,6 +141,16 @@ final class DeviceSettingsStore: ObservableObject {
     }
     
     // MARK: - Mutation
+    func updatePresentation(_ mutate: (inout PresentationSettings) -> Void) {
+        var copy = presentation
+        mutate(&copy)
+        var seen = Set<DashboardCard>()
+        copy.dashboardCards = copy.dashboardCards.filter { seen.insert($0).inserted }
+        defaults.set(copy.dashboardCards.map(\.rawValue), forKey: Keys.dashboardCards)
+        defaults.set(copy.hideWeights, forKey: Keys.hideWeights)
+        presentation = copy
+    }
+
     func updateReminders(_ mutate: (inout RemindersSettings) -> Void) {
         var copy = reminders
         mutate(&copy)

@@ -1,6 +1,6 @@
 //
 //  PlateauDetectionService.swift
-//  Weigh
+//  My Weight
 //
 //  Created by Trimly on 11/19/2025.
 //
@@ -23,21 +23,17 @@ final class PlateauDetectionService: ObservableObject {
         let changePercentage: Double
         
         var message: String {
-            String(localized: L10n.Plateau.message(duration))
+            String(localized: L10n.Insights.plateauMessage(duration))
         }
         
         var hint: String {
-            if changePercentage < 0.5 {
-                return String(localized: L10n.Plateau.hintStable)
-            } else {
-                return String(localized: L10n.Plateau.hintFluctuation)
-            }
+            String(localized: L10n.Insights.plateauExplanation)
         }
     }
     
     // Configuration
-    private let minimumDays = 14 // Minimum days to consider a plateau
-    private let changeThreshold = 0.005 // 0.5% change threshold
+    private let minimumDays = 14
+    private let changeThreshold = 0.005
     
     // Track dismissed plateaus
     private var dismissedPlateaus: Set<String> = []
@@ -51,39 +47,33 @@ final class PlateauDetectionService: ObservableObject {
     
     /// Check if a plateau exists in recent data
     func detectPlateau(dataManager: DataManager) -> PlateauDetection? {
-        let dailyWeights = dataManager.getDailyWeights()
-        guard dailyWeights.count >= minimumDays else { return nil }
-        
-        // Check last N days for stability
-        let recentWeights = dailyWeights.suffix(minimumDays)
-        
-        guard let firstWeight = recentWeights.first?.weight,
-              let lastWeight = recentWeights.last?.weight else {
-            return nil
-        }
-        
-        // Calculate average weight
-        let averageWeight = recentWeights.reduce(0.0) { $0 + $1.weight } / Double(recentWeights.count)
-        
-        // Calculate total change percentage
-        let changePercentage = abs((lastWeight - firstWeight) / firstWeight) * 100
-        
-        // Check if within threshold
-        if changePercentage <= changeThreshold * 100 {
-            let plateau = PlateauDetection(
-                startDate: recentWeights.first!.date,
-                duration: minimumDays,
-                averageWeight: averageWeight,
-                changePercentage: changePercentage
-            )
-            
-            // Check if this plateau has been dismissed
-            if !isDismissed(plateau) {
-                return plateau
-            }
-        }
-        
-        return nil
+        guard let plateau = detectPlateau(dailyWeights: dataManager.getDailyWeights()),
+              !isDismissed(plateau) else { return nil }
+        return plateau
+    }
+
+    /// Require recent, well-supported history and low variation, not just matching endpoints.
+    func detectPlateau(
+        dailyWeights: [WeightInsights.DailyWeight], now: Date = Date(), calendar: Calendar = .current
+    ) -> PlateauDetection? {
+        guard now.timeIntervalSinceReferenceDate.isFinite else { return nil }
+        let today = calendar.startOfDay(for: now)
+        guard let cutoff = calendar.date(byAdding: .day, value: -20, to: today) else { return nil }
+        let recent = WeightAnalytics.normalizedDailyWeights(dailyWeights, calendar: calendar)
+            .filter { $0.date >= cutoff && $0.date <= today }
+        let evidence = WeightInsights.support(for: recent, now: now, minimumSamples: minimumDays,
+                                              minimumSpan: minimumDays, maximumAge: 3, calendar: calendar)
+        guard evidence.state == .supported, let first = recent.first,
+              let slope = WeightAnalytics.calculateLinearRegression(dailyWeights: recent, calendar: calendar).slope else { return nil }
+        let average = recent.reduce(0.0) { $0 + $1.weight / Double(recent.count) }
+        let weights = recent.map { $0.weight }
+        guard average.isFinite, average > 0, let minimum = weights.min(), let maximum = weights.max() else { return nil }
+        let relativeTrend = abs(slope) * Double(evidence.calendarDays - 1) / average
+        let relativeRange = (maximum - minimum) / average
+        guard relativeTrend.isFinite, relativeRange.isFinite,
+              relativeTrend <= changeThreshold, relativeRange <= 0.02 else { return nil }
+        return PlateauDetection(startDate: first.date, duration: evidence.calendarDays,
+                                averageWeight: average, changePercentage: relativeTrend * 100)
     }
     
     /// Show plateau detection
@@ -101,11 +91,7 @@ final class PlateauDetectionService: ObservableObject {
     
     /// Check and update plateau status
     func checkForPlateau(dataManager: DataManager) {
-        if currentPlateau == nil {
-            if let plateau = detectPlateau(dataManager: dataManager) {
-                showPlateau(plateau)
-            }
-        }
+        currentPlateau = detectPlateau(dataManager: dataManager)
     }
     
     // MARK: - Persistence

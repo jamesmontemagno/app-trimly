@@ -190,7 +190,7 @@
         }
       }
     },
-    "accessibility.hint.opensWeighPro" : {
+    "accessibility.hint.opensMyWeightPro" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
@@ -11479,7 +11479,7 @@
         }
       }
     },
-    "Unlock Weigh Pro" : {
+    "Unlock My Weight Pro" : {
       "extractionState" : "stale",
       "localizations" : {
         "es" : {

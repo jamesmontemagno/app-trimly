@@ -7,6 +7,7 @@ import CoreData
 final class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+        NotificationService.shared.installResponseHandler()
         application.registerForRemoteNotifications()
         
         #if DEBUG
@@ -46,6 +47,10 @@ import SwiftData
 import CoreData
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationWillFinishLaunching(_ notification: Notification) {
+        NotificationService.shared.installResponseHandler()
+    }
+
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApplication.shared.registerForRemoteNotifications()
         

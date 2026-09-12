@@ -1,8 +1,8 @@
-# Weigh v1.1/v1.2 Feature Implementation Summary
+# My Weight v1.1/v1.2 Feature Implementation Summary
 
 ## Overview
 
-This document summarizes the implementation of all requested v1.1 and v1.2 features for the Weigh weight tracking app.
+This document summarizes the implementation of all requested v1.1 and v1.2 features for the My Weight app.
 
 ## Features Implemented
 

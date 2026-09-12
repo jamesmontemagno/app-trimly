@@ -4,6 +4,26 @@ import XCTest
 
 @MainActor
 final class DeviceSettingsStoreTests: XCTestCase {
+    func testPresentationDefaultsAndPersistence() {
+        let (defaults, store) = makeStore()
+        XCTAssertEqual(store.presentation.dashboardCards, DashboardCard.allCases)
+        XCTAssertFalse(store.presentation.hideWeights)
+        store.updatePresentation {
+            $0.dashboardCards = [.recap, .today, .recap, .trend]
+            $0.hideWeights = true
+        }
+        let reloaded = DeviceSettingsStore(userDefaults: defaults)
+        XCTAssertEqual(reloaded.presentation.dashboardCards, [.recap, .today, .trend])
+        XCTAssertTrue(reloaded.presentation.hideWeights)
+    }
+
+    func testPresentationIgnoresUnknownCardIdentifiers() {
+        let (defaults, _) = makeStore()
+        defaults.set(["future-card", "today", "today", "recap"], forKey: "device.presentation.dashboardCards")
+        let reloaded = DeviceSettingsStore(userDefaults: defaults)
+        XCTAssertEqual(reloaded.presentation.dashboardCards, [.today, .recap])
+    }
+
     func testUpdateRemindersPersistsAcrossInstances() {
         let (defaults, store) = makeStore()
         let morning = Date(timeIntervalSince1970: 1_701_000_000)

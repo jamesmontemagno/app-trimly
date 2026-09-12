@@ -1,6 +1,6 @@
 //
 //  HealthKitService.swift
-//  Weigh
+//  My Weight
 //
 //  Created by Trimly on 11/19/2025.
 //
@@ -12,14 +12,18 @@ import HealthKit
 /// Service for HealthKit integration (weight data import and sync)
 @MainActor
 final class HealthKitService: ObservableObject {
+    static let shared = HealthKitService()
     
     private let healthStore = HKHealthStore()
     private let weightType = HKQuantityType.quantityType(forIdentifier: .bodyMass)!
     private let syncOverlapSeconds: TimeInterval = 600 // re-read a small window to avoid missing edge samples
+    private var observerQuery: HKObserverQuery?
+    private var importWaiters: [CheckedContinuation<Void, Never>] = []
     
     @Published var isAuthorized = false
     @Published var isImporting = false
     @Published var importProgress: Double = 0
+    @Published private(set) var skippedSampleCount = 0
     
     // MARK: - Authorization
     
@@ -88,16 +92,21 @@ final class HealthKitService: ObservableObject {
         dataManager: DataManager,
         unit: WeightUnit
     ) async throws -> Int {
+        await waitForImport()
         guard isAuthorized else {
             throw HealthKitError.notAuthorized
         }
         
         isImporting = true
         importProgress = 0
+        skippedSampleCount = 0
         
         defer {
             isImporting = false
             importProgress = 0
+            let waiting = importWaiters
+            importWaiters.removeAll()
+            waiting.forEach { $0.resume() }
         }
         
         // Query for weight samples
@@ -132,8 +141,24 @@ final class HealthKitService: ObservableObject {
         }
         
         // Process samples and check for duplicates
-        var importedCount = 0
         let totalSamples = samples.count
+        let healthSettings = dataManager.deviceSettings.healthKit
+        var duplicateCandidates: [Int: [(timestamp: Date, weightKg: Double)]] = [:]
+        if healthSettings.autoHideDuplicates {
+            let existingEntries = try dataManager.fetchEntries(
+                startDate: startDate.addingTimeInterval(-300),
+                endDate: endDate.addingTimeInterval(301),
+                includeHidden: true
+            )
+            for entry in existingEntries {
+                addDuplicateCandidate(
+                    timestamp: entry.timestamp,
+                    weightKg: entry.weightKg,
+                    to: &duplicateCandidates
+                )
+            }
+        }
+        var drafts: [WeightEntryDraft] = []
         
         for (index, sample) in samples.enumerated() {
             // Update progress
@@ -142,22 +167,30 @@ final class HealthKitService: ObservableObject {
             let weightKg = sample.quantity.doubleValue(for: .gramUnit(with: .kilo))
             let timestamp = sample.startDate
             
-            // Check if this is a duplicate
-            if !isDuplicate(
+            let isDuplicate = healthSettings.autoHideDuplicates && containsDuplicate(
                 weightKg: weightKg,
                 timestamp: timestamp,
-                dataManager: dataManager
-            ) {
-                try dataManager.addWeightEntry(
+                tolerance: healthSettings.duplicateToleranceKg,
+                candidates: duplicateCandidates
+            )
+            if isDuplicate {
+                skippedSampleCount += 1
+            } else {
+                drafts.append(WeightEntryDraft(
                     weightKg: weightKg,
                     timestamp: timestamp,
                     unit: unit,
-                    source: .healthKit
+                    notes: nil
+                ))
+                addDuplicateCandidate(
+                    timestamp: timestamp,
+                    weightKg: weightKg,
+                    to: &duplicateCandidates
                 )
-                importedCount += 1
             }
         }
         
+        let importedCount = try dataManager.importHealthKitEntries(drafts)
         importProgress = 1.0
         return importedCount
     }
@@ -208,6 +241,14 @@ final class HealthKitService: ObservableObject {
             }
         }
     }
+
+    func disableBackgroundDelivery() {
+        if let observerQuery {
+            healthStore.stop(observerQuery)
+            self.observerQuery = nil
+        }
+        healthStore.disableBackgroundDelivery(for: weightType) { _, _ in }
+    }
     
     /// Register background delivery on app launch if enabled in settings
     /// Call this from the app entry point to ensure background sync is active after app restarts
@@ -232,25 +273,27 @@ final class HealthKitService: ObservableObject {
     /// Observe weight changes and sync new samples
     @MainActor
     private func observeWeightChanges(dataManager: DataManager, unit: WeightUnit) async {
+        guard observerQuery == nil, dataManager.deviceSettings.healthKit.backgroundSyncEnabled else { return }
         let query = HKObserverQuery(sampleType: weightType, predicate: nil) { [weak self] _, completionHandler, error in
+            let completion = HealthObserverCompletion(completionHandler)
             guard error == nil else {
-                completionHandler()
+                completion.finish()
                 return
             }
             
             Task { @MainActor [weak self] in
                 await self?.syncRecentSamples(dataManager: dataManager, unit: unit)
+                completion.finish()
             }
-            
-            completionHandler()
         }
-        
+        observerQuery = query
         healthStore.execute(query)
     }
     
     /// Sync recent weight samples from the last known sync point (with a small overlap) through now
     private func syncRecentSamples(dataManager: DataManager, unit: WeightUnit) async {
-        guard isAuthorized else { return }
+        await waitForImport()
+        guard isAuthorized, dataManager.deviceSettings.healthKit.backgroundSyncEnabled else { return }
         let now = Date()
         let startDate = syncStartDate(deviceSettings: dataManager.deviceSettings, now: now)
         do {
@@ -258,28 +301,42 @@ final class HealthKitService: ObservableObject {
                 from: startDate,
                 to: now,
                 dataManager: dataManager,
-                unit: unit
+                unit: dataManager.settings?.preferredUnit ?? unit
             )
+            await dataManager.waitForPendingWidgetRefresh()
             dataManager.deviceSettings.updateHealthKit { settings in
                 settings.lastBackgroundSyncAt = now
             }
         } catch {
-            // Intentionally keep quiet to avoid spamming logs; UI surfaces errors on manual imports
+            dataManager.persistenceErrorMessage = error.localizedDescription
+        }
+    }
+
+    private func waitForImport() async {
+        while isImporting {
+            await withCheckedContinuation { continuation in
+                importWaiters.append(continuation)
+            }
         }
     }
     
     // MARK: - Duplicate Detection
     
     /// Check if a HealthKit sample is a duplicate
-    private func isDuplicate(
+    func isDuplicate(
         weightKg: Double,
         timestamp: Date,
         dataManager: DataManager
-    ) -> Bool {
+    ) throws -> Bool {
         let healthSettings = dataManager.deviceSettings.healthKit
         guard healthSettings.autoHideDuplicates else { return false }
         let tolerance = healthSettings.duplicateToleranceKg
-        let existingEntries = dataManager.fetchEntriesForDate(timestamp)
+        // Include adjacent days: samples near midnight can match across a day boundary.
+        let existingEntries = try dataManager.fetchEntries(
+            startDate: timestamp.addingTimeInterval(-300),
+            endDate: timestamp.addingTimeInterval(301),
+            includeHidden: true
+        )
         
         // Check if there's a matching entry within tolerance
         for entry in existingEntries {
@@ -293,6 +350,37 @@ final class HealthKitService: ObservableObject {
         }
         
         return false
+    }
+
+    private func containsDuplicate(
+        weightKg: Double,
+        timestamp: Date,
+        tolerance: Double,
+        candidates: [Int: [(timestamp: Date, weightKg: Double)]]
+    ) -> Bool {
+        let bucket = duplicateBucket(for: timestamp)
+        for candidateBucket in (bucket - 1)...(bucket + 1) {
+            guard let entries = candidates[candidateBucket] else { continue }
+            if entries.contains(where: {
+                abs($0.weightKg - weightKg) <= tolerance
+                    && abs($0.timestamp.timeIntervalSince(timestamp)) <= 300
+            }) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private func addDuplicateCandidate(
+        timestamp: Date,
+        weightKg: Double,
+        to candidates: inout [Int: [(timestamp: Date, weightKg: Double)]]
+    ) {
+        candidates[duplicateBucket(for: timestamp), default: []].append((timestamp, weightKg))
+    }
+
+    private func duplicateBucket(for timestamp: Date) -> Int {
+        Int(floor(timestamp.timeIntervalSinceReferenceDate / 300))
     }
 
     /// Determine the start date for the next sync using the most recent sync/import anchor and a small overlap window
@@ -319,12 +407,29 @@ enum HealthKitError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .notAuthorized:
-            return "HealthKit access not authorized"
+            return NSLocalizedString("platform.health.notAuthorized", tableName: "PlatformFeatures", comment: "HealthKit authorization error")
         case .notAvailable:
-            return "HealthKit is not available on this device"
+            return NSLocalizedString("platform.health.notAvailable", tableName: "PlatformFeatures", comment: "HealthKit availability error")
         case .importFailed(let error):
-            return "Import failed: \(error.localizedDescription)"
+            return String(format: NSLocalizedString("platform.health.importFailed", tableName: "PlatformFeatures", comment: "HealthKit import error"), error.localizedDescription)
         }
     }
 }
 
+/// HealthKit supplies a non-Sendable completion block; the lock guarantees one invocation.
+private final class HealthObserverCompletion: @unchecked Sendable {
+    nonisolated private let lock = NSLock()
+    nonisolated(unsafe) private var completion: (() -> Void)?
+
+    nonisolated init(_ completion: @escaping () -> Void) {
+        self.completion = completion
+    }
+
+    nonisolated func finish() {
+        lock.lock()
+        let callback = completion
+        completion = nil
+        lock.unlock()
+        callback?()
+    }
+}

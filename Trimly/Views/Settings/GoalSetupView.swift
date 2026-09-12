@@ -1,6 +1,6 @@
 //
 //  GoalSetupView.swift
-//  Weigh
+//  My Weight
 //
 //  Created by Trimly on 12/07/2025.
 //
@@ -23,6 +23,11 @@ struct GoalSetupView: View {
 	@State private var notes = ""
 	@State private var showingError = false
 	@State private var errorMessage = ""
+	@State private var hasDeadline = false
+	@State private var deadline = Calendar.current.date(byAdding: .day, value: 90, to: Date()) ?? Date()
+	@State private var didLoad = false
+	@State private var originalTargetText = ""
+	@State private var originalStartText = ""
     
 	var body: some View {
 		NavigationStack {
@@ -36,6 +41,7 @@ struct GoalSetupView: View {
 					) {
 						HStack(spacing: 12) {
 							TextField(String(localized: L10n.Goals.targetPlaceholder), text: $targetWeightText)
+								.accessibilityLabel(Text(L10n.Goals.targetTitle))
 								#if os(iOS)
 								.keyboardType(.decimalPad)
 								#endif
@@ -51,12 +57,24 @@ struct GoalSetupView: View {
 					) {
 						HStack(spacing: 12) {
 							TextField(String(localized: L10n.Goals.startPlaceholder), text: $startingWeightText)
+								.accessibilityLabel(Text(L10n.Goals.startTitle))
 							#if os(iOS)
 							.keyboardType(.decimalPad)
 							#endif
 							Text(preferredUnit.symbol)
 								.foregroundStyle(.secondary)
 						}
+					}
+					WeighCardSection(title: String(localized: L10n.EntryFeatures.deadline), style: .popup) {
+							Toggle(isOn: $hasDeadline) { Text(L10n.EntryFeatures.useDeadline) }
+								.accessibilityLabel(Text(L10n.EntryFeatures.useDeadline))
+							if hasDeadline {
+								DatePicker(selection: $deadline, displayedComponents: .date) {
+									Text(L10n.EntryFeatures.deadline)
+								}
+								.accessibilityLabel(Text(L10n.EntryFeatures.deadline))
+							}
+							Text(L10n.EntryFeatures.deadlineHint).font(.caption).foregroundStyle(.secondary)
 					}
 					
 					WeighCardSection(
@@ -66,6 +84,7 @@ struct GoalSetupView: View {
 					) {
 						TextField(String(localized: L10n.Goals.notesPlaceholder), text: $notes, axis: .vertical)
 							.lineLimit(3...6)
+							.accessibilityLabel(Text(L10n.Goals.notesTitle))
 					}
 					
 					Text(L10n.Goals.unitHint)
@@ -74,19 +93,21 @@ struct GoalSetupView: View {
 				}
 				.padding(24)
 			}
-			.navigationTitle(Text(mode == .edit ? "Edit Goal" : L10n.Goals.setupTitle))
+			.navigationTitle(Text(mode == .edit ? L10n.EntryFeatures.editGoal : L10n.Goals.setupTitle))
 			#if os(iOS)
 			.navigationBarTitleDisplayMode(.inline)
 			#endif
 			.toolbar {
 				ToolbarItem(placement: .cancellationAction) {
 					Button(String(localized: L10n.Common.cancelButton)) { dismiss() }
+						.accessibilityLabel(Text(L10n.Common.cancelButton))
 				}
 				ToolbarItem(placement: .confirmationAction) {
 					Button(String(localized: L10n.Common.saveButton)) { saveGoal() }
 						.buttonStyle(.borderedProminent)
 						.tint(.accentColor)
 						.disabled(saveButtonDisabled)
+						.accessibilityLabel(Text(L10n.Common.saveButton))
 				}
 			}
 			.alert(L10n.Common.errorTitle, isPresented: $showingError) {
@@ -96,6 +117,8 @@ struct GoalSetupView: View {
 			}
 		}
 		.task {
+			guard !didLoad else { return }
+			didLoad = true
 			prefillDefaults()
 		}
 	}
@@ -110,25 +133,15 @@ struct GoalSetupView: View {
 	}
 
 	private var saveButtonDisabled: Bool {
-		guard let start = Double(startingWeightText), start > 0,
-			  let target = Double(targetWeightText), target > 0 else {
+		guard EntryInput.weight(startingWeightText) != nil,
+			  EntryInput.weight(targetWeightText) != nil else {
 			return true
 		}
 		return false
 	}
 
 	private func formattedDisplayWeight(fromKg kg: Double) -> String {
-		let unitValue = preferredUnit.convert(fromKg: kg)
-		let format: String
-		switch decimalPrecision {
-		case ..<1:
-			format = "%.0f"
-		case 1:
-			format = "%.1f"
-		default:
-			format = "%.2f"
-		}
-		return String(format: format, unitValue)
+		EntryInput.display(preferredUnit.convert(fromKg: kg), precision: decimalPrecision)
 	}
 
 	private func prefillDefaults() {
@@ -138,18 +151,22 @@ struct GoalSetupView: View {
 				startingWeightText = formattedDisplayWeight(fromKg: startingKg)
 			}
 			notes = goal.notes ?? ""
-		} else if startingWeightText.isEmpty, let current = dataManager.getCurrentWeight() {
+			hasDeadline = goal.targetDate != nil
+			deadline = goal.targetDate ?? deadline
+			originalTargetText = targetWeightText
+			originalStartText = startingWeightText
+		} else if startingWeightText.isEmpty, let current = dataManager.getCurrentVisibleWeight() {
 			startingWeightText = formattedDisplayWeight(fromKg: current)
 		}
 	}
 
 	private func saveGoal() {
-		guard let starting = Double(startingWeightText), starting > 0 else {
+		guard let starting = EntryInput.weight(startingWeightText) else {
 			errorMessage = String(localized: L10n.Goals.errorMissingStartingWeight)
 			showingError = true
 			return
 		}
-		guard let weight = Double(targetWeightText) else {
+		guard let weight = EntryInput.weight(targetWeightText) else {
 			errorMessage = String(localized: L10n.Goals.errorInvalidWeight)
 			showingError = true
 			return
@@ -159,27 +176,37 @@ struct GoalSetupView: View {
 			showingError = true
 			return
 		}
-		let weightKg = preferredUnit.convertToKg(weight)
-		let startingKg = preferredUnit.convertToKg(starting)
+		let currentGoal = mode == .edit ? dataManager.fetchActiveGoal() : nil
+		let weightKg = currentGoal.flatMap { targetWeightText == originalTargetText ? $0.targetWeightKg : nil }
+			?? preferredUnit.convertToKg(weight)
+		let startingKg = currentGoal.flatMap { startingWeightText == originalStartText ? $0.startingWeightKg : nil }
+			?? preferredUnit.convertToKg(starting)
 		do {
 			if mode == .edit {
 				// Edit mode: update existing goal
 				try dataManager.updateGoal(
 					targetWeightKg: weightKg,
 					startingWeightKg: startingKg,
+					targetDate: hasDeadline ? deadline : nil,
 					notes: notes.isEmpty ? nil : notes
 				)
 			} else {
-				// New mode: create new goal (archives old one)
-				// When setting a goal from Settings, also log a corresponding entry
-				// so history and analytics align with the new starting point.
-				try dataManager.addWeightEntry(
-					weightKg: startingKg,
-					unit: preferredUnit
-				)
-				try dataManager.setGoal(targetWeightKg: weightKg,
-								startingWeightKg: startingKg,
-									notes: notes.isEmpty ? nil : notes)
+				if dataManager.hasAnyEntries() {
+					try dataManager.setGoal(
+						targetWeightKg: weightKg,
+						startingWeightKg: startingKg,
+						targetDate: hasDeadline ? deadline : nil,
+						notes: notes.isEmpty ? nil : notes
+					)
+				} else {
+					try dataManager.setGoalAndCreateStartingEntry(
+						targetWeightKg: weightKg,
+						startingWeightKg: startingKg,
+						targetDate: hasDeadline ? deadline : nil,
+						notes: notes.isEmpty ? nil : notes,
+						unit: preferredUnit
+					)
+				}
 			}
 			dismiss()
 		} catch {

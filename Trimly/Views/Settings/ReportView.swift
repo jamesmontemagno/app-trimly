@@ -2,6 +2,7 @@ import SwiftUI
 import Charts
 import CoreGraphics
 import QuickLook
+import UniformTypeIdentifiers
 #if canImport(UIKit)
 import UIKit
 #elseif canImport(AppKit)

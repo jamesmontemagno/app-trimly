@@ -17,13 +17,22 @@ struct CelebrationServiceTests {
 		return await DataManager(inMemory: true, deviceSettings: deviceSettings)
 	}
 
+	private func makeCelebrationService() -> CelebrationService {
+		let suiteName = "com.trimly.tests.celebration-state.\(UUID().uuidString)"
+		guard let defaults = UserDefaults(suiteName: suiteName) else {
+			fatalError("Failed to create UserDefaults suite \(suiteName)")
+		}
+		defaults.removePersistentDomain(forName: suiteName)
+		return CelebrationService(userDefaults: defaults)
+	}
+
 	// MARK: - Goal Progress Celebration Tests
 
 	@Test
 	func goalCelebration_weightLoss_progressTowardGoal_celebratesAtMilestone() async throws {
 		// Setup: User wants to lose weight (start 100kg -> target 90kg)
 		let manager = await makeInMemoryManager()
-		let service = CelebrationService()
+		let service = makeCelebrationService()
 		
 		// Set start weight
 		let startDate = Date().addingTimeInterval(-30 * 24 * 60 * 60) // 30 days ago
@@ -48,7 +57,7 @@ struct CelebrationServiceTests {
 	func goalCelebration_weightLoss_movingAwayFromGoal_doesNotCelebrate() async throws {
 		// Setup: User wants to lose weight (start 100kg -> target 90kg) but is gaining
 		let manager = await makeInMemoryManager()
-		let service = CelebrationService()
+		let service = makeCelebrationService()
 		
 		// Set start weight
 		let startDate = Date().addingTimeInterval(-30 * 24 * 60 * 60) // 30 days ago
@@ -77,7 +86,7 @@ struct CelebrationServiceTests {
 	func goalCelebration_weightGain_progressTowardGoal_celebratesAtMilestone() async throws {
 		// Setup: User wants to gain weight (start 60kg -> target 70kg)
 		let manager = await makeInMemoryManager()
-		let service = CelebrationService()
+		let service = makeCelebrationService()
 		
 		// Set start weight
 		let startDate = Date().addingTimeInterval(-30 * 24 * 60 * 60) // 30 days ago
@@ -102,7 +111,7 @@ struct CelebrationServiceTests {
 	func goalCelebration_weightGain_movingAwayFromGoal_doesNotCelebrate() async throws {
 		// Setup: User wants to gain weight (start 60kg -> target 70kg) but is losing
 		let manager = await makeInMemoryManager()
-		let service = CelebrationService()
+		let service = makeCelebrationService()
 		
 		// Set start weight
 		let startDate = Date().addingTimeInterval(-30 * 24 * 60 * 60) // 30 days ago
@@ -131,7 +140,7 @@ struct CelebrationServiceTests {
 	func goalCelebration_atExactStartWeight_doesNotCelebrate() async throws {
 		// Setup: User at exact start weight (no progress)
 		let manager = await makeInMemoryManager()
-		let service = CelebrationService()
+		let service = makeCelebrationService()
 		
 		// Set start weight
 		let startDate = Date().addingTimeInterval(-30 * 24 * 60 * 60) // 30 days ago
@@ -160,7 +169,7 @@ struct CelebrationServiceTests {
 	func goalCelebration_largeProgressJump_celebratesHighestMilestoneFirst() async throws {
 		// Setup: User makes large progress jump (0% -> 80%) and should see 75% celebration (not 25%)
 		let manager = await makeInMemoryManager()
-		let service = CelebrationService()
+		let service = makeCelebrationService()
 		
 		// Set start weight
 		let startDate = Date().addingTimeInterval(-30 * 24 * 60 * 60) // 30 days ago

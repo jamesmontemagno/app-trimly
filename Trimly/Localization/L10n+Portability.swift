@@ -75,7 +75,6 @@ extension L10n {
         nonisolated static let shareNoData = LocalizedStringResource("share.noData", defaultValue: "No visible weight data in this period.", table: "Portability")
         nonisolated static let sharePrivacyHint = LocalizedStringResource("share.privacyHint", defaultValue: "Check-ins only is the safest option. Recipients and the destination you choose control copies after sharing.", table: "Portability")
         nonisolated static let shareFailed = LocalizedStringResource("share.failed", defaultValue: "The share image could not be created. Please try again.", table: "Portability")
-        nonisolated static let sevenDayCount = LocalizedStringResource("share.sevenDayCount", defaultValue: "%lld of 7 days", table: "Portability")
         nonisolated static let shareCheckedIn = LocalizedStringResource("share.checkedIn", defaultValue: "Checked in", table: "Portability")
         nonisolated static let shareNoCheckIn = LocalizedStringResource("share.noCheckIn", defaultValue: "No check-in", table: "Portability")
         nonisolated static let shareDayAxis = LocalizedStringResource("share.dayAxis", defaultValue: "Day", table: "Portability")
@@ -102,6 +101,9 @@ extension L10n {
 
         nonisolated static func entryCount(_ count: Int) -> LocalizedStringResource {
             LocalizedStringResource("summary.entries", defaultValue: "Measurements: \(count)", table: "Portability")
+        }
+        nonisolated static func sevenDayCount(_ count: Int) -> LocalizedStringResource {
+            LocalizedStringResource("share.sevenDayCount", defaultValue: "\(count) of 7 days", table: "Portability")
         }
         nonisolated static func readyCount(_ count: Int) -> LocalizedStringResource {
             LocalizedStringResource("import.readyCount", defaultValue: "Selected for import: \(count)", table: "Portability")

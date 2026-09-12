@@ -120,8 +120,10 @@ final class CelebrationService: ObservableObject {
     // Track which celebrations have been shown
     private var shownCelebrations: Set<String> = []
     private let userDefaultsKey = "trimly.celebrations.shown"
+    private let userDefaults: UserDefaults
     
-    init() {
+    init(userDefaults: UserDefaults = .standard) {
+        self.userDefaults = userDefaults
         loadShownCelebrations()
     }
     
@@ -452,12 +454,12 @@ final class CelebrationService: ObservableObject {
     }
     
     private func loadShownCelebrations() {
-        if let data = UserDefaults.standard.array(forKey: userDefaultsKey) as? [String] {
+        if let data = userDefaults.array(forKey: userDefaultsKey) as? [String] {
             shownCelebrations = Set(data)
         }
     }
     
     private func saveShownCelebrations() {
-        UserDefaults.standard.set(Array(shownCelebrations), forKey: userDefaultsKey)
+        userDefaults.set(Array(shownCelebrations), forKey: userDefaultsKey)
     }
 }

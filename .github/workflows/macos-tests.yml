@@ -1,4 +1,4 @@
-name: macOS Unit Tests
+name: Apple Platform Builds and Tests
 
 on:
   push:
@@ -25,6 +25,9 @@ jobs:
       - name: Build macOS app
         run: xcodebuild -scheme TrimTally -destination "platform=macOS,arch=arm64" CODE_SIGNING_ALLOWED=NO build
 
+      - name: Run macOS unit tests
+        run: xcodebuild -scheme TrimTally -destination "platform=macOS,arch=arm64" CODE_SIGNING_ALLOWED=NO test
+
   tests-ios:
     runs-on: macos-26
 
@@ -37,8 +40,18 @@ jobs:
         with:
           xcode-version: '26.6'
 
+      - name: Select iOS simulator
+        id: simulator
+        run: |
+          simulator_id="$(xcrun simctl list devices available --json | jq -r '[.devices[][] | select(.name | startswith("iPhone"))][0].udid')"
+          if [[ -z "$simulator_id" || "$simulator_id" == "null" ]]; then
+            echo "No available iPhone simulator was found." >&2
+            exit 1
+          fi
+          echo "id=$simulator_id" >> "$GITHUB_OUTPUT"
+
       - name: Build iOS app
-        run: xcodebuild -scheme TrimTally -destination "platform=iOS Simulator,name=iPhone 17" CODE_SIGNING_ALLOWED=NO build
+        run: xcodebuild -scheme TrimTally -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.id }}" CODE_SIGNING_ALLOWED=NO build
 
       - name: Run iOS unit tests
-        run: xcodebuild -scheme TrimTally -destination "platform=iOS Simulator,name=iPhone 17" CODE_SIGNING_ALLOWED=NO test
+        run: xcodebuild -scheme TrimTally -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.id }}" CODE_SIGNING_ALLOWED=NO test

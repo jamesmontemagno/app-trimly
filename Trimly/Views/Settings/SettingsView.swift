@@ -532,7 +532,7 @@ struct SettingsView: View {
 		formatter.dateStyle = .medium
 		formatter.timeStyle = .short
 		let timestamp = formatter.string(from: Date())
-		let subject = "Weigh Support - \(timestamp)"
+		let subject = "My Weight Support - \(timestamp)"
 		let bodyLines = [
 			"App Version: \(appVersion)",
 			"Device: \(deviceDescription)",

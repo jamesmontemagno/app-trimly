@@ -15,7 +15,7 @@ struct WeighWidget: Widget {
 		StaticConfiguration(kind: kind, provider: WeightProvider()) { entry in
 			WeightWidgetEntryView(entry: entry)
 		}
-		.configurationDisplayName("Weight Tracker")
+		.configurationDisplayName("My Weight")
 		.description("See your current weight at a glance")
 		.supportedFamilies([.systemSmall, .systemMedium])
 	}

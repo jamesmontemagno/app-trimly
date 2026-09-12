@@ -196,7 +196,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Opens Weigh Pro upgrade page"
+            "value" : "Opens My Weight Pro upgrade page"
           }
         }
       }
@@ -1178,19 +1178,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Unlock this achievement with Weigh Pro."
+            "value" : "Unlock this achievement with My Weight Pro."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Desbloquea este logro con Weigh Pro."
+            "value" : "Desbloquea este logro con My Weight Pro."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Débloquez cette réalisation avec Weigh Pro."
+            "value" : "Débloquez cette réalisation avec My Weight Pro."
           }
         }
       }
@@ -1569,19 +1569,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Upgrade to Weigh Pro to unlock premium achievements."
+            "value" : "Upgrade to My Weight Pro to unlock premium achievements."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mejora a Weigh Pro para desbloquear logros premium."
+            "value" : "Mejora a My Weight Pro para desbloquear logros premium."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Passez à Weigh Pro pour débloquer les réalisations premium."
+            "value" : "Passez à My Weight Pro pour débloquer les réalisations premium."
           }
         }
       }
@@ -5027,19 +5027,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Requires Weigh Pro"
+            "value" : "Requires My Weight Pro"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Requiere Weigh Pro"
+            "value" : "Requiere My Weight Pro"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nécessite Weigh Pro"
+            "value" : "Nécessite My Weight Pro"
           }
         }
       }
@@ -6315,19 +6315,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Allow Weigh to securely read your Health app weight data."
+            "value" : "Allow My Weight to securely read your Health app weight data."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Permite que Weigh lea de forma segura los datos de peso de tu app Salud."
+            "value" : "Permite que My Weight lea de forma segura los datos de peso de tu app Salud."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Autoriser Weigh à lire en toute sécurité les données de poids de l'app Santé."
+            "value" : "Autoriser My Weight à lire en toute sécurité les données de poids de l'app Santé."
           }
         }
       }
@@ -6384,19 +6384,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Connect to Health so Weigh can keep everything in one place."
+            "value" : "Connect to Health so My Weight can keep everything in one place."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Conéctate a Salud para que Weigh pueda mantener todo en un solo lugar."
+            "value" : "Conéctate a Salud para que My Weight pueda mantener todo en un solo lugar."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Connectez à Santé pour que Weigh puisse tout garder au même endroit."
+            "value" : "Connectez à Santé pour que My Weight puisse tout garder au même endroit."
           }
         }
       }
@@ -6545,19 +6545,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Saved in Weigh, but couldn't write to Health. Check Health permissions if you want syncing."
+            "value" : "Saved in My Weight, but couldn't write to Health. Check Health permissions if you want syncing."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se guardó en Weigh, pero no se pudo escribir en Salud. Revisa los permisos de Salud si quieres sincronización."
+            "value" : "Se guardó en My Weight, pero no se pudo escribir en Salud. Revisa los permisos de Salud si quieres sincronización."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enregistré dans Weigh, mais impossible d’écrire dans Santé. Vérifiez les autorisations Santé si vous souhaitez la synchronisation."
+            "value" : "Enregistré dans My Weight, mais impossible d’écrire dans Santé. Vérifiez les autorisations Santé si vous souhaitez la synchronisation."
           }
         }
       }
@@ -6614,19 +6614,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choose a range and pull past weights into Weigh. Duplicates are automatically skipped."
+            "value" : "Choose a range and pull past weights into My Weight. Duplicates are automatically skipped."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Elige un rango y trae pesos anteriores a Weigh. Los duplicados se omiten automáticamente."
+            "value" : "Elige un rango y trae pesos anteriores a My Weight. Los duplicados se omiten automáticamente."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choisissez une plage et importez les poids précédents dans Weigh. Les doublons sont automatiquement ignorés."
+            "value" : "Choisissez une plage et importez les poids précédents dans My Weight. Les doublons sont automatiquement ignorés."
           }
         }
       }
@@ -7051,19 +7051,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Let Weigh watch for new Health weight samples and keep things tidy."
+            "value" : "Let My Weight watch for new Health weight samples and keep things tidy."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Permite que Weigh vigile nuevas muestras de peso de Salud y mantenga todo ordenado."
+            "value" : "Permite que My Weight vigile nuevas muestras de peso de Salud y mantenga todo ordenado."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Permettez à Weigh de surveiller les nouveaux échantillons de poids Health et de garder tout propre."
+            "value" : "Permettez à My Weight de surveiller les nouveaux échantillons de poids Health et de garder tout propre."
           }
         }
       }
@@ -7166,19 +7166,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Weigh can read your weight from Health, and optionally write new manual entries back."
+            "value" : "My Weight can read your weight from Health, and optionally write new manual entries back."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Weigh puede leer tu peso desde Salud y, opcionalmente, escribir nuevas entradas manuales de vuelta."
+            "value" : "My Weight puede leer tu peso desde Salud y, opcionalmente, escribir nuevas entradas manuales de vuelta."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Weigh peut lire votre poids depuis Santé et, en option, écrire de nouvelles entrées manuelles."
+            "value" : "My Weight peut lire votre poids depuis Santé et, en option, écrire de nouvelles entrées manuelles."
           }
         }
       }
@@ -7709,19 +7709,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Looking for your previous Weigh data..."
+            "value" : "Looking for your previous My Weight data..."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Buscando tus datos anteriores de Weigh..."
+            "value" : "Buscando tus datos anteriores de My Weight..."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Recherche de vos données Weigh précédentes..."
+            "value" : "Recherche de vos données My Weight précédentes..."
           }
         }
       }
@@ -7755,19 +7755,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "No Weigh data found in iCloud yet—start fresh and we'll sync new entries."
+            "value" : "No My Weight data found in iCloud yet—start fresh and we'll sync new entries."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aún no se encontraron datos de Weigh en iCloud: comienza de nuevo y sincronizaremos las nuevas entradas."
+            "value" : "Aún no se encontraron datos de My Weight en iCloud: comienza de nuevo y sincronizaremos las nuevas entradas."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aucune donnée Weigh trouvée dans iCloud pour le moment — commencez à zéro et nous synchroniserons les nouvelles entrées."
+            "value" : "Aucune donnée My Weight trouvée dans iCloud pour le moment — commencez à zéro et nous synchroniserons les nouvelles entrées."
           }
         }
       }
@@ -8744,19 +8744,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Welcome to Weigh"
+            "value" : "Welcome to My Weight"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bienvenido a Weigh"
+            "value" : "Bienvenido a My Weight"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bienvenue dans Weigh"
+            "value" : "Bienvenue dans My Weight"
           }
         }
       }
@@ -8806,7 +8806,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Restores your previous Weigh Pro purchase"
+            "value" : "Restores your previous My Weight Pro purchase"
           }
         }
       }
@@ -8828,7 +8828,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Upgrade to Weigh Pro for %@"
+            "value" : "Upgrade to My Weight Pro for %@"
           }
         }
       }
@@ -8971,7 +8971,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Unlock Weigh Pro"
+            "value" : "Unlock My Weight Pro"
           }
         }
       }
@@ -9051,19 +9051,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Let Weigh learn your habits and recommend smarter reminder times."
+            "value" : "Let My Weight learn your habits and recommend smarter reminder times."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Permite que Weigh aprenda tus hábitos y recomiende horarios de recordatorio más inteligentes."
+            "value" : "Permite que My Weight aprenda tus hábitos y recomiende horarios de recordatorio más inteligentes."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Laissez Weigh apprendre vos habitudes et recommander des heures de rappel plus pertinentes."
+            "value" : "Laissez My Weight apprendre vos habitudes et recommander des heures de rappel plus pertinentes."
           }
         }
       }
@@ -9166,19 +9166,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Weigh can send you reminders on this device."
+            "value" : "My Weight can send you reminders on this device."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Weigh puede enviarte recordatorios en este dispositivo."
+            "value" : "My Weight puede enviarte recordatorios en este dispositivo."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Weigh peut vous envoyer des rappels sur cet appareil."
+            "value" : "My Weight peut vous envoyer des rappels sur cet appareil."
           }
         }
       }
@@ -9281,19 +9281,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Choose the best time for Weigh to nudge you to log your weight."
+            "value" : "Choose the best time for My Weight to nudge you to log your weight."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Elige el mejor momento para que Weigh te recuerde registrar tu peso."
+            "value" : "Elige el mejor momento para que My Weight te recuerde registrar tu peso."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choisissez l'heure idéale pour que Weigh vous incite à enregistrer votre poids."
+            "value" : "Choisissez l'heure idéale pour que My Weight vous incite à enregistrer votre poids."
           }
         }
       }
@@ -9579,19 +9579,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "You have Weigh Pro"
+            "value" : "You have My Weight Pro"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tienes Weigh Pro"
+            "value" : "Tienes My Weight Pro"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vous avez Weigh Pro"
+            "value" : "Vous avez My Weight Pro"
           }
         }
       }
@@ -9681,7 +9681,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Review Weigh"
+            "value" : "Review My Weight"
           }
         }
       }
@@ -9991,19 +9991,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Please restart Weigh for this change to take effect. Your data is securely encrypted and only accessible from your devices."
+            "value" : "Please restart My Weight for this change to take effect. Your data is securely encrypted and only accessible from your devices."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Por favor reinicia Weigh para que este cambio surta efecto. Tus datos están cifrados de forma segura y solo accesibles desde tus dispositivos."
+            "value" : "Por favor reinicia My Weight para que este cambio surta efecto. Tus datos están cifrados de forma segura y solo accesibles desde tus dispositivos."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Veuillez redémarrer Weigh pour que ce changement prenne effet. Vos données sont chiffrées en toute sécurité et uniquement accessibles depuis vos appareils."
+            "value" : "Veuillez redémarrer My Weight pour que ce changement prenne effet. Vos données sont chiffrées en toute sécurité et uniquement accessibles depuis vos appareils."
           }
         }
       }
@@ -10611,19 +10611,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Choose Weigh's appearance."
+            "value" : "Choose My Weight's appearance."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Elige la apariencia de Weigh."
+            "value" : "Elige la apariencia de My Weight."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choisissez l'apparence de Weigh."
+            "value" : "Choisissez l'apparence de My Weight."
           }
         }
       }
@@ -10725,19 +10725,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "We couldn't find a previous Weigh Pro purchase associated with your account."
+            "value" : "We couldn't find a previous My Weight Pro purchase associated with your account."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No pudimos encontrar una compra anterior de Weigh Pro asociada con tu cuenta."
+            "value" : "No pudimos encontrar una compra anterior de My Weight Pro asociada con tu cuenta."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nous n'avons pas trouvé d'achat Weigh Pro précédent associé à votre compte."
+            "value" : "Nous n'avons pas trouvé d'achat My Weight Pro précédent associé à votre compte."
           }
         }
       }
@@ -10771,19 +10771,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Your Weigh Pro purchase has been restored successfully."
+            "value" : "Your My Weight Pro purchase has been restored successfully."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tu compra de Weigh Pro ha sido restaurada exitosamente."
+            "value" : "Tu compra de My Weight Pro ha sido restaurada exitosamente."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Votre achat Weigh Pro a été restauré avec succès."
+            "value" : "Votre achat My Weight Pro a été restauré avec succès."
           }
         }
       }
@@ -10817,19 +10817,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "About Weigh"
+            "value" : "About My Weight"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Acerca de Weigh"
+            "value" : "Acerca de My Weight"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "À propos de Weigh"
+            "value" : "À propos de My Weight"
           }
         }
       }
@@ -10840,19 +10840,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Choose how Weigh treats multiple entries recorded in the same day."
+            "value" : "Choose how My Weight treats multiple entries recorded in the same day."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Elige cómo Weigh trata múltiples entradas registradas en el mismo día."
+            "value" : "Elige cómo My Weight trata múltiples entradas registradas en el mismo día."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choisissez comment Weigh traite plusieurs entrées enregistrées le même jour."
+            "value" : "Choisissez comment My Weight traite plusieurs entrées enregistrées le même jour."
           }
         }
       }
@@ -10978,19 +10978,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Fine-tune how Weigh displays your weight, decimals, and appearance."
+            "value" : "Fine-tune how My Weight displays your weight, decimals, and appearance."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ajusta cómo Weigh muestra tu peso, decimales y apariencia."
+            "value" : "Ajusta cómo My Weight muestra tu peso, decimales y apariencia."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Affinez la façon dont Weigh affiche votre poids, les décimales et l'apparence."
+            "value" : "Affinez la façon dont My Weight affiche votre poids, les décimales et l'apparence."
           }
         }
       }
@@ -11024,7 +11024,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Reach out for help or share feedback with the Weigh team."
+            "value" : "Reach out for help or share feedback with the My Weight team."
           }
         }
       }
@@ -11485,13 +11485,13 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Desbloquear Weigh Pro"
+            "value" : "Desbloquear My Weight Pro"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Débloquer Weigh Pro"
+            "value" : "Débloquer My Weight Pro"
           }
         }
       }

@@ -422,15 +422,16 @@ private struct WeightReportContent: View {
                                 errorMessage = String(localized: L10n.Portability.shareFailed)
                             }
 
-                            private func removeTemporaryImage() {
-                                guard let shareURL else { return }
-                                try? FileManager.default.removeItem(at: shareURL)
-                                self.shareURL = nil
-                            }
                         }
-                    }
 
-                    private struct ShareCardContent: View {
+                    private func removeTemporaryImage() {
+                        guard let shareURL else { return }
+                        try? FileManager.default.removeItem(at: shareURL)
+                        self.shareURL = nil
+                    }
+                }
+
+                private struct ShareCardContent: View {
                         let snapshot: ShareCheckInSnapshot
                         let format: ShareCardFormat
                         let privacy: SharePrivacy

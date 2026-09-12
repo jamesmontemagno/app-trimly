@@ -1,10 +1,10 @@
-# Weigh
+# My Weight
 
 A modern, supportive weight tracking app for iOS and macOS built with SwiftUI and SwiftData.
 
 ## Overview
 
-Weigh is designed to be your mindful companion for weight tracking, featuring:
+My Weight is designed to be your mindful companion for weight tracking, featuring:
 
 - **Multi-entry per day** with flexible daily aggregation (latest or average)
 - **Comprehensive analytics** including moving averages, EMA, and trend analysis

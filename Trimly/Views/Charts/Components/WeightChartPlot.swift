@@ -134,7 +134,7 @@ struct WeightChartPlot: View {
                 position: AnnotationPosition.top,
                 alignment: Alignment.center,
                 spacing: 4,
-                overflowResolution: AnnotationOverflowResolution(x: .fitToChart, y: .disabled)
+                overflowResolution: AnnotationOverflowResolution(x: .fit(to: .chart), y: .disabled)
             ) {
                 ChartTooltip(point: point, unit: unit, precision: precision, note: nil)
                     .accessibilityHidden(true)

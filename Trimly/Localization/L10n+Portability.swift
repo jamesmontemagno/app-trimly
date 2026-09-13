@@ -76,7 +76,6 @@ extension L10n {
         nonisolated static let shareCurrentWeight = LocalizedStringResource("share.current", defaultValue: "Include current weight", table: "Portability")
         nonisolated static let shareChange = LocalizedStringResource("share.change", defaultValue: "Include period change", table: "Portability")
         nonisolated static let shareGoalValue = LocalizedStringResource("share.goalValue", defaultValue: "Include goal details", table: "Portability")
-        nonisolated static let sharePrepare = LocalizedStringResource("share.prepare", defaultValue: "Prepare image", table: "Portability")
         nonisolated static let shareImage = LocalizedStringResource("share.image", defaultValue: "Share image", table: "Portability")
         nonisolated static let sharePrivacyHint = LocalizedStringResource("share.privacyHint", defaultValue: "Check-ins only is the safest option. Recipients and the destination you choose control copies after sharing.", table: "Portability")
         nonisolated static let shareTrendDisclosure = LocalizedStringResource("share.trendDisclosure", defaultValue: "Trend only hides numbers and units, but the graph still reveals weight movement.", table: "Portability")

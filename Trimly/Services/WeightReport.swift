@@ -52,7 +52,8 @@ struct WeightReport {
             }
             let progress = (currentWeightKg - goalStartingWeightKg) / totalChange
             guard progress.isFinite else { return nil }
-            return min(1, max(0, progress))
+            let clamped = min(1, max(0, progress))
+            return clamped <= 0 ? 0 : clamped
         }
 
         init(

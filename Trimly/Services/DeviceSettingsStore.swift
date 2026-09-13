@@ -161,15 +161,15 @@ final class DeviceSettingsStore: ObservableObject {
             hasPrompted: defaults.object(forKey: Keys.reviewHasPrompted) as? Bool ?? false
         )
         shareCard = ShareCardSettings(
-            privacy: defaults.string(forKey: Keys.sharePrivacy) ?? "trend",
+            privacy: defaults.string(forKey: Keys.sharePrivacy) ?? "detailed",
             accent: defaults.string(forKey: Keys.shareAccent) ?? "blue",
             portrait: defaults.object(forKey: Keys.sharePortrait) as? Bool ?? true,
             darkAppearance: defaults.object(forKey: Keys.shareDarkAppearance) as? Bool ?? false,
             showFooter: defaults.object(forKey: Keys.shareShowFooter) as? Bool ?? true,
             includeGraph: defaults.object(forKey: Keys.shareIncludeGraph) as? Bool ?? true,
-            includeCurrent: defaults.object(forKey: Keys.shareIncludeCurrent) as? Bool ?? false,
-            includeChange: defaults.object(forKey: Keys.shareIncludeChange) as? Bool ?? false,
-            includeGoal: defaults.object(forKey: Keys.shareIncludeGoal) as? Bool ?? false
+            includeCurrent: defaults.object(forKey: Keys.shareIncludeCurrent) as? Bool ?? true,
+            includeChange: defaults.object(forKey: Keys.shareIncludeChange) as? Bool ?? true,
+            includeGoal: defaults.object(forKey: Keys.shareIncludeGoal) as? Bool ?? true
         )
     }
     

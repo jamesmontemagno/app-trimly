@@ -142,38 +142,38 @@ final class DeviceSettingsStoreTests: XCTestCase {
 
     func testShareCardDefaultsAndPersistence() {
         let (defaults, store) = makeStore()
-        XCTAssertEqual(store.shareCard.privacy, "trend")
+        XCTAssertEqual(store.shareCard.privacy, "detailed")
         XCTAssertEqual(store.shareCard.accent, "blue")
         XCTAssertTrue(store.shareCard.portrait)
         XCTAssertFalse(store.shareCard.darkAppearance)
         XCTAssertTrue(store.shareCard.showFooter)
         XCTAssertTrue(store.shareCard.includeGraph)
-        XCTAssertFalse(store.shareCard.includeCurrent)
-        XCTAssertFalse(store.shareCard.includeChange)
-        XCTAssertFalse(store.shareCard.includeGoal)
+        XCTAssertTrue(store.shareCard.includeCurrent)
+        XCTAssertTrue(store.shareCard.includeChange)
+        XCTAssertTrue(store.shareCard.includeGoal)
 
         store.updateShareCard { settings in
-            settings.privacy = "detailed"
+            settings.privacy = "trend"
             settings.accent = "purple"
             settings.portrait = false
             settings.darkAppearance = true
             settings.showFooter = false
             settings.includeGraph = false
-            settings.includeCurrent = true
-            settings.includeChange = true
-            settings.includeGoal = true
+            settings.includeCurrent = false
+            settings.includeChange = false
+            settings.includeGoal = false
         }
 
         let reloaded = DeviceSettingsStore(userDefaults: defaults)
-        XCTAssertEqual(reloaded.shareCard.privacy, "detailed")
+        XCTAssertEqual(reloaded.shareCard.privacy, "trend")
         XCTAssertEqual(reloaded.shareCard.accent, "purple")
         XCTAssertFalse(reloaded.shareCard.portrait)
         XCTAssertTrue(reloaded.shareCard.darkAppearance)
         XCTAssertFalse(reloaded.shareCard.showFooter)
         XCTAssertFalse(reloaded.shareCard.includeGraph)
-        XCTAssertTrue(reloaded.shareCard.includeCurrent)
-        XCTAssertTrue(reloaded.shareCard.includeChange)
-        XCTAssertTrue(reloaded.shareCard.includeGoal)
+        XCTAssertFalse(reloaded.shareCard.includeCurrent)
+        XCTAssertFalse(reloaded.shareCard.includeChange)
+        XCTAssertFalse(reloaded.shareCard.includeGoal)
     }
     
     private func makeStore() -> (UserDefaults, DeviceSettingsStore) {

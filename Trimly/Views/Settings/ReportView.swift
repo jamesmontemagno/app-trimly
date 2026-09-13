@@ -286,18 +286,23 @@ private enum ShareAccent: String, CaseIterable, Identifiable {
 struct ShareCheckInView: View {
     @EnvironmentObject private var dataManager: DataManager
     @Environment(\.dismiss) private var dismiss
-    @State private var privacy = SharePrivacy.trend
+    @State private var privacy = SharePrivacy.detailed
     @State private var accent = ShareAccent.blue
     @State private var portrait = true
     @State private var darkAppearance = false
     @State private var showFooter = true
     @State private var includeGraph = true
-    @State private var includeCurrent = false
-    @State private var includeChange = false
-    @State private var includeGoal = false
+    @State private var includeCurrent = true
+    @State private var includeChange = true
+    @State private var includeGoal = true
     @State private var snapshot: WeightReport.ShareCheckInSnapshot?
     @State private var shareURL: URL?
     @State private var errorMessage: String?
+    #if canImport(UIKit)
+    @State private var showingShareSheet = false
+    #elseif canImport(AppKit)
+    @State private var sharingPicker: NSSharingServicePicker?
+    #endif
 
     var body: some View {
         NavigationStack {
@@ -356,22 +361,24 @@ struct ShareCheckInView: View {
                     Toggle(String(localized: L10n.Portability.sharePortrait), isOn: $portrait)
                     Toggle(String(localized: L10n.Portability.shareDark), isOn: $darkAppearance)
                     Toggle(String(localized: L10n.Portability.shareFooter), isOn: $showFooter)
-                    Button(String(localized: L10n.Portability.sharePrepare), action: prepareImage)
-                        .disabled(snapshot == nil)
-                }
-                if let shareURL {
-                    Section {
-                        ShareLink(item: shareURL) {
-                            Label(String(localized: L10n.Portability.shareImage), systemImage: "square.and.arrow.up")
-                        }
+                    Button(action: shareImage) {
+                        Label(String(localized: L10n.Portability.shareImage), systemImage: "square.and.arrow.up")
+                            .frame(maxWidth: .infinity)
                     }
+                    .buttonStyle(.borderedProminent)
+                    .frame(minHeight: 44)
+                    .accessibilityLabel(Text(L10n.Portability.shareImage))
+                    .disabled(snapshot == nil)
                 }
             }
             .formStyle(.grouped)
             .navigationTitle(Text(L10n.Portability.shareCheckIn))
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(String(localized: L10n.Common.doneButton)) { dismiss() }
+                    Button(String(localized: L10n.Common.doneButton)) {
+                        saveShareSettings()
+                        dismiss()
+                    }
                 }
             }
         }
@@ -386,23 +393,34 @@ struct ShareCheckInView: View {
         .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in
             refreshSnapshot()
         }
-        .onChange(of: privacy) { _, newValue in
-            if newValue != .detailed {
-                includeCurrent = false
-                includeChange = false
-                includeGoal = false
-            }
-            shareURL = nil
+        .onChange(of: privacy) { _, _ in
+            removeTemporaryImage()
         }
-        .onChange(of: accent) { _, _ in shareURL = nil }
-        .onChange(of: portrait) { _, _ in shareURL = nil }
-        .onChange(of: darkAppearance) { _, _ in shareURL = nil }
-        .onChange(of: showFooter) { _, _ in shareURL = nil }
-        .onChange(of: includeGraph) { _, _ in shareURL = nil }
-        .onChange(of: includeCurrent) { _, _ in shareURL = nil }
-        .onChange(of: includeChange) { _, _ in shareURL = nil }
-        .onChange(of: includeGoal) { _, _ in shareURL = nil }
-        .onDisappear(perform: removeTemporaryImage)
+        .onChange(of: accent) { _, _ in removeTemporaryImage() }
+        .onChange(of: portrait) { _, _ in removeTemporaryImage() }
+        .onChange(of: darkAppearance) { _, _ in removeTemporaryImage() }
+        .onChange(of: showFooter) { _, _ in removeTemporaryImage() }
+        .onChange(of: includeGraph) { _, _ in removeTemporaryImage() }
+        .onChange(of: includeCurrent) { _, _ in removeTemporaryImage() }
+        .onChange(of: includeChange) { _, _ in removeTemporaryImage() }
+        .onChange(of: includeGoal) { _, _ in removeTemporaryImage() }
+        .onDisappear {
+            saveShareSettings()
+            #if canImport(UIKit)
+            if !showingShareSheet {
+                removeTemporaryImage()
+            }
+            #else
+            removeTemporaryImage()
+            #endif
+        }
+        #if canImport(UIKit)
+        .sheet(isPresented: $showingShareSheet, onDismiss: removeTemporaryImage) {
+            if let shareURL {
+                ShareActivityView(items: [shareURL])
+            }
+        }
+        #endif
         .alert(String(localized: L10n.Common.errorTitle), isPresented: Binding(
             get: { errorMessage != nil },
             set: { if !$0 { errorMessage = nil } }
@@ -422,14 +440,30 @@ struct ShareCheckInView: View {
             decimalPrecision: dataManager.settings?.decimalPrecision ?? 1
         )
         snapshot = refreshed
-        if refreshed.goalWeightKg == nil {
-            includeGoal = false
-        }
-        shareURL = nil
+        removeTemporaryImage()
     }
 
-    private func prepareImage() {
-        guard let snapshot else { return }
+    private func shareImage() {
+        saveShareSettings()
+        guard let url = renderImage() else { return }
+        #if canImport(UIKit)
+        shareURL = url
+        showingShareSheet = true
+        #elseif canImport(AppKit)
+        guard let sourceView = (NSApp.keyWindow ?? NSApp.mainWindow)?.contentView else {
+            removeTemporaryImage()
+            errorMessage = String(localized: L10n.Portability.shareFailed)
+            return
+        }
+        let picker = NSSharingServicePicker(items: [url])
+        sharingPicker = picker
+        let sourceRect = NSRect(x: sourceView.bounds.midX, y: sourceView.bounds.midY, width: 1, height: 1)
+        picker.show(relativeTo: sourceRect, of: sourceView, preferredEdge: .minY)
+        #endif
+    }
+
+    private func renderImage() -> URL? {
+        guard let snapshot else { return nil }
         let content = ShareCardCanvas(
             snapshot: snapshot,
             privacy: privacy,
@@ -443,37 +477,39 @@ struct ShareCheckInView: View {
             includeGoal: includeGoal
         )
         let renderer = ImageRenderer(content: content)
+        renderer.scale = 2
         #if canImport(UIKit)
         guard let image = renderer.uiImage, let data = image.pngData() else {
             errorMessage = String(localized: L10n.Portability.shareFailed)
-            return
+            return nil
         }
         #elseif canImport(AppKit)
         guard let image = renderer.nsImage, let tiff = image.tiffRepresentation,
               let representation = NSBitmapImageRep(data: tiff),
               let data = representation.representation(using: .png, properties: [:]) else {
             errorMessage = String(localized: L10n.Portability.shareFailed)
-            return
+            return nil
         }
         #else
         errorMessage = String(localized: L10n.Portability.shareFailed)
-        return
+        return nil
         #endif
         removeTemporaryImage()
         let url = FileManager.default.temporaryDirectory
             .appendingPathComponent("image-\(UUID().uuidString).png")
         do {
             try data.write(to: url, options: .atomic)
-            saveShareSettings()
             shareURL = url
+            return url
         } catch {
             errorMessage = String(localized: L10n.Portability.shareFailed)
+            return nil
         }
     }
 
     private func loadShareSettings() {
         let settings = dataManager.deviceSettings.shareCard
-        privacy = SharePrivacy(rawValue: settings.privacy) ?? .trend
+        privacy = SharePrivacy(rawValue: settings.privacy) ?? .detailed
         accent = ShareAccent(rawValue: settings.accent) ?? .blue
         portrait = settings.portrait
         darkAppearance = settings.darkAppearance
@@ -516,14 +552,15 @@ private struct ShareCardPreview: View {
     let includeCurrent: Bool
     let includeChange: Bool
     let includeGoal: Bool
+    @State private var canvasHeight: CGFloat = 800
 
-    private var exportSize: CGSize {
-        portrait ? CGSize(width: 700, height: 900) : CGSize(width: 800, height: 800)
+    private var exportWidth: CGFloat {
+        portrait ? 700 : 800
     }
 
     var body: some View {
         GeometryReader { geometry in
-            let scale = geometry.size.width / exportSize.width
+            let scale = geometry.size.width / exportWidth
             ShareCardCanvas(
                 snapshot: snapshot,
                 privacy: privacy,
@@ -536,10 +573,27 @@ private struct ShareCardPreview: View {
                 includeChange: includeChange,
                 includeGoal: includeGoal
             )
+            .background {
+                GeometryReader { canvas in
+                    Color.clear.preference(key: ShareCardHeightKey.self, value: canvas.size.height)
+                }
+            }
             .scaleEffect(scale, anchor: .topLeading)
         }
-        .aspectRatio(exportSize.width / exportSize.height, contentMode: .fit)
+        .aspectRatio(exportWidth / canvasHeight, contentMode: .fit)
+        .onPreferenceChange(ShareCardHeightKey.self) { height in
+            guard height.isFinite, height > 0 else { return }
+            canvasHeight = height
+        }
         .accessibilityElement(children: .contain)
+    }
+}
+
+private struct ShareCardHeightKey: PreferenceKey {
+    static let defaultValue: CGFloat = 800
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
 
@@ -567,7 +621,8 @@ private struct ShareCardCanvas: View {
             includeGoal: includeGoal
         )
         .padding(28)
-        .frame(width: portrait ? 700 : 800, height: portrait ? 900 : 800, alignment: .top)
+        .frame(width: portrait ? 700 : 800, alignment: .topLeading)
+        .fixedSize(horizontal: false, vertical: true)
         .background(darkAppearance ? Color.black : Color.white)
         .environment(\.colorScheme, darkAppearance ? .dark : .light)
         .environment(\.dynamicTypeSize, .large)
@@ -624,6 +679,7 @@ private struct ShareCardContent: View {
                     .foregroundStyle(.secondary)
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityElement(children: .contain)
     }
 
@@ -774,3 +830,15 @@ private struct ShareCardContent: View {
         .accessibilityElement(children: .combine)
     }
 }
+
+#if canImport(UIKit)
+private struct ShareActivityView: UIViewControllerRepresentable {
+    let items: [Any]
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: items, applicationActivities: nil)
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
+}
+#endif

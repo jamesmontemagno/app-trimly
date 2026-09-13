@@ -3115,19 +3115,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Tap a point to see the exact weight."
+            "value" : "Tap or drag across the chart to see any day."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Toca un punto para ver el peso exacto."
+            "value" : "Toca o desliza por el gráfico para ver cualquier día."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Appuyez sur un point pour voir le poids exact."
+            "value" : "Appuyez ou faites glisser sur le graphique pour voir un jour."
           }
         }
       }

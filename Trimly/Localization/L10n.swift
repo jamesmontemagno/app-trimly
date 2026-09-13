@@ -170,7 +170,7 @@ enum L10n {
 		static let emaInfoDescription = LocalizedStringResource("charts.info.ema.description", defaultValue: "An exponential moving average reacts faster by giving more weight to your latest readings while still smoothing swings.")
 		static let legendInfoHint = LocalizedStringResource("charts.legend.info.hint", defaultValue: "Opens a short description of this overlay")
 		static let selectionTitle = LocalizedStringResource("charts.selection.title", defaultValue: "Selected Entry")
-		static let selectionHint = LocalizedStringResource("charts.selection.hint", defaultValue: "Tap a point to see the exact weight.")
+		static let selectionHint = LocalizedStringResource("charts.selection.hint", defaultValue: "Tap or drag across the chart to see any day.")
 		static let tapToShowDotsHint = LocalizedStringResource("charts.tap.showDots.hint", defaultValue: "Tap the chart to show data points.")
 		static let settingsButton = LocalizedStringResource("charts.button.settings", defaultValue: "Chart Settings")
 		static let consistencyScoreAlertTitle = LocalizedStringResource("charts.consistency.alertTitle", defaultValue: "Consistency Score")

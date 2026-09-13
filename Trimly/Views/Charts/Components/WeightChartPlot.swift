@@ -121,18 +121,30 @@ struct WeightChartPlot: View {
     @ChartContentBuilder
     private var selectionMarks: some ChartContent {
         if let point = selectedPoint {
-            RuleMark(x: .value(dateLabel, point.date))
-                .foregroundStyle(.secondary)
-                .lineStyle(StrokeStyle(lineWidth: 1, dash: [3]))
-                .annotation(position: .top, spacing: 0,
-                            overflowResolution: .init(x: .fitToChart, y: .disabled)) {
-                    ChartTooltip(point: point, unit: unit, precision: precision, note: nil)
-                        .accessibilityHidden(true)
-                }
-            PointMark(x: .value(dateLabel, point.date), y: .value(weightLabel, convert(point.weight)))
-                .foregroundStyle(by: .value(seriesLabel, weightLabel))
-                .symbolSize(120)
+            selectionRule(for: point)
+            selectionPoint(for: point)
         }
+    }
+
+    private func selectionRule(for point: ChartDataPoint) -> some ChartContent {
+        RuleMark(x: .value(dateLabel, point.date))
+            .foregroundStyle(Color.secondary)
+            .lineStyle(StrokeStyle(lineWidth: 1, dash: [3]))
+            .annotation(
+                position: AnnotationPosition.top,
+                alignment: Alignment.center,
+                spacing: 4,
+                overflowResolution: AnnotationOverflowResolution(x: .fitToChart, y: .disabled)
+            ) {
+                ChartTooltip(point: point, unit: unit, precision: precision, note: nil)
+                    .accessibilityHidden(true)
+            }
+    }
+
+    private func selectionPoint(for point: ChartDataPoint) -> some ChartContent {
+        PointMark(x: .value(dateLabel, point.date), y: .value(weightLabel, convert(point.weight)))
+            .foregroundStyle(by: .value(seriesLabel, weightLabel))
+            .symbolSize(120)
     }
 
     private var unit: WeightUnit { dataManager.settings?.preferredUnit ?? .kilograms }

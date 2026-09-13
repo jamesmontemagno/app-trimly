@@ -249,14 +249,14 @@ private struct WeightReportContent: View {
     }
 }
 
-private enum SharePrivacy: String, CaseIterable, Identifiable {
+enum SharePrivacy: String, CaseIterable, Identifiable {
     case checkInsOnly
     case trend
     case detailed
     var id: String { rawValue }
 }
 
-private enum ShareAccent: String, CaseIterable, Identifiable {
+enum ShareAccent: String, CaseIterable, Identifiable {
     case blue
     case teal
     case purple
@@ -299,7 +299,7 @@ struct ShareCheckInView: View {
     @State private var shareURL: URL?
     @State private var errorMessage: String?
     #if canImport(UIKit)
-    @State private var showingShareSheet = false
+    @State private var shareItem: ShareImageItem?
     #elseif canImport(AppKit)
     @State private var sharingPicker: NSSharingServicePicker?
     #endif
@@ -361,14 +361,24 @@ struct ShareCheckInView: View {
                     Toggle(String(localized: L10n.Portability.sharePortrait), isOn: $portrait)
                     Toggle(String(localized: L10n.Portability.shareDark), isOn: $darkAppearance)
                     Toggle(String(localized: L10n.Portability.shareFooter), isOn: $showFooter)
-                    Button(action: shareImage) {
-                        Label(String(localized: L10n.Portability.shareImage), systemImage: "square.and.arrow.up")
-                            .frame(maxWidth: .infinity)
+                    if shareURL == nil {
+                        Button(action: prepareImage) {
+                            Label(String(localized: L10n.Portability.prepareImage), systemImage: "photo")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .frame(minHeight: 44)
+                        .accessibilityLabel(Text(L10n.Portability.prepareImage))
+                        .disabled(snapshot == nil)
+                    } else {
+                        Button(action: shareImage) {
+                            Label(String(localized: L10n.Portability.shareImage), systemImage: "square.and.arrow.up")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .frame(minHeight: 44)
+                        .accessibilityLabel(Text(L10n.Portability.shareImage))
                     }
-                    .buttonStyle(.borderedProminent)
-                    .frame(minHeight: 44)
-                    .accessibilityLabel(Text(L10n.Portability.shareImage))
-                    .disabled(snapshot == nil)
                 }
             }
             .formStyle(.grouped)
@@ -407,7 +417,7 @@ struct ShareCheckInView: View {
         .onDisappear {
             saveShareSettings()
             #if canImport(UIKit)
-            if !showingShareSheet {
+            if shareItem == nil {
                 removeTemporaryImage()
             }
             #else
@@ -415,10 +425,8 @@ struct ShareCheckInView: View {
             #endif
         }
         #if canImport(UIKit)
-        .sheet(isPresented: $showingShareSheet, onDismiss: removeTemporaryImage) {
-            if let shareURL {
-                ShareActivityView(items: [shareURL])
-            }
+        .sheet(item: $shareItem, onDismiss: removeTemporaryImage) { item in
+            ShareActivityView(items: [item.url])
         }
         #endif
         .alert(String(localized: L10n.Common.errorTitle), isPresented: Binding(
@@ -443,12 +451,15 @@ struct ShareCheckInView: View {
         removeTemporaryImage()
     }
 
-    private func shareImage() {
+    private func prepareImage() {
         saveShareSettings()
-        guard let url = renderImage() else { return }
+        _ = renderImage()
+    }
+
+    private func shareImage() {
+        guard let url = shareURL else { return }
         #if canImport(UIKit)
-        shareURL = url
-        showingShareSheet = true
+        shareItem = ShareImageItem(url: url)
         #elseif canImport(AppKit)
         guard let sourceView = (NSApp.keyWindow ?? NSApp.mainWindow)?.contentView else {
             removeTemporaryImage()
@@ -535,6 +546,10 @@ struct ShareCheckInView: View {
     }
 
     private func removeTemporaryImage() {
+        #if canImport(UIKit)
+        // Keep the file available until the activity controller has finished with it.
+        guard shareItem == nil else { return }
+        #endif
         guard let shareURL else { return }
         try? FileManager.default.removeItem(at: shareURL)
         self.shareURL = nil
@@ -597,7 +612,7 @@ private struct ShareCardHeightKey: PreferenceKey {
     }
 }
 
-private struct ShareCardCanvas: View {
+struct ShareCardCanvas: View {
     let snapshot: WeightReport.ShareCheckInSnapshot
     let privacy: SharePrivacy
     let accent: ShareAccent
@@ -638,25 +653,29 @@ private struct ShareCardContent: View {
     let includeCurrent: Bool
     let includeChange: Bool
     let includeGoal: Bool
-    @ScaledMetric(relativeTo: .body) private var chartHeight = 190
+    @ScaledMetric(relativeTo: .body) private var chartHeight = 320
+    @ScaledMetric(relativeTo: .largeTitle) private var titleSize = 56
+    @ScaledMetric(relativeTo: .body) private var bodySize = 30
+    @ScaledMetric(relativeTo: .caption) private var captionSize = 24
+    @ScaledMetric(relativeTo: .title) private var valueSize = 36
 
     private var showsValues: Bool { privacy == .detailed }
     private var normalizedGraph: Bool { privacy == .trend }
     private var includesGoal: Bool { showsValues && includeGoal && snapshot.goalWeightKg != nil }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 18) {
+        VStack(alignment: .leading, spacing: 24) {
             Text(includesGoal ? L10n.Portability.shareGoal : L10n.Portability.shareCheckIn)
-                .font(.largeTitle.bold())
+                .font(.system(size: titleSize, weight: .bold, design: .rounded))
                 .accessibilityAddTraits(.isHeader)
             todayStatus
             Text(L10n.Portability.sevenDayCount(snapshot.checkedInDays))
-                .font(.headline)
+                .fontWeight(.semibold)
             checkInDays
             if privacy != .checkInsOnly, includeGraph {
                 if snapshot.graphPoints.isEmpty {
                     Text(L10n.Portability.shareTrendNoData)
-                        .font(.subheadline)
+                        .font(.system(size: bodySize))
                         .foregroundStyle(.secondary)
                 } else {
                     trendChart
@@ -675,10 +694,11 @@ private struct ShareCardContent: View {
             }
             if showFooter {
                 Text(L10n.Portability.shareBrand)
-                    .font(.caption.weight(.semibold))
+                    .font(.system(size: captionSize, weight: .semibold))
                     .foregroundStyle(.secondary)
             }
         }
+        .font(.system(size: bodySize))
         .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityElement(children: .contain)
     }
@@ -686,10 +706,17 @@ private struct ShareCardContent: View {
     private var todayStatus: some View {
         let checkedIn = snapshot.days.last?.hasCheckIn == true
         return Label {
-            HStack(spacing: 4) {
-                Text(L10n.Portability.shareToday)
-                    .fontWeight(.semibold)
-                Text(checkedIn ? L10n.Portability.shareCheckedIn : L10n.Portability.shareNoCheckIn)
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 8) {
+                    Text(L10n.Portability.shareToday)
+                        .fontWeight(.semibold)
+                    Text(checkedIn ? L10n.Portability.shareCheckedIn : L10n.Portability.shareNoCheckIn)
+                }
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(L10n.Portability.shareToday)
+                        .fontWeight(.semibold)
+                    Text(checkedIn ? L10n.Portability.shareCheckedIn : L10n.Portability.shareNoCheckIn)
+                }
             }
         } icon: {
             Image(systemName: checkedIn ? "checkmark.circle.fill" : "circle")
@@ -703,9 +730,11 @@ private struct ShareCardContent: View {
             ForEach(snapshot.days) { day in
                 VStack(spacing: 6) {
                     Image(systemName: day.hasCheckIn ? "checkmark.circle.fill" : "circle")
+                        .font(.system(size: valueSize))
                         .foregroundStyle(day.hasCheckIn ? accent.color : .secondary)
                     dayLabel(day)
-                        .font(.caption)
+                        .font(.system(size: captionSize, weight: .medium))
+                        .lineLimit(1)
                         .minimumScaleFactor(0.7)
                 }
                 .frame(maxWidth: .infinity)
@@ -729,19 +758,21 @@ private struct ShareCardContent: View {
                               snapshot.graphValue(point.weightKg, normalized: normalizedGraph)),
                     series: .value(String(localized: L10n.Portability.shareTrendAxis), point.segment)
                 )
+                .lineStyle(StrokeStyle(lineWidth: 4))
                 .foregroundStyle(accent.color)
                 PointMark(
                     x: .value(String(localized: L10n.Portability.shareDayAxis), point.date),
                     y: .value(String(localized: L10n.Portability.shareTrendAxis),
                               snapshot.graphValue(point.weightKg, normalized: normalizedGraph))
                 )
+                .symbolSize(120)
                 .foregroundStyle(accent.color)
             }
             if includesGoal, let goal = snapshot.goalWeightKg {
                 RuleMark(
                     y: .value(String(localized: L10n.Portability.goal), snapshot.displayValue(goal))
                 )
-                .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [5, 4]))
+                .lineStyle(StrokeStyle(lineWidth: 3, dash: [8, 6]))
                 .foregroundStyle(.orange)
             }
         }
@@ -755,8 +786,10 @@ private struct ShareCardContent: View {
                     if let date = value.as(Date.self) {
                         if date == snapshot.days.last?.date {
                             Text(L10n.Portability.shareToday)
+                                .font(.system(size: captionSize))
                         } else {
                             Text(date, format: .dateTime.weekday(.narrow))
+                                .font(.system(size: captionSize))
                         }
                     }
                 }
@@ -764,10 +797,20 @@ private struct ShareCardContent: View {
         }
         .chartYAxis {
             if privacy == .detailed, includeCurrent {
-                AxisMarks(position: .leading)
+                AxisMarks(position: .leading, values: .automatic(desiredCount: 4)) {
+                    AxisGridLine()
+                    AxisTick()
+                    AxisValueLabel()
+                        .font(.system(size: captionSize))
+                }
             }
         }
-        .chartYAxisLabel(privacy == .detailed && includeCurrent ? snapshot.unit.symbol : "")
+        .chartYAxisLabel {
+            if privacy == .detailed, includeCurrent {
+                Text(snapshot.unit.symbol)
+                    .font(.system(size: captionSize))
+            }
+        }
         .frame(height: chartHeight)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(
@@ -783,14 +826,16 @@ private struct ShareCardContent: View {
         if let progress = snapshot.goalProgress {
             ProgressView(value: progress) {
                 Text(L10n.Portability.shareGoal)
+                    .font(.system(size: bodySize))
             } currentValueLabel: {
                 Text(progress, format: .percent.precision(.fractionLength(0)))
+                    .font(.system(size: bodySize, weight: .semibold))
             }
             .tint(accent.color)
             .accessibilityValue(Text(progress, format: .percent.precision(.fractionLength(0))))
         } else {
             Text(L10n.Portability.shareGoalUnavailable)
-                .font(.subheadline)
+                .font(.system(size: bodySize))
                 .foregroundStyle(.secondary)
         }
         if let goal = snapshot.goalWeightKg {
@@ -822,16 +867,29 @@ private struct ShareCardContent: View {
     }
 
     private func valueRow(_ label: LocalizedStringResource, _ value: String) -> some View {
-        HStack {
-            Text(label)
-            Spacer()
-            Text(value).fontWeight(.semibold)
+        ViewThatFits(in: .horizontal) {
+            HStack {
+                Text(label)
+                Spacer()
+                Text(value)
+                    .font(.system(size: valueSize, weight: .semibold, design: .rounded))
+            }
+            VStack(alignment: .leading, spacing: 6) {
+                Text(label)
+                Text(value)
+                    .font(.system(size: valueSize, weight: .semibold, design: .rounded))
+            }
         }
         .accessibilityElement(children: .combine)
     }
 }
 
 #if canImport(UIKit)
+private struct ShareImageItem: Identifiable {
+    let url: URL
+    var id: URL { url }
+}
+
 private struct ShareActivityView: UIViewControllerRepresentable {
     let items: [Any]
 

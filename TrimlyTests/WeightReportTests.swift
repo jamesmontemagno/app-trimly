@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 import Testing
 @testable import TrimTally
 
@@ -181,5 +182,67 @@ struct WeightReportTests {
         let domain = snapshot.chartYDomain(normalized: false, includeGoal: true)
         #expect(domain?.contains(70) == true)
         #expect(domain?.contains(75) == true)
+    }
+
+    @Test(arguments: [true, false])
+    func shareCardRendersOnFirstAttemptInBothLayouts(portrait: Bool) throws {
+        let snapshot = WeightReport.ShareCheckInSnapshot(
+            entries: [entry(80, offset: 100), entry(79, offset: 86_500)],
+            goal: Goal(targetWeightKg: 70, startingWeightKg: 80),
+            unit: .kilograms,
+            aggregation: .latest,
+            decimalPrecision: 1,
+            now: day.addingTimeInterval(90_000)
+        )
+        for privacy in SharePrivacy.allCases {
+            for darkAppearance in [false, true] {
+                let canvas = ShareCardCanvas(
+                    snapshot: snapshot,
+                    privacy: privacy,
+                    accent: .blue,
+                    portrait: portrait,
+                    darkAppearance: darkAppearance,
+                    showFooter: true,
+                    includeGraph: true,
+                    includeCurrent: true,
+                    includeChange: true,
+                    includeGoal: true
+                )
+                let renderer = ImageRenderer(content: canvas)
+                renderer.scale = 2
+                let image = try #require(renderer.cgImage)
+                #expect(image.width == (portrait ? 1400 : 1600))
+                #expect(image.height > 0)
+                if privacy == .detailed {
+                    #expect(image.height > 1500)
+                }
+            }
+        }
+    }
+
+    @Test func shareCardRendersWithoutMeasurementsOrOptionalContent() throws {
+        let canvas = ShareCardCanvas(
+            snapshot: WeightReport.ShareCheckInSnapshot(
+                entries: [],
+                goal: nil,
+                unit: .pounds,
+                aggregation: .latest,
+                decimalPrecision: 1,
+                now: day
+            ),
+            privacy: .detailed,
+            accent: .teal,
+            portrait: true,
+            darkAppearance: false,
+            showFooter: false,
+            includeGraph: false,
+            includeCurrent: false,
+            includeChange: false,
+            includeGoal: false
+        )
+        let renderer = ImageRenderer(content: canvas)
+        let image = try #require(renderer.cgImage)
+        #expect(image.width == 700)
+        #expect(image.height > 0)
     }
 }

@@ -11,94 +11,128 @@ struct WeightChartPlot: View {
     @Binding var selectedDate: Date?
 
     var body: some View {
-        Chart {
-            ForEach(data) { point in
-                if data.count > 1 {
-                    LineMark(x: .value(dateLabel, point.date), y: .value(weightLabel, convert(point.weight)))
-                        .foregroundStyle(by: .value(seriesLabel, weightLabel))
-                        .interpolationMethod(.linear)
-                }
-                PointMark(x: .value(dateLabel, point.date), y: .value(weightLabel, convert(point.weight)))
-                    .foregroundStyle(by: .value(seriesLabel, weightLabel))
-                    .symbolSize(notesDays.contains(point.date) ? 65 : 25)
-                    .accessibilityLabel(Text(point.date, format: .dateTime.day().month().year()))
-                    .accessibilityValue(Text(InsightFormatting.weight(point.weight, unit: unit)))
-                if notesDays.contains(point.date) {
-                    PointMark(x: .value(dateLabel, point.date), y: .value(weightLabel, convert(point.weight)))
-                        .symbol(.square)
-                        .foregroundStyle(.primary)
-                        .annotation(position: .top) {
-                            Image(systemName: "note.text").font(.caption)
-                                .accessibilityLabel(Text(L10n.Insights.notes))
-                        }
-                }
-            }
-            ForEach(movingAverage) { point in
-                LineMark(x: .value(dateLabel, point.date), y: .value(maLabel, convert(point.weight)))
-                    .foregroundStyle(by: .value(seriesLabel, maLabel))
-                    .lineStyle(StrokeStyle(lineWidth: 2, dash: [5, 5]))
-            }
-            ForEach(ema) { point in
-                LineMark(x: .value(dateLabel, point.date), y: .value(emaLabel, convert(point.weight)))
-                    .foregroundStyle(by: .value(seriesLabel, emaLabel))
-                    .lineStyle(StrokeStyle(lineWidth: 2, dash: [2, 2]))
-            }
-            if let goal = dataManager.fetchActiveGoal(), convert(goal.targetWeightKg).isFinite, goal.targetWeightKg > 0 {
-                RuleMark(y: .value(goalLabel, convert(goal.targetWeightKg)))
-                    .foregroundStyle(.green)
-                    .lineStyle(StrokeStyle(lineWidth: 2, dash: [10, 5]))
-                    .annotation(position: .top, alignment: .trailing) {
-                        Text(L10n.Charts.goalLabel).font(.caption)
-                    }
-                if let first = data.first, let last = data.last,
-                   goal.startDate >= first.date, goal.startDate <= last.date {
-                    RuleMark(x: .value(String(localized: L10n.Insights.sinceGoal), goal.startDate))
-                        .foregroundStyle(.purple)
-                }
-            }
-            if let point = selectedPoint {
-                RuleMark(x: .value(dateLabel, point.date))
-                    .foregroundStyle(.secondary)
-                    .lineStyle(StrokeStyle(lineWidth: 1, dash: [3]))
-                    .annotation(position: .top, spacing: 0,
-                                overflowResolution: .init(x: .fitToChart, y: .disabled)) {
-                        ChartTooltip(point: point, unit: unit, precision: precision, note: nil)
-                            .accessibilityHidden(true)
-                    }
-                PointMark(x: .value(dateLabel, point.date), y: .value(weightLabel, convert(point.weight)))
-                    .foregroundStyle(by: .value(seriesLabel, weightLabel))
-                    .symbolSize(120)
-            }
-        }
-        .chartForegroundStyleScale([weightLabel: Color.blue, maLabel: Color.orange, emaLabel: Color.purple])
-        .chartLegend(.hidden)
-        .chartYScale(domain: .automatic(includesZero: false))
-        .chartXAxis {
+        Group {
             if showsAxes {
-                AxisMarks(preset: .aligned, values: .stride(by: axisStride.component, count: axisStride.count)) { value in
-                    AxisGridLine()
-                    AxisTick()
-                    if let date = value.as(Date.self) {
-                        AxisValueLabel {
-                            Text(date, format: axisFormat)
-                                .font(.caption2)
-                        }
-                    }
-                }
+                baseChart
+                    .chartXAxis { dateAxisMarks }
+                    .chartYAxis(.automatic)
+            } else {
+                baseChart
+                    .chartXAxis(.hidden)
+                    .chartYAxis(.hidden)
             }
-        }
-        .chartYAxis(showsAxes ? .automatic : .hidden)
-        .chartXSelection(value: persistentSelection)
-        .chartGesture { proxy in
-            DragGesture(minimumDistance: 8)
-                .onChanged { proxy.selectXValue(at: $0.location.x) }
-        }
-        .chartPlotStyle { plot in
-            plot.padding(.horizontal, 8)
         }
         .frame(height: 300)
         .animation(reduceMotion ? nil : .easeInOut, value: selectedDate)
         .accessibilityLabel(Text(L10n.Charts.navigationTitle))
+    }
+
+    private var baseChart: some View {
+        Chart {
+            entryMarks
+            averageMarks
+            goalMarks
+            selectionMarks
+        }
+        .chartForegroundStyleScale([weightLabel: Color.blue, maLabel: Color.orange, emaLabel: Color.purple])
+        .chartLegend(.hidden)
+        .chartYScale(domain: .automatic(includesZero: false))
+        .chartXSelection(value: persistentSelection)
+        .chartGesture { proxy in
+            DragGesture(minimumDistance: 8)
+                .onChanged { value in proxy.selectXValue(at: value.location.x) }
+        }
+        .chartPlotStyle { plot in
+            plot.padding(.horizontal, 8)
+        }
+    }
+
+    /// Date labels sized and spaced for the visible range so they stay readable.
+    @AxisContentBuilder
+    private var dateAxisMarks: some AxisContent {
+        AxisMarks(preset: .aligned, values: .stride(by: axisStride.component, count: axisStride.count)) { value in
+            AxisGridLine()
+            AxisTick()
+            if let date = value.as(Date.self) {
+                AxisValueLabel {
+                    Text(date, format: axisFormat)
+                        .font(.caption2)
+                }
+            }
+        }
+    }
+
+    @ChartContentBuilder
+    private var entryMarks: some ChartContent {
+        ForEach(data) { point in
+            if data.count > 1 {
+                LineMark(x: .value(dateLabel, point.date), y: .value(weightLabel, convert(point.weight)))
+                    .foregroundStyle(by: .value(seriesLabel, weightLabel))
+                    .interpolationMethod(.linear)
+            }
+            PointMark(x: .value(dateLabel, point.date), y: .value(weightLabel, convert(point.weight)))
+                .foregroundStyle(by: .value(seriesLabel, weightLabel))
+                .symbolSize(notesDays.contains(point.date) ? 65 : 25)
+                .accessibilityLabel(Text(point.date, format: .dateTime.day().month().year()))
+                .accessibilityValue(Text(InsightFormatting.weight(point.weight, unit: unit)))
+            if notesDays.contains(point.date) {
+                PointMark(x: .value(dateLabel, point.date), y: .value(weightLabel, convert(point.weight)))
+                    .symbol(.square)
+                    .foregroundStyle(.primary)
+                    .annotation(position: .top) {
+                        Image(systemName: "note.text").font(.caption)
+                            .accessibilityLabel(Text(L10n.Insights.notes))
+                    }
+            }
+        }
+    }
+
+    @ChartContentBuilder
+    private var averageMarks: some ChartContent {
+        ForEach(movingAverage) { point in
+            LineMark(x: .value(dateLabel, point.date), y: .value(maLabel, convert(point.weight)))
+                .foregroundStyle(by: .value(seriesLabel, maLabel))
+                .lineStyle(StrokeStyle(lineWidth: 2, dash: [5, 5]))
+        }
+        ForEach(ema) { point in
+            LineMark(x: .value(dateLabel, point.date), y: .value(emaLabel, convert(point.weight)))
+                .foregroundStyle(by: .value(seriesLabel, emaLabel))
+                .lineStyle(StrokeStyle(lineWidth: 2, dash: [2, 2]))
+        }
+    }
+
+    @ChartContentBuilder
+    private var goalMarks: some ChartContent {
+        if let goal = dataManager.fetchActiveGoal(), convert(goal.targetWeightKg).isFinite, goal.targetWeightKg > 0 {
+            RuleMark(y: .value(goalLabel, convert(goal.targetWeightKg)))
+                .foregroundStyle(.green)
+                .lineStyle(StrokeStyle(lineWidth: 2, dash: [10, 5]))
+                .annotation(position: .top, alignment: .trailing) {
+                    Text(L10n.Charts.goalLabel).font(.caption)
+                }
+            if let first = data.first, let last = data.last,
+               goal.startDate >= first.date, goal.startDate <= last.date {
+                RuleMark(x: .value(String(localized: L10n.Insights.sinceGoal), goal.startDate))
+                    .foregroundStyle(.purple)
+            }
+        }
+    }
+
+    @ChartContentBuilder
+    private var selectionMarks: some ChartContent {
+        if let point = selectedPoint {
+            RuleMark(x: .value(dateLabel, point.date))
+                .foregroundStyle(.secondary)
+                .lineStyle(StrokeStyle(lineWidth: 1, dash: [3]))
+                .annotation(position: .top, spacing: 0,
+                            overflowResolution: .init(x: .fitToChart, y: .disabled)) {
+                    ChartTooltip(point: point, unit: unit, precision: precision, note: nil)
+                        .accessibilityHidden(true)
+                }
+            PointMark(x: .value(dateLabel, point.date), y: .value(weightLabel, convert(point.weight)))
+                .foregroundStyle(by: .value(seriesLabel, weightLabel))
+                .symbolSize(120)
+        }
     }
 
     private var unit: WeightUnit { dataManager.settings?.preferredUnit ?? .kilograms }

@@ -249,279 +249,528 @@ private struct WeightReportContent: View {
     }
 }
 
-                    private enum ShareCardFormat: String, CaseIterable, Identifiable {
-                        case checkIns
-                        case goal
-                        var id: String { rawValue }
+private enum SharePrivacy: String, CaseIterable, Identifiable {
+    case checkInsOnly
+    case trend
+    case detailed
+    var id: String { rawValue }
+}
+
+private enum ShareAccent: String, CaseIterable, Identifiable {
+    case blue
+    case teal
+    case purple
+    case orange
+
+    var id: String { rawValue }
+
+    var color: Color {
+        switch self {
+        case .blue: .blue
+        case .teal: .teal
+        case .purple: .purple
+        case .orange: .orange
+        }
+    }
+
+    var label: LocalizedStringResource {
+        switch self {
+        case .blue: L10n.Portability.shareAccentBlue
+        case .teal: L10n.Portability.shareAccentTeal
+        case .purple: L10n.Portability.shareAccentPurple
+        case .orange: L10n.Portability.shareAccentOrange
+        }
+    }
+}
+
+struct ShareCheckInView: View {
+    @EnvironmentObject private var dataManager: DataManager
+    @Environment(\.dismiss) private var dismiss
+    @State private var privacy = SharePrivacy.trend
+    @State private var accent = ShareAccent.blue
+    @State private var portrait = true
+    @State private var darkAppearance = false
+    @State private var showFooter = true
+    @State private var includeGraph = true
+    @State private var includeCurrent = false
+    @State private var includeChange = false
+    @State private var includeGoal = false
+    @State private var snapshot: WeightReport.ShareCheckInSnapshot?
+    @State private var shareURL: URL?
+    @State private var errorMessage: String?
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    if let snapshot {
+                        ShareCardPreview(
+                            snapshot: snapshot,
+                            privacy: privacy,
+                            accent: accent,
+                            portrait: portrait,
+                            darkAppearance: darkAppearance,
+                            showFooter: showFooter,
+                            includeGraph: includeGraph,
+                            includeCurrent: includeCurrent,
+                            includeChange: includeChange,
+                            includeGoal: includeGoal
+                        )
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
                     }
-
-                    private enum SharePrivacy: String, CaseIterable, Identifiable {
-                        case checkInsOnly
-                        case trend
-                        case detailed
-                        var id: String { rawValue }
+                } header: {
+                    Text(L10n.Portability.shareCheckInSubtitle)
+                }
+                Section(String(localized: L10n.Portability.sharePrivacy)) {
+                    Picker(String(localized: L10n.Portability.sharePrivacy), selection: $privacy) {
+                        Text(L10n.Portability.shareCheckInsOnly).tag(SharePrivacy.checkInsOnly)
+                        Text(L10n.Portability.shareTrend).tag(SharePrivacy.trend)
+                        Text(L10n.Portability.shareDetailed).tag(SharePrivacy.detailed)
                     }
-
-                    struct ShareCheckInView: View {
-                        @EnvironmentObject private var dataManager: DataManager
-                        @Environment(\.dismiss) private var dismiss
-                        @State private var format = ShareCardFormat.checkIns
-                        @State private var privacy = SharePrivacy.checkInsOnly
-                        @State private var portrait = true
-                        @State private var darkAppearance = false
-                        @State private var showFooter = true
-                        @State private var includeGraph = true
-                        @State private var includeCurrent = false
-                        @State private var includeChange = false
-                        @State private var includeGoalDetails = false
-                        @State private var snapshot: WeightReport.ShareCheckInSnapshot?
-                        @State private var shareURL: URL?
-                        @State private var errorMessage: String?
-
-                        var body: some View {
-                            NavigationStack {
-                                Form {
-                                    Section {
-                                        if let snapshot {
-                                            ShareCardContent(snapshot: snapshot, format: format, privacy: privacy,
-                                                             showFooter: showFooter, includeGraph: includeGraph,
-                                                             includeCurrent: includeCurrent, includeChange: includeChange,
-                                                             includeGoalDetails: includeGoalDetails)
-                                            .padding(16)
-                                            .background(darkAppearance ? Color.black : Color.white)
-                                            .clipShape(RoundedRectangle(cornerRadius: 20))
-                                            .environment(\.colorScheme, darkAppearance ? .dark : .light)
-                                        } else {
-                                            Text(L10n.Portability.shareNoData)
-                                                .foregroundStyle(.secondary)
-                                        }
-                                    } header: {
-                                        Text(L10n.Portability.shareCheckInSubtitle)
-                                    }
-                                    Section(String(localized: L10n.Portability.shareFormat)) {
-                                        Picker(String(localized: L10n.Portability.shareFormat), selection: $format) {
-                                            Text(L10n.Portability.shareCheckIns).tag(ShareCardFormat.checkIns)
-                                            Text(L10n.Portability.shareGoal).tag(ShareCardFormat.goal)
-                                        }
-                                        .pickerStyle(.segmented)
-                                        .accessibilityLabel(Text(L10n.Portability.shareFormat))
-                                    }
-                                    Section(String(localized: L10n.Portability.sharePrivacy)) {
-                                        Picker(String(localized: L10n.Portability.sharePrivacy), selection: $privacy) {
-                                            Text(L10n.Portability.shareCheckInsOnly).tag(SharePrivacy.checkInsOnly)
-                                            Text(L10n.Portability.shareTrend).tag(SharePrivacy.trend)
-                                            Text(L10n.Portability.shareDetailed).tag(SharePrivacy.detailed)
-                                        }
-                                        .pickerStyle(.menu)
-                                        Toggle(String(localized: L10n.Portability.shareWeightGraph), isOn: $includeGraph)
-                                        if privacy == .detailed {
-                                            Toggle(String(localized: L10n.Portability.shareCurrentWeight), isOn: $includeCurrent)
-                                            Toggle(String(localized: L10n.Portability.shareChange), isOn: $includeChange)
-                                            Toggle(String(localized: L10n.Portability.shareGoalValue), isOn: $includeGoalDetails)
-                                        }
-                                        Text(L10n.Portability.sharePrivacyHint)
-                                            .font(.caption)
-                                            .foregroundStyle(.secondary)
-                                    }
-                                    Section {
-                                        Toggle(String(localized: L10n.Portability.sharePortrait), isOn: $portrait)
-                                        Toggle(String(localized: L10n.Portability.shareDark), isOn: $darkAppearance)
-                                        Toggle(String(localized: L10n.Portability.shareFooter), isOn: $showFooter)
-                                        Button(String(localized: L10n.Portability.sharePrepare), action: prepareImage)
-                                            .disabled(snapshot == nil)
-                                    }
-                                    if let shareURL {
-                                        Section {
-                                            ShareLink(item: shareURL) {
-                                                Label(String(localized: L10n.Portability.shareImage), systemImage: "square.and.arrow.up")
-                                            }
-                                        }
-                                    }
-                                }
-                                .formStyle(.grouped)
-                                .navigationTitle(Text(L10n.Portability.shareCheckIn))
-                                .toolbar {
-                                    ToolbarItem(placement: .confirmationAction) {
-                                        Button(String(localized: L10n.Common.doneButton)) { dismiss() }
-                                    }
-                                }
-                            }
-                            #if os(macOS)
-                            .frame(minWidth: 520, minHeight: 720)
-                            #endif
-                            .onAppear(perform: refreshSnapshot)
-                            .onChange(of: dataManager.dataRevision) { _, _ in refreshSnapshot() }
-                            .onChange(of: format) { _, _ in shareURL = nil }
-                            .onChange(of: privacy) { _, newValue in
-                                if newValue != .detailed {
-                                    includeCurrent = false
-                                    includeChange = false
-                                    includeGoalDetails = false
-                                }
-                                shareURL = nil
-                            }
-                            .onChange(of: portrait) { _, _ in shareURL = nil }
-                            .onChange(of: darkAppearance) { _, _ in shareURL = nil }
-                            .onChange(of: showFooter) { _, _ in shareURL = nil }
-                            .onChange(of: includeGraph) { _, _ in shareURL = nil }
-                            .onChange(of: includeCurrent) { _, _ in shareURL = nil }
-                            .onChange(of: includeChange) { _, _ in shareURL = nil }
-                            .onChange(of: includeGoalDetails) { _, _ in shareURL = nil }
-                            .onDisappear(perform: removeTemporaryImage)
-                            .alert(String(localized: L10n.Common.errorTitle), isPresented: Binding(
-                                get: { errorMessage != nil },
-                                set: { if !$0 { errorMessage = nil } }
-                            )) {
-                                Button(String(localized: L10n.Common.okButton), role: .cancel) {}
-                            } message: {
-                                Text(errorMessage ?? String(localized: L10n.Portability.shareFailed))
-                            }
+                    .pickerStyle(.menu)
+                    if privacy != .checkInsOnly {
+                        Toggle(String(localized: L10n.Portability.shareWeightGraph), isOn: $includeGraph)
+                    }
+                    if privacy == .detailed {
+                        Toggle(String(localized: L10n.Portability.shareCurrentWeight), isOn: $includeCurrent)
+                        Toggle(String(localized: L10n.Portability.shareChange), isOn: $includeChange)
+                        if snapshot?.goalWeightKg != nil {
+                            Toggle(String(localized: L10n.Portability.shareGoalValue), isOn: $includeGoal)
                         }
-
-                        private func refreshSnapshot() {
-                            let entries = dataManager.fetchAllEntries()
-                            snapshot = WeightReport.ShareCheckInSnapshot(
-                                entries: entries,
-                                goal: dataManager.fetchActiveGoal(),
-                                unit: dataManager.settings?.preferredUnit ?? .kilograms,
-                                aggregation: dataManager.settings?.dailyAggregationMode ?? .latest,
-                                decimalPrecision: dataManager.settings?.decimalPrecision ?? 1
-                            )
-                            shareURL = nil
-                        }
-
-                        private func prepareImage() {
-                            guard let snapshot else { return }
-                            let content = ShareCardContent(snapshot: snapshot, format: format, privacy: privacy,
-                                                          showFooter: showFooter, includeGraph: includeGraph,
-                                                          includeCurrent: includeCurrent, includeChange: includeChange,
-                                                          includeGoalDetails: includeGoalDetails)
-                                .padding(28)
-                                .frame(width: portrait ? 700 : 800, height: portrait ? 900 : 800, alignment: .top)
-                                .background(darkAppearance ? Color.black : Color.white)
-                                .environment(\.colorScheme, darkAppearance ? .dark : .light)
-                                .environment(\.dynamicTypeSize, .large)
-                            let renderer = ImageRenderer(content: content)
-                            #if canImport(UIKit)
-                            guard let image = renderer.uiImage, let data = image.pngData() else {
-                                errorMessage = String(localized: L10n.Portability.shareFailed)
-                                return
-                            }
-                            #elseif canImport(AppKit)
-                            guard let image = renderer.nsImage, let tiff = image.tiffRepresentation,
-                                  let representation = NSBitmapImageRep(data: tiff),
-                                  let data = representation.representation(using: .png, properties: [:]) else {
-                                errorMessage = String(localized: L10n.Portability.shareFailed)
-                                return
-                            }
-                            #else
-                            errorMessage = String(localized: L10n.Portability.shareFailed)
-                            return
-                            #endif
-                            removeTemporaryImage()
-                            let url = FileManager.default.temporaryDirectory
-                                .appendingPathComponent("trimtally-share-\(UUID().uuidString).png")
-                            do {
-                                try data.write(to: url, options: .atomic)
-                                shareURL = url
-                            } catch {
-                                errorMessage = String(localized: L10n.Portability.shareFailed)
-                            }
-
-                        }
-
-                    private func removeTemporaryImage() {
-                        guard let shareURL else { return }
-                        try? FileManager.default.removeItem(at: shareURL)
-                        self.shareURL = nil
+                    }
+                    Text(L10n.Portability.sharePrivacyHint)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    if privacy == .trend {
+                        Text(L10n.Portability.shareTrendDisclosure)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                     }
                 }
-
-                private struct ShareCardContent: View {
-                        let snapshot: WeightReport.ShareCheckInSnapshot
-                        let format: ShareCardFormat
-                        let privacy: SharePrivacy
-                        let showFooter: Bool
-                        let includeGraph: Bool
-                        let includeCurrent: Bool
-                        let includeChange: Bool
-                        let includeGoalDetails: Bool
-                        @ScaledMetric(relativeTo: .body) private var chartHeight = 190
-
-                        private var showsValues: Bool { privacy == .detailed }
-                        private var graphPoints: [WeightReport.ShareCheckInSnapshot.Day] {
-                            snapshot.days.filter { $0.weightKg != nil }
-                        }
-
-                        var body: some View {
-                            VStack(alignment: .leading, spacing: 18) {
-                                Text(format == .goal ? L10n.Portability.shareGoal : L10n.Portability.shareCheckIn)
-                                    .font(.largeTitle.bold())
-                                    .accessibilityAddTraits(.isHeader)
-                                Text(L10n.Portability.sevenDayCount(snapshot.checkedInDays))
-                                    .font(.headline)
-                                HStack(spacing: 8) {
-                                    ForEach(snapshot.days) { day in
-                                        VStack(spacing: 6) {
-                                            Image(systemName: day.hasCheckIn ? "checkmark.circle.fill" : "circle")
-                                                .foregroundStyle(day.hasCheckIn ? .green : .secondary)
-                                            Text(day.date, format: .dateTime.weekday(.narrow))
-                                                .font(.caption)
-                                        }
-                                        .frame(maxWidth: .infinity)
-                                        .accessibilityElement(children: .combine)
-                                        .accessibilityLabel(day.date.formatted(date: .abbreviated, time: .omitted))
-                                        .accessibilityValue(Text(day.hasCheckIn ? L10n.Portability.shareCheckedIn : L10n.Portability.shareNoCheckIn))
-                                    }
-                                }
-                                if includeGraph && !graphPoints.isEmpty && privacy != .checkInsOnly {
-                                    Chart(graphPoints) { day in
-                                        if let weight = day.weightKg {
-                                            LineMark(x: .value(String(localized: L10n.Portability.shareDayAxis), day.date), y: .value(String(localized: L10n.Portability.shareTrendAxis), weight))
-                                                .foregroundStyle(.blue)
-                                            PointMark(x: .value(String(localized: L10n.Portability.shareDayAxis), day.date), y: .value(String(localized: L10n.Portability.shareTrendAxis), weight))
-                                                .foregroundStyle(.blue)
-                                        }
-                                        if format == .goal, privacy == .detailed, includeGoalDetails,
-                                           let goal = snapshot.goalWeightKg {
-                                            RuleMark(y: .value(String(localized: L10n.Portability.goal), goal))
-                                                .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [5, 4]))
-                                                .foregroundStyle(.orange)
-                                        }
-                                    }
-                                    .chartYScale(domain: .automatic(includesZero: false))
-                                    .chartYAxis(privacy == .detailed ? .automatic : .hidden)
-                                    .frame(height: chartHeight)
-                                    .accessibilityLabel(Text(L10n.Portability.reportChart))
-                                } else if includeGraph {
-                                    Text(L10n.Portability.shareNoData).font(.subheadline).foregroundStyle(.secondary)
-                                }
-                                if showsValues {
-                                    if includeCurrent, let current = snapshot.currentWeightKg {
-                                        valueRow(L10n.Portability.latestWeight, snapshot.formattedWeight(current))
-                                    }
-                                    if includeChange, let change = snapshot.changeKg {
-                                        valueRow(L10n.Portability.change, snapshot.formattedWeight(change, signed: true))
-                                    }
-                                    if format == .goal, includeGoalDetails, let goal = snapshot.goalWeightKg {
-                                        valueRow(L10n.Portability.goal, snapshot.formattedWeight(goal))
-                                    }
-                                }
-                                if showFooter {
-                                    Text(L10n.Portability.shareBrand)
-                                        .font(.caption.weight(.semibold))
-                                        .foregroundStyle(.secondary)
-                                }
-                            }
-                            .accessibilityElement(children: .contain)
-                        }
-
-                        private func valueRow(_ label: LocalizedStringResource, _ value: String) -> some View {
-                            HStack {
-                                Text(label)
-                                Spacer()
-                                Text(value).fontWeight(.semibold)
-                            }
-                            .accessibilityElement(children: .combine)
+                Section {
+                    Picker(String(localized: L10n.Portability.shareAccent), selection: $accent) {
+                        ForEach(ShareAccent.allCases) { option in
+                            Text(option.label).tag(option)
                         }
                     }
+                    Toggle(String(localized: L10n.Portability.sharePortrait), isOn: $portrait)
+                    Toggle(String(localized: L10n.Portability.shareDark), isOn: $darkAppearance)
+                    Toggle(String(localized: L10n.Portability.shareFooter), isOn: $showFooter)
+                    Button(String(localized: L10n.Portability.sharePrepare), action: prepareImage)
+                        .disabled(snapshot == nil)
+                }
+                if let shareURL {
+                    Section {
+                        ShareLink(item: shareURL) {
+                            Label(String(localized: L10n.Portability.shareImage), systemImage: "square.and.arrow.up")
+                        }
+                    }
+                }
+            }
+            .formStyle(.grouped)
+            .navigationTitle(Text(L10n.Portability.shareCheckIn))
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(String(localized: L10n.Common.doneButton)) { dismiss() }
+                }
+            }
+        }
+        #if os(macOS)
+        .frame(minWidth: 520, minHeight: 720)
+        #endif
+        .onAppear {
+            loadShareSettings()
+            refreshSnapshot()
+        }
+        .onChange(of: dataManager.dataRevision) { _, _ in refreshSnapshot() }
+        .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in
+            refreshSnapshot()
+        }
+        .onChange(of: privacy) { _, newValue in
+            if newValue != .detailed {
+                includeCurrent = false
+                includeChange = false
+                includeGoal = false
+            }
+            shareURL = nil
+        }
+        .onChange(of: accent) { _, _ in shareURL = nil }
+        .onChange(of: portrait) { _, _ in shareURL = nil }
+        .onChange(of: darkAppearance) { _, _ in shareURL = nil }
+        .onChange(of: showFooter) { _, _ in shareURL = nil }
+        .onChange(of: includeGraph) { _, _ in shareURL = nil }
+        .onChange(of: includeCurrent) { _, _ in shareURL = nil }
+        .onChange(of: includeChange) { _, _ in shareURL = nil }
+        .onChange(of: includeGoal) { _, _ in shareURL = nil }
+        .onDisappear(perform: removeTemporaryImage)
+        .alert(String(localized: L10n.Common.errorTitle), isPresented: Binding(
+            get: { errorMessage != nil },
+            set: { if !$0 { errorMessage = nil } }
+        )) {
+            Button(String(localized: L10n.Common.okButton), role: .cancel) {}
+        } message: {
+            Text(errorMessage ?? String(localized: L10n.Portability.shareFailed))
+        }
+    }
+
+    private func refreshSnapshot() {
+        let refreshed = WeightReport.ShareCheckInSnapshot(
+            entries: dataManager.fetchAllEntries(),
+            goal: dataManager.fetchActiveGoal(),
+            unit: dataManager.settings?.preferredUnit ?? .kilograms,
+            aggregation: dataManager.settings?.dailyAggregationMode ?? .latest,
+            decimalPrecision: dataManager.settings?.decimalPrecision ?? 1
+        )
+        snapshot = refreshed
+        if refreshed.goalWeightKg == nil {
+            includeGoal = false
+        }
+        shareURL = nil
+    }
+
+    private func prepareImage() {
+        guard let snapshot else { return }
+        let content = ShareCardCanvas(
+            snapshot: snapshot,
+            privacy: privacy,
+            accent: accent,
+            portrait: portrait,
+            darkAppearance: darkAppearance,
+            showFooter: showFooter,
+            includeGraph: includeGraph,
+            includeCurrent: includeCurrent,
+            includeChange: includeChange,
+            includeGoal: includeGoal
+        )
+        let renderer = ImageRenderer(content: content)
+        #if canImport(UIKit)
+        guard let image = renderer.uiImage, let data = image.pngData() else {
+            errorMessage = String(localized: L10n.Portability.shareFailed)
+            return
+        }
+        #elseif canImport(AppKit)
+        guard let image = renderer.nsImage, let tiff = image.tiffRepresentation,
+              let representation = NSBitmapImageRep(data: tiff),
+              let data = representation.representation(using: .png, properties: [:]) else {
+            errorMessage = String(localized: L10n.Portability.shareFailed)
+            return
+        }
+        #else
+        errorMessage = String(localized: L10n.Portability.shareFailed)
+        return
+        #endif
+        removeTemporaryImage()
+        let url = FileManager.default.temporaryDirectory
+            .appendingPathComponent("image-\(UUID().uuidString).png")
+        do {
+            try data.write(to: url, options: .atomic)
+            saveShareSettings()
+            shareURL = url
+        } catch {
+            errorMessage = String(localized: L10n.Portability.shareFailed)
+        }
+    }
+
+    private func loadShareSettings() {
+        let settings = dataManager.deviceSettings.shareCard
+        privacy = SharePrivacy(rawValue: settings.privacy) ?? .trend
+        accent = ShareAccent(rawValue: settings.accent) ?? .blue
+        portrait = settings.portrait
+        darkAppearance = settings.darkAppearance
+        showFooter = settings.showFooter
+        includeGraph = settings.includeGraph
+        includeCurrent = settings.includeCurrent
+        includeChange = settings.includeChange
+        includeGoal = settings.includeGoal
+    }
+
+    private func saveShareSettings() {
+        dataManager.deviceSettings.updateShareCard { settings in
+            settings.privacy = privacy.rawValue
+            settings.accent = accent.rawValue
+            settings.portrait = portrait
+            settings.darkAppearance = darkAppearance
+            settings.showFooter = showFooter
+            settings.includeGraph = includeGraph
+            settings.includeCurrent = includeCurrent
+            settings.includeChange = includeChange
+            settings.includeGoal = includeGoal
+        }
+    }
+
+    private func removeTemporaryImage() {
+        guard let shareURL else { return }
+        try? FileManager.default.removeItem(at: shareURL)
+        self.shareURL = nil
+    }
+}
+
+private struct ShareCardPreview: View {
+    let snapshot: WeightReport.ShareCheckInSnapshot
+    let privacy: SharePrivacy
+    let accent: ShareAccent
+    let portrait: Bool
+    let darkAppearance: Bool
+    let showFooter: Bool
+    let includeGraph: Bool
+    let includeCurrent: Bool
+    let includeChange: Bool
+    let includeGoal: Bool
+
+    private var exportSize: CGSize {
+        portrait ? CGSize(width: 700, height: 900) : CGSize(width: 800, height: 800)
+    }
+
+    var body: some View {
+        GeometryReader { geometry in
+            let scale = geometry.size.width / exportSize.width
+            ShareCardCanvas(
+                snapshot: snapshot,
+                privacy: privacy,
+                accent: accent,
+                portrait: portrait,
+                darkAppearance: darkAppearance,
+                showFooter: showFooter,
+                includeGraph: includeGraph,
+                includeCurrent: includeCurrent,
+                includeChange: includeChange,
+                includeGoal: includeGoal
+            )
+            .scaleEffect(scale, anchor: .topLeading)
+        }
+        .aspectRatio(exportSize.width / exportSize.height, contentMode: .fit)
+        .accessibilityElement(children: .contain)
+    }
+}
+
+private struct ShareCardCanvas: View {
+    let snapshot: WeightReport.ShareCheckInSnapshot
+    let privacy: SharePrivacy
+    let accent: ShareAccent
+    let portrait: Bool
+    let darkAppearance: Bool
+    let showFooter: Bool
+    let includeGraph: Bool
+    let includeCurrent: Bool
+    let includeChange: Bool
+    let includeGoal: Bool
+
+    var body: some View {
+        ShareCardContent(
+            snapshot: snapshot,
+            privacy: privacy,
+            accent: accent,
+            showFooter: showFooter,
+            includeGraph: includeGraph,
+            includeCurrent: includeCurrent,
+            includeChange: includeChange,
+            includeGoal: includeGoal
+        )
+        .padding(28)
+        .frame(width: portrait ? 700 : 800, height: portrait ? 900 : 800, alignment: .top)
+        .background(darkAppearance ? Color.black : Color.white)
+        .environment(\.colorScheme, darkAppearance ? .dark : .light)
+        .environment(\.dynamicTypeSize, .large)
+    }
+}
+
+private struct ShareCardContent: View {
+    let snapshot: WeightReport.ShareCheckInSnapshot
+    let privacy: SharePrivacy
+    let accent: ShareAccent
+    let showFooter: Bool
+    let includeGraph: Bool
+    let includeCurrent: Bool
+    let includeChange: Bool
+    let includeGoal: Bool
+    @ScaledMetric(relativeTo: .body) private var chartHeight = 190
+
+    private var showsValues: Bool { privacy == .detailed }
+    private var normalizedGraph: Bool { privacy == .trend }
+    private var includesGoal: Bool { showsValues && includeGoal && snapshot.goalWeightKg != nil }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 18) {
+            Text(includesGoal ? L10n.Portability.shareGoal : L10n.Portability.shareCheckIn)
+                .font(.largeTitle.bold())
+                .accessibilityAddTraits(.isHeader)
+            todayStatus
+            Text(L10n.Portability.sevenDayCount(snapshot.checkedInDays))
+                .font(.headline)
+            checkInDays
+            if privacy != .checkInsOnly, includeGraph {
+                if snapshot.graphPoints.isEmpty {
+                    Text(L10n.Portability.shareTrendNoData)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                } else {
+                    trendChart
+                }
+            }
+            if showsValues {
+                if includeCurrent, let current = snapshot.currentWeightKg {
+                    valueRow(L10n.Portability.latestWeight, snapshot.formattedWeight(current))
+                }
+                if includeChange, let change = snapshot.changeKg {
+                    valueRow(L10n.Portability.change, snapshot.formattedWeight(change, signed: true))
+                }
+                if includesGoal {
+                    goalProgress
+                }
+            }
+            if showFooter {
+                Text(L10n.Portability.shareBrand)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .accessibilityElement(children: .contain)
+    }
+
+    private var todayStatus: some View {
+        let checkedIn = snapshot.days.last?.hasCheckIn == true
+        return Label {
+            HStack(spacing: 4) {
+                Text(L10n.Portability.shareToday)
+                    .fontWeight(.semibold)
+                Text(checkedIn ? L10n.Portability.shareCheckedIn : L10n.Portability.shareNoCheckIn)
+            }
+        } icon: {
+            Image(systemName: checkedIn ? "checkmark.circle.fill" : "circle")
+                .foregroundStyle(checkedIn ? accent.color : .secondary)
+        }
+        .accessibilityElement(children: .combine)
+    }
+
+    private var checkInDays: some View {
+        HStack(spacing: 8) {
+            ForEach(snapshot.days) { day in
+                VStack(spacing: 6) {
+                    Image(systemName: day.hasCheckIn ? "checkmark.circle.fill" : "circle")
+                        .foregroundStyle(day.hasCheckIn ? accent.color : .secondary)
+                    dayLabel(day)
+                        .font(.caption)
+                        .minimumScaleFactor(0.7)
+                }
+                .frame(maxWidth: .infinity)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel(relativeDayAccessibilityLabel(day))
+                .accessibilityValue(Text(day.hasCheckIn ? L10n.Portability.shareCheckedIn : L10n.Portability.shareNoCheckIn))
+            }
+        }
+    }
+
+    private var trendChart: some View {
+        let yDomain = snapshot.chartYDomain(normalized: normalizedGraph, includeGoal: includesGoal) ?? 0...1
+        let firstDate = snapshot.days.first?.date ?? Date()
+        let lastDate = snapshot.days.last?.date ?? Date()
+        let xDomain = firstDate.addingTimeInterval(-12 * 60 * 60)...lastDate.addingTimeInterval(12 * 60 * 60)
+        return Chart {
+            ForEach(snapshot.graphPoints) { point in
+                LineMark(
+                    x: .value(String(localized: L10n.Portability.shareDayAxis), point.date),
+                    y: .value(String(localized: L10n.Portability.shareTrendAxis),
+                              snapshot.graphValue(point.weightKg, normalized: normalizedGraph)),
+                    series: .value(String(localized: L10n.Portability.shareTrendAxis), point.segment)
+                )
+                .foregroundStyle(accent.color)
+                PointMark(
+                    x: .value(String(localized: L10n.Portability.shareDayAxis), point.date),
+                    y: .value(String(localized: L10n.Portability.shareTrendAxis),
+                              snapshot.graphValue(point.weightKg, normalized: normalizedGraph))
+                )
+                .foregroundStyle(accent.color)
+            }
+            if includesGoal, let goal = snapshot.goalWeightKg {
+                RuleMark(
+                    y: .value(String(localized: L10n.Portability.goal), snapshot.displayValue(goal))
+                )
+                .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [5, 4]))
+                .foregroundStyle(.orange)
+            }
+        }
+        .chartXScale(domain: xDomain)
+        .chartYScale(domain: yDomain)
+        .chartXAxis {
+            AxisMarks(values: snapshot.days.map(\.date)) { value in
+                AxisGridLine().foregroundStyle(.secondary.opacity(0.15))
+                AxisTick()
+                AxisValueLabel {
+                    if let date = value.as(Date.self) {
+                        if date == snapshot.days.last?.date {
+                            Text(L10n.Portability.shareToday)
+                        } else {
+                            Text(date, format: .dateTime.weekday(.narrow))
+                        }
+                    }
+                }
+            }
+        }
+        .chartYAxis {
+            if privacy == .detailed, includeCurrent {
+                AxisMarks(position: .leading)
+            }
+        }
+        .chartYAxisLabel(privacy == .detailed && includeCurrent ? snapshot.unit.symbol : "")
+        .frame(height: chartHeight)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(
+            privacy == .detailed && includeCurrent
+                ? L10n.Portability.reportChart
+                : L10n.Portability.shareTrendAccessibility
+        ))
+        .accessibilityValue(chartAccessibilityValue)
+    }
+
+    @ViewBuilder
+    private var goalProgress: some View {
+        if let progress = snapshot.goalProgress {
+            ProgressView(value: progress) {
+                Text(L10n.Portability.shareGoal)
+            } currentValueLabel: {
+                Text(progress, format: .percent.precision(.fractionLength(0)))
+            }
+            .tint(accent.color)
+            .accessibilityValue(Text(progress, format: .percent.precision(.fractionLength(0))))
+        } else {
+            Text(L10n.Portability.shareGoalUnavailable)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
+        if let goal = snapshot.goalWeightKg {
+            valueRow(L10n.Portability.goal, snapshot.formattedWeight(goal))
+        }
+    }
+
+    @ViewBuilder
+    private func dayLabel(_ day: WeightReport.ShareCheckInSnapshot.Day) -> some View {
+        if day.date == snapshot.days.last?.date {
+            Text(L10n.Portability.shareToday)
+        } else {
+            Text(day.date, format: .dateTime.weekday(.narrow))
+        }
+    }
+
+    private func relativeDayAccessibilityLabel(_ day: WeightReport.ShareCheckInSnapshot.Day) -> String {
+        if day.date == snapshot.days.last?.date {
+            return String(localized: L10n.Portability.shareToday)
+        }
+        return day.date.formatted(.dateTime.weekday(.wide))
+    }
+
+    private var chartAccessibilityValue: String {
+        guard privacy == .detailed, includeCurrent, let currentWeightKg = snapshot.currentWeightKg else {
+            return ""
+        }
+        return snapshot.formattedWeight(currentWeightKg)
+    }
+
+    private func valueRow(_ label: LocalizedStringResource, _ value: String) -> some View {
+        HStack {
+            Text(label)
+            Spacer()
+            Text(value).fontWeight(.semibold)
+        }
+        .accessibilityElement(children: .combine)
+    }
+}

@@ -6,6 +6,7 @@ struct TimelineView: View {
     @State private var showingAddEntry = false
     @State private var showingFilters = false
     @State private var selectedEntry: WeightEntry?
+    @State private var editingEntry: WeightEntry?
     @State private var selectedDay: IdentifiableDate?
     @State private var searchText = ""
     @State private var sourceFilter = EntrySourceFilter.all
@@ -32,6 +33,17 @@ struct TimelineView: View {
                             }
                             .buttonStyle(.plain)
                             .accessibilityHint(Text(L10n.EntryFeatures.details))
+                            .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                                if entry.source == .manual {
+                                    Button {
+                                        editingEntry = entry
+                                    } label: {
+                                        Label(L10n.EntryFeatures.edit, systemImage: "pencil")
+                                    }
+                                    .tint(.accentColor)
+                                    .accessibilityLabel(Text(L10n.EntryFeatures.edit))
+                                }
+                            }
                         }
                         .onDelete { deleteEntries(at: $0, in: group.entries) }
                     } header: {
@@ -57,6 +69,7 @@ struct TimelineView: View {
             }
             .sheet(isPresented: $showingAddEntry) { AddWeightEntryView() }
             .sheet(item: $selectedEntry) { EntryDetailView(entry: $0) }
+            .sheet(item: $editingEntry) { AddWeightEntryView(entry: $0) }
             .sheet(item: $selectedDay) { EntryDayDetailView(date: $0.date) }
             .sheet(isPresented: $showingFilters, onDismiss: {
                 if let pendingDay {

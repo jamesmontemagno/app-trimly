@@ -1,6 +1,24 @@
 import SwiftUI
 import Charts
 
+private enum ChartRangeTab: CaseIterable, Hashable {
+    case week
+    case month
+    case quarter
+    case year
+    case more
+
+    var label: LocalizedStringResource {
+        switch self {
+        case .week: L10n.Insights.rangeWeekShort
+        case .month: L10n.Insights.rangeMonthShort
+        case .quarter: L10n.Insights.rangeQuarterShort
+        case .year: L10n.Insights.rangeYearShort
+        case .more: L10n.Insights.moreRanges
+        }
+    }
+}
+
 struct ChartsView: View {
     @EnvironmentObject private var dataManager: DataManager
     @EnvironmentObject private var deviceSettings: DeviceSettingsStore
@@ -9,7 +27,6 @@ struct ChartsView: View {
     @State private var customEnd = Date()
     @State private var showingSettings = false
     @State private var showingAddEntry = false
-    @State private var showingComparison = false
     @State private var selectedDate: Date?
     @State private var showingMAInfo = false
     @State private var showingEMAInfo = false
@@ -33,15 +50,16 @@ struct ChartsView: View {
                                                    systemImage: "chart.xyaxis.line",
                                                    description: Text(L10n.Charts.noDataDescription))
                         } else {
+                            Text(L10n.Insights.weightTrend)
+                                .font(.headline)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .accessibilityAddTraits(.isHeader)
                             chartSection(data: data, period: period)
                         }
                     } else {
                         Text(selectedRange == .sinceGoal ? L10n.Insights.noGoalRange : L10n.Insights.invalidRange)
                             .foregroundStyle(.secondary)
                     }
-                    Button(String(localized: L10n.Insights.comparePeriods)) { showingComparison = true }
-                        .frame(minHeight: 44)
-                        .accessibilityLabel(Text(L10n.Insights.comparePeriods))
                     RecapCard()
                     GoalPaceCard()
                     }
@@ -63,7 +81,6 @@ struct ChartsView: View {
             }
             .sheet(isPresented: $showingAddEntry) { AddWeightEntryView() }
             .sheet(isPresented: $showingSettings) { ChartSettingsView() }
-            .sheet(isPresented: $showingComparison) { PeriodComparisonView() }
         }
         .onChange(of: selectedRange) { _, _ in selectedDate = nil }
         .onChange(of: customStart) { _, _ in selectedDate = nil }
@@ -73,14 +90,24 @@ struct ChartsView: View {
 
     private var rangeControls: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Picker(String(localized: L10n.Charts.rangePicker), selection: $selectedRange) {
-                ForEach(ChartRange.allCases, id: \.self) { range in
-                    Text(range.displayName).tag(range)
+            Picker(String(localized: L10n.Charts.rangePicker), selection: rangeTab) {
+                ForEach(ChartRangeTab.allCases, id: \.self) { tab in
+                    Text(tab.label).tag(tab)
                 }
             }
-            .pickerStyle(.menu)
+            .pickerStyle(.segmented)
             .frame(minHeight: 44)
             .accessibilityLabel(Text(L10n.Charts.rangePicker))
+            if rangeTab.wrappedValue == .more {
+                Picker(String(localized: L10n.Insights.moreRanges), selection: $selectedRange) {
+                    Text(L10n.Insights.allTime).tag(ChartRange.allTime)
+                    Text(L10n.Insights.sinceGoal).tag(ChartRange.sinceGoal)
+                    Text(L10n.Insights.customRange).tag(ChartRange.custom)
+                }
+                .pickerStyle(.menu)
+                .frame(minHeight: 44)
+                .accessibilityLabel(Text(L10n.Insights.moreRanges))
+            }
             if selectedRange == .custom {
                 DatePicker(String(localized: L10n.Insights.startDate), selection: $customStart, in: ...Date(), displayedComponents: .date)
                     .accessibilityLabel(Text(L10n.Insights.startDate))
@@ -88,6 +115,32 @@ struct ChartsView: View {
                     .accessibilityLabel(Text(L10n.Insights.endDate))
             }
         }
+    }
+
+    private var rangeTab: Binding<ChartRangeTab> {
+        Binding(
+            get: {
+                switch selectedRange {
+                case .week: .week
+                case .month: .month
+                case .quarter: .quarter
+                case .year: .year
+                case .allTime, .sinceGoal, .custom: .more
+                }
+            },
+            set: { tab in
+                switch tab {
+                case .week: selectedRange = .week
+                case .month: selectedRange = .month
+                case .quarter: selectedRange = .quarter
+                case .year: selectedRange = .year
+                case .more:
+                    if ![.allTime, .sinceGoal, .custom].contains(selectedRange) {
+                        selectedRange = .allTime
+                    }
+                }
+            }
+        )
     }
 
     private func chartSection(data: [ChartDataPoint], period: WeightInsights.Period) -> some View {

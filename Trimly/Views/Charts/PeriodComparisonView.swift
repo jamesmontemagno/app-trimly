@@ -35,7 +35,10 @@ struct PeriodComparisonView: View {
                         .font(.caption).foregroundStyle(.secondary)
                 }
             }
-            .navigationTitle(Text(L10n.Insights.comparePeriods))
+            .navigationTitle(Text(L10n.Insights.comparePeriodsTitle))
+            #if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(String(localized: L10n.Common.doneButton)) { dismiss() }

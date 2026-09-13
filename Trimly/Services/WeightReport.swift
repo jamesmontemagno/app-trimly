@@ -16,15 +16,44 @@ struct WeightReport {
             var id: Date { date }
         }
 
+        struct GraphPoint: Identifiable {
+            let date: Date
+            let weightKg: Double
+            let segment: Int
+            var id: Date { date }
+        }
+
         let days: [Day]
         let goalWeightKg: Double?
+        let goalStartingWeightKg: Double?
         let currentWeightKg: Double?
         let changeKg: Double?
         let unit: WeightUnit
         let decimalPrecision: Int
 
         var checkedInDays: Int { days.filter(\.hasCheckIn).count }
-        var hasWeightData: Bool { days.contains { $0.weightKg != nil } }
+        var graphPoints: [GraphPoint] {
+            var segment = 0
+            var previousIndex: Int?
+            return days.enumerated().compactMap { index, day in
+                guard let weightKg = day.weightKg else { return nil }
+                if let previousIndex, index != previousIndex + 1 {
+                    segment += 1
+                }
+                previousIndex = index
+                return GraphPoint(date: day.date, weightKg: weightKg, segment: segment)
+            }
+        }
+        var goalProgress: Double? {
+            guard let currentWeightKg, let goalWeightKg, let goalStartingWeightKg else { return nil }
+            let totalChange = goalWeightKg - goalStartingWeightKg
+            if abs(totalChange) < 0.000_001 {
+                return abs(currentWeightKg - goalWeightKg) <= 0.05 ? 1 : nil
+            }
+            let progress = (currentWeightKg - goalStartingWeightKg) / totalChange
+            guard progress.isFinite else { return nil }
+            return min(1, max(0, progress))
+        }
 
         init(
             entries: [WeightEntry],
@@ -39,6 +68,8 @@ struct WeightReport {
             let dates = (0..<7).compactMap { calendar.date(byAdding: .day, value: -6 + $0, to: today) }
             let visible = entries.filter {
                 !$0.isHidden && $0.weightKg.isFinite && $0.weightKg > 0
+                    && $0.timestamp.timeIntervalSinceReferenceDate.isFinite
+                    && $0.timestamp <= now
                     && calendar.startOfDay(for: $0.timestamp) <= today
             }
             let grouped = Dictionary(grouping: visible) { calendar.startOfDay(for: $0.timestamp) }
@@ -58,6 +89,7 @@ struct WeightReport {
                 })
             }
             goalWeightKg = goal.map(\.targetWeightKg).flatMap { $0.isFinite && $0 > 0 ? $0 : nil }
+            goalStartingWeightKg = goal?.startingWeightKg.flatMap { $0.isFinite && $0 > 0 ? $0 : nil }
             currentWeightKg = days.reversed().compactMap(\.weightKg).first
             let weighted = days.compactMap(\.weightKg)
             changeKg = weighted.count >= 2 ? weighted.last! - weighted.first! : nil
@@ -65,8 +97,31 @@ struct WeightReport {
             self.decimalPrecision = min(2, max(1, decimalPrecision))
         }
 
+        func displayValue(_ kg: Double) -> Double {
+            unit.convert(fromKg: kg)
+        }
+
+        func graphValue(_ kg: Double, normalized: Bool) -> Double {
+            guard normalized, let baseline = graphPoints.first?.weightKg else {
+                return displayValue(kg)
+            }
+            return displayValue(kg - baseline)
+        }
+
+        func chartYDomain(normalized: Bool, includeGoal: Bool) -> ClosedRange<Double>? {
+            var values = graphPoints.map { graphValue($0.weightKg, normalized: normalized) }
+            if includeGoal, !normalized, let goalWeightKg {
+                values.append(displayValue(goalWeightKg))
+            }
+            guard let minimum = values.min(), let maximum = values.max() else { return nil }
+            let span = maximum - minimum
+            let minimumPadding = abs(displayValue(0.5))
+            let padding = max(span * 0.15, minimumPadding)
+            return (minimum - padding)...(maximum + padding)
+        }
+
         func formattedWeight(_ kg: Double, signed: Bool = false) -> String {
-            let value = unit.convert(fromKg: kg)
+            let value = displayValue(kg)
             let text = signed
                 ? value.formatted(.number.precision(.fractionLength(decimalPrecision)).sign(strategy: .always()))
                 : value.formatted(.number.precision(.fractionLength(decimalPrecision)))

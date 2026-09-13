@@ -84,22 +84,34 @@ struct AddWeightEntryView: View {
 							description: String(localized: L10n.AddEntry.dateDescription),
 							style: .popup
 						) {
-							DatePicker(String(localized: L10n.AddEntry.dateTitle), selection: $selectedDate, in: ...Date())
-						#if os(iOS)
-							.datePickerStyle(.compact)
-						#endif
-							.accessibilityLabel(String(localized: L10n.Accessibility.dateAndTime))
-							HStack {
-								Button(L10n.EntryFeatures.now) { selectedDate = Date() }
-									.accessibilityLabel(Text(L10n.EntryFeatures.now))
-								Button(L10n.EntryFeatures.yesterday) {
-									if let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date()) {
-										selectedDate = yesterday
+							VStack(alignment: .leading, spacing: 12) {
+								DatePicker(
+									String(localized: L10n.AddEntry.dateTitle),
+									selection: $selectedDate,
+									in: ...Date()
+								)
+								.labelsHidden()
+							#if os(iOS)
+								.datePickerStyle(.compact)
+							#endif
+								.frame(maxWidth: .infinity, alignment: .leading)
+								.accessibilityLabel(String(localized: L10n.Accessibility.dateAndTime))
+
+								HStack(spacing: 12) {
+									Button(L10n.EntryFeatures.now) { selectedDate = Date() }
+										.frame(maxWidth: .infinity, minHeight: 44)
+										.accessibilityLabel(Text(L10n.EntryFeatures.now))
+									Button(L10n.EntryFeatures.yesterday) {
+										if let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date()) {
+											selectedDate = yesterday
+										}
 									}
+									.frame(maxWidth: .infinity, minHeight: 44)
+									.accessibilityLabel(Text(L10n.EntryFeatures.yesterday))
 								}
-								.accessibilityLabel(Text(L10n.EntryFeatures.yesterday))
+								.buttonStyle(.bordered)
 							}
-							.buttonStyle(.bordered)
+							.accessibilityElement(children: .contain)
 					}
 
 						WeighCardSection(

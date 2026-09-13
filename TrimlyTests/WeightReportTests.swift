@@ -78,6 +78,7 @@ struct WeightReportTests {
         let entries = [
             WeightEntry(timestamp: calendar.date(byAdding: .day, value: -6, to: today)!, weightKg: 80, displayUnitAtEntry: .kilograms),
             WeightEntry(timestamp: calendar.date(byAdding: .day, value: -2, to: today)!, weightKg: 79, displayUnitAtEntry: .kilograms),
+            WeightEntry(timestamp: today.addingTimeInterval(13 * 60 * 60), weightKg: 75, displayUnitAtEntry: .kilograms),
             WeightEntry(timestamp: calendar.date(byAdding: .day, value: 1, to: today)!, weightKg: 70, displayUnitAtEntry: .kilograms),
             WeightEntry(timestamp: today, weightKg: 90, displayUnitAtEntry: .kilograms, isHidden: true)
         ]
@@ -104,9 +105,81 @@ struct WeightReportTests {
             unit: .kilograms,
             aggregation: .latest,
             decimalPrecision: 1,
-            now: day
+            now: day.addingTimeInterval(3_600)
         )
         #expect(snapshot.checkedInDays == 1)
         #expect(snapshot.changeKg == nil)
+    }
+
+    @Test func shareSnapshotBreaksTrendAcrossMissingDays() throws {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+        let now = calendar.date(from: DateComponents(year: 2025, month: 3, day: 10, hour: 12))!
+        let today = calendar.startOfDay(for: now)
+        let snapshot = WeightReport.ShareCheckInSnapshot(
+            entries: [
+                WeightEntry(
+                    timestamp: try #require(calendar.date(byAdding: .day, value: -6, to: today)),
+                    weightKg: 80,
+                    displayUnitAtEntry: .kilograms
+                ),
+                WeightEntry(
+                    timestamp: try #require(calendar.date(byAdding: .day, value: -5, to: today)),
+                    weightKg: 79.5,
+                    displayUnitAtEntry: .kilograms
+                ),
+                WeightEntry(
+                    timestamp: try #require(calendar.date(byAdding: .day, value: -2, to: today)),
+                    weightKg: 79,
+                    displayUnitAtEntry: .kilograms
+                )
+            ],
+            goal: nil,
+            unit: .kilograms,
+            aggregation: .latest,
+            decimalPrecision: 1,
+            calendar: calendar,
+            now: now
+        )
+
+        #expect(snapshot.graphPoints.map(\.segment) == [0, 0, 1])
+    }
+
+    @Test func shareSnapshotUsesDisplayUnitsAndStableConstantDomain() {
+        let snapshot = WeightReport.ShareCheckInSnapshot(
+            entries: [entry(80, offset: 100)],
+            goal: nil,
+            unit: .pounds,
+            aggregation: .latest,
+            decimalPrecision: 1,
+            now: day.addingTimeInterval(3_600)
+        )
+
+        let displayed = snapshot.graphValue(80, normalized: false)
+        let normalized = snapshot.graphValue(79, normalized: true)
+        let domain = snapshot.chartYDomain(normalized: false, includeGoal: false)
+
+        #expect(abs(displayed - 176.369_8) < 0.001)
+        #expect(abs(normalized + 2.204_62) < 0.001)
+        #expect(domain != nil)
+        #expect(domain?.lowerBound ?? displayed < displayed)
+        #expect(domain?.upperBound ?? displayed > displayed)
+    }
+
+    @Test func shareSnapshotCalculatesGoalProgressFromVisibleWindow() {
+        let goal = Goal(targetWeightKg: 70, startingWeightKg: 80)
+        let snapshot = WeightReport.ShareCheckInSnapshot(
+            entries: [entry(75, offset: 100)],
+            goal: goal,
+            unit: .kilograms,
+            aggregation: .latest,
+            decimalPrecision: 1,
+            now: day.addingTimeInterval(3_600)
+        )
+
+        #expect(snapshot.goalProgress == 0.5)
+        let domain = snapshot.chartYDomain(normalized: false, includeGoal: true)
+        #expect(domain?.contains(70) == true)
+        #expect(domain?.contains(75) == true)
     }
 }

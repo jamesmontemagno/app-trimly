@@ -69,13 +69,29 @@ struct WeightChartPlot: View {
         .chartYScale(domain: .automatic(includesZero: false))
         .chartXAxis(dataManager.settings?.chartMode == .analytical ? .automatic : .hidden)
         .chartYAxis(dataManager.settings?.chartMode == .analytical ? .automatic : .hidden)
-        .chartXSelection(value: $selectedDate)
+        .chartXSelection(value: persistentSelection)
         .frame(height: 300)
         .animation(reduceMotion ? nil : .easeInOut, value: selectedDate)
         .accessibilityLabel(Text(L10n.Charts.navigationTitle))
     }
 
     private var unit: WeightUnit { dataManager.settings?.preferredUnit ?? .kilograms }
+    private var persistentSelection: Binding<Date?> {
+        Binding(
+            get: { selectedDate },
+            set: { proposedDate in
+                guard let proposedDate,
+                      let nearestDate = data.min(by: {
+                          abs($0.date.timeIntervalSince(proposedDate))
+                              < abs($1.date.timeIntervalSince(proposedDate))
+                      })?.date else {
+                    return
+                }
+                selectedDate = nearestDate
+            }
+        )
+    }
+
     private func convert(_ kg: Double) -> Double { unit.convert(fromKg: kg) }
     private var dateLabel: String { String(localized: L10n.Insights.dateAxis) }
     private var weightLabel: String { String(localized: L10n.Charts.legendWeight) }

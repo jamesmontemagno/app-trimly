@@ -139,6 +139,42 @@ final class DeviceSettingsStoreTests: XCTestCase {
         XCTAssertEqual(reloaded2.review.entryCount, 10, "Entry count should persist at 10")
         XCTAssertTrue(reloaded2.review.hasPrompted, "hasPrompted should persist as true")
     }
+
+    func testShareCardDefaultsAndPersistence() {
+        let (defaults, store) = makeStore()
+        XCTAssertEqual(store.shareCard.privacy, "trend")
+        XCTAssertEqual(store.shareCard.accent, "blue")
+        XCTAssertTrue(store.shareCard.portrait)
+        XCTAssertFalse(store.shareCard.darkAppearance)
+        XCTAssertTrue(store.shareCard.showFooter)
+        XCTAssertTrue(store.shareCard.includeGraph)
+        XCTAssertFalse(store.shareCard.includeCurrent)
+        XCTAssertFalse(store.shareCard.includeChange)
+        XCTAssertFalse(store.shareCard.includeGoal)
+
+        store.updateShareCard { settings in
+            settings.privacy = "detailed"
+            settings.accent = "purple"
+            settings.portrait = false
+            settings.darkAppearance = true
+            settings.showFooter = false
+            settings.includeGraph = false
+            settings.includeCurrent = true
+            settings.includeChange = true
+            settings.includeGoal = true
+        }
+
+        let reloaded = DeviceSettingsStore(userDefaults: defaults)
+        XCTAssertEqual(reloaded.shareCard.privacy, "detailed")
+        XCTAssertEqual(reloaded.shareCard.accent, "purple")
+        XCTAssertFalse(reloaded.shareCard.portrait)
+        XCTAssertTrue(reloaded.shareCard.darkAppearance)
+        XCTAssertFalse(reloaded.shareCard.showFooter)
+        XCTAssertFalse(reloaded.shareCard.includeGraph)
+        XCTAssertTrue(reloaded.shareCard.includeCurrent)
+        XCTAssertTrue(reloaded.shareCard.includeChange)
+        XCTAssertTrue(reloaded.shareCard.includeGoal)
+    }
     
     private func makeStore() -> (UserDefaults, DeviceSettingsStore) {
         let suiteName = "com.trimly.tests.devicesettings.\(UUID().uuidString)"

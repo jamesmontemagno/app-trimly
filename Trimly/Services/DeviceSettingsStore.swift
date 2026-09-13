@@ -51,6 +51,18 @@ final class DeviceSettingsStore: ObservableObject {
         var entryCount: Int
         var hasPrompted: Bool
     }
+
+    struct ShareCardSettings: Equatable {
+        var privacy: String
+        var accent: String
+        var portrait: Bool
+        var darkAppearance: Bool
+        var showFooter: Bool
+        var includeGraph: Bool
+        var includeCurrent: Bool
+        var includeChange: Bool
+        var includeGoal: Bool
+    }
     
     private enum Keys {
         static let primaryReminderTime = "device.reminders.primaryTime"
@@ -69,6 +81,15 @@ final class DeviceSettingsStore: ObservableObject {
         static let reviewHasPrompted = "device.review.hasPrompted"
         static let dashboardCards = "device.presentation.dashboardCards"
         static let hideWeights = "device.presentation.hideWeights"
+        static let sharePrivacy = "device.shareCard.privacy"
+        static let shareAccent = "device.shareCard.accent"
+        static let sharePortrait = "device.shareCard.portrait"
+        static let shareDarkAppearance = "device.shareCard.darkAppearance"
+        static let shareShowFooter = "device.shareCard.showFooter"
+        static let shareIncludeGraph = "device.shareCard.includeGraph"
+        static let shareIncludeCurrent = "device.shareCard.includeCurrent"
+        static let shareIncludeChange = "device.shareCard.includeChange"
+        static let shareIncludeGoal = "device.shareCard.includeGoal"
     }
     
     // MARK: - Published State
@@ -78,6 +99,7 @@ final class DeviceSettingsStore: ObservableObject {
     @Published private(set) var pro: ProSettings
     @Published private(set) var review: ReviewSettings
     @Published private(set) var presentation: PresentationSettings
+    @Published private(set) var shareCard: ShareCardSettings
     
     var remindersPublisher: AnyPublisher<RemindersSettings, Never> {
         $reminders.eraseToAnyPublisher()
@@ -138,6 +160,17 @@ final class DeviceSettingsStore: ObservableObject {
             entryCount: defaults.object(forKey: Keys.reviewEntryCount) as? Int ?? 0,
             hasPrompted: defaults.object(forKey: Keys.reviewHasPrompted) as? Bool ?? false
         )
+        shareCard = ShareCardSettings(
+            privacy: defaults.string(forKey: Keys.sharePrivacy) ?? "trend",
+            accent: defaults.string(forKey: Keys.shareAccent) ?? "blue",
+            portrait: defaults.object(forKey: Keys.sharePortrait) as? Bool ?? true,
+            darkAppearance: defaults.object(forKey: Keys.shareDarkAppearance) as? Bool ?? false,
+            showFooter: defaults.object(forKey: Keys.shareShowFooter) as? Bool ?? true,
+            includeGraph: defaults.object(forKey: Keys.shareIncludeGraph) as? Bool ?? true,
+            includeCurrent: defaults.object(forKey: Keys.shareIncludeCurrent) as? Bool ?? false,
+            includeChange: defaults.object(forKey: Keys.shareIncludeChange) as? Bool ?? false,
+            includeGoal: defaults.object(forKey: Keys.shareIncludeGoal) as? Bool ?? false
+        )
     }
     
     // MARK: - Mutation
@@ -185,6 +218,13 @@ final class DeviceSettingsStore: ObservableObject {
         review = copy
         persistReview(copy)
     }
+
+    func updateShareCard(_ mutate: (inout ShareCardSettings) -> Void) {
+        var copy = shareCard
+        mutate(&copy)
+        shareCard = copy
+        persistShareCard(copy)
+    }
     
     // MARK: - Persistence Helpers
     private func persistReminders(_ value: RemindersSettings) {
@@ -230,5 +270,17 @@ final class DeviceSettingsStore: ObservableObject {
     private func persistReview(_ value: ReviewSettings) {
         defaults.set(value.entryCount, forKey: Keys.reviewEntryCount)
         defaults.set(value.hasPrompted, forKey: Keys.reviewHasPrompted)
+    }
+
+    private func persistShareCard(_ value: ShareCardSettings) {
+        defaults.set(value.privacy, forKey: Keys.sharePrivacy)
+        defaults.set(value.accent, forKey: Keys.shareAccent)
+        defaults.set(value.portrait, forKey: Keys.sharePortrait)
+        defaults.set(value.darkAppearance, forKey: Keys.shareDarkAppearance)
+        defaults.set(value.showFooter, forKey: Keys.shareShowFooter)
+        defaults.set(value.includeGraph, forKey: Keys.shareIncludeGraph)
+        defaults.set(value.includeCurrent, forKey: Keys.shareIncludeCurrent)
+        defaults.set(value.includeChange, forKey: Keys.shareIncludeChange)
+        defaults.set(value.includeGoal, forKey: Keys.shareIncludeGoal)
     }
 }

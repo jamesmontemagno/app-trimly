@@ -232,6 +232,13 @@ Before submitting changes that affect UI:
 - Keep views under 300 lines—extract subviews when needed
  - Prefer small helper views (e.g., status pills, labeled rows) for repeated UI patterns instead of duplicating layout logic.
 
+### SwiftUI and Charts Compiler Complexity
+- Keep result-builder expressions small; a view under 300 lines can still exceed Swift's type-checking budget.
+- Split charts with multiple series, conditional marks, or annotations into focused `@ChartContentBuilder` properties or methods returning `some ChartContent`. Follow `WeightChartPlot` for weight, moving-average, EMA, goal, and selection marks.
+- Extract complex SwiftUI sections into helpers returning `some View`, and move non-presentation calculations out of result builders. Use explicitly typed intermediate values when overload inference is ambiguous.
+- If the compiler reports "unable to type-check this expression in reasonable time", simplify the enclosing builder as well as the highlighted expression; the reported line may not be the underlying cause. Do not work around this by increasing compiler limits or disabling CI builds.
+- Preserve mark order, series labels, styling, accessibility, and selection bindings when splitting chart content.
+
 ## Critical Gotchas
 - **MainActor isolation**: DataManager must be accessed on main thread—use `@MainActor` or `Task { @MainActor in ... }`
 - **Date comparisons**: Always normalize dates for daily logic using `Calendar.current.startOfDay(for:)`
@@ -245,4 +252,10 @@ Never hard code strings in views. Use `Localizable.strings` and `NSLocalizedStri
 
 
 ## After Code Changes
-Make sure we build the project to verify there are no errors. 
+- On a Mac with Xcode, build the affected app target before considering a code change complete. For shared SwiftUI or Charts changes, build **both macOS and iOS Simulator** because they compile separately:
+  ```bash
+  xcodebuild -scheme TrimTally -destination 'platform=macOS,arch=arm64' CODE_SIGNING_ALLOWED=NO build
+  xcodebuild -scheme TrimTally -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
+  ```
+- Run the relevant existing unit tests for behavior changes, using the targeted commands above. Unit tests do not replace compiling the app's SwiftUI views.
+- If working on Linux or another environment without Xcode, explicitly report that Apple-platform builds are unavailable and rely on the existing macOS and iOS Actions jobs for confirmation. Do not claim a compiler failure is resolved based only on source inspection or formatting checks.

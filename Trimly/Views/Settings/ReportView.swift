@@ -283,6 +283,53 @@ enum ShareAccent: String, CaseIterable, Identifiable {
     }
 }
 
+/// Groups appearance/lifecycle-related modifiers for `ShareCheckInView` so the
+/// compiler doesn't have to type-check one enormous modifier chain at once.
+private struct ShareCheckInLifecycleModifiers: ViewModifier {
+    let onAppear: () -> Void
+    let onDisappear: () -> Void
+    let dataRevision: Int
+    let onRefresh: () -> Void
+
+    func body(content: Content) -> some View {
+        content
+            .onAppear(perform: onAppear)
+            .onChange(of: dataRevision) { _, _ in onRefresh() }
+            .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in
+                onRefresh()
+            }
+            .onDisappear(perform: onDisappear)
+    }
+}
+
+/// Groups the "invalidate the prepared share image when an option changes"
+/// modifiers so they type-check as their own smaller expression.
+private struct ShareCheckInOptionChangeModifiers: ViewModifier {
+    let privacy: SharePrivacy
+    let accent: ShareAccent
+    let portrait: Bool
+    let darkAppearance: Bool
+    let showFooter: Bool
+    let includeGraph: Bool
+    let includeCurrent: Bool
+    let includeChange: Bool
+    let includeGoal: Bool
+    let onOptionChanged: () -> Void
+
+    func body(content: Content) -> some View {
+        content
+            .onChange(of: privacy) { _, _ in onOptionChanged() }
+            .onChange(of: accent) { _, _ in onOptionChanged() }
+            .onChange(of: portrait) { _, _ in onOptionChanged() }
+            .onChange(of: darkAppearance) { _, _ in onOptionChanged() }
+            .onChange(of: showFooter) { _, _ in onOptionChanged() }
+            .onChange(of: includeGraph) { _, _ in onOptionChanged() }
+            .onChange(of: includeCurrent) { _, _ in onOptionChanged() }
+            .onChange(of: includeChange) { _, _ in onOptionChanged() }
+            .onChange(of: includeGoal) { _, _ in onOptionChanged() }
+    }
+}
+
 struct ShareCheckInView: View {
     @EnvironmentObject private var dataManager: DataManager
     @Environment(\.dismiss) private var dismiss
@@ -395,35 +442,36 @@ struct ShareCheckInView: View {
         #if os(macOS)
         .frame(minWidth: 520, minHeight: 720)
         #endif
-        .onAppear {
-            loadShareSettings()
-            refreshSnapshot()
-        }
-        .onChange(of: dataManager.dataRevision) { _, _ in refreshSnapshot() }
-        .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in
-            refreshSnapshot()
-        }
-        .onChange(of: privacy) { _, _ in
-            removeTemporaryImage()
-        }
-        .onChange(of: accent) { _, _ in removeTemporaryImage() }
-        .onChange(of: portrait) { _, _ in removeTemporaryImage() }
-        .onChange(of: darkAppearance) { _, _ in removeTemporaryImage() }
-        .onChange(of: showFooter) { _, _ in removeTemporaryImage() }
-        .onChange(of: includeGraph) { _, _ in removeTemporaryImage() }
-        .onChange(of: includeCurrent) { _, _ in removeTemporaryImage() }
-        .onChange(of: includeChange) { _, _ in removeTemporaryImage() }
-        .onChange(of: includeGoal) { _, _ in removeTemporaryImage() }
-        .onDisappear {
-            saveShareSettings()
-            #if canImport(UIKit)
-            if shareItem == nil {
+        .modifier(ShareCheckInLifecycleModifiers(
+            onAppear: {
+                loadShareSettings()
+                refreshSnapshot()
+            },
+            onDisappear: {
+                saveShareSettings()
+                #if canImport(UIKit)
+                if shareItem == nil {
+                    removeTemporaryImage()
+                }
+                #else
                 removeTemporaryImage()
-            }
-            #else
-            removeTemporaryImage()
-            #endif
-        }
+                #endif
+            },
+            dataRevision: dataManager.dataRevision,
+            onRefresh: refreshSnapshot
+        ))
+        .modifier(ShareCheckInOptionChangeModifiers(
+            privacy: privacy,
+            accent: accent,
+            portrait: portrait,
+            darkAppearance: darkAppearance,
+            showFooter: showFooter,
+            includeGraph: includeGraph,
+            includeCurrent: includeCurrent,
+            includeChange: includeChange,
+            includeGoal: includeGoal,
+            onOptionChanged: removeTemporaryImage
+        ))
         #if canImport(UIKit)
         .sheet(item: $shareItem, onDismiss: removeTemporaryImage) { item in
             ShareActivityView(items: [item.url])

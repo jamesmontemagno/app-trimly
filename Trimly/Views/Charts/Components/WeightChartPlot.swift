@@ -11,20 +11,17 @@ struct WeightChartPlot: View {
     @Binding var selectedDate: Date?
 
     var body: some View {
-        Group {
-            if showsAxes {
-                baseChart
-                    .chartXAxis { dateAxisMarks }
-                    .chartYAxis(.automatic)
-            } else {
-                baseChart
-                    .chartXAxis(.hidden)
-                    .chartYAxis(.hidden)
+        VStack(alignment: .leading, spacing: 16) {
+            ChartSelectionSummary(point: selectedPoint, unit: unit, precision: precision) {
+                selectedDate = nil
             }
+            baseChart
+                .chartXAxis(showsAxes ? .automatic : .hidden)
+                .chartYAxis(showsAxes ? .automatic : .hidden)
+                .frame(height: 300)
+                .accessibilityLabel(Text(L10n.Charts.navigationTitle))
         }
-        .frame(height: 300)
         .animation(reduceMotion ? nil : .easeInOut, value: selectedDate)
-        .accessibilityLabel(Text(L10n.Charts.navigationTitle))
     }
 
     private var baseChart: some View {
@@ -34,29 +31,42 @@ struct WeightChartPlot: View {
             goalMarks
             selectionMarks
         }
-        .chartForegroundStyleScale([weightLabel: Color.blue, maLabel: Color.orange, emaLabel: Color.purple])
+        .chartForegroundStyleScale([
+            weightLabel: weightGradient,
+            maLabel: gradient(from: movingAverageColor.opacity(0.9), to: movingAverageColor),
+            emaLabel: gradient(from: emaColor.opacity(0.9), to: emaColor)
+        ])
         .chartLegend(.hidden)
         .chartYScale(domain: .automatic(includesZero: false))
-        .chartXSelection(value: persistentSelection)
-        .chartGesture { proxy in
-            DragGesture(minimumDistance: 8)
-                .onChanged { value in proxy.selectXValue(at: value.location.x) }
-        }
-        .chartPlotStyle { plot in
-            plot.padding(.horizontal, 8)
-        }
-    }
-
-    /// Date labels sized and spaced for the visible range so they stay readable.
-    @AxisContentBuilder
-    private var dateAxisMarks: some AxisContent {
-        AxisMarks(preset: .aligned, values: .stride(by: axisStride.component, count: axisStride.count)) { value in
-            AxisGridLine()
-            AxisTick()
-            if let date = value.as(Date.self) {
-                AxisValueLabel {
-                    Text(date, format: axisFormat)
-                        .font(.caption2)
+        .chartOverlay { proxy in
+            GeometryReader { geometry in
+                if let anchor = proxy.plotFrame {
+                    let plotFrame = geometry[anchor]
+                    ZStack {
+                        if let point = selectedPoint, let x = proxy.position(forX: point.date) {
+                            Rectangle()
+                                .fill(weightLinePrimary.opacity(0.08))
+                                .frame(width: max(24, plotFrame.width * 0.015), height: plotFrame.height)
+                                .position(x: x + plotFrame.minX, y: plotFrame.midY)
+                                .allowsHitTesting(false)
+                        }
+                        Rectangle()
+                            .fill(.clear)
+                            .contentShape(Rectangle())
+                            .frame(width: plotFrame.width, height: plotFrame.height)
+                            .gesture(
+                                DragGesture(minimumDistance: 0)
+                                    .onChanged { value in
+                                        // This gesture is local to the plot, not the surrounding axes.
+                                        let x = min(max(value.location.x, 0), plotFrame.width)
+                                        if let date: Date = proxy.value(atX: x) {
+                                            selectedDate = ChartDataPoint.nearest(to: date, in: data)?.date
+                                        }
+                                    }
+                            )
+                            .position(x: plotFrame.midX, y: plotFrame.midY)
+                    }
+                    .accessibilityHidden(true)
                 }
             }
         }
@@ -68,13 +78,15 @@ struct WeightChartPlot: View {
             if data.count > 1 {
                 LineMark(x: .value(dateLabel, point.date), y: .value(weightLabel, convert(point.weight)))
                     .foregroundStyle(by: .value(seriesLabel, weightLabel))
-                    .interpolationMethod(.linear)
+                    .interpolationMethod(.monotone)
             }
-            PointMark(x: .value(dateLabel, point.date), y: .value(weightLabel, convert(point.weight)))
-                .foregroundStyle(by: .value(seriesLabel, weightLabel))
-                .symbolSize(notesDays.contains(point.date) ? 65 : 25)
-                .accessibilityLabel(Text(point.date, format: .dateTime.day().month().year()))
-                .accessibilityValue(Text(InsightFormatting.weight(point.weight, unit: unit)))
+            if selectedDate != nil || data.count == 1 {
+                PointMark(x: .value(dateLabel, point.date), y: .value(weightLabel, convert(point.weight)))
+                    .foregroundStyle(by: .value(seriesLabel, weightLabel))
+                    .symbol { pointSymbol(for: point) }
+                    .accessibilityLabel(Text(point.date, format: .dateTime.day().month().year()))
+                    .accessibilityValue(Text(InsightFormatting.weight(point.weight, unit: unit)))
+            }
             if notesDays.contains(point.date) {
                 PointMark(x: .value(dateLabel, point.date), y: .value(weightLabel, convert(point.weight)))
                     .symbol(.square)
@@ -93,11 +105,13 @@ struct WeightChartPlot: View {
             LineMark(x: .value(dateLabel, point.date), y: .value(maLabel, convert(point.weight)))
                 .foregroundStyle(by: .value(seriesLabel, maLabel))
                 .lineStyle(StrokeStyle(lineWidth: 2, dash: [5, 5]))
+                .interpolationMethod(.monotone)
         }
         ForEach(ema) { point in
             LineMark(x: .value(dateLabel, point.date), y: .value(emaLabel, convert(point.weight)))
                 .foregroundStyle(by: .value(seriesLabel, emaLabel))
                 .lineStyle(StrokeStyle(lineWidth: 2, dash: [2, 2]))
+                .interpolationMethod(.monotone)
         }
     }
 
@@ -108,12 +122,13 @@ struct WeightChartPlot: View {
                 .foregroundStyle(.green)
                 .lineStyle(StrokeStyle(lineWidth: 2, dash: [10, 5]))
                 .annotation(position: .top, alignment: .trailing) {
-                    Text(L10n.Charts.goalLabel).font(.caption)
+                    Text(L10n.Charts.goalLabel).font(.caption).foregroundStyle(.green)
                 }
             if let first = data.first, let last = data.last,
                goal.startDate >= first.date, goal.startDate <= last.date {
                 RuleMark(x: .value(String(localized: L10n.Insights.sinceGoal), goal.startDate))
-                    .foregroundStyle(.purple)
+                    .foregroundStyle(.purple.opacity(0.6))
+                    .lineStyle(StrokeStyle(lineWidth: 2))
             }
         }
     }
@@ -121,30 +136,18 @@ struct WeightChartPlot: View {
     @ChartContentBuilder
     private var selectionMarks: some ChartContent {
         if let point = selectedPoint {
-            selectionRule(for: point)
-            selectionPoint(for: point)
+            RuleMark(x: .value(dateLabel, point.date))
+                .foregroundStyle(weightLinePrimary.opacity(0.3))
+                .lineStyle(StrokeStyle(lineWidth: 1, dash: [2]))
         }
     }
 
-    private func selectionRule(for point: ChartDataPoint) -> some ChartContent {
-        RuleMark(x: .value(dateLabel, point.date))
-            .foregroundStyle(Color.secondary)
-            .lineStyle(StrokeStyle(lineWidth: 1, dash: [3]))
-            .annotation(
-                position: AnnotationPosition.top,
-                alignment: Alignment.center,
-                spacing: 4,
-                overflowResolution: AnnotationOverflowResolution(x: .fit(to: .chart), y: .disabled)
-            ) {
-                ChartTooltip(point: point, unit: unit, precision: precision, note: nil)
-                    .accessibilityHidden(true)
-            }
-    }
-
-    private func selectionPoint(for point: ChartDataPoint) -> some ChartContent {
-        PointMark(x: .value(dateLabel, point.date), y: .value(weightLabel, convert(point.weight)))
-            .foregroundStyle(by: .value(seriesLabel, weightLabel))
-            .symbolSize(120)
+    private func pointSymbol(for point: ChartDataPoint) -> some View {
+        let isSelected = point.date == selectedDate
+        return Circle()
+            .strokeBorder(weightLinePrimary, lineWidth: isSelected ? 3 : 2)
+            .background(Circle().fill(isSelected ? pointFillColor : weightLineSecondary))
+            .frame(width: isSelected ? 24 : 12, height: isSelected ? 24 : 12)
     }
 
     private var unit: WeightUnit { dataManager.settings?.preferredUnit ?? .kilograms }
@@ -153,52 +156,23 @@ struct WeightChartPlot: View {
 
     private var selectedPoint: ChartDataPoint? {
         guard let selectedDate else { return nil }
-        return data.min {
-            abs($0.date.timeIntervalSince(selectedDate)) < abs($1.date.timeIntervalSince(selectedDate))
-        }
+        return ChartDataPoint.nearest(to: selectedDate, in: data)
     }
 
-    /// Number of days covered by the plotted data, used to size the date axis labels.
-    private var spanInDays: Int {
-        guard let first = data.first?.date, let last = data.last?.date else { return 0 }
-        return Calendar.current.dateComponents([.day], from: first, to: last).day ?? 0
+    private var weightLinePrimary: Color { Color(red: 0.31, green: 0.55, blue: 1.0) }
+    private var weightLineSecondary: Color { Color(red: 0.29, green: 0.78, blue: 1.0) }
+    private var movingAverageColor: Color { Color(red: 0.99, green: 0.64, blue: 0.32) }
+    private var emaColor: Color { Color(red: 0.74, green: 0.54, blue: 0.96) }
+    private var weightGradient: LinearGradient { gradient(from: weightLinePrimary, to: weightLineSecondary) }
+    private func gradient(from start: Color, to end: Color) -> LinearGradient {
+        LinearGradient(colors: [start, end], startPoint: .leading, endPoint: .trailing)
     }
-
-    /// Spacing between date labels so they never overlap or get truncated.
-    private var axisStride: (component: Calendar.Component, count: Int) {
-        switch spanInDays {
-        case ..<8: return (.day, 1)
-        case ..<32: return (.day, 7)
-        case ..<100: return (.day, 14)
-        case ..<400: return (.month, 2)
-        default: return (.month, 6)
-        }
-    }
-
-    /// Compact date format matched to the visible range.
-    private var axisFormat: Date.FormatStyle {
-        switch spanInDays {
-        case ..<8: return .dateTime.weekday(.abbreviated)
-        case ..<100: return .dateTime.month(.abbreviated).day()
-        case ..<400: return .dateTime.month(.abbreviated)
-        default: return .dateTime.month(.abbreviated).year(.twoDigits)
-        }
-    }
-
-    private var persistentSelection: Binding<Date?> {
-        Binding(
-            get: { selectedDate },
-            set: { proposedDate in
-                guard let proposedDate,
-                      let nearestDate = data.min(by: {
-                          abs($0.date.timeIntervalSince(proposedDate))
-                              < abs($1.date.timeIntervalSince(proposedDate))
-                      })?.date else {
-                    return
-                }
-                selectedDate = nearestDate
-            }
-        )
+    private var pointFillColor: Color {
+        #if os(macOS)
+        Color(nsColor: .windowBackgroundColor)
+        #else
+        Color(uiColor: .systemBackground)
+        #endif
     }
 
     private func convert(_ kg: Double) -> Double { unit.convert(fromKg: kg) }

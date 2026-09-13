@@ -19,4 +19,10 @@ struct ChartDataPoint: Identifiable, Hashable {
 		let weightBits = weight.bitPattern
 		self.id = "\(dateBits)-\(weightBits)"
 	}
+
+	static func nearest(to date: Date, in points: [ChartDataPoint]) -> ChartDataPoint? {
+		points.min {
+			abs($0.date.timeIntervalSince(date)) < abs($1.date.timeIntervalSince(date))
+		}
+	}
 }

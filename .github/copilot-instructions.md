@@ -239,6 +239,9 @@ Before submitting changes that affect UI:
 - **iCloud sync**: Test multi-device scenarios—SwiftData handles conflicts but verify merge behavior
 - **StoreKit & ObservableObject**: Always `import SwiftUI` or `import Combine` in `StoreManager` or similar classes. `ObservableObject` and `@Published` are not available in `Foundation` alone.
 - **Concurrency & Listeners**: When using `Task.detached` for long-running listeners (e.g., `Transaction.updates`), ensure called methods are `nonisolated` if they don't touch `@MainActor` state, or use `await MainActor.run { ... }`.
+- **Swift Charts type-check timeouts**: A large `Chart { ... }` body (many `ForEach`/`LineMark`/`PointMark` branches, ternaries, conditional marks) fails to build with *"the compiler is unable to type-check this expression in reasonable time"*. Split the chart content into small `@ChartContentBuilder` computed properties (e.g. `entryMarks`, `averageMarks`, `goalMarks`, `selectionMarks`) and keep the `Chart { }` body to a few lines. See `Trimly/Views/Charts/Components/WeightChartPlot.swift`.
+- **Conditional chart axes**: Don't wrap `AxisMarks` in an `if` inside `.chartXAxis { }`. Put the axis marks in an `@AxisContentBuilder` property and branch at the view level instead (`if showsAxes { chart.chartXAxis { marks } } else { chart.chartXAxis(.hidden) }`).
+- **Explicit `return` in multi-branch computed properties**: Prefer explicit `return` in `switch`-based computed properties (e.g. returning `Date.FormatStyle`) to keep type inference fast and unambiguous.
 
 ## Translations
 Never hard code strings in views. Use `Localizable.strings` and `NSLocalizedString` for all user-facing text. Follow existing keys for consistency. Make sure to add new keys to all supported languages.

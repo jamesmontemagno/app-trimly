@@ -21,9 +21,29 @@ struct WeightChartPlot: View {
         .chartForegroundStyleScale([weightLabel: Color.blue, maLabel: Color.orange, emaLabel: Color.purple])
         .chartLegend(.hidden)
         .chartYScale(domain: .automatic(includesZero: false))
-        .chartXAxis(dataManager.settings?.chartMode == .analytical ? .automatic : .hidden)
-        .chartYAxis(dataManager.settings?.chartMode == .analytical ? .automatic : .hidden)
+        .chartXAxis {
+            if showsAxes {
+                AxisMarks(preset: .aligned, values: .stride(by: axisStride.component, count: axisStride.count)) { value in
+                    AxisGridLine()
+                    AxisTick()
+                    if let date = value.as(Date.self) {
+                        AxisValueLabel {
+                            Text(date, format: axisFormat)
+                                .font(.caption2)
+                        }
+                    }
+                }
+            }
+        }
+        .chartYAxis(showsAxes ? .automatic : .hidden)
         .chartXSelection(value: persistentSelection)
+        .chartGesture { proxy in
+            DragGesture(minimumDistance: 8)
+                .onChanged { proxy.selectXValue(at: $0.location.x) }
+        }
+        .chartPlotStyle { plot in
+            plot.padding(.horizontal, 8)
+        }
         .frame(height: 300)
         .animation(reduceMotion ? nil : .easeInOut, value: selectedDate)
         .accessibilityLabel(Text(L10n.Charts.navigationTitle))
@@ -91,16 +111,59 @@ struct WeightChartPlot: View {
 
     @ChartContentBuilder
     private var selectionMark: some ChartContent {
-        if let selectedDate, let point = data.min(by: {
-            abs($0.date.timeIntervalSince(selectedDate)) < abs($1.date.timeIntervalSince(selectedDate))
-        }) {
+        if let point = selectedPoint {
             RuleMark(x: .value(dateLabel, point.date))
                 .foregroundStyle(.secondary)
                 .lineStyle(StrokeStyle(lineWidth: 1, dash: [3]))
+                .annotation(position: .top, spacing: 0,
+                            overflowResolution: .init(x: .fitToChart, y: .disabled)) {
+                    ChartTooltip(point: point, unit: unit, precision: precision, note: nil)
+                        .accessibilityHidden(true)
+                }
+            PointMark(x: .value(dateLabel, point.date), y: .value(weightLabel, convert(point.weight)))
+                .foregroundStyle(by: .value(seriesLabel, weightLabel))
+                .symbolSize(120)
         }
     }
 
     private var unit: WeightUnit { dataManager.settings?.preferredUnit ?? .kilograms }
+    private var precision: Int { dataManager.settings?.decimalPrecision ?? 1 }
+    private var showsAxes: Bool { dataManager.settings?.chartMode == .analytical }
+
+    private var selectedPoint: ChartDataPoint? {
+        guard let selectedDate else { return nil }
+        return data.min {
+            abs($0.date.timeIntervalSince(selectedDate)) < abs($1.date.timeIntervalSince(selectedDate))
+        }
+    }
+
+    /// Number of days covered by the plotted data, used to size the date axis labels.
+    private var spanInDays: Int {
+        guard let first = data.first?.date, let last = data.last?.date else { return 0 }
+        return Calendar.current.dateComponents([.day], from: first, to: last).day ?? 0
+    }
+
+    /// Spacing between date labels so they never overlap or get truncated.
+    private var axisStride: (component: Calendar.Component, count: Int) {
+        switch spanInDays {
+        case ..<8: return (.day, 1)
+        case ..<32: return (.day, 7)
+        case ..<100: return (.day, 14)
+        case ..<400: return (.month, 2)
+        default: return (.month, 6)
+        }
+    }
+
+    /// Compact date format matched to the visible range.
+    private var axisFormat: Date.FormatStyle {
+        switch spanInDays {
+        case ..<8: return .dateTime.weekday(.abbreviated)
+        case ..<100: return .dateTime.month(.abbreviated).day()
+        case ..<400: return .dateTime.month(.abbreviated)
+        default: return .dateTime.month(.abbreviated).year(.twoDigits)
+        }
+    }
+
     private var persistentSelection: Binding<Date?> {
         Binding(
             get: { selectedDate },

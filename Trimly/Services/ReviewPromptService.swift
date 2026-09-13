@@ -1,6 +1,6 @@
 //
 //  ReviewPromptService.swift
-//  Weigh
+//  My Weight
 //
 //  Created by Trimly on 12/20/2025.
 //
@@ -15,13 +15,22 @@ import UIKit
 @MainActor
 final class ReviewPromptService {
     private let deviceSettings: DeviceSettingsStore
+    private let allowsReviewPrompts: Bool
+    private let requestReviewHandler: () -> Void
     /// The number of manual entries required before prompting for review
     static let defaultEntryThreshold = 10
     private let entryThreshold: Int
     
-    init(deviceSettings: DeviceSettingsStore, entryThreshold: Int = defaultEntryThreshold) {
+    init(
+        deviceSettings: DeviceSettingsStore,
+        entryThreshold: Int = defaultEntryThreshold,
+        allowsReviewPrompts: Bool = ReviewPromptService.runtimeAllowsReviewPrompts,
+        requestReviewHandler: (() -> Void)? = nil
+    ) {
         self.deviceSettings = deviceSettings
         self.entryThreshold = entryThreshold
+        self.allowsReviewPrompts = allowsReviewPrompts
+        self.requestReviewHandler = requestReviewHandler ?? ReviewPromptService.requestSystemReview
     }
     
     /// Increments the entry count and checks if we should prompt for review
@@ -34,14 +43,14 @@ final class ReviewPromptService {
             review.entryCount += 1
             
             // Check if we've hit the threshold and haven't prompted yet
-            if review.entryCount >= entryThreshold && !review.hasPrompted {
+            if allowsReviewPrompts && review.entryCount >= entryThreshold && !review.hasPrompted {
                 shouldPrompt = true
                 review.hasPrompted = true
             }
         }
         
         if shouldPrompt {
-            requestReview()
+            requestReviewHandler()
         }
         
         return shouldPrompt
@@ -50,6 +59,20 @@ final class ReviewPromptService {
     /// Manually request a review (e.g., from Settings)
     /// Silently handles any exceptions that may occur during the review request
     func requestReview() {
+        guard allowsReviewPrompts else { return }
+        requestReviewHandler()
+    }
+
+    private static var runtimeAllowsReviewPrompts: Bool {
+        #if DEBUG
+        false
+        #else
+        ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil
+            && NSClassFromString("XCTestCase") == nil
+        #endif
+    }
+
+    private static func requestSystemReview() {
         #if os(iOS)
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
             // No valid window scene available, silently return

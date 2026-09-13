@@ -1,6 +1,6 @@
 //
 //  TodayWeightCard.swift
-//  Weigh
+//  My Weight
 //
 //  Created by Trimly on 12/7/2025.
 //
@@ -39,7 +39,7 @@ struct TodayWeightCard: View {
 							.padding(.top, 4)
 							.padding(.bottom, 4)
 						
-						Text(L10n.Dashboard.sevenDayAverage)
+						Text(L10n.Insights.loggingDayAverage)
 							.font(.caption2)
 							.foregroundStyle(.secondary)
 						
@@ -77,8 +77,6 @@ struct TodayWeightCard: View {
 		.background(.thinMaterial)
 		.clipShape(RoundedRectangle(cornerRadius: 16))
 		.accessibilityElement(children: .combine)
-		.accessibilityLabel(accessibilityLabel)
-		.accessibilityValue(accessibilityValue)
 	}
 	
 	private func primaryValueIndicator(entries: [WeightEntry]) -> some View {
@@ -111,13 +109,8 @@ struct TodayWeightCard: View {
 	}
 	
 	private func calculateSevenDayAverage() -> Double? {
-		// Get all entries to check if user has at least 7 check-ins
-		let allEntries = dataManager.fetchAllEntries().filter { !$0.isHidden }
-		guard allEntries.count >= 7 else { return nil }
-		
-		// Get daily weights and take the last 7 days
 		let dailyWeights = dataManager.getDailyWeights()
-		guard !dailyWeights.isEmpty else { return nil }
+		guard dailyWeights.count >= 7 else { return nil }
 		
 		// Take up to the last 7 days (may be fewer if user hasn't logged that long)
 		let last7Days = dailyWeights.suffix(7)
@@ -127,24 +120,4 @@ struct TodayWeightCard: View {
 		return sum / Double(last7Days.count)
 	}
 	
-	private var accessibilityLabel: String {
-		return "Current weight"
-	}
-	
-	private var accessibilityValue: String {
-		if let currentWeight {
-			var value = displayValue(currentWeight)
-			if let sevenDayAvg = calculateSevenDayAverage() {
-				value += ", 7-day average: \(displayValue(sevenDayAvg))"
-			}
-			if recentlySyncedFromICloud {
-				value += ", recently synced from iCloud"
-			}
-			if recentlySyncedToHealthKit {
-				value += ", synced to HealthKit"
-			}
-			return value
-		}
-		return "No weight entries yet"
-	}
 }

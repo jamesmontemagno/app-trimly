@@ -1,10 +1,10 @@
-# SEO Best Practices for Weigh Website
+# SEO Best Practices for My Weight Website
 
-This document outlines the SEO strategies and best practices implemented on the Weigh website to ensure optimal search engine visibility and discoverability.
+This document outlines the SEO strategies and best practices implemented on the My Weight website to ensure optimal search engine visibility and discoverability.
 
 ## Overview
 
-The Weigh website has been optimized for search engines with a focus on:
+The My Weight website has been optimized for search engines with a focus on:
 - **Mobile-first indexing** - Fully responsive design
 - **Semantic HTML** - Proper use of HTML5 elements and ARIA attributes
 - **Structured data** - Rich snippets for better search results
@@ -18,7 +18,7 @@ The Weigh website has been optimized for search engines with a focus on:
 Located in `/website/index.html`:
 
 ```html
-<title>Weigh - Private Weight Tracking App for iOS & macOS | No Account Required</title>
+<title>My Weight - Private Weight Tracking App for iOS & macOS | No Account Required</title>
 <meta name="description" content="..." />
 <meta name="keywords" content="weight tracking app, iOS weight tracker, ..." />
 <meta name="robots" content="index, follow" />
@@ -37,7 +37,7 @@ For social media sharing (Facebook, LinkedIn, etc.):
 
 ```html
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Weigh - Private Weight Tracking App for iOS & macOS" />
+<meta property="og:title" content="My Weight - Private Weight Tracking App for iOS & macOS" />
 <meta property="og:description" content="..." />
 <meta property="og:image" content="https://weigh.app/app-icon.png" />
 ```
@@ -74,7 +74,7 @@ Primary schema for the app listing:
 {
   "@context": "https://schema.org",
   "@type": "MobileApplication",
-  "name": "Weigh",
+  "name": "My Weight",
   "applicationCategory": "HealthApplication",
   "operatingSystem": "iOS 17.0+, macOS 14.0+",
   "offers": {
@@ -113,7 +113,7 @@ General website information:
 {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "name": "Weigh",
+  "name": "My Weight",
   "url": "https://weigh.app/"
 }
 ```
@@ -126,7 +126,7 @@ Alternative app schema for broader coverage:
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "Weigh",
+  "name": "My Weight",
   "applicationCategory": "HealthApplication"
 }
 ```
@@ -209,7 +209,7 @@ All images have descriptive alt text:
 ```tsx
 <img 
   src="..." 
-  alt="Weigh dashboard screen showing weight tracking overview"
+  alt="My Weight dashboard screen showing weight tracking overview"
   loading="lazy"
 />
 ```
@@ -381,4 +381,4 @@ Consider adding:
 ---
 
 **Last Updated:** December 25, 2025
-**Maintained By:** Weigh Development Team
+**Maintained By:** My Weight Development Team

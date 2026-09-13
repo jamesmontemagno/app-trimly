@@ -1,6 +1,6 @@
 //
 //  GoalHistoryView.swift
-//  Weigh
+//  My Weight
 //
 //  Created by Trimly on 12/07/2025.
 //
@@ -9,20 +9,27 @@ import SwiftUI
 
 struct GoalHistoryView: View {
 	@EnvironmentObject var dataManager: DataManager
+	@EnvironmentObject private var deviceSettings: DeviceSettingsStore
 	@Environment(\.dismiss) var dismiss
+	@State private var selectedGoal: Goal?
     
 	var body: some View {
 		NavigationStack {
-			let history = dataManager.fetchGoalHistory()
+			let archived = dataManager.fetchGoalHistory()
+			let activeAchieved = dataManager.fetchActiveGoal().flatMap { $0.completionReason == .achieved ? $0 : nil }
+			let history = activeAchieved.map { [$0] + archived } ?? archived
 			ScrollView {
 				LazyVStack(spacing: 16) {
 					ForEach(history) { goal in
-						historyCard(goal)
+						Button { selectedGoal = goal } label: { historyCard(goal) }
+							.buttonStyle(.plain)
+							.accessibilityHint(Text(L10n.EntryFeatures.goalHistoryDetail))
 					}
 				}
 				.padding(24)
 			}
 			.navigationTitle(Text(L10n.Goals.historyTitle))
+			.sheet(item: $selectedGoal) { GoalHistoryDetailView(goal: $0) }
 			#if os(iOS)
 			.navigationBarTitleDisplayMode(.inline)
 			#endif
@@ -49,8 +56,12 @@ struct GoalHistoryView: View {
 		WeighCardContainer(style: .popup) {
 			VStack(alignment: .leading, spacing: 10) {
 				HStack(alignment: .firstTextBaseline) {
-					Text(displayValue(goal.targetWeightKg))
-						.font(.title3.weight(.semibold))
+					if deviceSettings.presentation.hideWeights {
+						Text(L10n.Insights.privacyTitle)
+					} else {
+						Text(displayValue(goal.targetWeightKg))
+							.font(.title3.weight(.semibold))
+					}
 					Spacer()
 					if let reason = goal.completionReason {
 						let pill = completionPillColors(for: reason)
@@ -71,7 +82,7 @@ struct GoalHistoryView: View {
 						.font(.caption)
 						.foregroundStyle(.secondary)
 				}
-				if let notes = goal.notes, !notes.isEmpty {
+				if !deviceSettings.presentation.hideWeights, let notes = goal.notes, !notes.isEmpty {
 					Text(notes)
 						.font(.callout)
 						.foregroundStyle(.secondary)

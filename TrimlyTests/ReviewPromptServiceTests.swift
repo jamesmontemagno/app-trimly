@@ -6,7 +6,12 @@ import XCTest
 final class ReviewPromptServiceTests: XCTestCase {
     func testIncrementEntryCountTracksCorrectly() {
         let (_, deviceSettings) = makeStore()
-        let service = ReviewPromptService(deviceSettings: deviceSettings)
+        var requestCount = 0
+        let service = ReviewPromptService(
+            deviceSettings: deviceSettings,
+            allowsReviewPrompts: true,
+            requestReviewHandler: { requestCount += 1 }
+        )
         
         // Initial state
         XCTAssertEqual(service.currentEntryCount, 0)
@@ -33,16 +38,22 @@ final class ReviewPromptServiceTests: XCTestCase {
         XCTAssertTrue(promptedAt10, "Should prompt at 10th entry")
         XCTAssertEqual(service.currentEntryCount, 10)
         XCTAssertTrue(service.hasPromptedForReview, "Should have prompted at 10 entries")
+        XCTAssertEqual(requestCount, 1)
         
         // Increment beyond threshold - should not prompt again
         let promptedAgain = service.incrementEntryCountAndPromptIfNeeded()
         XCTAssertFalse(promptedAgain, "Should not prompt again after already prompted")
         XCTAssertEqual(service.currentEntryCount, 11)
+        XCTAssertEqual(requestCount, 1)
     }
     
     func testResetReviewPromptState() {
         let (_, deviceSettings) = makeStore()
-        let service = ReviewPromptService(deviceSettings: deviceSettings)
+        let service = ReviewPromptService(
+            deviceSettings: deviceSettings,
+            allowsReviewPrompts: true,
+            requestReviewHandler: {}
+        )
         
         // Increment to threshold
         for _ in 0..<10 {
@@ -54,6 +65,24 @@ final class ReviewPromptServiceTests: XCTestCase {
         service.resetReviewPromptState()
         XCTAssertFalse(service.hasPromptedForReview, "Should reset prompt state")
         XCTAssertEqual(service.currentEntryCount, 10, "Entry count should not change on reset")
+    }
+
+    func testDisabledPromptsNeverRequestOrConsumeEligibility() {
+        let (_, deviceSettings) = makeStore()
+        var requestCount = 0
+        let service = ReviewPromptService(
+            deviceSettings: deviceSettings,
+            entryThreshold: 1,
+            allowsReviewPrompts: false,
+            requestReviewHandler: { requestCount += 1 }
+        )
+
+        XCTAssertFalse(service.incrementEntryCountAndPromptIfNeeded())
+        service.requestReview()
+
+        XCTAssertEqual(service.currentEntryCount, 1)
+        XCTAssertFalse(service.hasPromptedForReview)
+        XCTAssertEqual(requestCount, 0)
     }
     
     func testPersistenceAcrossInstances() {

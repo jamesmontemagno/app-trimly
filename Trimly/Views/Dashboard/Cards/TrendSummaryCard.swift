@@ -1,6 +1,6 @@
 //
 //  TrendSummaryCard.swift
-//  Weigh
+//  My Weight
 //
 //  Created by Trimly on 12/7/2025.
 //
@@ -28,6 +28,8 @@ struct TrendSummaryCard: View {
 			.clipShape(RoundedRectangle(cornerRadius: 16))
 		}
 		.buttonStyle(.plain)
+		.accessibilityLabel(Text(L10n.Dashboard.trendTitle))
+		.accessibilityValue(trend.description)
 		.accessibilityHint(String(localized: L10n.Accessibility.opensCharts))
 	}
 	

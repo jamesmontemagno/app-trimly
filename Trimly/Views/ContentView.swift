@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  Weigh
+//  My Weight
 //
 //  Created by Trimly on 11/19/2025.
 //
@@ -36,6 +36,9 @@ struct ContentView: View {
 struct MainTabView: View {
     @EnvironmentObject var dataManager: DataManager
     @EnvironmentObject var storeManager: StoreManager
+    @EnvironmentObject var router: AppRouter
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @StateObject private var celebrationService = CelebrationService()
     @StateObject private var achievementService = AchievementService()
     
@@ -48,6 +51,7 @@ struct MainTabView: View {
     }
 
     @State private var selectedTab: Tab = .dashboard
+    @State private var showingQuickLog = false
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -106,29 +110,45 @@ struct MainTabView: View {
         .overlay {
             if let celebration = celebrationService.currentCelebration {
                 CelebrationOverlayView(celebration: celebration)
-                    .transition(.scale.combined(with: .opacity))
+                    .transition(reduceMotion ? .opacity : .scale.combined(with: .opacity))
                     .onTapGesture {
                         celebrationService.dismissCelebration()
                     }
             }
         }
-        .onAppear {
-            achievementService.refresh(using: dataManager, isPro: storeManager.isPro)
-            celebrationService.checkAllCelebrations(dataManager: dataManager)
+        .sheet(isPresented: $showingQuickLog) {
+            AddWeightEntryView()
+                .environmentObject(dataManager)
+                .environmentObject(dataManager.deviceSettings)
+                .environmentObject(storeManager)
+                .environmentObject(celebrationService)
+                .environmentObject(achievementService)
         }
-        .onChange(of: entryCount) { _, _ in
-            achievementService.refresh(using: dataManager, isPro: storeManager.isPro)
+        .onAppear {
+            achievementService.refresh(using: dataManager, isPro: storeManager.isPro, celebrateUnlocks: false)
+            presentPendingQuickLog()
+        }
+        .onChange(of: dataManager.dataRevision) { _, _ in
+            achievementService.refresh(
+                using: dataManager, isPro: storeManager.isPro,
+                celebrateUnlocks: dataManager.lastChangeAllowsCelebration
+            )
+        }
+        .onChange(of: dataManager.celebrationRevision) { _, _ in
             celebrationService.checkAllCelebrations(dataManager: dataManager)
         }
         .onChange(of: storeManager.isPro) { _, _ in
-            achievementService.refresh(using: dataManager, isPro: storeManager.isPro)
+            achievementService.refresh(using: dataManager, isPro: storeManager.isPro, celebrateUnlocks: false)
         }
+        .onChange(of: router.hasPendingQuickLog) { _, _ in presentPendingQuickLog() }
+        .onChange(of: scenePhase) { _, _ in presentPendingQuickLog() }
     }
     
     // MARK: - Helpers
     
-    private var entryCount: Int {
-        dataManager.fetchAllEntries().count
+    private func presentPendingQuickLog() {
+        guard router.consumeQuickLog(isReady: scenePhase == .active && dataManager.settings?.hasCompletedOnboarding == true) else { return }
+        showingQuickLog = true
     }
 }
 
@@ -136,4 +156,5 @@ struct MainTabView: View {
     ContentView()
         .environmentObject(DataManager(inMemory: true))
         .environmentObject(StoreManager())
+        .environmentObject(AppRouter())
 }

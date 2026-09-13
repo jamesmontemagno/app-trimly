@@ -1,0 +1,69 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "error.invalidWeight" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Enter a finite weight greater than zero." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Introduce un peso finito mayor que cero." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Saisissez un poids fini supérieur à zéro." } }
+      }
+    },
+    "error.invalidDateRange" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Choose a valid date or date range." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Elige una fecha o un intervalo de fechas válido." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Choisissez une date ou une période valide." } }
+      }
+    },
+    "error.importedReadOnly" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "HealthKit measurements are read-only here. You can change local notes or hide the entry without changing Apple Health." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Las mediciones de HealthKit son de solo lectura aquí. Puedes cambiar las notas locales u ocultar la entrada sin modificar Apple Salud." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Les mesures HealthKit sont en lecture seule ici. Vous pouvez modifier les notes locales ou masquer la mesure sans modifier Apple Santé." } }
+      }
+    },
+    "achievement.details" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Achievement details" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Detalles del logro" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Détails du succès" } }
+      }
+    },
+    "achievement.explanation" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Progress uses visible entries. Hiding or correcting a measurement updates progress, but achievements already earned stay unlocked." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "El progreso usa las entradas visibles. Ocultar o corregir una medición actualiza el progreso, pero los logros obtenidos permanecen desbloqueados." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "La progression utilise les mesures visibles. Masquer ou corriger une mesure actualise la progression, mais les succès obtenus restent débloqués." } }
+      }
+    },
+    "achievement.firstDay.title" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "A fresh start" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Un nuevo comienzo" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Un nouveau départ" } }
+      }
+    },
+    "achievement.firstDay.detail" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Log on your first day. Every journey starts with one check-in." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Registra tu primer día. Cada camino empieza con un registro." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Notez votre première mesure. Chaque parcours commence par un premier relevé." } }
+      }
+    },
+    "achievement.sevenDays.title" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Finding your rhythm" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Encuentra tu ritmo" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Trouver son rythme" } }
+      }
+    },
+    "achievement.sevenDays.detail" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Log on seven different days, at your own pace. They do not need to be consecutive." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Registra en siete días diferentes, a tu ritmo. No tienen que ser consecutivos." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Notez une mesure sur sept jours différents, à votre rythme. Ils ne doivent pas être consécutifs." } }
+      }
+    }
+  },
+  "version" : "1.0"
+}

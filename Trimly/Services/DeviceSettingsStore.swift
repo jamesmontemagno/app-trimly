@@ -1,6 +1,6 @@
 //
 //  DeviceSettingsStore.swift
-//  Weigh
+//  My Weight
 //
 //  Created by Trimly on 11/30/2025.
 //
@@ -8,10 +8,21 @@
 import Foundation
 import Combine
 
+enum DashboardCard: String, CaseIterable, Identifiable {
+    case today, progress, sparkline, consistency, trend, calendar, plateau, projection, recap
+
+    var id: String { rawValue }
+}
+
 /// Persists device-scoped preferences that should not sync via CloudKit
 @MainActor
 final class DeviceSettingsStore: ObservableObject {
     // MARK: - Nested Types
+    struct PresentationSettings: Equatable {
+        var dashboardCards: [DashboardCard]
+        var hideWeights: Bool
+    }
+
     struct RemindersSettings: Equatable {
         var primaryTime: Date?
         var secondaryTime: Date?
@@ -40,6 +51,18 @@ final class DeviceSettingsStore: ObservableObject {
         var entryCount: Int
         var hasPrompted: Bool
     }
+
+    struct ShareCardSettings: Equatable {
+        var privacy: String
+        var accent: String
+        var portrait: Bool
+        var darkAppearance: Bool
+        var showFooter: Bool
+        var includeGraph: Bool
+        var includeCurrent: Bool
+        var includeChange: Bool
+        var includeGoal: Bool
+    }
     
     private enum Keys {
         static let primaryReminderTime = "device.reminders.primaryTime"
@@ -56,6 +79,17 @@ final class DeviceSettingsStore: ObservableObject {
         static let isPro = "device.pro.isPro"
         static let reviewEntryCount = "device.review.entryCount"
         static let reviewHasPrompted = "device.review.hasPrompted"
+        static let dashboardCards = "device.presentation.dashboardCards"
+        static let hideWeights = "device.presentation.hideWeights"
+        static let sharePrivacy = "device.shareCard.privacy"
+        static let shareAccent = "device.shareCard.accent"
+        static let sharePortrait = "device.shareCard.portrait"
+        static let shareDarkAppearance = "device.shareCard.darkAppearance"
+        static let shareShowFooter = "device.shareCard.showFooter"
+        static let shareIncludeGraph = "device.shareCard.includeGraph"
+        static let shareIncludeCurrent = "device.shareCard.includeCurrent"
+        static let shareIncludeChange = "device.shareCard.includeChange"
+        static let shareIncludeGoal = "device.shareCard.includeGoal"
     }
     
     // MARK: - Published State
@@ -64,6 +98,8 @@ final class DeviceSettingsStore: ObservableObject {
     @Published private(set) var cloudSync: CloudSyncSettings
     @Published private(set) var pro: ProSettings
     @Published private(set) var review: ReviewSettings
+    @Published private(set) var presentation: PresentationSettings
+    @Published private(set) var shareCard: ShareCardSettings
     
     var remindersPublisher: AnyPublisher<RemindersSettings, Never> {
         $reminders.eraseToAnyPublisher()
@@ -90,6 +126,14 @@ final class DeviceSettingsStore: ObservableObject {
     // MARK: - Init
     init(userDefaults: UserDefaults = .standard) {
         defaults = userDefaults
+        let storedCards = defaults.stringArray(forKey: Keys.dashboardCards)
+        var seenCards = Set<DashboardCard>()
+        let cards = storedCards?.compactMap(DashboardCard.init(rawValue:))
+            .filter { seenCards.insert($0).inserted } ?? DashboardCard.allCases
+        presentation = PresentationSettings(
+            dashboardCards: cards,
+            hideWeights: defaults.bool(forKey: Keys.hideWeights)
+        )
         reminders = RemindersSettings(
             primaryTime: defaults.object(forKey: Keys.primaryReminderTime) as? Date,
             secondaryTime: defaults.object(forKey: Keys.secondaryReminderTime) as? Date,
@@ -116,9 +160,30 @@ final class DeviceSettingsStore: ObservableObject {
             entryCount: defaults.object(forKey: Keys.reviewEntryCount) as? Int ?? 0,
             hasPrompted: defaults.object(forKey: Keys.reviewHasPrompted) as? Bool ?? false
         )
+        shareCard = ShareCardSettings(
+            privacy: defaults.string(forKey: Keys.sharePrivacy) ?? "detailed",
+            accent: defaults.string(forKey: Keys.shareAccent) ?? "blue",
+            portrait: defaults.object(forKey: Keys.sharePortrait) as? Bool ?? true,
+            darkAppearance: defaults.object(forKey: Keys.shareDarkAppearance) as? Bool ?? false,
+            showFooter: defaults.object(forKey: Keys.shareShowFooter) as? Bool ?? true,
+            includeGraph: defaults.object(forKey: Keys.shareIncludeGraph) as? Bool ?? true,
+            includeCurrent: defaults.object(forKey: Keys.shareIncludeCurrent) as? Bool ?? true,
+            includeChange: defaults.object(forKey: Keys.shareIncludeChange) as? Bool ?? true,
+            includeGoal: defaults.object(forKey: Keys.shareIncludeGoal) as? Bool ?? true
+        )
     }
     
     // MARK: - Mutation
+    func updatePresentation(_ mutate: (inout PresentationSettings) -> Void) {
+        var copy = presentation
+        mutate(&copy)
+        var seen = Set<DashboardCard>()
+        copy.dashboardCards = copy.dashboardCards.filter { seen.insert($0).inserted }
+        defaults.set(copy.dashboardCards.map(\.rawValue), forKey: Keys.dashboardCards)
+        defaults.set(copy.hideWeights, forKey: Keys.hideWeights)
+        presentation = copy
+    }
+
     func updateReminders(_ mutate: (inout RemindersSettings) -> Void) {
         var copy = reminders
         mutate(&copy)
@@ -152,6 +217,13 @@ final class DeviceSettingsStore: ObservableObject {
         mutate(&copy)
         review = copy
         persistReview(copy)
+    }
+
+    func updateShareCard(_ mutate: (inout ShareCardSettings) -> Void) {
+        var copy = shareCard
+        mutate(&copy)
+        shareCard = copy
+        persistShareCard(copy)
     }
     
     // MARK: - Persistence Helpers
@@ -198,5 +270,17 @@ final class DeviceSettingsStore: ObservableObject {
     private func persistReview(_ value: ReviewSettings) {
         defaults.set(value.entryCount, forKey: Keys.reviewEntryCount)
         defaults.set(value.hasPrompted, forKey: Keys.reviewHasPrompted)
+    }
+
+    private func persistShareCard(_ value: ShareCardSettings) {
+        defaults.set(value.privacy, forKey: Keys.sharePrivacy)
+        defaults.set(value.accent, forKey: Keys.shareAccent)
+        defaults.set(value.portrait, forKey: Keys.sharePortrait)
+        defaults.set(value.darkAppearance, forKey: Keys.shareDarkAppearance)
+        defaults.set(value.showFooter, forKey: Keys.shareShowFooter)
+        defaults.set(value.includeGraph, forKey: Keys.shareIncludeGraph)
+        defaults.set(value.includeCurrent, forKey: Keys.shareIncludeCurrent)
+        defaults.set(value.includeChange, forKey: Keys.shareIncludeChange)
+        defaults.set(value.includeGoal, forKey: Keys.shareIncludeGoal)
     }
 }

@@ -1,6 +1,6 @@
 //
 //  HealthKitView.swift
-//  Weigh
+//  My Weight
 //
 //  Created by Trimly on 11/19/2025.
 //
@@ -10,7 +10,7 @@ import SwiftUI
 struct HealthKitView: View {
 	@EnvironmentObject var dataManager: DataManager
 	@EnvironmentObject var deviceSettings: DeviceSettingsStore
-	@StateObject private var healthKitService = HealthKitService()
+	@StateObject private var healthKitService = HealthKitService.shared
 	@Environment(\.dismiss) var dismiss
     
 	@State private var startDate = Calendar.current.date(byAdding: .year, value: -1, to: Date()) ?? Date()
@@ -18,6 +18,7 @@ struct HealthKitView: View {
 	@State private var sampleCount: Int?
 	@State private var isLoadingSampleCount = false
 	@State private var importedCount: Int?
+	@State private var skippedCount = 0
 	@State private var errorMessage: LocalizedStringResource?
 	@State private var showingError = false
 	@State private var healthKitEntryCount: Int = 0
@@ -70,6 +71,7 @@ struct HealthKitView: View {
 									requestAuthorization()
 								}
 								.buttonStyle(.borderedProminent)
+								.accessibilityLabel(String(localized: L10n.Health.requestAccessButton))
 							}
 						}
 					}
@@ -85,6 +87,11 @@ struct HealthKitView: View {
 							Label(String(localized: L10n.Health.syncDirectionWrite), systemImage: "arrow.up.circle")
 								.font(.subheadline)
 								.foregroundStyle(.primary)
+							Text(L10n.PlatformFeatures.healthLocalOnly)
+								.font(.callout)
+							Text(L10n.PlatformFeatures.healthDuplicateExplanation)
+								.font(.caption)
+								.foregroundStyle(.secondary)
 						}
 					}
 					
@@ -125,6 +132,7 @@ struct HealthKitView: View {
 							}
 							.disabled(healthKitService.isImporting || isImportingRecent)
 							.buttonStyle(.bordered)
+							.accessibilityLabel(String(localized: L10n.Health.importRecentButton))
 							Text(L10n.Health.importRecentExplainer)
 								.font(.caption)
 								.foregroundStyle(.secondary)
@@ -136,6 +144,7 @@ struct HealthKitView: View {
 							}
 							.disabled(sampleCount == nil || sampleCount == 0 || healthKitService.isImporting)
 							.buttonStyle(.borderedProminent)
+							.accessibilityLabel(String(localized: L10n.Health.importButton))
 							Text(L10n.Health.importDateRangeExplainer)
 								.font(.caption)
 								.foregroundStyle(.secondary)
@@ -151,6 +160,8 @@ struct HealthKitView: View {
 							WeighCardSection(title: String(localized: L10n.Health.importProgressTitle)) {
 								VStack(alignment: .leading, spacing: 8) {
 									ProgressView(value: healthKitService.importProgress)
+										.accessibilityLabel(String(localized: L10n.Health.importProgressTitle))
+										.accessibilityValue(String(localized: L10n.Health.importProgressStatus(Int(healthKitService.importProgress * 100))))
 									Text(L10n.Health.importProgressStatus(Int(healthKitService.importProgress * 100)))
 										.font(.caption)
 										.foregroundStyle(.secondary)
@@ -165,6 +176,8 @@ struct HealthKitView: View {
 								Text(L10n.Health.recentImportHint)
 									.font(.caption)
 									.foregroundStyle(.secondary)
+								Text(L10n.PlatformFeatures.healthSkipped(skippedCount))
+									.font(.caption)
 							}
 						}
 						
@@ -181,11 +194,14 @@ struct HealthKitView: View {
 									}
 									if enabled {
 										enableBackgroundSync()
+									} else {
+										healthKitService.disableBackgroundDelivery()
 									}
 								}
 							))
+							.accessibilityLabel(String(localized: L10n.Health.backgroundSyncToggle))
 							Divider().padding(.vertical, 8)
-							Toggle(String(localized: L10n.Health.autoHideToggle), isOn: Binding(
+							Toggle(String(localized: L10n.PlatformFeatures.healthSkipDuplicates), isOn: Binding(
 								get: { healthSettings.autoHideDuplicates },
 								set: { enabled in
 									deviceSettings.updateHealthKit { settings in
@@ -193,6 +209,8 @@ struct HealthKitView: View {
 									}
 								}
 							))
+							.accessibilityLabel(String(localized: L10n.PlatformFeatures.healthSkipDuplicates))
+							.accessibilityHint(String(localized: L10n.PlatformFeatures.healthDuplicateExplanation))
 							Divider().padding(.vertical, 8)
 							Toggle(String(localized: L10n.Health.writeToHealthToggle), isOn: Binding(
 								get: { healthSettings.writeEnabled },
@@ -202,6 +220,7 @@ struct HealthKitView: View {
 									}
 								}
 							))
+							.accessibilityLabel(String(localized: L10n.Health.writeToHealthToggle))
 							if let lastBackground = healthSettings.lastBackgroundSyncAt {
 								Divider().padding(.vertical, 8)
 								Text(L10n.Health.lastBackgroundSync(lastBackground.formatted(date: .abbreviated, time: .shortened)))
@@ -285,6 +304,7 @@ struct HealthKitView: View {
 					unit: unit
 				)
 				importedCount = count
+				skippedCount = healthKitService.skippedSampleCount
 				deviceSettings.updateHealthKit { settings in
 					settings.lastImportAt = Date()
 				}
@@ -318,6 +338,7 @@ struct HealthKitView: View {
 					unit: unit
 				)
 				importedCount = count
+				skippedCount = healthKitService.skippedSampleCount
 				deviceSettings.updateHealthKit { settings in
 					settings.lastImportAt = Date()
 				}
@@ -365,6 +386,7 @@ extension HealthKitView {
 			Spacer()
 			DatePicker(String(localized: title), selection: date, displayedComponents: .date)
 				.labelsHidden()
+				.accessibilityLabel(String(localized: title))
 		}
 	}
 

@@ -1,5 +1,5 @@
 //  InitialCloudSyncState.swift
-//  Weigh
+//  My Weight
 //
 //  Created by Trimly on 11/30/2025.
 //

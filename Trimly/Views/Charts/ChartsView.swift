@@ -1,553 +1,266 @@
-//
-//  ChartsView.swift
-//  Weigh
-//
-//  Created by Trimly on 11/19/2025.
-//
-
 import SwiftUI
 import Charts
-import Combine
-#if os(macOS)
-import AppKit
-#endif
-#if canImport(UIKit)
-import UIKit
-#endif
+
+private enum ChartRangeTab: CaseIterable, Hashable {
+    case week
+    case month
+    case quarter
+    case year
+    case more
+
+    var label: LocalizedStringResource {
+        switch self {
+        case .week: L10n.Insights.rangeWeekShort
+        case .month: L10n.Insights.rangeMonthShort
+        case .quarter: L10n.Insights.rangeQuarterShort
+        case .year: L10n.Insights.rangeYearShort
+        case .more: L10n.Insights.moreRanges
+        }
+    }
+}
 
 struct ChartsView: View {
-	@EnvironmentObject var dataManager: DataManager
-	@State private var selectedRange: ChartRange = .week
-	@State private var showingSettings = false
-	@State private var showingAddEntry = false
-	@State private var selectedPoint: ChartDataPoint?
-	@State private var showingMAInfo = false
-	@State private var showingEMAInfo = false
-	@State private var showDots = false
-	@State private var chartCache: [ChartRange: [ChartDataPoint]] = [:]
-	@State private var movingAverageCache: [ChartRange: [ChartDataPoint]] = [:]
-	@State private var emaCache: [ChartRange: [ChartDataPoint]] = [:]
-	@Environment(\.accessibilityReduceMotion) private var reduceMotion
-	private let minimumHighlightBandWidth: CGFloat = 24 // Keep the selection band visible on tight plots.
-	private let highlightBandWidthPercentage: CGFloat = 0.015 // Scale the selection band with the plot width.
+    @EnvironmentObject private var dataManager: DataManager
+    @EnvironmentObject private var deviceSettings: DeviceSettingsStore
+    @State private var selectedRange: ChartRange = .week
+    @State private var customStart = Calendar.current.date(byAdding: .month, value: -1, to: Date()) ?? Date()
+    @State private var customEnd = Date()
+    @State private var showingSettings = false
+    @State private var showingAddEntry = false
+    @State private var selectedDate: Date?
+    @State private var showingMAInfo = false
+    @State private var showingEMAInfo = false
 
-	private let tooltipFormatter: DateFormatter = {
-		let formatter = DateFormatter()
-		formatter.dateStyle = .medium
-		formatter.timeStyle = .none
-		return formatter
-	}()
-	
-	var body: some View {
-		NavigationStack {
-			VStack(spacing: 0) {
-				Picker(String(localized: L10n.Charts.rangePicker), selection: $selectedRange) {
-					ForEach(ChartRange.allCases, id: \.self) { range in
-						Text(range.displayName).tag(range)
-					}
-				}
-				.pickerStyle(.segmented)
-				.padding()
-				
-				ScrollView {
-					VStack(spacing: 16) {
-						if let chartData = chartData {
-							weightChart(data: chartData)
-								.padding()
-						} else {
-							ContentUnavailableView(
-								String(localized: L10n.Charts.noDataTitle),
-								systemImage: "chart.xyaxis.line",
-								description: Text(L10n.Charts.noDataDescription)
-							)
-						}
-					}
-				}
-			}
-			.navigationTitle(Text(L10n.Charts.navigationTitle))
-			.toolbar {
-				ToolbarItem(placement: .primaryAction) {
-					Button {
-						showingAddEntry = true
-					} label: {
-						Image(systemName: "plus")
-					}
-					.accessibilityLabel(Text(L10n.Common.addWeight))
-					.accessibilityHint(String(localized: L10n.Accessibility.addWeightEntryHint))
-				}
-				#if os(iOS)
-				ToolbarItem(placement: .topBarLeading) {
-					Button {
-						showingSettings = true
-					} label: {
-						Image(systemName: "slider.horizontal.3")
-					}
-					.accessibilityLabel(Text(L10n.Charts.settingsButton))
-					.accessibilityHint(String(localized: L10n.Accessibility.opensChartSettings))
-				}
-				#else
-				ToolbarItem(placement: .navigation) {
-					Button {
-						showingSettings = true
-					} label: {
-						Image(systemName: "slider.horizontal.3")
-					}
-					.accessibilityLabel(Text(L10n.Charts.settingsButton))
-					.accessibilityHint(String(localized: L10n.Accessibility.opensChartSettings))
-				}
-				#endif
-			}
-			.sheet(isPresented: $showingAddEntry) {
-				AddWeightEntryView()
-			}
-			.sheet(isPresented: $showingSettings) {
-				ChartSettingsView()
-			}
-		}
-		.onChange(of: selectedRange) { _, _ in
-			selectedPoint = nil
-			showDots = false
-			prewarmCaches(for: selectedRange)
-		}
-		.onReceive(dataManager.objectWillChange) { _ in
-			invalidateCaches()
-			prewarmCaches(for: selectedRange)
-		}
-		.onAppear {
-			prewarmCaches(for: selectedRange)
-		}
-	}
-	
-	@ViewBuilder
-	private func weightChart(data: [ChartDataPoint]) -> some View {
-		let chartMode = dataManager.settings?.chartMode ?? .minimalist
-		
-		VStack(alignment: .leading, spacing: 16) {
-			Group {
-				if let selectedPoint {
-					selectionSummaryView(for: selectedPoint)
-						.transition(.opacity.combined(with: .move(edge: .top)))
-				} else {
-					selectionHintView
-				}
-			}
-			.animation(reduceMotion ? nil : .easeInOut, value: selectedPoint?.id)
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 16) {
+                    if deviceSettings.presentation.hideWeights {
+                        ContentUnavailableView(
+                            String(localized: L10n.Portability.hideWeights),
+                            systemImage: "eye.slash",
+                            description: Text(L10n.Portability.hideWeightsHint)
+                        )
+                    } else {
+                    rangeControls
+                    if let period {
+                        let data = points(in: period)
+                        if data.isEmpty {
+                            ContentUnavailableView(String(localized: L10n.Charts.noDataTitle),
+                                                   systemImage: "chart.xyaxis.line",
+                                                   description: Text(L10n.Charts.noDataDescription))
+                        } else {
+                            Text(L10n.Insights.weightTrend)
+                                .font(.headline)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .accessibilityAddTraits(.isHeader)
+                            chartSection(data: data, period: period)
+                        }
+                    } else {
+                        Text(selectedRange == .sinceGoal ? L10n.Insights.noGoalRange : L10n.Insights.invalidRange)
+                            .foregroundStyle(.secondary)
+                    }
+                    RecapCard()
+                    GoalPaceCard()
+                    }
+                }
+                .padding()
+            }
+            .navigationTitle(Text(L10n.Charts.navigationTitle))
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button { showingAddEntry = true } label: { Image(systemName: "plus") }
+                        .accessibilityLabel(Text(L10n.Common.addWeight))
+                        .accessibilityHint(Text(L10n.Accessibility.addWeightEntryHint))
+                }
+                ToolbarItem(placement: .automatic) {
+                    Button { showingSettings = true } label: { Image(systemName: "slider.horizontal.3") }
+                        .accessibilityLabel(Text(L10n.Charts.settingsButton))
+                        .accessibilityHint(Text(L10n.Accessibility.opensChartSettings))
+                }
+            }
+            .sheet(isPresented: $showingAddEntry) { AddWeightEntryView() }
+            .sheet(isPresented: $showingSettings) { ChartSettingsView() }
+        }
+        .onChange(of: selectedRange) { _, _ in selectedDate = nil }
+        .onChange(of: customStart) { _, _ in selectedDate = nil }
+        .onChange(of: customEnd) { _, _ in selectedDate = nil }
+        .onChange(of: dataManager.dataRevision) { _, _ in selectedDate = nil }
+    }
 
-			Chart {
-				weightSeriesMarks(data: data)
-				selectedPointRuleMark()
-				movingAverageMarks()
-				emaMarks()
-				goalMarks(data: data)
-			}
-			.frame(height: 300)
-			.chartXAxis(chartMode == .minimalist ? .hidden : .automatic)
-			.chartYAxis(chartMode == .minimalist ? .hidden : .automatic)
-			.chartYScale(domain: .automatic(includesZero: false))
-			.chartForegroundStyleScale([
-				ChartSeries.weight.rawValue: weightLineGradient,
-				ChartSeries.movingAverage.rawValue: movingAverageGradient,
-				ChartSeries.ema.rawValue: emaLineGradient
-			])
-			.chartLegend(.hidden)
-			.chartOverlay { proxy in
-				GeometryReader { geo in
-					ZStack {
-						if let selectedPoint,
-						   let plotFrameAnchor = proxy.plotFrame,
-						   let xPosition = proxy.position(forX: selectedPoint.date) {
-							let plotFrame = geo[plotFrameAnchor]
-							let highlightX = xPosition + plotFrame.origin.x
-							let bandWidth = highlightBandWidth(for: plotFrame)
-							
-							Rectangle()
-								.fill(weightLinePrimary.opacity(0.08))
-								.frame(width: bandWidth, height: plotFrame.height)
-								.position(x: highlightX, y: plotFrame.midY)
-								.allowsHitTesting(false)
-						}
-						
-						Rectangle()
-							.fill(.clear)
-							.contentShape(Rectangle())
-							.gesture(
-								DragGesture(minimumDistance: 0)
-									.onChanged { value in
-										updateSelection(at: value.location, proxy: proxy, geometry: geo, data: data)
-									}
-									.onEnded { _ in }
-							)
-							.onTapGesture { location in
-								updateSelection(at: location, proxy: proxy, geometry: geo, data: data)
-							}
-					}
-				}
-			}
-			
-			if dataManager.settings?.showMovingAverage == true || dataManager.settings?.showEMA == true {
-				ChartLegend(
-					showMovingAverage: dataManager.settings?.showMovingAverage == true,
-					showEMA: dataManager.settings?.showEMA == true,
-					onMAInfo: { showingMAInfo = true },
-					onEMAInfo: { showingEMAInfo = true }
-				)
-			}
-			
-			if let stats = calculateStats(data: data) {
-				AnalyticsDashboardView(stats: stats, data: data, range: selectedRange)
-			}
-		}
-		.padding()
-		.background(.thinMaterial)
-		.clipShape(RoundedRectangle(cornerRadius: 16))
-		.alert(String(localized: L10n.Charts.maInfoTitle), isPresented: $showingMAInfo) {
-			Button(String(localized: L10n.Common.okButton), role: .cancel) {}
-		} message: {
-			Text(L10n.Charts.maInfoDescription)
-		}
-		.alert(String(localized: L10n.Charts.emaInfoTitle), isPresented: $showingEMAInfo) {
-			Button(String(localized: L10n.Common.okButton), role: .cancel) {}
-		} message: {
-			Text(L10n.Charts.emaInfoDescription)
-		}
-	}
-	
-	// MARK: - Data Processing
-	
-	private var chartData: [ChartDataPoint]? {
-		cachedChartData(for: selectedRange)
-	}
-	
-	private var movingAverageData: [ChartDataPoint]? {
-		cachedMovingAverageData(for: selectedRange)
-	}
-	
-	private var emaData: [ChartDataPoint]? {
-		cachedEMAData(for: selectedRange)
-	}
-	
-	private func cachedChartData(for range: ChartRange) -> [ChartDataPoint]? {
-		if let cached = chartCache[range] {
-			return cached
-		}
-		
-		let dailyWeights = dataManager.getDailyWeights()
-		guard !dailyWeights.isEmpty else { return nil }
-		
-		let filtered = filterData(dailyWeights, in: range)
-		guard !filtered.isEmpty else { return nil }
-		
-		let mapped = filtered.map { ChartDataPoint(date: $0.date, weight: $0.weight) }
-		chartCache[range] = mapped
-		return mapped
-	}
-	
-	private func cachedMovingAverageData(for range: ChartRange) -> [ChartDataPoint]? {
-		if let cached = movingAverageCache[range] {
-			return cached.isEmpty ? nil : cached
-		}
-		
-		guard let period = dataManager.settings?.movingAveragePeriod else { return nil }
-		let dailyWeights = dataManager.getDailyWeights()
-		let filtered = filterData(dailyWeights, in: range)
-		
-		let ma = WeightAnalytics.calculateMovingAverage(dailyWeights: filtered, period: period)
-		let mapped = ma.map { ChartDataPoint(date: $0.date, weight: $0.value) }
-		guard !mapped.isEmpty else { return nil }
-		movingAverageCache[range] = mapped
-		return mapped
-	}
-	
-	private func cachedEMAData(for range: ChartRange) -> [ChartDataPoint]? {
-		if let cached = emaCache[range] {
-			return cached.isEmpty ? nil : cached
-		}
-		
-		guard let period = dataManager.settings?.emaPeriod else { return nil }
-		let dailyWeights = dataManager.getDailyWeights()
-		let filtered = filterData(dailyWeights, in: range)
-		
-		let ema = WeightAnalytics.calculateEMA(dailyWeights: filtered, period: period)
-		let mapped = ema.map { ChartDataPoint(date: $0.date, weight: $0.value) }
-		guard !mapped.isEmpty else { return nil }
-		emaCache[range] = mapped
-		return mapped
-	}
-	
-	private func filterData(_ data: [(date: Date, weight: Double)], in range: ChartRange) -> [(date: Date, weight: Double)] {
-		let calendar = Calendar.current
-		let now = Date()
-		
-		let startDate: Date
-		switch range {
-		case .week:
-			startDate = calendar.date(byAdding: .day, value: -7, to: now) ?? now
-		case .month:
-			startDate = calendar.date(byAdding: .month, value: -1, to: now) ?? now
-		case .quarter:
-			startDate = calendar.date(byAdding: .month, value: -3, to: now) ?? now
-		case .year:
-			startDate = calendar.date(byAdding: .year, value: -1, to: now) ?? now
-		}
-		
-		return data.filter { $0.date >= startDate }
-	}
-	
-	private func calculateStats(data: [ChartDataPoint]) -> ChartStats? {
-		guard !data.isEmpty else { return nil }
-		
-		let weights = data.map { $0.weight }
-		let min = weights.min() ?? 0
-		let max = weights.max() ?? 0
-		let average = weights.reduce(0, +) / Double(weights.count)
-		
-		return ChartStats(min: min, max: max, average: average, range: max - min)
-	}
-	
-	// MARK: - Helpers
-	
-	private func invalidateCaches() {
-		chartCache.removeAll()
-		movingAverageCache.removeAll()
-		emaCache.removeAll()
-	}
-	
-	private func prewarmCaches(for range: ChartRange) {
-		_ = cachedChartData(for: range)
-		if dataManager.settings?.showMovingAverage == true {
-			_ = cachedMovingAverageData(for: range)
-		}
-		if dataManager.settings?.showEMA == true {
-			_ = cachedEMAData(for: range)
-		}
-	}
+    private var rangeControls: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Picker(String(localized: L10n.Charts.rangePicker), selection: rangeTab) {
+                ForEach(ChartRangeTab.allCases, id: \.self) { tab in
+                    Text(tab.label).tag(tab)
+                }
+            }
+            .pickerStyle(.segmented)
+            .frame(minHeight: 44)
+            .accessibilityLabel(Text(L10n.Charts.rangePicker))
+            if rangeTab.wrappedValue == .more {
+                Picker(String(localized: L10n.Insights.moreRanges), selection: $selectedRange) {
+                    Text(L10n.Insights.allTime).tag(ChartRange.allTime)
+                    Text(L10n.Insights.sinceGoal).tag(ChartRange.sinceGoal)
+                    Text(L10n.Insights.customRange).tag(ChartRange.custom)
+                }
+                .pickerStyle(.menu)
+                .frame(minHeight: 44)
+                .accessibilityLabel(Text(L10n.Insights.moreRanges))
+            }
+            if selectedRange == .custom {
+                DatePicker(String(localized: L10n.Insights.startDate), selection: $customStart, in: ...Date(), displayedComponents: .date)
+                    .accessibilityLabel(Text(L10n.Insights.startDate))
+                DatePicker(String(localized: L10n.Insights.endDate), selection: $customEnd, in: ...Date(), displayedComponents: .date)
+                    .accessibilityLabel(Text(L10n.Insights.endDate))
+            }
+        }
+    }
 
-	private func highlightBandWidth(for plotFrame: CGRect) -> CGFloat {
-		max(minimumHighlightBandWidth, plotFrame.width * highlightBandWidthPercentage)
-	}
-	
-	private func displayValue(_ kg: Double) -> String {
-		guard let unit = dataManager.settings?.preferredUnit else {
-			return String(format: "%.1f", kg)
-		}
-		
-		let value = unit.convert(fromKg: kg)
-		let precision = dataManager.settings?.decimalPrecision ?? 1
-		return String(format: "%.*f", precision, value)
-	}
+    private var rangeTab: Binding<ChartRangeTab> {
+        Binding(
+            get: {
+                switch selectedRange {
+                case .week: .week
+                case .month: .month
+                case .quarter: .quarter
+                case .year: .year
+                case .allTime, .sinceGoal, .custom: .more
+                }
+            },
+            set: { tab in
+                switch tab {
+                case .week: selectedRange = .week
+                case .month: selectedRange = .month
+                case .quarter: selectedRange = .quarter
+                case .year: selectedRange = .year
+                case .more:
+                    if ![.allTime, .sinceGoal, .custom].contains(selectedRange) {
+                        selectedRange = .allTime
+                    }
+                }
+            }
+        )
+    }
 
-	private func convertedWeight(_ kg: Double) -> Double {
-		guard let unit = dataManager.settings?.preferredUnit else { return kg }
-		return unit.convert(fromKg: kg)
-	}
+    private func chartSection(data: [ChartDataPoint], period: WeightInsights.Period) -> some View {
+        VStack(alignment: .leading, spacing: 16) {
+            WeightChartPlot(
+                data: data, movingAverage: movingAverage(in: period), ema: ema(in: period),
+                notesDays: notesDays, selectedDate: $selectedDate
+            )
+            if let point = selectedPoint(in: data) {
+                selectedDay(point)
+            } else {
+                Text(L10n.Charts.selectionHint).font(.caption).foregroundStyle(.secondary)
+            }
+            Menu {
+                ForEach(data) { point in
+                    Button(point.date.formatted(date: .abbreviated, time: .omitted)) { selectedDate = point.date }
+                }
+            } label: {
+                Label(String(localized: L10n.Insights.chooseDay), systemImage: "calendar")
+            }
+            .frame(minHeight: 44)
+            .accessibilityLabel(Text(L10n.Insights.chooseDay))
+            if dataManager.settings?.showMovingAverage == true || dataManager.settings?.showEMA == true {
+                ChartLegend(
+                    showMovingAverage: dataManager.settings?.showMovingAverage == true,
+                    showEMA: dataManager.settings?.showEMA == true,
+                    onMAInfo: { showingMAInfo = true }, onEMAInfo: { showingEMAInfo = true }
+                )
+                Text(L10n.Insights.samplesExplanation).font(.caption).foregroundStyle(.secondary)
+            }
+            if let stats = stats(data) {
+                AnalyticsDashboardView(stats: stats, data: data, range: selectedRange, period: period)
+            }
+        }
+        .padding()
+        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .alert(String(localized: L10n.Charts.maInfoTitle), isPresented: $showingMAInfo) {
+            Button(String(localized: L10n.Common.okButton), role: .cancel) {}
+        } message: {
+            Text(L10n.Insights.samplesExplanation)
+        }
+        .alert(String(localized: L10n.Charts.emaInfoTitle), isPresented: $showingEMAInfo) {
+            Button(String(localized: L10n.Common.okButton), role: .cancel) {}
+        } message: {
+            Text(L10n.Insights.samplesExplanation)
+        }
+    }
 
-	@ViewBuilder
-	private func selectionSummaryView(for point: ChartDataPoint) -> some View {
-		let unitSymbol = dataManager.settings?.preferredUnit.symbol ?? "kg"
-		let dateText = tooltipFormatter.string(from: point.date)
+    private func selectedDay(_ point: ChartDataPoint) -> some View {
+        NavigationLink {
+            EntryDayDetailView(date: point.date)
+        } label: {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(point.date, format: .dateTime.day().month().year()).font(.headline)
+                Text(InsightFormatting.weight(point.weight, unit: dataManager.settings?.preferredUnit ?? .kilograms,
+                                              precision: dataManager.settings?.decimalPrecision ?? 1))
+                Label(String(localized: L10n.Insights.dayDetails), systemImage: "list.bullet")
+                if notesDays.contains(point.date) {
+                    Label(String(localized: L10n.Insights.notes), systemImage: "note.text")
+                }
+            }
+            .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+            .padding(12)
+            .background(.background, in: RoundedRectangle(cornerRadius: 12))
+        }
+        .buttonStyle(.plain)
+        .accessibilityElement(children: .combine)
+        .accessibilityHint(Text(L10n.Insights.dayDetailsHint))
+    }
 
-		HStack(alignment: .top) {
-			VStack(alignment: .leading, spacing: 4) {
-				Text(L10n.Charts.selectionTitle)
-					.font(.caption)
-					.foregroundStyle(.secondary)
-				Text(dateText)
-					.font(.headline)
-			}
-			Spacer()
-			Text("\(displayValue(point.weight)) \(unitSymbol)")
-				.font(.title3.weight(.semibold))
-				.multilineTextAlignment(.trailing)
-		}
-		.padding(12)
-		.background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-		.accessibilityElement(children: .combine)
-		.accessibilityLabel(Text("\(dateText), \(displayValue(point.weight)) \(unitSymbol)"))
-		.onTapGesture {
-			// Tapping the selected summary hides the dots
-			withAnimation {
-				showDots = false
-				selectedPoint = nil
-			}
-		}
-	}
+    private var allData: [WeightInsights.DailyWeight] {
+        let unit = dataManager.settings?.preferredUnit ?? .kilograms
+        return dataManager.getDailyWeights().filter {
+            $0.weight.isFinite && $0.weight > 0 && unit.convert(fromKg: $0.weight).isFinite && $0.date <= Date()
+        }
+    }
 
-	private var selectionHintView: some View {
-		HStack(spacing: 8) {
-			Image(systemName: "hand.tap")
-				.font(.subheadline)
-				.foregroundStyle(.secondary)
-			Text(showDots ? L10n.Charts.selectionHint : L10n.Charts.tapToShowDotsHint)
-				.font(.footnote)
-				.foregroundStyle(.secondary)
-		}
-		.padding(12)
-		.background(Color.secondary.opacity(0.08), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-	}
+    private var period: WeightInsights.Period? {
+        selectedRange.period(firstDate: allData.first?.date, goalStart: dataManager.fetchActiveGoal()?.startDate,
+                             customStart: customStart, customEnd: customEnd)
+    }
 
-	private func pointAccessibilityLabel(_ point: ChartDataPoint) -> Text {
-		let dateText = tooltipFormatter.string(from: point.date)
-		return Text("\(dateText), \(displayValue(point.weight)) \(dataManager.settings?.preferredUnit.symbol ?? "kg")")
-	}
-	
-	@ViewBuilder
-	private func pointSymbol(for point: ChartDataPoint) -> some View {
-		let isSelected = point.id == selectedPoint?.id
-		let size: CGFloat = isSelected ? 24 : 12
-		Circle()
-			.strokeBorder(weightLinePrimary, lineWidth: isSelected ? 3 : 2)
-			.background(
-				Circle()
-					.fill(isSelected ? pointFillColor : weightLineSecondary)
-			)
-			.frame(width: size, height: size)
-	}
+    private var notesDays: Set<Date> {
+        Set(dataManager.fetchAllEntries().filter {
+            !$0.isHidden && !($0.notes?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+        }.map { WeightEntry.normalizeDate($0.timestamp) })
+    }
 
-	private func updateSelection(at location: CGPoint, proxy: ChartProxy, geometry: GeometryProxy, data: [ChartDataPoint]) {
-		guard let plotFrameAnchor = proxy.plotFrame else { return }
-		let plotFrame = geometry[plotFrameAnchor]
-		let xPosition = location.x - plotFrame.origin.x
-		guard xPosition >= 0, xPosition <= plotFrame.size.width else { return }
-		
-		guard let date: Date = proxy.value(atX: xPosition) else { return }
-		if let nearest = nearestPoint(to: date, in: data) {
-			withAnimation {
-				showDots = true
-				selectedPoint = nearest
-			}
-		}
-	}
+    private func points(in period: WeightInsights.Period) -> [ChartDataPoint] {
+        allData.filter { $0.date >= period.start && $0.date < period.end }
+            .map { ChartDataPoint(date: $0.date, weight: $0.weight) }
+    }
 
-	private func nearestPoint(to date: Date, in data: [ChartDataPoint]) -> ChartDataPoint? {
-		data.min(by: { abs($0.date.timeIntervalSince(date)) < abs($1.date.timeIntervalSince(date)) })
-	}
-	
-	// MARK: - Chart Components
-	
-	@ChartContentBuilder
-	private func weightSeriesMarks(data: [ChartDataPoint]) -> some ChartContent {
-		// Draw the line connecting all points (only if more than 1 point)
-		if data.count > 1 {
-			ForEach(data) { point in
-				LineMark(
-					x: .value("Date", point.date),
-					y: .value("Weight", convertedWeight(point.weight))
-				)
-				.foregroundStyle(by: .value("Series", ChartSeries.weight.rawValue))
-				.interpolationMethod(.monotone)
-			}
-		}
-		
-		// Draw points if enabled OR if there's only one data point
-		if showDots || data.count == 1 {
-			ForEach(data) { point in
-				PointMark(
-					x: .value("Date", point.date),
-					y: .value("Weight", convertedWeight(point.weight))
-				)
-				.symbol {
-					pointSymbol(for: point)
-				}
-				.foregroundStyle(by: .value("Series", ChartSeries.weight.rawValue))
-				.accessibilityLabel(pointAccessibilityLabel(point))
-			}
-		}
-	}
-	
-	@ChartContentBuilder
-	private func selectedPointRuleMark() -> some ChartContent {
-		if let selectedPoint {
-			RuleMark(x: .value("Selected Date", selectedPoint.date))
-				.foregroundStyle(weightLinePrimary.opacity(0.3))
-				.lineStyle(StrokeStyle(lineWidth: 1, dash: [2]))
-		}
-	}
-	
-	@ChartContentBuilder
-	private func movingAverageMarks() -> some ChartContent {
-		if dataManager.settings?.showMovingAverage == true,
-		   let maData = movingAverageData {
-			ForEach(maData) { point in
-				LineMark(
-					x: .value("Date", point.date),
-					y: .value("MA", convertedWeight(point.weight))
-				)
-				.foregroundStyle(by: .value("Series", ChartSeries.movingAverage.rawValue))
-				.lineStyle(StrokeStyle(lineWidth: 2, dash: [5, 5]))
-				.interpolationMethod(.monotone)
-			}
-		}
-	}
-	
-	@ChartContentBuilder
-	private func emaMarks() -> some ChartContent {
-		if dataManager.settings?.showEMA == true,
-		   let emaData = emaData {
-			ForEach(emaData) { point in
-				LineMark(
-					x: .value("Date", point.date),
-					y: .value("EMA", convertedWeight(point.weight))
-				)
-				.foregroundStyle(by: .value("Series", ChartSeries.ema.rawValue))
-				.lineStyle(StrokeStyle(lineWidth: 2, dash: [2, 2]))
-				.interpolationMethod(.monotone)
-			}
-		}
-	}
-	
-	@ChartContentBuilder
-	private func goalMarks(data: [ChartDataPoint]) -> some ChartContent {
-		if let goal = dataManager.fetchActiveGoal() {
-			RuleMark(
-				y: .value("Goal", convertedWeight(goal.targetWeightKg))
-			)
-			.foregroundStyle(goalLineColor)
-			.lineStyle(StrokeStyle(lineWidth: 2, dash: [10, 5]))
-			.annotation(position: .top, alignment: .trailing) {
-				Text(L10n.Charts.goalLabel)
-					.font(.caption)
-					.foregroundStyle(goalLineColor)
-			}
-			
-			// Add goal start date marker as vertical line
-			if let startDate = goal.startDate as Date?,
-			   startDate >= (data.first?.date ?? Date.distantPast),
-			   startDate <= (data.last?.date ?? Date.distantFuture) {
-				RuleMark(
-					x: .value("Goal Start", startDate)
-				)
-				.foregroundStyle(.purple.opacity(0.6))
-				.lineStyle(StrokeStyle(lineWidth: 2))
-			}
-		}
-	}
-	
-	// MARK: - Colors
-	
-	private var weightLinePrimary: Color { Color(red: 0.31, green: 0.55, blue: 1.0) }
-	private var weightLineSecondary: Color { Color(red: 0.29, green: 0.78, blue: 1.0) }
-	private var weightLineGradient: LinearGradient {
-		LinearGradient(colors: [weightLinePrimary, weightLineSecondary], startPoint: .leading, endPoint: .trailing)
-	}
-	private var movingAverageColor: Color { Color(red: 0.99, green: 0.64, blue: 0.32) }
-	private var movingAverageGradient: LinearGradient {
-		LinearGradient(colors: [movingAverageColor.opacity(0.9), movingAverageColor], startPoint: .leading, endPoint: .trailing)
-	}
-	private var emaLineColor: Color { Color(red: 0.74, green: 0.54, blue: 0.96) }
-	private var emaLineGradient: LinearGradient {
-		LinearGradient(colors: [emaLineColor.opacity(0.9), emaLineColor], startPoint: .leading, endPoint: .trailing)
-	}
-	private var goalLineColor: Color { .green }
-	private var pointFillColor: Color {
-#if os(macOS)
-		Color(nsColor: .windowBackgroundColor)
-#else
-		Color(uiColor: .systemBackground)
-#endif
-	}
+    private func movingAverage(in period: WeightInsights.Period) -> [ChartDataPoint] {
+        guard dataManager.settings?.showMovingAverage == true else { return [] }
+        return WeightAnalytics.calculateMovingAverage(dailyWeights: allData, period: dataManager.settings?.movingAveragePeriod ?? 7)
+            .filter { $0.date >= period.start && $0.date < period.end }
+            .map { ChartDataPoint(date: $0.date, weight: $0.value) }
+    }
+
+    private func ema(in period: WeightInsights.Period) -> [ChartDataPoint] {
+        guard dataManager.settings?.showEMA == true else { return [] }
+        return WeightAnalytics.calculateEMA(dailyWeights: allData, period: dataManager.settings?.emaPeriod ?? 7)
+            .filter { $0.date >= period.start && $0.date < period.end }
+            .map { ChartDataPoint(date: $0.date, weight: $0.value) }
+    }
+
+    private func selectedPoint(in data: [ChartDataPoint]) -> ChartDataPoint? {
+        guard let selectedDate else { return nil }
+        return data.min { abs($0.date.timeIntervalSince(selectedDate)) < abs($1.date.timeIntervalSince(selectedDate)) }
+    }
+
+    private func stats(_ data: [ChartDataPoint]) -> ChartStats? {
+        let weights = data.map(\.weight)
+        guard let minimum = weights.min(), let maximum = weights.max() else { return nil }
+        return ChartStats(min: minimum, max: maximum,
+                          average: weights.reduce(0) { $0 + $1 / Double(weights.count) }, range: maximum - minimum)
+    }
 }
 
 #Preview {
-	ChartsView()
-		.environmentObject(DataManager(inMemory: true))
+    ChartsView().environmentObject(DataManager(inMemory: true)).environmentObject(DeviceSettingsStore())
 }

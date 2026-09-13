@@ -1,6 +1,6 @@
 //
 //  Achievement.swift
-//  Weigh
+//  My Weight
 //
 //  Created by Trimly on 11/29/25.
 //
@@ -21,7 +21,7 @@ final class Achievement {
 	var evaluatedAt: Date = Date()
 	/// Whether the unlock animation/celebration has been presented
 	var didCelebrateUnlock: Bool = false
-	/// Whether this achievement is reserved for Weigh Pro subscribers
+	/// Whether this achievement is reserved for My Weight Pro subscribers
 	var isPremium: Bool = false
 	/// Optional custom data payload (e.g., last threshold hit) for future expansion
 	var metadata: Data?

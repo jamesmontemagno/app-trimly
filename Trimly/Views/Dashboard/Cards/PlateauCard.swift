@@ -1,6 +1,6 @@
 //
 //  PlateauCard.swift
-//  Weigh
+//  My Weight
 //
 //  Created by Trimly on 12/7/2025.
 //
@@ -16,16 +16,20 @@ struct PlateauCard: View {
 			HStack {
 				Image(systemName: "info.circle.fill")
 					.foregroundStyle(.blue)
+					.accessibilityHidden(true)
 				
 				Text(L10n.Dashboard.plateauDetected)
 					.font(.headline)
+					.accessibilityAddTraits(.isHeader)
 				
 				Spacer()
 				
 				Button(action: onDismiss) {
 					Image(systemName: "xmark.circle.fill")
 						.foregroundStyle(.secondary)
+						.frame(minWidth: 44, minHeight: 44)
 				}
+				.accessibilityLabel(Text(L10n.Insights.dismissPlateau))
 			}
 			
 			Text(plateau.message)
@@ -35,7 +39,7 @@ struct PlateauCard: View {
 			
 			Text(plateau.hint)
 				.font(.caption)
-				.foregroundStyle(.tertiary)
+				.foregroundStyle(.secondary)
 				.multilineTextAlignment(.center)
 				.padding(.top, 4)
 		}

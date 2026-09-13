@@ -1,239 +1,49 @@
-# Weigh Widget Implementation Plan
-
-This document outlines a concrete, end-to-end plan for integrating the Weigh home screen widget with the existing SwiftData + CloudKit stack. The goal is to make the widget show the user	s current weight, delta, and trend using the same underlying data and analytics as the main app, while keeping the implementation maintainable.
+# Widget integration
 
-## Goals
+The widget extension is now part of `TrimTally.xcodeproj`. This replaces the earlier proposal to give the extension its own CloudKit-backed model container.
 
-- Show current weight, recent change (delta), and trend in small/medium widgets.
-- Use the same data source as the main app:
-  - SwiftData models: `WeightEntry`, `Goal`, `AppSettings`.
-  - CloudKit-backed storage using `iCloud.com.refractored.weigh`.
-- Minimize duplication of analytics logic (re-use `WeightAnalytics` where practical).
-- Keep widget reads lightweight and read-only.
-- Ensure widgets stay fresh when the user logs new entries.
-
-## High-Level Architecture
-
-- **Widget extension target**
-  - New target: `WeighWidgetExtension` (name can be adjusted).
-  - Platform: iOS (or Multiplatform if desired); hosts home screen widgets.
-  - Contains a `WidgetBundle` + `Widget` type and `TimelineProvider` implementation.
+## Architecture
 
-- **Data source**
-  - Option A (recommended for v1): The widget creates its own `ModelContainer` using the same SwiftData schema and CloudKit configuration as the main app.
-    - Pros: No extra storage format; multi-device sync built in.
-    - Cons: Slightly heavier initialization cost versus a simple UserDefaults read.
-  - Option B (optional optimization later): Main app writes a summary payload into `UserDefaults(suiteName: "group.com.refractored.weigh")`, widget reads that summary.
+- `Trimly/Widget/TrimlyWidget.swift` is the extension entry point and renders small/medium widgets plus iOS circular, rectangular, and inline accessory widgets.
+- `Trimly/Widget/WidgetSnapshotWriter.swift` belongs only to the app. It derives the latest visible measurement and recent daily aggregates using the existing DataManager and WeightAnalytics APIs.
+- `Trimly/Widget/Shared/WidgetSnapshot.swift` defines a versioned, Codable display snapshot and its file store. It has no SwiftData, HealthKit, or app-model dependency.
+- The app and extension share `group.com.refractored.trimtally`. The snapshot is stored as `weight-widget-snapshot.json` in that App Group, excluded from backups.
+- The widget never opens the CloudKit store. No persisted model, relationship, property, or stored enum changes are required.
 
-- **Analytics**
-  - Re-use `WeightAnalytics` or a subset of its logic to compute:
-    - Latest weight.
-    - Delta over a configurable lookback window (e.g., 7 days).
-    - Trend direction (downward / upward / stable).
+## Refresh and privacy
 
-- **Refresh strategy**
-  - System-driven: Widget timeline policy `.after(nextUpdate)` (e.g., every 30–60 minutes).
-  - App-driven: When the app saves a new `WeightEntry`, call `WidgetCenter.shared.reloadTimelines(ofKind: "TrimlyWidget")` to request an immediate refresh.
+Successful entry, goal, and settings changes refresh the snapshot. Presentation preferences, app activation, and completed CloudKit imports refresh it too. Deleting all data writes an empty snapshot; enabling weight privacy writes a snapshot without weight history.
 
----
+The app requests `WidgetCenter.reloadTimelines(ofKind:)`. WidgetKit controls the actual refresh budget, so updates are not guaranteed to appear immediately. Timeline entries mark older cached measurements as stale, and missing/invalid caches display an empty state rather than sample weights.
 
-## Step 1: Create the Widget Extension Target
+Widget views are privacy-sensitive and replace both visible and VoiceOver content when redacted. The privacy preference is device-local; it does not lock the app or remove stored measurements.
 
-1. Open `Weigh.xcodeproj` in Xcode.
-2. Go to **File → New → Target...**.
-3. Select **Widget Extension** (under iOS or Multiplatform → Application Extension).
-4. Configure the new target:
-   - Product Name: `WeighWidgetExtension`.
-   - Embedded in Application: `Weigh`.
-   - Language: Swift.
-   - Disable the option to include a separate host app (if prompted).
-5. Finish the wizard.
+## Quick logging
 
-Xcode will add:
-- A new target `WeighWidgetExtension` to the project.
-- A starter Swift file (e.g., `WeighWidgetExtension.swift`) containing a `WidgetBundle` and basic widget.
+Tapping a widget opens the same buffered quick-log route as reminder actions and the Shortcuts action. The app waits for an active window and completed onboarding before presenting the entry form. No weight is saved automatically.
 
-> **Note:** The existing file `Trimly/Widget/TrimlyWidget.swift` is not currently part of any widget extension. It should be wired into this new target in a later step.
+## Signing and target membership
 
----
+The project embeds `TrimTallyWidget` and keeps its `@main` source out of the app's synchronized source group. Shared value types are compiled into both targets; the snapshot writer is app-only.
 
-## Step 2: Wire Up the Existing Widget Swift File
+In Xcode, configure an Apple development team and provisioning for:
 
-1. In Xcode Project Navigator, locate [Trimly/Widget/TrimlyWidget.swift](../Trimly/Widget/TrimlyWidget.swift).
-2. Open the **File Inspector** and under **Target Membership**, check the box for the new `WeighWidgetExtension` target.
-3. Optionally uncheck the main `Weigh` app target for this file, so it lives purely in the extension.
-4. In the widget extension target’s source group, you can either:
-   - Move `TrimlyWidget.swift` into the widget target group, **or**
-   - Leave it physically in the `Trimly/Widget` folder and just rely on target membership.
-5. Remove or adapt the autogenerated starter widget Swift file to avoid duplicate widget definitions:
-   - If you keep `TrimlyWidget` as your primary widget, delete the auto-generated `SimpleEntry`/`Provider`/`<AppName>Widget` types to avoid naming/conflict issues.
+- The existing app identifier.
+- `com.refractored.trimtally.widget`.
+- The App Group `group.com.refractored.trimtally` on both targets.
 
-At this point, the extension target should build with the placeholder widget data already present in `TrimlyWidget.swift`.
+The extension requires App Groups, not its own CloudKit entitlement. Keep app and extension version/build numbers aligned when releasing.
 
----
+## Development
 
-## Step 3: Configure Widget Entitlements
+```bash
+xcodebuild -scheme TrimTally \
+  -destination 'platform=iOS Simulator,name=iPhone 17' build
 
-The widget extension must have compatible entitlements with the main app so it can access:
-- The same CloudKit container: `iCloud.com.refractored.weigh`.
-- The same app group: `group.com.refractored.weigh` (for any future shared storage).
+xcodebuild -scheme TrimTally \
+  -destination 'platform=macOS,arch=arm64' \
+  -only-testing:TrimTallyTests/WidgetSnapshotTests \
+  -only-testing:TrimTallyTests/PlatformRoutingTests test
+```
 
-1. Select the `WeighWidgetExtension` target in Xcode.
-2. Go to **Signing & Capabilities**.
-3. Add **App Groups** capability:
-   - Check or add the group: `group.com.refractored.weigh`.
-4. Add **iCloud** capability:
-   - Enable **CloudKit** under Services.
-   - Under Containers, select `iCloud.com.refractored.weigh`.
-5. Confirm that Xcode generates a widget entitlements file (e.g., `TrimlyWidgetExtension.entitlements`) with:
-   - `com.apple.developer.icloud-container-identifiers = ["iCloud.com.refractored.weigh"]`
-   - `com.apple.developer.icloud-services = ["CloudKit"]`
-   - `com.apple.security.application-groups = ["group.com.refractored.weigh"]`
-
-No Swift code changes are needed at this step; this is purely configuration.
-
----
-
-## Step 4: Share Core Types with the Widget Target
-
-The current widget UI in [Trimly/Widget/TrimlyWidget.swift](../Trimly/Widget/TrimlyWidget.swift) refers to:
-- `WeightUnit`.
-- `WeightAnalytics.TrendDirection`.
-
-To reuse these types in the widget:
-
-1. Identify their definitions:
-   - `WeightUnit` is likely defined in a model or utility file in `Trimly/Models` or `Trimly/Services`.
-   - `WeightAnalytics.TrendDirection` is defined in [Trimly/Services/WeightAnalytics.swift](../Trimly/Services/WeightAnalytics.swift).
-2. In Xcode, ensure the files containing these types are added to the `WeighWidgetExtension` target:
-   - Select each relevant Swift file (e.g., `WeightEntry.swift`, `WeightAnalytics.swift`, any file defining `WeightUnit`).
-   - In File Inspector → **Target Membership**, check `WeighWidgetExtension`.
-3. Keep an eye on dependencies: any file you add to the widget target must compile in that context.
-   - Avoid pulling in heavy dependencies that are not available in a widget environment (e.g., direct HealthKit usage if not strictly needed).
-   - If `WeightAnalytics` has HealthKit-related code, consider:
-     - Marking that code with `#if canImport(HealthKit)` guards, or
-     - Extracting purely weight-related analytics (trend/delta) into a lightweight helper that both the main app and widget can share.
-
-Goal of this step: make `WeightUnit` and `WeightAnalytics.TrendDirection` usable in the extension with minimal extra dependencies.
-
----
-
-## Step 5: Define a SwiftData Container for the Widget (Option A)
-
-If you choose to have the widget read directly from SwiftData + CloudKit:
-
-1. Create a small helper in the widget target (or a shared file included in both app and widget):
-
-   - Responsibilities:
-     - Define a `Schema` with the same models: `WeightEntry`, `Goal`, `AppSettings`.
-     - Initialize a `ModelContainer` with `cloudKitDatabase: .automatic` (matching the main app’s `DataManager` configuration).
-   - This helper should be light and focused solely on read operations.
-
-2. Example design (pseudocode, to be implemented later):
-
-   - `WidgetDataProvider` with:
-     - A static `shared` instance.
-     - Lazy `ModelContainer` property.
-     - Functions like `loadLatestWeightSummary()` returning a simple struct: `currentWeight`, `unit`, `delta`, `trend`.
-
-3. Ensure the same iCloud container and schema are used so the widget receives the same synchronized data as the app.
-
-If you prefer Option B (app-group summary) instead, you can skip SwiftData in the widget and return to this later.
-
----
-
-## Step 6: Implement Real Data Fetching in `WeightProvider`
-
-Once the widget has access to the necessary types and (optionally) SwiftData:
-
-1. Update `WeightProvider` in [Trimly/Widget/TrimlyWidget.swift](../Trimly/Widget/TrimlyWidget.swift):
-
-   - `placeholder(in:)` can continue returning static sample data.
-   - `getSnapshot(in:completion:)`:
-     - For `.isPreview` contexts, return a simple static entry.
-     - For running on device, optionally call the shared data helper to provide a more realistic snapshot.
-   - `getTimeline(in:completion:)`:
-     - Use the data helper (SwiftData or app-group summary) to fetch current stats.
-     - Construct a `WidgetTimelineEntry` with:
-       - `date`: `Date()`.
-       - `weight`: current weight in display units.
-       - `unit`: `WeightUnit` from settings.
-       - `delta`: weight change over a recent window (e.g., last 7 days).
-       - `trend`: `WeightAnalytics.TrendDirection` based on that history.
-     - Define `nextUpdate` (e.g., `Calendar.current.date(byAdding: .minute, value: 30, to: Date())`).
-     - Create a `Timeline(entries: [entry], policy: .after(nextUpdate))` and pass to `completion`.
-
-2. Keep timeline generation resilient:
-   - If data fetch fails or there are no entries, fall back to a neutral placeholder (e.g., weight 0.0, delta 0.0, `trend: .stable`).
-
-This step makes the widget actually reflect the user	s real data.
-
----
-
-## Step 7: Trigger Widget Reloads from the Main App
-
-To keep the widget up to date when the user logs a new weight:
-
-1. In the main app target, import `WidgetKit` where appropriate (likely in `DataManager` or a higher-level coordinator).
-2. After successful writes of `WeightEntry` (e.g., in `DataManager.addWeightEntry` or equivalent), call:
-
-   - `WidgetCenter.shared.reloadTimelines(ofKind: "TrimlyWidget")`
-
-   where `"TrimlyWidget"` matches the `kind` property in `TrimlyWidget`.
-
-3. For broader updates (e.g., settings changes that affect units), you can use:
-
-   - `WidgetCenter.shared.reloadAllTimelines()`.
-
-This ensures widgets re-query the data source soon after important changes, rather than waiting only on the system	s schedule.
-
----
-
-## Step 8: Testing and Validation
-
-1. **Build and run the app** in Debug with widgets enabled.
-2. On an iOS simulator or device:
-   - Long-press on the home screen → **Edit Home Screen** → `+` → add Weigh widget.
-3. Verify:
-   - Widget loads without errors (check Xcode console for extension logs).
-   - Weight, delta, and trend match what the main app shows.
-   - Unit (kg / lb) follows `AppSettings`.
-4. Log a new weight in the app:
-   - Confirm that widgets update within a reasonable time after calling `WidgetCenter` reload APIs.
-
-For more detailed QA, test multi-device iCloud sync scenarios to ensure widgets on different devices see consistent data once CloudKit sync completes.
-
----
-
-## Optional: App-Group Summary Optimization (Option B)
-
-If SwiftData initialization overhead in the widget becomes a concern, you can introduce an app-group-backed summary:
-
-1. Define a small, codable `WeightSummary` struct (weight, unit, delta, trend, timestamp).
-2. In the main app, after computing analytics for dashboard, write `WeightSummary` to:
-
-   - `UserDefaults(suiteName: "group.com.refractored.weigh")` or a small file inside the app group container.
-
-3. In the widget extension:
-   - Read the latest `WeightSummary` from the app group.
-   - Use it directly to construct `WidgetTimelineEntry` without touching SwiftData.
-
-This can coexist with CloudKit: the app remains responsible for computing the summary whenever it has up-to-date SwiftData, and the widget simply consumes the last known summary value.
-
----
-
-## Checklist Summary
-
-When you	re ready to implement, use this as a quick checklist:
-
-- [ ] Create `WeighWidgetExtension` target in Xcode.
-- [ ] Add `Trimly/Widget/TrimlyWidget.swift` to the widget target.
-- [ ] Remove/merge the default starter widget file from the extension.
-- [ ] Add App Groups + iCloud (CloudKit) capabilities to the widget extension.
-- [ ] Share `WeightUnit` and `WeightAnalytics.TrendDirection` with the widget target.
-- [ ] Implement a shared data helper (SwiftData container **or** app-group summary).
-- [ ] Update `WeightProvider.getTimeline` to use real data instead of hard-coded values.
-- [ ] Call `WidgetCenter.shared.reloadTimelines(ofKind: "TrimlyWidget")` from the main app after relevant data changes.
-- [ ] Test adding the widget on device/simulator and validate correct values & updates.
-
-Once these steps are complete, Weigh will have a fully integrated, data-driven widget that stays in sync across devices via CloudKit.
+Native builds and runtime widget inspection require macOS/Xcode. Exercise new entries, edits, hiding, deletion, unit changes, CloudKit imports, stale caches, privacy/VoiceOver, cold-launch links, and links received during onboarding before release.

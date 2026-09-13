@@ -1,10 +1,10 @@
-# Weigh
+# My Weight
 
 A modern, supportive weight tracking app for iOS and macOS built with SwiftUI and SwiftData.
 
 ## Overview
 
-Weigh is designed to be your mindful companion for weight tracking, featuring:
+My Weight is designed to be your mindful companion for weight tracking, featuring:
 
 - **Multi-entry per day** with flexible daily aggregation (latest or average)
 - **Comprehensive analytics** including moving averages, EMA, and trend analysis
@@ -16,23 +16,32 @@ Weigh is designed to be your mindful companion for weight tracking, featuring:
 - **Notes per entry** for contextual tracking
 - **iCloud sync** via SwiftData for multi-device support
 - **Data export** to CSV for portability
+- **Editable history** with note search, date/source filters, and reversible hiding
+- **Weekly and monthly recaps**, custom-period comparisons, and optional goal deadlines
+- **Device-local dashboard layouts and weight privacy**, plus quick logging from reminders and Shortcuts
 
 ## Features
 
 ### Core Functionality
 
 - **Dashboard View**: Today's weight, 7-day sparkline, progress metrics, consistency score, and trend summary
-- **Timeline View**: Chronological list of all entries grouped by day with aggregated values
-- **Charts View**: Interactive charts with customizable ranges (week, month, quarter, year)
+- **Timeline View**: Searchable history grouped by day, entry details, manual measurement editing, notes, source/date filters, and hidden-entry review
+- **Charts View**: Interactive charts with week/month/quarter/year, all-time, since-goal, and custom ranges; note markers open the day's measurements
 - **Settings**: Full customization of units, aggregation, reminders, and data management
+- **Portability**: CSV file export/import with mapping and duplicate review, plus previewable PDF progress reports (Pro)
+- **Quick logging**: Reminder actions, a Shortcuts action, widget links, and macOS Command-N open the entry form without automatically saving a weight
+- **Widgets**: Small/medium widgets and iOS accessory families use a derived App Group snapshot; see [widget integration](docs/WIDGET_IMPLEMENTATION_PLAN.md)
 
 ### Analytics
 
 - Simple Moving Average (configurable period, default 7 days)
 - Exponential Moving Average (EMA)
-- Linear regression for trend analysis
+- Calendar-day linear regression for trend analysis, with sparse/stale-data guardrails
 - Goal projection with estimated completion date
 - Consistency score (rolling window, default 30 days)
+- Recaps compare equal elapsed calendar-day windows; shorter previous months cap both windows
+- Moving average periods count **logging days**, not missing calendar days
+- Goal pace describes the relationship between recorded trends and a user-selected date, not a recommended rate of weight change
 
 ### Data Model
 
@@ -41,6 +50,11 @@ All data is stored using SwiftData with iCloud sync enabled:
 - **WeightEntry**: Individual weight measurements with timestamps, notes, and source tracking
 - **Goal**: Active and historical goals with completion tracking
 - **AppSettings**: User preferences and app configuration
+- **Achievement**: Progress and unlock state for stable achievement keys
+
+The enhancement set does not add persisted models, properties, relationships, or stored enum cases. Dashboard order and privacy preferences live in device-local UserDefaults and do not sync through CloudKit. Widget snapshots are disposable caches, not a second database.
+
+Manual measurements can be edited. Imported HealthKit measurements support app-local notes and hiding, but their weight/time remain read-only. App edits and deletions do not update Apple Health, and deleted imports can return. CSV imports create manual measurements; they do not restore HealthKit identity, goals, achievements, or hidden state. CSV is not a full backup.
 
 ## Requirements
 
@@ -51,7 +65,7 @@ All data is stored using SwiftData with iCloud sync enabled:
 
 ## Architecture
 
-Weigh follows modern iOS/macOS development best practices:
+My Weight follows modern iOS/macOS development best practices:
 
 - **SwiftUI** for declarative UI
 - **SwiftData** for persistent storage with iCloud sync
@@ -63,7 +77,7 @@ Weigh follows modern iOS/macOS development best practices:
 
 ```
 app-trimly/
-├── Weigh.xcodeproj/                # Shared iOS + macOS project
+├── TrimTally.xcodeproj/                # Shared iOS + macOS project and widget extension
 ├── Trimly/                             # App sources
 │   ├── TrimlyApp.swift                 # App entry point (@main)
 │   ├── Trimly.swift                    # Shared scene setup
@@ -98,10 +112,10 @@ app-trimly/
 	```
 2. Open the project:
 	```bash
-	open Weigh.xcodeproj
+	open TrimTally.xcodeproj
 	```
 	or launch Xcode and select **File → Open...**.
-3. Choose the `Weigh` scheme and a destination:
+3. Choose the `TrimTally` scheme and a destination:
 	- **iOS**: Any simulator or connected device
 	- **macOS**: `My Mac`
 4. Press `⌘R` to build and run, `⌘U` to run unit tests.
@@ -112,8 +126,8 @@ app-trimly/
 git clone https://github.com/jamesmontemagno/app-trimly.git
 cd app-trimly
 
-xcodebuild -scheme Weigh \
-			  -destination 'platform=iOS Simulator,name=iPhone 15 Pro' \
+xcodebuild -scheme TrimTally \
+			  -destination 'platform=iOS Simulator,name=iPhone 17' \
 			  clean test
 ```
 
@@ -131,18 +145,24 @@ xcodebuild -scheme Weigh \
 - [x] Adaptive reminders and notification scheduling
 - [x] Micro celebrations, plateau detection, and contextual notes
 - [x] Widgets (small + medium), localization, and iCloud sync
+- [x] Manual entry editing, day drill-down, search/filters, and hide/unhide
+- [x] Calendar-aware trends, weekly/monthly recaps, and period comparisons
+- [x] Optional goal deadlines, descriptive pace, and goal-history charts
+- [x] Device-local dashboard customization and weight privacy
+- [x] CSV mapping/import review, actual file export, and PDF progress reports
+- [x] Quick-log routing, Shortcuts, macOS menu command, and accessory widgets
 
 ### Future Enhancements
 
 - [ ] Apple Watch companion + complications
-- [ ] Expanded widget sizes and lock screen support
-- [ ] Siri Shortcuts and Spotlight integration
+- [ ] Larger widget layouts
+- [ ] Spotlight integration and direct parameterized Shortcuts logging
 - [ ] Manual daily override tooling
-- [ ] Goal history visualization and sharing options
+- [ ] Full versioned backup/restore beyond measurement CSV
 
 ## Data Privacy
 
-Weigh respects your privacy:
+My Weight respects your privacy:
 
 - All data stored locally with optional iCloud sync
 - No third-party analytics or tracking
@@ -154,14 +174,19 @@ Weigh respects your privacy:
 Run the test suite:
 
 ```bash
-swift test
+xcodebuild -scheme TrimTally -destination 'platform=macOS,arch=arm64' test
 ```
+
+Xcode and Apple SDKs are required; the SwiftUI/SwiftData application cannot be built on Linux. Configure signing for both the app and `TrimTallyWidget`, including their shared App Group, before device deployment.
 
 Tests cover:
 - Weight analytics calculations (moving averages, EMA, regression)
 - Data management operations (CRUD for entries and goals)
 - Consistency score computation
 - Goal projection algorithms
+- Entry edits, visibility, import validation, and presentation preferences
+- Calendar gaps, recaps, comparisons, CSV parsing/mapping, and reports
+- Quick-log routing, HealthKit duplicate matching, and widget snapshots
 
 ## Contributing
 
@@ -169,7 +194,7 @@ Contributions are welcome! Please feel free to submit issues or pull requests.
 
 ## Localization
 
-Weigh is fully localized in three languages:
+My Weight is fully localized in three languages:
 - **English** (primary) - 474 strings
 - **Spanish** (Español) - 474 strings (100% complete)
 - **French** (Français) - 474 strings (100% complete)
@@ -191,4 +216,4 @@ Built with modern Apple technologies:
 
 ---
 
-**Weigh** - Your supportive companion for mindful weight tracking.
+**My Weight** - Your supportive companion for mindful weight tracking.

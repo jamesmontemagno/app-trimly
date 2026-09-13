@@ -1,6 +1,6 @@
-# Weigh API Documentation
+# My Weight API Documentation
 
-This document describes the internal APIs and architecture of Weigh.
+This document describes the internal APIs and architecture of My Weight.
 
 ## Table of Contents
 

@@ -1,4 +1,4 @@
-# Weigh - Project Status
+# My Weight - Project Status
 
 **Version:** 1.2  
 **Status:** ✅ Feature-complete & production-ready

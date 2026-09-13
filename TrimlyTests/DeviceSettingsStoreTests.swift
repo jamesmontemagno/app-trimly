@@ -4,6 +4,26 @@ import XCTest
 
 @MainActor
 final class DeviceSettingsStoreTests: XCTestCase {
+    func testPresentationDefaultsAndPersistence() {
+        let (defaults, store) = makeStore()
+        XCTAssertEqual(store.presentation.dashboardCards, DashboardCard.allCases)
+        XCTAssertFalse(store.presentation.hideWeights)
+        store.updatePresentation {
+            $0.dashboardCards = [.recap, .today, .recap, .trend]
+            $0.hideWeights = true
+        }
+        let reloaded = DeviceSettingsStore(userDefaults: defaults)
+        XCTAssertEqual(reloaded.presentation.dashboardCards, [.recap, .today, .trend])
+        XCTAssertTrue(reloaded.presentation.hideWeights)
+    }
+
+    func testPresentationIgnoresUnknownCardIdentifiers() {
+        let (defaults, _) = makeStore()
+        defaults.set(["future-card", "today", "today", "recap"], forKey: "device.presentation.dashboardCards")
+        let reloaded = DeviceSettingsStore(userDefaults: defaults)
+        XCTAssertEqual(reloaded.presentation.dashboardCards, [.today, .recap])
+    }
+
     func testUpdateRemindersPersistsAcrossInstances() {
         let (defaults, store) = makeStore()
         let morning = Date(timeIntervalSince1970: 1_701_000_000)
@@ -118,6 +138,42 @@ final class DeviceSettingsStoreTests: XCTestCase {
         let reloaded2 = DeviceSettingsStore(userDefaults: defaults)
         XCTAssertEqual(reloaded2.review.entryCount, 10, "Entry count should persist at 10")
         XCTAssertTrue(reloaded2.review.hasPrompted, "hasPrompted should persist as true")
+    }
+
+    func testShareCardDefaultsAndPersistence() {
+        let (defaults, store) = makeStore()
+        XCTAssertEqual(store.shareCard.privacy, "detailed")
+        XCTAssertEqual(store.shareCard.accent, "blue")
+        XCTAssertTrue(store.shareCard.portrait)
+        XCTAssertFalse(store.shareCard.darkAppearance)
+        XCTAssertTrue(store.shareCard.showFooter)
+        XCTAssertTrue(store.shareCard.includeGraph)
+        XCTAssertTrue(store.shareCard.includeCurrent)
+        XCTAssertTrue(store.shareCard.includeChange)
+        XCTAssertTrue(store.shareCard.includeGoal)
+
+        store.updateShareCard { settings in
+            settings.privacy = "trend"
+            settings.accent = "purple"
+            settings.portrait = false
+            settings.darkAppearance = true
+            settings.showFooter = false
+            settings.includeGraph = false
+            settings.includeCurrent = false
+            settings.includeChange = false
+            settings.includeGoal = false
+        }
+
+        let reloaded = DeviceSettingsStore(userDefaults: defaults)
+        XCTAssertEqual(reloaded.shareCard.privacy, "trend")
+        XCTAssertEqual(reloaded.shareCard.accent, "purple")
+        XCTAssertFalse(reloaded.shareCard.portrait)
+        XCTAssertTrue(reloaded.shareCard.darkAppearance)
+        XCTAssertFalse(reloaded.shareCard.showFooter)
+        XCTAssertFalse(reloaded.shareCard.includeGraph)
+        XCTAssertFalse(reloaded.shareCard.includeCurrent)
+        XCTAssertFalse(reloaded.shareCard.includeChange)
+        XCTAssertFalse(reloaded.shareCard.includeGoal)
     }
     
     private func makeStore() -> (UserDefaults, DeviceSettingsStore) {

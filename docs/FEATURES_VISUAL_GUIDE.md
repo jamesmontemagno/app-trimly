@@ -1,4 +1,4 @@
-# Weigh v1.2 - Visual Feature Guide
+# My Weight v1.2 - Visual Feature Guide
 
 ## 🎉 New Features Overview
 
@@ -90,7 +90,7 @@ Settings Tab
 ### Notification Example
 ```
 ┌─────────────────────────────────────┐
-│ 🏃 Weigh                        │
+│ 🏃 My Weight                    │
 │ Time to log your weight             │
 │ Keep your streak going! Log today's│
 │ weight.                             │

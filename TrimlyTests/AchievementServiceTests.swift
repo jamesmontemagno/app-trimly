@@ -75,7 +75,7 @@ final class AchievementServiceTests: XCTestCase {
 		let ledgerLocked = dataManager.achievement(forKey: "logging.ledger", createIfMissing: false)
 		XCTAssertNotNil(ledgerLocked)
 		XCTAssertNil(ledgerLocked?.unlockedAt)
-		XCTAssertLessThan(ledgerLocked?.progressValue ?? 0, 1)
+		XCTAssertEqual(ledgerLocked?.progressValue, 1)
 		achievementService.refresh(using: dataManager, isPro: true)
 		let ledgerUnlocked = dataManager.achievement(forKey: "logging.ledger", createIfMissing: false)
 		XCTAssertNotNil(ledgerUnlocked?.unlockedAt)
@@ -99,7 +99,9 @@ final class AchievementServiceTests: XCTestCase {
 		let poundsUnit = WeightUnit.pounds
 		let startWeightKg = poundsUnit.convertToKg(180)
 		let targetWeightKg = poundsUnit.convertToKg(175)
-		try dataManager.addWeightEntry(weightKg: startWeightKg, timestamp: Date(), unit: poundsUnit)
+		let calendar = Calendar.current
+		let yesterday = calendar.date(byAdding: .day, value: -1, to: Date()) ?? Date()
+		try dataManager.addWeightEntry(weightKg: startWeightKg, timestamp: yesterday, unit: poundsUnit)
 		
 		// Create and achieve a goal (it stays active)
 		try dataManager.setGoal(targetWeightKg: targetWeightKg, startingWeightKg: startWeightKg)
@@ -126,10 +128,11 @@ final class AchievementServiceTests: XCTestCase {
 		// Log 5 entries to build up progress (50% for logging.newcomer which requires 10)
 		try logSequentialEntries(count: 5)
 		achievementService.refresh(using: dataManager, isPro: true)
-		let partialProgress = dataManager.achievement(forKey: "logging.newcomer", createIfMissing: false)
-		XCTAssertNotNil(partialProgress)
-		XCTAssertNil(partialProgress?.unlockedAt)
-		XCTAssertEqual(partialProgress?.progressValue, 0.5, accuracy: 0.01)
+		let partialProgress = try XCTUnwrap(
+			dataManager.achievement(forKey: "logging.newcomer", createIfMissing: false)
+		)
+		XCTAssertNil(partialProgress.unlockedAt)
+		XCTAssertEqual(partialProgress.progressValue, 0.5, accuracy: 0.01)
 		
 		// Log 5 more entries to unlock the achievement (total 10)
 		try logSequentialEntries(count: 5, startOffset: 5)
@@ -172,16 +175,16 @@ final class AchievementServiceTests: XCTestCase {
 		let targetWeightKg = poundsUnit.convertToKg(180)
 		
 		// Log starting weight
-		try dataManager.addWeightEntry(weightKg: startWeightKg, timestamp: Date(), unit: poundsUnit)
+		let calendar = Calendar.current
+		let yesterday = calendar.date(byAdding: .day, value: -1, to: Date()) ?? Date()
+		try dataManager.addWeightEntry(weightKg: startWeightKg, timestamp: yesterday, unit: poundsUnit)
 		
 		// Set goal
 		try dataManager.setGoal(targetWeightKg: targetWeightKg, startingWeightKg: startWeightKg)
 		
 		// Log weight at 50% progress (190 lbs)
 		let halfwayWeightKg = poundsUnit.convertToKg(190)
-		let calendar = Calendar.current
-		let tomorrow = calendar.date(byAdding: .day, value: 1, to: Date()) ?? Date()
-		try dataManager.addWeightEntry(weightKg: halfwayWeightKg, timestamp: tomorrow, unit: poundsUnit)
+		try dataManager.addWeightEntry(weightKg: halfwayWeightKg, timestamp: Date(), unit: poundsUnit)
 		
 		achievementService.refresh(using: dataManager, isPro: false)
 		let halfway = dataManager.achievement(forKey: "goals.halfway", createIfMissing: false)

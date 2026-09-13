@@ -615,7 +615,7 @@ struct OnboardingView: View {
             return
         }
 
-        guard let currentWeight = dataManager.getCurrentWeight() else {
+        guard let currentWeight = dataManager.getCurrentVisibleWeight() else {
             goalWeightError = L10n.Onboarding.goalNeedsStart
             withAnimation { currentPage = 2 }
             return
@@ -680,7 +680,7 @@ struct OnboardingView: View {
 
     private func completeOnboarding() {
         // Validate that starting weight and goal have been set
-        guard dataManager.getCurrentWeight() != nil, dataManager.fetchActiveGoal() != nil else {
+        guard dataManager.getCurrentVisibleWeight() != nil, dataManager.fetchActiveGoal() != nil else {
             showIncompleteAlert = true
             return
         }

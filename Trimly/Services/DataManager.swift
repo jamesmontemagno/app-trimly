@@ -1,6 +1,6 @@
     //
 //  DataManager.swift
-//  Weigh
+//  My Weight
 //
 //  Created by Trimly on 11/19/2025.
 //
@@ -13,6 +13,9 @@ enum DataManagerError: Error {
     case missingStartingWeight
     case futureDateNotAllowed
     case noActiveGoal
+    case invalidWeight
+    case invalidDateRange
+    case importedMeasurementReadOnly
 }
 
 extension DataManagerError: LocalizedError {
@@ -25,6 +28,12 @@ extension DataManagerError: LocalizedError {
             return NSLocalizedString("addEntry.error.futureDate", comment: "Date cannot be in the future")
         case .noActiveGoal:
             return NSLocalizedString("goals.error.noActiveGoal", comment: "No active goal found")
+        case .invalidWeight:
+            return NSLocalizedString("error.invalidWeight", tableName: "CoreFeatures", comment: "Weight validation")
+        case .invalidDateRange:
+            return NSLocalizedString("error.invalidDateRange", tableName: "CoreFeatures", comment: "Date validation")
+        case .importedMeasurementReadOnly:
+            return NSLocalizedString("error.importedReadOnly", tableName: "CoreFeatures", comment: "Health measurements are read-only")
         }
     }
 }
@@ -37,15 +46,34 @@ final class DataManager: ObservableObject {
     let deviceSettings: DeviceSettingsStore
     private let notificationService: NotificationService
     private let reviewPromptService: ReviewPromptService
+    let isInMemory: Bool
+    private var presentationSubscription: AnyCancellable?
+    private var settingsNeedsInsertion = false
+    private var widgetRefreshTask: Task<Void, Never>?
     
     @Published var settings: AppSettings?
+    @Published private(set) var dataRevision = 0
+    @Published private(set) var celebrationRevision = 0
+    @Published var persistenceErrorMessage: String?
+    private(set) var lastChangeAllowsCelebration = false
     private var pendingGoalAchievementCelebration = false
     private var pendingGoalAchievementGoalID: UUID?
     private var initialCloudSyncState = InitialCloudSyncState()
 
     /// Ensures SwiftUI views refresh when persisted data changes
-    private func publishChange() {
+    private func publishChange(refreshData: Bool = false, celebrate: Bool = false) {
         objectWillChange.send()
+        if refreshData {
+            lastChangeAllowsCelebration = celebrate
+            dataRevision += 1
+            if !isInMemory {
+                widgetRefreshTask = WidgetSnapshotWriter.refresh(using: self)
+                Task { await refreshReminderSchedule() }
+            }
+        }
+        if celebrate {
+            celebrationRevision += 1
+        }
     }
     
     init(
@@ -53,6 +81,7 @@ final class DataManager: ObservableObject {
         deviceSettings: DeviceSettingsStore? = nil,
         notificationService: NotificationService? = nil
     ) {
+        self.isInMemory = inMemory
         if let deviceSettings {
             self.deviceSettings = deviceSettings
         } else if inMemory {
@@ -98,6 +127,15 @@ final class DataManager: ObservableObject {
             // Load or create settings
             loadSettings()
             refreshInitialCloudSyncState()
+            presentationSubscription = self.deviceSettings.$presentation
+                .dropFirst()
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    guard let self else { return }
+                    if !self.isInMemory {
+                        self.widgetRefreshTask = WidgetSnapshotWriter.refresh(using: self)
+                    }
+                }
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
@@ -106,26 +144,31 @@ final class DataManager: ObservableObject {
     // MARK: - Settings Management
     
     private func loadSettings() {
-        let descriptor = FetchDescriptor<AppSettings>()
+        var descriptor = FetchDescriptor<AppSettings>(
+            sortBy: [SortDescriptor(\.updatedAt, order: .reverse)]
+        )
+        descriptor.fetchLimit = 1
         
         do {
             let existingSettings = try modelContext.fetch(descriptor)
             if let first = existingSettings.first {
                 settings = first
+                settingsNeedsInsertion = false
             } else {
                 // Create default settings
                 let newSettings = AppSettings()
                 modelContext.insert(newSettings)
                 try modelContext.save()
                 settings = newSettings
+                settingsNeedsInsertion = false
             }
         } catch {
-            print("Failed to load settings: \(error)")
-            // Create default settings anyway
-            let newSettings = AppSettings()
-            modelContext.insert(newSettings)
-            settings = newSettings
-            try? modelContext.save()
+            modelContext.rollback()
+            persistenceErrorMessage = error.localizedDescription
+            if settings == nil {
+                settings = AppSettings()
+                settingsNeedsInsertion = true
+            }
         }
     }
     
@@ -133,8 +176,40 @@ final class DataManager: ObservableObject {
         guard var settings = settings else { return }
         update(&settings)
         settings.updatedAt = Date()
-        try? modelContext.save()
-        publishChange()
+        let insertsFallback = settingsNeedsInsertion
+        if insertsFallback {
+            modelContext.insert(settings)
+        }
+        do {
+            try saveChanges()
+            settingsNeedsInsertion = false
+            publishChange(refreshData: true)
+        } catch {
+            if insertsFallback {
+                settingsNeedsInsertion = true
+            }
+            persistenceErrorMessage = error.localizedDescription
+        }
+    }
+
+    private func saveChanges() throws {
+        do {
+            try modelContext.save()
+        } catch {
+            modelContext.rollback()
+            throw error
+        }
+    }
+
+    /// Refresh derived state after CloudKit has merged remote changes.
+    func refreshAfterExternalChanges() {
+        loadSettings()
+        refreshInitialCloudSyncState()
+        publishChange(refreshData: true)
+    }
+
+    func waitForPendingWidgetRefresh() async {
+        await widgetRefreshTask?.value
     }
 
     // MARK: - Initial Cloud Sync State
@@ -196,9 +271,7 @@ final class DataManager: ObservableObject {
         notes: String? = nil,
         source: EntrySource = .manual
     ) throws {
-        guard timestamp <= Date() else {
-            throw DataManagerError.futureDateNotAllowed
-        }
+        try validateMeasurement(weightKg: weightKg, timestamp: timestamp)
         let entry = WeightEntry(
             timestamp: timestamp,
             weightKg: weightKg,
@@ -207,10 +280,14 @@ final class DataManager: ObservableObject {
             notes: notes
         )
         modelContext.insert(entry)
-        try modelContext.save()
-        publishChange()
+        let isCurrentManualLog = source == .manual && Calendar.current.isDateInToday(timestamp)
+        let completedGoalID = evaluateGoalAchievementIfNeeded()
+        try saveChanges()
+        if let completedGoalID, isCurrentManualLog {
+            markPendingGoalCelebration(goalID: completedGoalID)
+        }
+        publishChange(refreshData: true, celebrate: isCurrentManualLog)
         markInitialCloudSyncCompletedIfNeeded()
-        try evaluateGoalAchievementIfNeeded(latestWeightKg: entry.weightKg)
         
         // Increment review entry count and prompt if threshold reached
         // Only track manual entries for review prompts
@@ -230,7 +307,12 @@ final class DataManager: ObservableObject {
         let descriptor = FetchDescriptor<WeightEntry>(
             sortBy: [SortDescriptor(\.timestamp, order: .reverse)]
         )
-        return (try? modelContext.fetch(descriptor)) ?? []
+        do {
+            return try modelContext.fetch(descriptor)
+        } catch {
+            persistenceErrorMessage = error.localizedDescription
+            return []
+        }
     }
 
     func hasAnyEntries() -> Bool {
@@ -245,23 +327,170 @@ final class DataManager: ObservableObject {
         )
         return (try? modelContext.fetch(descriptor)) ?? []
     }
+
+    /// Query a half-open date range. Hidden measurements are excluded by default.
+    func fetchEntries(
+        startDate: Date? = nil,
+        endDate: Date? = nil,
+        source: EntrySource? = nil,
+        includeHidden: Bool = false,
+        notesOnly: Bool = false,
+        searchText: String = ""
+    ) throws -> [WeightEntry] {
+        let start = startDate ?? .distantPast
+        let end = endDate ?? .distantFuture
+        guard start < end else { throw DataManagerError.invalidDateRange }
+        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        let descriptor = FetchDescriptor<WeightEntry>(
+            predicate: #Predicate {
+                $0.timestamp >= start && $0.timestamp < end
+                    && (includeHidden || !$0.isHidden)
+                    && (!notesOnly || ($0.notes != nil && $0.notes != ""))
+                    && (query.isEmpty || ($0.notes?.localizedStandardContains(query) ?? false))
+            },
+            sortBy: [SortDescriptor(\.timestamp, order: .reverse)]
+        )
+        let entries = try modelContext.fetch(descriptor)
+        // Codable enum predicates are not supported consistently by SwiftData stores.
+        return source.map { selected in entries.filter { $0.source == selected } } ?? entries
+    }
     
     func deleteEntry(_ entry: WeightEntry) throws {
         modelContext.delete(entry)
-        try modelContext.save()
-        publishChange()
+        try saveChanges()
+        publishChange(refreshData: true)
     }
     
     func updateEntry(_ entry: WeightEntry, notes: String?) throws {
         entry.notes = notes
         entry.updatedAt = Date()
-        try modelContext.save()
-        publishChange()
+        try saveChanges()
+        publishChange(refreshData: true)
+    }
+
+    /// Edit a manual measurement without creating a new record or writing to HealthKit.
+    func updateEntry(
+        _ entry: WeightEntry,
+        weightKg: Double,
+        timestamp: Date,
+        unit: WeightUnit,
+        notes: String?
+    ) throws {
+        guard entry.source == .manual else { throw DataManagerError.importedMeasurementReadOnly }
+        try validateMeasurement(weightKg: weightKg, timestamp: timestamp)
+        entry.weightKg = weightKg
+        entry.timestamp = timestamp
+        entry.normalizedDate = WeightEntry.normalizeDate(timestamp)
+        entry.displayUnitAtEntry = unit
+        entry.notes = notes
+        entry.updatedAt = Date()
+        _ = evaluateGoalAchievementIfNeeded()
+        try saveChanges()
+        publishChange(refreshData: true)
+    }
+
+    /// Hiding is reversible and affects all app analytics, not Apple Health.
+    func setEntryHidden(_ entry: WeightEntry, isHidden: Bool) throws {
+        entry.isHidden = isHidden
+        entry.updatedAt = Date()
+        try saveChanges()
+        publishChange(refreshData: true)
+    }
+
+    /// Insert validated CSV measurements in one save, with no per-row celebrations.
+    @discardableResult
+    func importWeightEntries(_ drafts: [WeightEntryDraft]) throws -> Int {
+        for draft in drafts {
+            try validateMeasurement(weightKg: draft.weightKg, timestamp: draft.timestamp)
+        }
+        for draft in drafts {
+            modelContext.insert(WeightEntry(
+                timestamp: draft.timestamp,
+                weightKg: draft.weightKg,
+                displayUnitAtEntry: draft.unit,
+                source: .manual,
+                notes: draft.notes
+            ))
+        }
+        try saveChanges()
+        publishChange(refreshData: true)
+        markInitialCloudSyncCompletedIfNeeded()
+        return drafts.count
+    }
+
+    /// Insert validated HealthKit measurements in one transaction and publish one refresh.
+    @discardableResult
+    func importHealthKitEntries(_ drafts: [WeightEntryDraft]) throws -> Int {
+        guard !drafts.isEmpty else { return 0 }
+        for draft in drafts {
+            try validateMeasurement(weightKg: draft.weightKg, timestamp: draft.timestamp)
+        }
+        for draft in drafts {
+            modelContext.insert(WeightEntry(
+                timestamp: draft.timestamp,
+                weightKg: draft.weightKg,
+                displayUnitAtEntry: draft.unit,
+                source: .healthKit,
+                notes: draft.notes
+            ))
+        }
+        _ = evaluateGoalAchievementIfNeeded()
+        try saveChanges()
+        publishChange(refreshData: true)
+        markInitialCloudSyncCompletedIfNeeded()
+        return drafts.count
+    }
+
+    private func validateMeasurement(weightKg: Double, timestamp: Date) throws {
+        guard weightKg.isFinite, weightKg > 0 else { throw DataManagerError.invalidWeight }
+        guard timestamp.timeIntervalSinceReferenceDate.isFinite else { throw DataManagerError.invalidDateRange }
+        guard timestamp <= Date() else { throw DataManagerError.futureDateNotAllowed }
     }
     
     // MARK: - Goal Management
     
-    func setGoal(targetWeightKg: Double, startingWeightKg: Double?, targetDate: Date? = nil, notes: String? = nil) throws {
+    func setGoal(
+        targetWeightKg: Double,
+        startingWeightKg: Double?,
+        targetDate: Date? = nil,
+        notes: String? = nil
+    ) throws {
+        try createGoal(
+            targetWeightKg: targetWeightKg,
+            startingWeightKg: startingWeightKg,
+            targetDate: targetDate,
+            notes: notes,
+            startingEntryUnit: nil
+        )
+    }
+
+    func setGoalAndCreateStartingEntry(
+        targetWeightKg: Double,
+        startingWeightKg: Double,
+        targetDate: Date? = nil,
+        notes: String? = nil,
+        unit: WeightUnit
+    ) throws {
+        try createGoal(
+            targetWeightKg: targetWeightKg,
+            startingWeightKg: startingWeightKg,
+            targetDate: targetDate,
+            notes: notes,
+            startingEntryUnit: unit
+        )
+    }
+
+    private func createGoal(
+        targetWeightKg: Double,
+        startingWeightKg: Double?,
+        targetDate: Date?,
+        notes: String?,
+        startingEntryUnit: WeightUnit?
+    ) throws {
+        guard let resolvedStartingWeight = startingWeightKg ?? getCurrentWeight() else {
+            throw DataManagerError.missingStartingWeight
+        }
+        try validateGoal(targetWeightKg: targetWeightKg, startingWeightKg: resolvedStartingWeight, targetDate: targetDate)
         // Archive current active goal if exists
         if let activeGoal = fetchActiveGoal() {
             if activeGoal.completionReason == .achieved {
@@ -273,34 +502,90 @@ final class DataManager: ObservableObject {
             }
         }
         
-        guard let resolvedStartingWeight = startingWeightKg ?? getCurrentWeight() else {
-            throw DataManagerError.missingStartingWeight
-        }
+        let now = Date()
         let goal = Goal(
             targetWeightKg: targetWeightKg,
+            startDate: now,
             targetDate: targetDate,
             startingWeightKg: resolvedStartingWeight,
             notes: notes
         )
         modelContext.insert(goal)
-        try modelContext.save()
-        publishChange()
+        if let startingEntryUnit {
+            modelContext.insert(WeightEntry(
+                timestamp: now, weightKg: resolvedStartingWeight, displayUnitAtEntry: startingEntryUnit
+            ))
+        }
+        try saveChanges()
+        publishChange(refreshData: true)
+        markInitialCloudSyncCompletedIfNeeded()
     }
     
     func updateGoal(targetWeightKg: Double, startingWeightKg: Double?, notes: String? = nil) throws {
+        try updateGoal(
+            targetWeightKg: targetWeightKg,
+            startingWeightKg: startingWeightKg,
+            targetDate: nil,
+            notes: notes,
+            updatesTargetDate: false
+        )
+    }
+
+    func updateGoal(
+        targetWeightKg: Double,
+        startingWeightKg: Double?,
+        targetDate: Date?,
+        notes: String? = nil
+    ) throws {
+        try updateGoal(
+            targetWeightKg: targetWeightKg,
+            startingWeightKg: startingWeightKg,
+            targetDate: targetDate,
+            notes: notes,
+            updatesTargetDate: true
+        )
+    }
+
+    private func updateGoal(
+        targetWeightKg: Double,
+        startingWeightKg: Double?,
+        targetDate: Date?,
+        notes: String?,
+        updatesTargetDate: Bool
+    ) throws {
         guard let activeGoal = fetchActiveGoal() else {
             throw DataManagerError.noActiveGoal
         }
+        try validateGoal(targetWeightKg: targetWeightKg, startingWeightKg: startingWeightKg, targetDate: targetDate)
+        if targetWeightKg != activeGoal.targetWeightKg
+            || (startingWeightKg != nil && startingWeightKg != activeGoal.startingWeightKg) {
+            activeGoal.completionReason = nil
+            activeGoal.completedDate = nil
+        }
         
         activeGoal.targetWeightKg = targetWeightKg
+        if updatesTargetDate {
+            activeGoal.targetDate = targetDate
+        }
         if let startingWeight = startingWeightKg {
             activeGoal.startingWeightKg = startingWeight
         }
         activeGoal.notes = notes
         activeGoal.updatedAt = Date()
         
-        try modelContext.save()
-        publishChange()
+        _ = evaluateGoalAchievementIfNeeded()
+        try saveChanges()
+        publishChange(refreshData: true)
+    }
+
+    private func validateGoal(targetWeightKg: Double, startingWeightKg: Double?, targetDate: Date?) throws {
+        guard targetWeightKg.isFinite, targetWeightKg > 0 else { throw DataManagerError.invalidWeight }
+        if let startingWeightKg {
+            guard startingWeightKg.isFinite, startingWeightKg > 0 else { throw DataManagerError.invalidWeight }
+        }
+        if let targetDate, !targetDate.timeIntervalSinceReferenceDate.isFinite {
+            throw DataManagerError.invalidDateRange
+        }
     }
     
     func fetchActiveGoal() -> Goal? {
@@ -331,12 +616,14 @@ final class DataManager: ObservableObject {
         guard let activeGoal = fetchActiveGoal() else { return }
         if reason == .achieved {
             activeGoal.markAchieved()
-            markPendingGoalCelebration(goalID: activeGoal.id)
         } else {
             activeGoal.archive(reason: reason)
         }
-        try modelContext.save()
-        publishChange()
+        try saveChanges()
+        if reason == .achieved {
+            markPendingGoalCelebration(goalID: activeGoal.id)
+        }
+        publishChange(refreshData: true, celebrate: reason == .achieved)
     }
     
     // MARK: - Analytics
@@ -350,13 +637,29 @@ final class DataManager: ObservableObject {
     }
     
     func getCurrentWeight() -> Double? {
-        let entries = fetchAllEntries()
-        return entries.first?.weightKg
+        fetchAllEntries().first?.weightKg
+    }
+
+    func getCurrentVisibleWeight() -> Double? {
+        var descriptor = FetchDescriptor<WeightEntry>(
+            predicate: #Predicate { !$0.isHidden },
+            sortBy: [SortDescriptor(\.timestamp, order: .reverse)]
+        )
+        descriptor.fetchLimit = 1
+        return try? modelContext.fetch(descriptor).first?.weightKg
     }
     
     func getStartWeight() -> Double? {
-        let entries = fetchAllEntries()
-        return entries.last?.weightKg
+        fetchAllEntries().last?.weightKg
+    }
+
+    func getStartVisibleWeight() -> Double? {
+        var descriptor = FetchDescriptor<WeightEntry>(
+            predicate: #Predicate { !$0.isHidden },
+            sortBy: [SortDescriptor(\.timestamp, order: .forward)]
+        )
+        descriptor.fetchLimit = 1
+        return try? modelContext.fetch(descriptor).first?.weightKg
     }
     
     func getConsistencyScore() -> Double? {
@@ -385,10 +688,17 @@ final class DataManager: ObservableObject {
         )
     }
 
-    private func evaluateGoalAchievementIfNeeded(latestWeightKg: Double) throws {
-        guard let goal = fetchActiveGoal() else { return }
-        guard goal.completionReason != .achieved else { return }
-        guard let startWeight = goal.startingWeightKg ?? getStartWeight() else { return }
+    private func evaluateGoalAchievementIfNeeded() -> UUID? {
+        guard let goal = fetchActiveGoal(), goal.completionReason != .achieved else { return nil }
+        var descriptor = FetchDescriptor<WeightEntry>(
+            predicate: #Predicate { !$0.isHidden },
+            sortBy: [SortDescriptor(\.timestamp, order: .reverse)]
+        )
+        descriptor.fetchLimit = 1
+        guard let latest = try? modelContext.fetch(descriptor).first,
+              latest.timestamp >= goal.startDate,
+              let startWeight = goal.startingWeightKg ?? getStartWeight() else { return nil }
+        let latestWeightKg = latest.weightKg
         let target = goal.targetWeightKg
         let tolerance: Double = 0.05
         let meetsGoal: Bool
@@ -399,11 +709,9 @@ final class DataManager: ObservableObject {
         } else {
             meetsGoal = abs(latestWeightKg - target) <= tolerance
         }
-        guard meetsGoal else { return }
+        guard meetsGoal else { return nil }
         goal.markAchieved()
-        markPendingGoalCelebration(goalID: goal.id)
-        try modelContext.save()
-        publishChange()
+        return goal.id
     }
 
     func consumeGoalAchievementCelebrationIfNeeded() -> Bool {
@@ -489,8 +797,12 @@ final class DataManager: ObservableObject {
         if didChange {
             achievement.evaluatedAt = now
             achievement.updatedAt = now
-            try? modelContext.save()
-            publishChange()
+            do {
+                try saveChanges()
+                publishChange()
+            } catch {
+                persistenceErrorMessage = error.localizedDescription
+            }
         }
         return achievement
     }
@@ -500,8 +812,12 @@ final class DataManager: ObservableObject {
         guard achievement.didCelebrateUnlock == false else { return }
         achievement.didCelebrateUnlock = true
         achievement.updatedAt = Date()
-        try? modelContext.save()
-        publishChange()
+        do {
+            try saveChanges()
+            publishChange()
+        } catch {
+            persistenceErrorMessage = error.localizedDescription
+        }
     }
 
     private func achievementRecord(
@@ -517,7 +833,11 @@ final class DataManager: ObservableObject {
             if existing.isPremium != isPremium {
                 existing.isPremium = isPremium
                 existing.updatedAt = Date()
-                try? modelContext.save()
+                do {
+                    try saveChanges()
+                } catch {
+                    persistenceErrorMessage = error.localizedDescription
+                }
             }
             return (existing, false)
         }
@@ -685,8 +1005,8 @@ final class DataManager: ObservableObject {
             healthKit.lastBackgroundSyncAt = nil
         }
         
-        try modelContext.save()
-        publishChange()
+        try saveChanges()
+        publishChange(refreshData: true)
     }
 
     // MARK: - Debug Helpers
@@ -737,7 +1057,7 @@ final class DataManager: ObservableObject {
                 modelContext.insert(entry)
             }
         }
-        try modelContext.save()
-        publishChange()
+        try saveChanges()
+        publishChange(refreshData: true)
     }
 }

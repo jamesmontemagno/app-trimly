@@ -28,7 +28,7 @@ const features: Feature[] = [
   {
     Icon: Shield,
     title: 'Private by Design',
-    description: 'Weigh keeps every entry on your device with end-to-end privacy. No accounts, no tracking—ever.'
+    description: 'My Weight keeps every entry on your device with end-to-end privacy. No accounts, no tracking—ever.'
   },
   {
     Icon: Cloud,
@@ -38,7 +38,7 @@ const features: Feature[] = [
   {
     Icon: Scale,
     title: 'Multi-Entry Logging',
-    description: 'Log as often as you like and let Weigh handle daily normalization and insights.'
+    description: 'Log as often as you like and let My Weight handle daily normalization and insights.'
   },
   {
     Icon: TrendingUp,
@@ -94,7 +94,7 @@ const getScreenshotAlt = (screenName: string): string => {
   }
   const displayName = screenName.replace('-', ' ')
   const description = descriptions[screenName] || displayName
-  return `Weigh ${displayName} screen showing ${description}`
+  return `My Weight ${displayName} screen showing ${description}`
 }
 
 const LandingPage = ({ resolvedTheme, onLearnMore }: LandingPageProps) => {
@@ -112,7 +112,7 @@ const LandingPage = ({ resolvedTheme, onLearnMore }: LandingPageProps) => {
               Private, secure weight tracking <span className="gradient-text">with no account required</span>
             </h1>
             <p className="hero-subtitle">
-              Weigh keeps your progress safe on-device by default, with optional encrypted iCloud backup when you want it.
+              My Weight keeps your progress safe on-device by default, with optional encrypted iCloud backup when you want it.
               Understand trends without the noise thanks to clear analytics, smart goals, and encouraging feedback.
             </p>
             <div className="hero-highlights" role="list">
@@ -126,7 +126,7 @@ const LandingPage = ({ resolvedTheme, onLearnMore }: LandingPageProps) => {
                 className="btn btn-primary" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                aria-label="Download Weigh on the App Store"
+                aria-label="Download My Weight on the App Store"
               >
                 <Download size={20} aria-hidden="true" />
                 Download on App Store
@@ -135,7 +135,7 @@ const LandingPage = ({ resolvedTheme, onLearnMore }: LandingPageProps) => {
                 type="button" 
                 className="btn btn-secondary" 
                 onClick={onLearnMore}
-                aria-label="Learn more about Weigh features"
+                aria-label="Learn more about My Weight features"
               >
                 Learn more <ArrowRight size={18} aria-hidden="true" />
               </button>

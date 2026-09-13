@@ -1,6 +1,6 @@
 //
 //  ChartSettingsView.swift
-//  Weigh
+//  My Weight
 //
 //  Created by Trimly on 12/7/2025.
 //
@@ -33,7 +33,7 @@ struct ChartSettingsView: View {
 						style: .popup
 					) {
 						Toggle(L10n.ChartSettings.movingAverageToggle, isOn: binding(\.showMovingAverage))
-						Text(L10n.ChartSettings.movingAverageInfo)
+						Text(L10n.Insights.samplesExplanation)
 							.font(.caption)
 							.foregroundStyle(.secondary)
 
@@ -43,7 +43,7 @@ struct ChartSettingsView: View {
 								VStack(alignment: .leading, spacing: 2) {
 									Label(String(localized: L10n.ChartSettings.movingAverageLabel), systemImage: "chart.xyaxis.line")
 										.font(.subheadline.weight(.semibold))
-									Text(L10n.ChartSettings.daysLabel(dataManager.settings?.movingAveragePeriod ?? 7))
+									Text(L10n.Insights.samplePeriod(dataManager.settings?.movingAveragePeriod ?? 7))
 										.font(.caption)
 										.foregroundStyle(.secondary)
 								}
@@ -53,7 +53,7 @@ struct ChartSettingsView: View {
 						Divider().padding(.vertical, 10)
 
 						Toggle(L10n.ChartSettings.emaToggle, isOn: binding(\.showEMA))
-						Text(L10n.ChartSettings.emaInfo)
+						Text(L10n.Insights.samplesExplanation)
 							.font(.caption)
 							.foregroundStyle(.secondary)
 
@@ -63,7 +63,7 @@ struct ChartSettingsView: View {
 								VStack(alignment: .leading, spacing: 2) {
 									Label(String(localized: L10n.ChartSettings.emaLabel), systemImage: "chart.line.flattrend.xyaxis")
 										.font(.subheadline.weight(.semibold))
-									Text(L10n.ChartSettings.daysLabel(dataManager.settings?.emaPeriod ?? 7))
+									Text(L10n.Insights.samplePeriod(dataManager.settings?.emaPeriod ?? 7))
 										.font(.caption)
 										.foregroundStyle(.secondary)
 								}

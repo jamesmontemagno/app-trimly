@@ -410,8 +410,11 @@ struct ShareCheckInView: View {
                     Toggle(String(localized: L10n.Portability.shareFooter), isOn: $showFooter)
                     if shareURL == nil {
                         Button(action: prepareImage) {
-                            Label(String(localized: L10n.Portability.prepareImage), systemImage: "photo")
-                                .frame(maxWidth: .infinity)
+                            HStack {
+                                Spacer(minLength: 0)
+                                Label(String(localized: L10n.Portability.prepareImage), systemImage: "photo")
+                                Spacer(minLength: 0)
+                            }
                         }
                         .buttonStyle(.borderedProminent)
                         .frame(minHeight: 44)
@@ -419,8 +422,11 @@ struct ShareCheckInView: View {
                         .disabled(snapshot == nil)
                     } else {
                         Button(action: shareImage) {
-                            Label(String(localized: L10n.Portability.shareImage), systemImage: "square.and.arrow.up")
-                                .frame(maxWidth: .infinity)
+                            HStack {
+                                Spacer(minLength: 0)
+                                Label(String(localized: L10n.Portability.shareImage), systemImage: "square.and.arrow.up")
+                                Spacer(minLength: 0)
+                            }
                         }
                         .buttonStyle(.borderedProminent)
                         .frame(minHeight: 44)
@@ -832,13 +838,8 @@ private struct ShareCardContent: View {
                 AxisTick()
                 AxisValueLabel {
                     if let date = value.as(Date.self) {
-                        if date == snapshot.days.last?.date {
-                            Text(L10n.Portability.shareToday)
-                                .font(.system(size: captionSize))
-                        } else {
-                            Text(date, format: .dateTime.weekday(.narrow))
-                                .font(.system(size: captionSize))
-                        }
+                        Text(date, format: .dateTime.weekday(.narrow))
+                            .font(.system(size: captionSize))
                     }
                 }
             }

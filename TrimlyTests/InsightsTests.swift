@@ -27,6 +27,27 @@ struct InsightsTests {
         }
     }
 
+    @Test func chartSelection_snapsToNearestLoggedDayAcrossGaps() {
+        let first = ChartDataPoint(date: date(), weight: 80)
+        let last = ChartDataPoint(date: offset(6, from: date()), weight: 79)
+        let points = [first, last]
+
+        #expect(ChartDataPoint.nearest(to: offset(1, from: date()), in: points) == first)
+        #expect(ChartDataPoint.nearest(to: offset(5, from: date()), in: points) == last)
+        #expect(ChartDataPoint.nearest(to: offset(3, from: date()), in: points) == first)
+        #expect(ChartDataPoint.nearest(to: last.date, in: points) == last)
+    }
+
+    @Test func chartSelection_handlesEdgesSinglePointAndEmptyData() {
+        let first = ChartDataPoint(date: date(), weight: 80)
+        let last = ChartDataPoint(date: offset(6, from: date()), weight: 79)
+
+        #expect(ChartDataPoint.nearest(to: offset(-10, from: date()), in: [first, last]) == first)
+        #expect(ChartDataPoint.nearest(to: offset(10, from: date()), in: [first, last]) == last)
+        #expect(ChartDataPoint.nearest(to: last.date, in: [first]) == first)
+        #expect(ChartDataPoint.nearest(to: date(), in: []) == nil)
+    }
+
     @Test func weeklyRecap_comparesSameElapsedDaysAndExcludesLaterDays() throws {
         let now = date()
         let data: [WeightInsights.DailyWeight] = [

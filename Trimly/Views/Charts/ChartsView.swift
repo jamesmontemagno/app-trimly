@@ -151,8 +151,6 @@ struct ChartsView: View {
             )
             if let point = selectedPoint(in: data) {
                 selectedDay(point)
-            } else {
-                Text(L10n.Charts.selectionHint).font(.caption).foregroundStyle(.secondary)
             }
             Menu {
                 ForEach(data) { point in
@@ -250,7 +248,7 @@ struct ChartsView: View {
 
     private func selectedPoint(in data: [ChartDataPoint]) -> ChartDataPoint? {
         guard let selectedDate else { return nil }
-        return data.min { abs($0.date.timeIntervalSince(selectedDate)) < abs($1.date.timeIntervalSince(selectedDate)) }
+        return ChartDataPoint.nearest(to: selectedDate, in: data)
     }
 
     private func stats(_ data: [ChartDataPoint]) -> ChartStats? {

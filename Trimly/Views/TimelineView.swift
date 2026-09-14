@@ -33,19 +33,24 @@ struct TimelineView: View {
                             }
                             .buttonStyle(.plain)
                             .accessibilityHint(Text(L10n.EntryFeatures.details))
-                            .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                Button(role: .destructive) {
+                                    deleteEntry(entry)
+                                } label: {
+                                    Label(L10n.Common.deleteButton, systemImage: "trash")
+                                }
+                                .accessibilityLabel(Text(L10n.Common.deleteButton))
                                 if entry.source == .manual {
                                     Button {
                                         editingEntry = entry
                                     } label: {
-                                        Label(L10n.EntryFeatures.edit, systemImage: "pencil")
+                                        Label(L10n.Common.editButton, systemImage: "pencil")
                                     }
                                     .tint(.accentColor)
-                                    .accessibilityLabel(Text(L10n.EntryFeatures.edit))
+                                    .accessibilityLabel(Text(L10n.Common.editButton))
                                 }
                             }
                         }
-                        .onDelete { deleteEntries(at: $0, in: group.entries) }
                     } header: {
                         DayHeader(date: group.date, entries: group.entries,
                                   preferredUnit: dataManager.settings?.preferredUnit ?? .kilograms,
@@ -172,14 +177,13 @@ struct TimelineView: View {
         }
     }
 
-    private func deleteEntries(at offsets: IndexSet, in group: [WeightEntry]) {
-        let selected = offsets.compactMap { group.indices.contains($0) ? group[$0] : nil }
-        guard dataManager.fetchAllEntries().count > selected.count else {
+    private func deleteEntry(_ entry: WeightEntry) {
+        guard dataManager.fetchAllEntries().count > 1 else {
             errorMessage = String(localized: L10n.Timeline.lastEntryMessage)
             return
         }
         do {
-            for entry in selected { try dataManager.deleteEntry(entry) }
+            try dataManager.deleteEntry(entry)
         } catch {
             errorMessage = error.localizedDescription
         }

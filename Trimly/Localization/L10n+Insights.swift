@@ -26,7 +26,6 @@ extension L10n {
         static let averageDifference = LocalizedStringResource("recap.difference", defaultValue: "Average change from previous period", table: "Insights")
         static let unavailableComparison = LocalizedStringResource("recap.unavailable", defaultValue: "Log in both periods to compare averages.", table: "Insights")
         static let noMeasurements = LocalizedStringResource("recap.noMeasurements", defaultValue: "No measurements in this period", table: "Insights")
-        static let loggingDays = LocalizedStringResource("analytics.loggingDays", defaultValue: "Logging days", table: "Insights")
         static let loggingDayAverage = LocalizedStringResource("analytics.loggingDayAverage", defaultValue: "Average · last 7 logging days", table: "Insights")
         static let samplesExplanation = LocalizedStringResource("analytics.samplesExplanation", defaultValue: "SMA and EMA use logging-day samples, not elapsed calendar days. Missing days are skipped. Earlier history warms the lines before the visible range.", table: "Insights")
         static let insufficient = LocalizedStringResource("support.insufficient", defaultValue: "More logging history is needed for a reliable trend.", table: "Insights")

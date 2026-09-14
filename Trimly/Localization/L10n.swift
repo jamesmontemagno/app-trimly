@@ -10,6 +10,7 @@ enum L10n {
 		static let saveButton = LocalizedStringResource("common.button.save", defaultValue: "Save")
 		static let doneButton = LocalizedStringResource("common.button.done", defaultValue: "Done")
 		static let okButton = LocalizedStringResource("common.button.ok", defaultValue: "OK")
+		static let editButton = LocalizedStringResource("common.button.edit", defaultValue: "Edit")
 		static let deleteButton = LocalizedStringResource("common.button.delete", defaultValue: "Delete")
 		static let refresh = LocalizedStringResource("common.button.refresh", defaultValue: "Refresh")
 		static let addWeight = LocalizedStringResource("common.button.addWeight", defaultValue: "Add Weight")
@@ -154,16 +155,26 @@ enum L10n {
 		static let legendWeight = LocalizedStringResource("charts.legend.weight", defaultValue: "Weight")
 		static let legendMovingAverage = LocalizedStringResource("charts.legend.movingAverage", defaultValue: "MA")
 		static let legendEMA = LocalizedStringResource("charts.legend.ema", defaultValue: "EMA")
-		static let statMin = LocalizedStringResource("charts.stats.min", defaultValue: "Min")
-		static let statMax = LocalizedStringResource("charts.stats.max", defaultValue: "Max")
-		static let statAvg = LocalizedStringResource("charts.stats.avg", defaultValue: "Avg")
 		static let statRange = LocalizedStringResource("charts.stats.range", defaultValue: "Range")
 		static let statAverageWeight = LocalizedStringResource("charts.stats.averageWeight", defaultValue: "Average Weight")
-		static let statTotalChange = LocalizedStringResource("charts.stats.totalChange", defaultValue: "Total Change")
 		static let statCheckIns = LocalizedStringResource("charts.stats.checkIns", defaultValue: "Check-ins")
+		static func checkInsValue(_ logged: Int, _ total: Int) -> LocalizedStringResource {
+			LocalizedStringResource("charts.stats.checkInsValue", defaultValue: "\(logged)/\(total) days")
+		}
 		static let statConsistency = LocalizedStringResource("charts.stats.consistency", defaultValue: "Consistency")
-		static let statTimeframe = LocalizedStringResource("charts.stats.timeframe", defaultValue: "Timeframe")
+		static let statLatest = LocalizedStringResource("charts.stats.latest", defaultValue: "Latest")
+		static let statPeriodChange = LocalizedStringResource("charts.stats.periodChange", defaultValue: "Change")
+		static let statPerWeek = LocalizedStringResource("charts.stats.perWeek", defaultValue: "Per week")
+		static func consistencyValue(_ percentage: String, _ logged: Int, _ total: Int) -> LocalizedStringResource {
+			LocalizedStringResource("charts.stats.consistencyValue", defaultValue: "\(percentage) · \(logged)/\(total) days")
+		}
 		static let goalLabel = LocalizedStringResource("charts.goal.label", defaultValue: "Goal")
+		static func goalBelowView(_ weight: String) -> LocalizedStringResource {
+			LocalizedStringResource("charts.goal.belowView", defaultValue: "Goal \(weight) is below this view")
+		}
+		static func goalAboveView(_ weight: String) -> LocalizedStringResource {
+			LocalizedStringResource("charts.goal.aboveView", defaultValue: "Goal \(weight) is above this view")
+		}
 		static let maInfoTitle = LocalizedStringResource("charts.info.ma.title", defaultValue: "Moving Average")
 		static let maInfoDescription = LocalizedStringResource("charts.info.ma.description", defaultValue: "A simple moving average smooths recent entries by averaging the last few days so you can spot direction without noise.")
 		static let emaInfoTitle = LocalizedStringResource("charts.info.ema.title", defaultValue: "Exponential Moving Average")

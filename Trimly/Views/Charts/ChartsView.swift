@@ -1,30 +1,10 @@
 import SwiftUI
 import Charts
 
-private enum ChartRangeTab: CaseIterable, Hashable {
-    case week
-    case month
-    case quarter
-    case year
-    case more
-
-    var label: LocalizedStringResource {
-        switch self {
-        case .week: L10n.Insights.rangeWeekShort
-        case .month: L10n.Insights.rangeMonthShort
-        case .quarter: L10n.Insights.rangeQuarterShort
-        case .year: L10n.Insights.rangeYearShort
-        case .more: L10n.Insights.moreRanges
-        }
-    }
-}
-
 struct ChartsView: View {
     @EnvironmentObject private var dataManager: DataManager
     @EnvironmentObject private var deviceSettings: DeviceSettingsStore
     @State private var selectedRange: ChartRange = .week
-    @State private var customStart = Calendar.current.date(byAdding: .month, value: -1, to: Date()) ?? Date()
-    @State private var customEnd = Date()
     @State private var showingSettings = false
     @State private var showingAddEntry = false
     @State private var selectedDate: Date?
@@ -83,67 +63,55 @@ struct ChartsView: View {
             .sheet(isPresented: $showingSettings) { ChartSettingsView() }
         }
         .onChange(of: selectedRange) { _, _ in selectedDate = nil }
-        .onChange(of: customStart) { _, _ in selectedDate = nil }
-        .onChange(of: customEnd) { _, _ in selectedDate = nil }
         .onChange(of: dataManager.dataRevision) { _, _ in selectedDate = nil }
     }
 
     private var rangeControls: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Picker(String(localized: L10n.Charts.rangePicker), selection: rangeTab) {
-                ForEach(ChartRangeTab.allCases, id: \.self) { tab in
-                    Text(tab.label).tag(tab)
+            Picker(String(localized: L10n.Charts.rangePicker), selection: $selectedRange) {
+                ForEach(primaryRanges, id: \.self) { range in
+                    Text(range.displayName).tag(range)
                 }
             }
             .pickerStyle(.segmented)
             .frame(minHeight: 44)
             .accessibilityLabel(Text(L10n.Charts.rangePicker))
-            if rangeTab.wrappedValue == .more {
-                Picker(String(localized: L10n.Insights.moreRanges), selection: $selectedRange) {
-                    Text(L10n.Insights.allTime).tag(ChartRange.allTime)
-                    Text(L10n.Insights.sinceGoal).tag(ChartRange.sinceGoal)
-                    Text(L10n.Insights.customRange).tag(ChartRange.custom)
-                }
-                .pickerStyle(.menu)
-                .frame(minHeight: 44)
-                .accessibilityLabel(Text(L10n.Insights.moreRanges))
-            }
-            if selectedRange == .custom {
-                DatePicker(String(localized: L10n.Insights.startDate), selection: $customStart, in: ...Date(), displayedComponents: .date)
-                    .accessibilityLabel(Text(L10n.Insights.startDate))
-                DatePicker(String(localized: L10n.Insights.endDate), selection: $customEnd, in: ...Date(), displayedComponents: .date)
-                    .accessibilityLabel(Text(L10n.Insights.endDate))
-            }
         }
     }
 
-    private var rangeTab: Binding<ChartRangeTab> {
-        Binding(
-            get: {
-                switch selectedRange {
-                case .week: .week
-                case .month: .month
-                case .quarter: .quarter
-                case .year: .year
-                case .allTime, .sinceGoal, .custom: .more
-                }
-            },
-            set: { tab in
-                switch tab {
-                case .week: selectedRange = .week
-                case .month: selectedRange = .month
-                case .quarter: selectedRange = .quarter
-                case .year: selectedRange = .year
-                case .more:
-                    if ![.allTime, .sinceGoal, .custom].contains(selectedRange) {
-                        selectedRange = .allTime
-                    }
-                }
-            }
-        )
+    private var primaryRanges: [ChartRange] {
+        [.week, .month, .quarter, .year]
     }
 
     private func chartSection(data: [ChartDataPoint], period: WeightInsights.Period) -> some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(alignment: .top, spacing: 16) {
+                chartPlot(data: data, period: period)
+                    .frame(minWidth: 420, maxWidth: .infinity)
+                AnalyticsDashboardView(data: data, period: period)
+                    .frame(width: 260)
+            }
+
+            VStack(alignment: .leading, spacing: 16) {
+                chartPlot(data: data, period: period)
+                AnalyticsDashboardView(data: data, period: period)
+            }
+        }
+        .padding()
+        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .alert(String(localized: L10n.Charts.maInfoTitle), isPresented: $showingMAInfo) {
+            Button(String(localized: L10n.Common.okButton), role: .cancel) {}
+        } message: {
+            Text(L10n.Charts.maInfoDescription) + Text(verbatim: "\n\n") + Text(L10n.Insights.samplesExplanation)
+        }
+        .alert(String(localized: L10n.Charts.emaInfoTitle), isPresented: $showingEMAInfo) {
+            Button(String(localized: L10n.Common.okButton), role: .cancel) {}
+        } message: {
+            Text(L10n.Charts.emaInfoDescription) + Text(verbatim: "\n\n") + Text(L10n.Insights.samplesExplanation)
+        }
+    }
+
+    private func chartPlot(data: [ChartDataPoint], period: WeightInsights.Period) -> some View {
         VStack(alignment: .leading, spacing: 16) {
             WeightChartPlot(
                 data: data, movingAverage: movingAverage(in: period), ema: ema(in: period),
@@ -155,23 +123,7 @@ struct ChartsView: View {
                     showEMA: dataManager.settings?.showEMA == true,
                     onMAInfo: { showingMAInfo = true }, onEMAInfo: { showingEMAInfo = true }
                 )
-                Text(L10n.Insights.samplesExplanation).font(.caption).foregroundStyle(.secondary)
             }
-            if let stats = stats(data) {
-                AnalyticsDashboardView(stats: stats, data: data, range: selectedRange, period: period)
-            }
-        }
-        .padding()
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
-        .alert(String(localized: L10n.Charts.maInfoTitle), isPresented: $showingMAInfo) {
-            Button(String(localized: L10n.Common.okButton), role: .cancel) {}
-        } message: {
-            Text(L10n.Insights.samplesExplanation)
-        }
-        .alert(String(localized: L10n.Charts.emaInfoTitle), isPresented: $showingEMAInfo) {
-            Button(String(localized: L10n.Common.okButton), role: .cancel) {}
-        } message: {
-            Text(L10n.Insights.samplesExplanation)
         }
     }
 
@@ -183,8 +135,13 @@ struct ChartsView: View {
     }
 
     private var period: WeightInsights.Period? {
-        selectedRange.period(firstDate: allData.first?.date, goalStart: dataManager.fetchActiveGoal()?.startDate,
-                             customStart: customStart, customEnd: customEnd)
+        let today = Date()
+        return selectedRange.period(
+            firstDate: allData.first?.date,
+            goalStart: dataManager.fetchActiveGoal()?.startDate,
+            customStart: today,
+            customEnd: today
+        )
     }
 
     private var notesDays: Set<Date> {
@@ -210,13 +167,6 @@ struct ChartsView: View {
         return WeightAnalytics.calculateEMA(dailyWeights: allData, period: dataManager.settings?.emaPeriod ?? 7)
             .filter { $0.date >= period.start && $0.date < period.end }
             .map { ChartDataPoint(date: $0.date, weight: $0.value) }
-    }
-
-    private func stats(_ data: [ChartDataPoint]) -> ChartStats? {
-        let weights = data.map(\.weight)
-        guard let minimum = weights.min(), let maximum = weights.max() else { return nil }
-        return ChartStats(min: minimum, max: maximum,
-                          average: weights.reduce(0) { $0 + $1 / Double(weights.count) }, range: maximum - minimum)
     }
 }
 

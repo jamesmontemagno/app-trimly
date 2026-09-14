@@ -2764,6 +2764,52 @@
         }
       }
     },
+    "charts.goal.aboveView" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Goal %@ is above this view"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La meta %@ está por encima de esta vista"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’objectif %@ est au-dessus de cette vue"
+          }
+        }
+      }
+    },
+    "charts.goal.belowView" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Goal %@ is below this view"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La meta %@ está por debajo de esta vista"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’objectif %@ est en dessous de cette vue"
+          }
+        }
+      }
+    },
     "charts.goal.label" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -3166,29 +3212,6 @@
         }
       }
     },
-    "charts.stats.avg" : {
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Avg"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prom"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Moy"
-          }
-        }
-      }
-    },
     "charts.stats.checkIns" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -3211,48 +3234,117 @@
         }
       }
     },
-    "charts.stats.max" : {
+    "charts.stats.consistencyValue" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "Max"
+            "state" : "translated",
+            "value" : "%1$@ · %2$lld/%3$lld days"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Máx"
+            "value" : "%1$@ · %2$lld/%3$lld días"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Max"
+            "value" : "%1$@ · %2$lld/%3$lld jours"
           }
         }
       }
     },
-    "charts.stats.min" : {
+    "charts.stats.checkInsValue" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "Min"
+            "state" : "translated",
+            "value" : "%1$lld/%2$lld days"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mín"
+            "value" : "%1$lld/%2$lld días"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Min"
+            "value" : "%1$lld/%2$lld jours"
+          }
+        }
+      }
+    },
+    "charts.stats.latest" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Latest"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Último"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dernier"
+          }
+        }
+      }
+    },
+    "charts.stats.periodChange" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambio"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Évolution"
+          }
+        }
+      }
+    },
+    "charts.stats.perWeek" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Per week"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por semana"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Par semaine"
           }
         }
       }
@@ -3276,28 +3368,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Intervalle"
-          }
-        }
-      }
-    },
-    "charts.stats.timeframe" : {
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Timeframe"
-          }
-        }
-      }
-    },
-    "charts.stats.totalChange" : {
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Total Change"
           }
         }
       }
@@ -3855,6 +3925,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Supprimer"
+          }
+        }
+      }
+    },
+    "common.button.edit" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modifier"
           }
         }
       }

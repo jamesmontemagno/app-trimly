@@ -26,6 +26,21 @@ struct AppRootView: View {
             .environmentObject(storeManager)
             .preferredColorScheme(colorScheme(for: dataManager.settings?.appearance))
             .task {
+                #if DEBUG
+                if ProcessInfo.processInfo.arguments.contains("--show-all-chart-lines") {
+                    dataManager.updateSettings {
+                        $0.showMovingAverage = true
+                        $0.showEMA = true
+                    }
+                }
+                if ProcessInfo.processInfo.arguments.contains("--generate-sample-data") {
+                    do {
+                        try dataManager.generateSampleData(days: 365)
+                    } catch {
+                        dataManager.persistenceErrorMessage = error.localizedDescription
+                    }
+                }
+                #endif
                 NotificationService.shared.installResponseHandler()
                 NotificationService.shared.configure(dataManager: dataManager)
                 dataManager.refreshAfterExternalChanges()

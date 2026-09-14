@@ -14,14 +14,23 @@ enum InsightFormatting {
 
 struct InsightSupportView: View {
     let support: WeightInsights.Support
+    var showsDetails: Bool = true
 
     var body: some View {
+        if showsDetails || message != nil {
+            content
+        }
+    }
+
+    private var content: some View {
         VStack(alignment: .leading, spacing: 6) {
             if let message {
                 Label(String(localized: message), systemImage: "info.circle")
             }
-            Text(L10n.Insights.supportCounts(support.loggingDays, support.calendarDays))
-            Text(L10n.Insights.supportExplanation)
+            if showsDetails {
+                Text(L10n.Insights.supportCounts(support.loggingDays, support.calendarDays))
+                Text(L10n.Insights.supportExplanation)
+            }
         }
         .font(.caption)
         .foregroundStyle(.secondary)

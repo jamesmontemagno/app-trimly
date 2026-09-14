@@ -22,11 +22,11 @@ final class AppSettings {
     var dailyAggregationMode: DailyAggregationMode = DailyAggregationMode.latest
     
     /// Chart display mode
-    var chartMode: ChartMode = ChartMode.minimalist
+    var chartMode: ChartMode = ChartMode.analytical
     
     /// Whether to show moving average on charts
-    var showMovingAverage: Bool = true
-    
+    var showMovingAverage: Bool = false
+
     /// Whether to show EMA on charts
     var showEMA: Bool = true
     
@@ -61,8 +61,8 @@ final class AppSettings {
         id: UUID = UUID(),
         preferredUnit: WeightUnit = .pounds,
         dailyAggregationMode: DailyAggregationMode = .latest,
-        chartMode: ChartMode = .minimalist,
-        showMovingAverage: Bool = true,
+        chartMode: ChartMode = .analytical,
+        showMovingAverage: Bool = false,
         showEMA: Bool = true,
         movingAveragePeriod: Int = 7,
         emaPeriod: Int = 7,

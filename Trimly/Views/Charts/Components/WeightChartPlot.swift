@@ -12,13 +12,18 @@ struct WeightChartPlot: View {
     @Binding var selectedDate: Date?
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            ChartSelectionSummary(point: selectedPoint, unit: unit, precision: precision) {
+        VStack(alignment: .leading, spacing: 12) {
+            ChartSelectionSummary(point: selectedPoint, note: selectedNote, unit: unit, precision: precision) {
                 selectedDate = nil
             }
             chartWithAxes
                 .frame(height: 300)
                 .accessibilityLabel(Text(L10n.Charts.navigationTitle))
+            if let offScaleGoal {
+                Label(String(localized: offScaleGoal), systemImage: "flag.checkered")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
         .animation(reduceMotion ? nil : .easeInOut, value: selectedDate)
     }
@@ -60,7 +65,7 @@ struct WeightChartPlot: View {
             emaLabel: gradient(from: emaColor.opacity(0.9), to: emaColor)
         ])
         .chartLegend(.hidden)
-        .chartYScale(domain: .automatic(includesZero: false))
+        .chartYScale(domain: yDomain)
         .chartOverlay { proxy in
             GeometryReader { geometry in
                 if let anchor = proxy.plotFrame {
@@ -140,19 +145,19 @@ struct WeightChartPlot: View {
 
     @ChartContentBuilder
     private var goalMarks: some ChartContent {
-        if let goal = dataManager.fetchActiveGoal(), convert(goal.targetWeightKg).isFinite, goal.targetWeightKg > 0 {
-            RuleMark(y: .value(goalLabel, convert(goal.targetWeightKg)))
+        if let target = goalTargetKg, goalFitsScale {
+            RuleMark(y: .value(goalLabel, convert(target)))
                 .foregroundStyle(.green)
                 .lineStyle(StrokeStyle(lineWidth: 2, dash: [10, 5]))
                 .annotation(position: .top, alignment: .trailing) {
                     Text(L10n.Charts.goalLabel).font(.caption).foregroundStyle(.green)
                 }
-            if let first = data.first, let last = data.last,
-               goal.startDate >= first.date, goal.startDate <= last.date {
-                RuleMark(x: .value(String(localized: L10n.Insights.sinceGoal), goal.startDate))
-                    .foregroundStyle(.purple.opacity(0.6))
-                    .lineStyle(StrokeStyle(lineWidth: 2))
-            }
+        }
+        if let goalStart, let first = data.first, let last = data.last,
+           goalStart >= first.date, goalStart <= last.date {
+            RuleMark(x: .value(String(localized: L10n.Insights.sinceGoal), goalStart))
+                .foregroundStyle(.purple.opacity(0.6))
+                .lineStyle(StrokeStyle(lineWidth: 2))
         }
     }
 
@@ -177,9 +182,63 @@ struct WeightChartPlot: View {
     private var precision: Int { dataManager.settings?.decimalPrecision ?? 1 }
     private var showsAxes: Bool { dataManager.settings?.chartMode == .analytical }
 
+    private var goalTargetKg: Double? {
+        guard let goal = dataManager.fetchActiveGoal(), goal.targetWeightKg.isFinite, goal.targetWeightKg > 0,
+              convert(goal.targetWeightKg).isFinite else { return nil }
+        return goal.targetWeightKg
+    }
+
+    private var goalStart: Date? { dataManager.fetchActiveGoal()?.startDate }
+
+    private var plottedBounds: (low: Double, high: Double)? {
+        let values = (data + movingAverage + ema).map { convert($0.weight) }.filter(\.isFinite)
+        guard let low = values.min(), let high = values.max() else { return nil }
+        return (low, high)
+    }
+
+    /// A distant target would compress every real fluctuation into a flat line, so the
+    /// goal only shares the scale while it stays within one spread of the plotted data.
+    private var goalFitsScale: Bool {
+        guard let target = goalTargetKg, let bounds = plottedBounds else { return false }
+        let goal = convert(target)
+        let spread = max(bounds.high - bounds.low, 1)
+        return goal >= bounds.low - spread && goal <= bounds.high + spread
+    }
+
+    private var yDomain: ClosedRange<Double> {
+        guard let bounds = plottedBounds else { return 0...1 }
+        let spread = max(bounds.high - bounds.low, 1)
+        var lower = bounds.low - spread * 0.15
+        var upper = bounds.high + spread * 0.15
+        if let target = goalTargetKg, goalFitsScale {
+            let goal = convert(target)
+            lower = min(lower, goal - spread * 0.1)
+            upper = max(upper, goal + spread * 0.1)
+        }
+        return lower...upper
+    }
+
+    private var offScaleGoal: LocalizedStringResource? {
+        guard let target = goalTargetKg, !goalFitsScale, let bounds = plottedBounds else { return nil }
+        let formatted = InsightFormatting.weight(target, unit: unit, precision: precision)
+        return convert(target) < bounds.low
+            ? L10n.Charts.goalBelowView(formatted)
+            : L10n.Charts.goalAboveView(formatted)
+    }
+
     private var selectedPoint: ChartDataPoint? {
         guard let selectedDate else { return nil }
         return ChartDataPoint.nearest(to: selectedDate, in: data)
+    }
+
+    private var selectedNote: String? {
+        guard let point = selectedPoint else { return nil }
+        let notes = dataManager.fetchEntriesForDate(point.date)
+            .filter { !$0.isHidden }
+            .compactMap { $0.notes?.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+        guard !notes.isEmpty else { return nil }
+        return notes.joined(separator: " • ")
     }
 
     private var weightLinePrimary: Color { Color(red: 0.31, green: 0.55, blue: 1.0) }

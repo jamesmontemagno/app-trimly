@@ -29,13 +29,18 @@ struct FunStatCard: View {
 				Text(value)
 					.font(.subheadline.bold())
 					.lineLimit(2)
+					.minimumScaleFactor(0.9)
+					.allowsTightening(true)
 					.multilineTextAlignment(.leading)
-					.fixedSize(horizontal: false, vertical: true)
+					.layoutPriority(1)
 			}
 		}
 		.frame(maxWidth: .infinity, alignment: .leading)
 		.padding(12)
 		.background(Color.secondary.opacity(0.1))
 		.clipShape(RoundedRectangle(cornerRadius: 12))
+		.accessibilityElement(children: .combine)
+		.accessibilityLabel(title)
+		.accessibilityValue(value)
 	}
 }

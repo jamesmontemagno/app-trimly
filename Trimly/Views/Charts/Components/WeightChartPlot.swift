@@ -8,6 +8,7 @@ struct WeightChartPlot: View {
     let movingAverage: [ChartDataPoint]
     let ema: [ChartDataPoint]
     let notesDays: Set<Date>
+    let range: ChartRange
     @Binding var selectedDate: Date?
 
     var body: some View {
@@ -15,13 +16,35 @@ struct WeightChartPlot: View {
             ChartSelectionSummary(point: selectedPoint, unit: unit, precision: precision) {
                 selectedDate = nil
             }
-            baseChart
-                .chartXAxis(showsAxes ? .automatic : .hidden)
-                .chartYAxis(showsAxes ? .automatic : .hidden)
+            chartWithAxes
                 .frame(height: 300)
                 .accessibilityLabel(Text(L10n.Charts.navigationTitle))
         }
         .animation(reduceMotion ? nil : .easeInOut, value: selectedDate)
+    }
+
+    @ViewBuilder
+    private var chartWithAxes: some View {
+        if showsAxes {
+            if range == .week {
+                baseChart.chartXAxis { weekDateAxisMarks }
+            } else {
+                baseChart.chartXAxis(.automatic)
+            }
+        } else {
+            baseChart
+                .chartXAxis(.hidden)
+                .chartYAxis(.hidden)
+        }
+    }
+
+    @AxisContentBuilder
+    private var weekDateAxisMarks: some AxisContent {
+        AxisMarks(values: .stride(by: .day)) { _ in
+            AxisGridLine()
+            AxisTick()
+            AxisValueLabel(format: .dateTime.weekday(.narrow), centered: true)
+        }
     }
 
     private var baseChart: some View {

@@ -20,7 +20,9 @@ struct LegendItem: View {
 			
 			Text(label)
 				.foregroundStyle(.secondary)
+				.fixedSize(horizontal: true, vertical: false)
 		}
+		.fixedSize(horizontal: true, vertical: false)
 	}
 
 	private var legendStroke: StrokeStyle {

@@ -15,10 +15,11 @@ struct ChartLegend: View {
 	
 	var body: some View {
 		ViewThatFits(in: .horizontal) {
-			HStack(spacing: 16) { items }
+			HStack(spacing: 12) { items }
 			VStack(alignment: .leading, spacing: 8) { items }
 		}
 		.font(.caption)
+		.frame(maxWidth: .infinity, alignment: .leading)
 	}
 
 	private var items: some View {

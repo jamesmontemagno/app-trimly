@@ -147,20 +147,8 @@ struct ChartsView: View {
         VStack(alignment: .leading, spacing: 16) {
             WeightChartPlot(
                 data: data, movingAverage: movingAverage(in: period), ema: ema(in: period),
-                notesDays: notesDays, selectedDate: $selectedDate
+                notesDays: notesDays, range: selectedRange, selectedDate: $selectedDate
             )
-            if let point = selectedPoint(in: data) {
-                selectedDay(point)
-            }
-            Menu {
-                ForEach(data) { point in
-                    Button(point.date.formatted(date: .abbreviated, time: .omitted)) { selectedDate = point.date }
-                }
-            } label: {
-                Label(String(localized: L10n.Insights.chooseDay), systemImage: "calendar")
-            }
-            .frame(minHeight: 44)
-            .accessibilityLabel(Text(L10n.Insights.chooseDay))
             if dataManager.settings?.showMovingAverage == true || dataManager.settings?.showEMA == true {
                 ChartLegend(
                     showMovingAverage: dataManager.settings?.showMovingAverage == true,
@@ -185,28 +173,6 @@ struct ChartsView: View {
         } message: {
             Text(L10n.Insights.samplesExplanation)
         }
-    }
-
-    private func selectedDay(_ point: ChartDataPoint) -> some View {
-        NavigationLink {
-            EntryDayDetailView(date: point.date)
-        } label: {
-            VStack(alignment: .leading, spacing: 6) {
-                Text(point.date, format: .dateTime.day().month().year()).font(.headline)
-                Text(InsightFormatting.weight(point.weight, unit: dataManager.settings?.preferredUnit ?? .kilograms,
-                                              precision: dataManager.settings?.decimalPrecision ?? 1))
-                Label(String(localized: L10n.Insights.dayDetails), systemImage: "list.bullet")
-                if notesDays.contains(point.date) {
-                    Label(String(localized: L10n.Insights.notes), systemImage: "note.text")
-                }
-            }
-            .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
-            .padding(12)
-            .background(.background, in: RoundedRectangle(cornerRadius: 12))
-        }
-        .buttonStyle(.plain)
-        .accessibilityElement(children: .combine)
-        .accessibilityHint(Text(L10n.Insights.dayDetailsHint))
     }
 
     private var allData: [WeightInsights.DailyWeight] {
@@ -244,11 +210,6 @@ struct ChartsView: View {
         return WeightAnalytics.calculateEMA(dailyWeights: allData, period: dataManager.settings?.emaPeriod ?? 7)
             .filter { $0.date >= period.start && $0.date < period.end }
             .map { ChartDataPoint(date: $0.date, weight: $0.value) }
-    }
-
-    private func selectedPoint(in data: [ChartDataPoint]) -> ChartDataPoint? {
-        guard let selectedDate else { return nil }
-        return ChartDataPoint.nearest(to: selectedDate, in: data)
     }
 
     private func stats(_ data: [ChartDataPoint]) -> ChartStats? {

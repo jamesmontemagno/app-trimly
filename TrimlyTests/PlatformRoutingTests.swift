@@ -60,12 +60,12 @@ struct PlatformRoutingTests {
     }
 
     @Test
-    func coldLaunchDismissalIsReplayedAfterConfiguration() {
+    func coldLaunchExplicitDismissalIsReplayedAfterConfiguration() {
         let dataManager = DataManager(inMemory: true)
         let router = AppRouter()
         let service = NotificationService()
         service.handleResponse(
-            categoryIdentifier: "WEIGHT_REMINDER", actionIdentifier: UNNotificationDismissActionIdentifier,
+            categoryIdentifier: "WEIGHT_REMINDER", actionIdentifier: "DISMISS",
             deliveredAt: Date(), router: router
         )
         #expect(dataManager.deviceSettings.reminders.consecutiveDismissals == 0)
@@ -73,6 +73,22 @@ struct PlatformRoutingTests {
         #expect(dataManager.deviceSettings.reminders.consecutiveDismissals == 1)
         service.configure(dataManager: dataManager)
         #expect(dataManager.deviceSettings.reminders.consecutiveDismissals == 1)
+        #expect(!router.hasPendingQuickLog)
+    }
+
+    @Test
+    func systemDismissalDoesNotRecordOrLaunchTheApp() {
+        let dataManager = DataManager(inMemory: true)
+        let router = AppRouter()
+        let service = NotificationService()
+        service.handleResponse(
+            categoryIdentifier: "WEIGHT_REMINDER",
+            actionIdentifier: UNNotificationDismissActionIdentifier,
+            deliveredAt: Date(),
+            router: router
+        )
+        service.configure(dataManager: dataManager)
+        #expect(dataManager.deviceSettings.reminders.consecutiveDismissals == 0)
         #expect(!router.hasPendingQuickLog)
     }
 

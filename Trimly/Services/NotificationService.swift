@@ -136,7 +136,7 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
         switch actionIdentifier {
         case "QUICK_LOG", UNNotificationDefaultActionIdentifier:
             (router ?? .shared).requestQuickLog()
-        case "DISMISS", UNNotificationDismissActionIdentifier:
+        case "DISMISS":
             if let responseDataManager {
                 recordDismissal(at: deliveredAt, dataManager: responseDataManager)
             } else {
@@ -327,7 +327,7 @@ extension NotificationService {
             identifier: "WEIGHT_REMINDER",
             actions: [quickLogAction, dismissAction],
             intentIdentifiers: [],
-            options: .customDismissAction
+            options: []
         )
         
         notificationCenter.setNotificationCategories([category])

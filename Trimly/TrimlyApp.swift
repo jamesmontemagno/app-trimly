@@ -41,7 +41,6 @@ struct AppRootView: View {
                     }
                 }
                 #endif
-                NotificationService.shared.installResponseHandler()
                 NotificationService.shared.configure(dataManager: dataManager)
                 dataManager.refreshAfterExternalChanges()
                 // Register HealthKit background observer on app launch if enabled

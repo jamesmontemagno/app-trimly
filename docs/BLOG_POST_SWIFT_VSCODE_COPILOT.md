@@ -306,7 +306,7 @@ I'm continuing to refine this workflow. Some areas I'm exploring:
 
 ## Wrapping Up
 
-Look, I get it—this might sound too good to be true. But I'm shipping real code to real users using this setup. My Weight is available at [weigh.app](http://weigh.app/), and you can see all the PRs, commits, and code at [github.com/jamesmontemagno/app-trimly](https://github.com/jamesmontemagno/app-trimly).
+Look, I get it—this might sound too good to be true. But I'm shipping real code to real users using this setup. My Weight is available at [myweighttracker.app](https://myweighttracker.app/), and you can see all the PRs, commits, and code at [github.com/jamesmontemagno/app-trimly](https://github.com/jamesmontemagno/app-trimly).
 
 The future of development isn't about AI replacing developers—it's about AI amplifying what we can build. With GitHub Copilot Cloud Agent, MCP servers, and a solid VS Code setup, I'm building better apps faster than ever before.
 

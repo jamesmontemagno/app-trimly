@@ -22,7 +22,7 @@ Located in `/website/index.html`:
 <meta name="description" content="..." />
 <meta name="keywords" content="weight tracking app, iOS weight tracker, ..." />
 <meta name="robots" content="index, follow" />
-<link rel="canonical" href="https://weigh.app/" />
+<link rel="canonical" href="https://myweighttracker.app/" />
 ```
 
 **Best Practices:**
@@ -39,7 +39,7 @@ For social media sharing (Facebook, LinkedIn, etc.):
 <meta property="og:type" content="website" />
 <meta property="og:title" content="My Weight - Private Weight Tracking App for iOS & macOS" />
 <meta property="og:description" content="..." />
-<meta property="og:image" content="https://weigh.app/app-icon.png" />
+<meta property="og:image" content="https://myweighttracker.app/app-icon.png" />
 ```
 
 **Best Practices:**
@@ -114,7 +114,7 @@ General website information:
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "My Weight",
-  "url": "https://weigh.app/"
+  "url": "https://myweighttracker.app/"
 }
 ```
 
@@ -144,7 +144,7 @@ Location: `/website/public/robots.txt`
 ```
 User-agent: *
 Allow: /
-Sitemap: https://weigh.app/sitemap.xml
+Sitemap: https://myweighttracker.app/sitemap.xml
 ```
 
 **Best Practices:**

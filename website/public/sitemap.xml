@@ -5,43 +5,43 @@
   
   <!-- Main landing page -->
   <url>
-    <loc>https://weigh.app/</loc>
+    <loc>https://myweighttracker.app/</loc>
     <lastmod>2026-04-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <mobile:mobile/>
     <image:image>
-      <image:loc>https://weigh.app/app-icon.png</image:loc>
+      <image:loc>https://myweighttracker.app/app-icon.png</image:loc>
       <image:title>My Weight App Icon</image:title>
       <image:caption>My Weight - Private Weight Tracking App</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://weigh.app/screenshots/light/dashboard.png</image:loc>
+      <image:loc>https://myweighttracker.app/screenshots/light/dashboard.png</image:loc>
       <image:title>My Weight Dashboard</image:title>
       <image:caption>My Weight app dashboard showing weight tracking features</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://weigh.app/screenshots/light/analytics.png</image:loc>
+      <image:loc>https://myweighttracker.app/screenshots/light/analytics.png</image:loc>
       <image:title>My Weight Analytics</image:title>
       <image:caption>My Weight advanced analytics and charts</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://weigh.app/screenshots/light/add-entry.png</image:loc>
+      <image:loc>https://myweighttracker.app/screenshots/light/add-entry.png</image:loc>
       <image:title>My Weight Add Entry</image:title>
       <image:caption>Add weight entry in My Weight app</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://weigh.app/screenshots/dark/dashboard.png</image:loc>
+      <image:loc>https://myweighttracker.app/screenshots/dark/dashboard.png</image:loc>
       <image:title>My Weight Dashboard (Dark Mode)</image:title>
       <image:caption>My Weight app dashboard in dark mode</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://weigh.app/screenshots/dark/analytics.png</image:loc>
+      <image:loc>https://myweighttracker.app/screenshots/dark/analytics.png</image:loc>
       <image:title>My Weight Analytics (Dark Mode)</image:title>
       <image:caption>My Weight advanced analytics in dark mode</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://weigh.app/screenshots/dark/add-entry.png</image:loc>
+      <image:loc>https://myweighttracker.app/screenshots/dark/add-entry.png</image:loc>
       <image:title>My Weight Add Entry (Dark Mode)</image:title>
       <image:caption>Add weight entry in My Weight app dark mode</image:caption>
     </image:image>
@@ -49,7 +49,7 @@
   
   <!-- Privacy Policy -->
   <url>
-    <loc>https://weigh.app/#/privacy</loc>
+    <loc>https://myweighttracker.app/#/privacy</loc>
     <lastmod>2026-04-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -57,7 +57,7 @@
   
   <!-- Terms of Service -->
   <url>
-    <loc>https://weigh.app/#/terms</loc>
+    <loc>https://myweighttracker.app/#/terms</loc>
     <lastmod>2026-04-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

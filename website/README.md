@@ -49,7 +49,9 @@ This website has been fully optimized for search engines. See [SEO_GUIDE.md](./S
 ## Deployment
 
 The site is deployed to a custom domain. The production URL is:
-https://weigh.app
+https://myweighttracker.app
+
+Configure `myweighttracker.app` as the custom domain in the repository's GitHub Pages settings, point its DNS records to GitHub Pages, and enable HTTPS.
 
 ## React + TypeScript + Vite
 

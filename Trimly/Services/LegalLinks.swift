@@ -2,7 +2,7 @@ import Foundation
 
 enum LegalLinks {
 	/// Hosted legal pages for My Weight. Uses hash-based routing for GitHub Pages compatibility.
-	private static let base = "https://trimtally.app/#"
+	private static let base = "https://myweighttracker.app/#"
 	
 	static let privacyPolicy: URL = {
 		guard let url = URL(string: "\(base)/privacy") else {

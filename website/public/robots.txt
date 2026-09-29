@@ -1,11 +1,11 @@
 # robots.txt for My Weight Website
-# https://weigh.app/
+# https://myweighttracker.app/
 
 User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://weigh.app/sitemap.xml
+Sitemap: https://myweighttracker.app/sitemap.xml
 
 # Disallow common paths
 Disallow: /node_modules/

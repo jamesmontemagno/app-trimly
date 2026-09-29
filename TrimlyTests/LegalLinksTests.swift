@@ -2,6 +2,7 @@ import Foundation
 import Testing
 @testable import TrimTally
 
+@MainActor
 struct LegalLinksTests {
     @Test
     func privacyPolicyUsesOfficialWebsiteAndHashRoute() {

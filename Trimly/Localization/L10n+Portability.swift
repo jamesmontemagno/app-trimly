@@ -57,9 +57,12 @@ extension L10n {
         nonisolated static let reportLatest = LocalizedStringResource("report.mode.latest", defaultValue: "Uses the latest measurement on each logged day. Missing days are not filled in.", table: "Portability")
         nonisolated static let reportAverage = LocalizedStringResource("report.mode.average", defaultValue: "Uses the average measurement on each logged day. Missing days are not filled in.", table: "Portability")
         nonisolated static let shareCheckIn = LocalizedStringResource("share.title", defaultValue: "Share check-in", table: "Portability")
-        nonisolated static let shareCheckInSubtitle = LocalizedStringResource("share.subtitle", defaultValue: "Create a privacy-conscious seven-day card", table: "Portability")
+        nonisolated static let shareCheckInSubtitle = LocalizedStringResource("share.subtitle", defaultValue: "Create a privacy-conscious check-in card", table: "Portability")
         nonisolated static let shareCheckIns = LocalizedStringResource("share.format.checkins", defaultValue: "Check-ins", table: "Portability")
         nonisolated static let shareGoal = LocalizedStringResource("share.format.goal", defaultValue: "Goal progress", table: "Portability")
+        nonisolated static let sharePeriod = LocalizedStringResource("share.period", defaultValue: "Period", table: "Portability")
+        nonisolated static let shareSevenDays = LocalizedStringResource("share.period.sevenDays", defaultValue: "7 days", table: "Portability")
+        nonisolated static let shareThirtyDays = LocalizedStringResource("share.period.thirtyDays", defaultValue: "30 days", table: "Portability")
         nonisolated static let sharePrivacy = LocalizedStringResource("share.privacy", defaultValue: "Privacy", table: "Portability")
         nonisolated static let shareCheckInsOnly = LocalizedStringResource("share.privacy.checkins", defaultValue: "Check-ins only", table: "Portability")
         nonisolated static let shareTrend = LocalizedStringResource("share.privacy.trend", defaultValue: "Trend only", table: "Portability")
@@ -81,7 +84,7 @@ extension L10n {
         nonisolated static let sharePrivacyHint = LocalizedStringResource("share.privacyHint", defaultValue: "Check-ins only is the safest option. Recipients and the destination you choose control copies after sharing.", table: "Portability")
         nonisolated static let shareTrendDisclosure = LocalizedStringResource("share.trendDisclosure", defaultValue: "Trend only hides numbers and units, but the graph still reveals weight movement.", table: "Portability")
         nonisolated static let shareTrendAccessibility = LocalizedStringResource("share.trendAccessibility", defaultValue: "Weight trend. Exact values are hidden.", table: "Portability")
-        nonisolated static let shareTrendNoData = LocalizedStringResource("share.trendNoData", defaultValue: "No visible check-ins in the last 7 days.", table: "Portability")
+        nonisolated static let shareTrendNoData = LocalizedStringResource("share.trendNoData", defaultValue: "No visible check-ins in this period.", table: "Portability")
         nonisolated static let shareGoalUnavailable = LocalizedStringResource("share.goalUnavailable", defaultValue: "Goal progress needs a starting weight and a recent check-in.", table: "Portability")
         nonisolated static let shareFailed = LocalizedStringResource("share.failed", defaultValue: "The share image could not be created. Please try again.", table: "Portability")
         nonisolated static let shareToday = LocalizedStringResource("share.today", defaultValue: "Today", table: "Portability")
@@ -112,8 +115,8 @@ extension L10n {
         nonisolated static func entryCount(_ count: Int) -> LocalizedStringResource {
             LocalizedStringResource("summary.entries", defaultValue: "Measurements: \(count)", table: "Portability")
         }
-        nonisolated static func sevenDayCount(_ count: Int) -> LocalizedStringResource {
-            LocalizedStringResource("share.sevenDayCount", defaultValue: "\(count) of 7 days", table: "Portability")
+        nonisolated static func shareCheckInCount(_ count: Int, days: Int) -> LocalizedStringResource {
+            LocalizedStringResource("share.checkInCount", defaultValue: "\(count) of \(days) days", table: "Portability")
         }
         nonisolated static func readyCount(_ count: Int) -> LocalizedStringResource {
             LocalizedStringResource("import.readyCount", defaultValue: "Selected for import: \(count)", table: "Portability")

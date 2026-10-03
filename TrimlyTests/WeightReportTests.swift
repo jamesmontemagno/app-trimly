@@ -99,6 +99,35 @@ struct WeightReportTests {
         #expect(snapshot.changeKg == -1)
     }
 
+    @Test func shareSnapshotUsesThirtyCalendarDays() throws {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+        let now = calendar.date(from: DateComponents(year: 2025, month: 3, day: 10, hour: 12))!
+        let today = calendar.startOfDay(for: now)
+        let firstDay = try #require(calendar.date(byAdding: .day, value: -29, to: today))
+        let entries = [
+            WeightEntry(timestamp: firstDay, weightKg: 80, displayUnitAtEntry: .kilograms),
+            WeightEntry(timestamp: today, weightKg: 77, displayUnitAtEntry: .kilograms)
+        ]
+        let snapshot = WeightReport.ShareCheckInSnapshot(
+            entries: entries,
+            goal: nil,
+            unit: .kilograms,
+            aggregation: .latest,
+            period: .thirtyDays,
+            decimalPrecision: 1,
+            calendar: calendar,
+            now: now
+        )
+
+        #expect(snapshot.period == .thirtyDays)
+        #expect(snapshot.days.count == 30)
+        #expect(snapshot.days.first?.date == firstDay)
+        #expect(snapshot.days.last?.date == today)
+        #expect(snapshot.checkedInDays == 2)
+        #expect(snapshot.changeKg == -3)
+    }
+
     @Test func shareSnapshotDoesNotClaimChangeWithOneRecordedDay() {
         let snapshot = WeightReport.ShareCheckInSnapshot(
             entries: [entry(80, offset: 100)],
@@ -218,6 +247,36 @@ struct WeightReportTests {
                 }
             }
         }
+    }
+
+    @Test func shareCardRendersThirtyDayCheckInGrid() throws {
+        let snapshot = WeightReport.ShareCheckInSnapshot(
+            entries: [entry(80, offset: 100), entry(79, offset: 86_500)],
+            goal: nil,
+            unit: .kilograms,
+            aggregation: .latest,
+            period: .thirtyDays,
+            decimalPrecision: 1,
+            now: day.addingTimeInterval(90_000)
+        )
+        let canvas = ShareCardCanvas(
+            snapshot: snapshot,
+            privacy: .checkInsOnly,
+            accent: .blue,
+            portrait: true,
+            darkAppearance: false,
+            showFooter: true,
+            includeGraph: false,
+            includeCurrent: false,
+            includeChange: false,
+            includeGoal: false
+        )
+        let renderer = ImageRenderer(content: canvas)
+        renderer.scale = 2
+        let image = try #require(renderer.cgImage)
+
+        #expect(image.width == 1400)
+        #expect(image.height > 0)
     }
 
     @Test func shareCardRendersWithoutMeasurementsOrOptionalContent() throws {

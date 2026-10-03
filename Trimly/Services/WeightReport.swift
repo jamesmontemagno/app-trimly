@@ -2,6 +2,7 @@ import Foundation
 
 enum ShareCheckInPeriod: String, CaseIterable, Identifiable {
     case sevenDays
+    case fourteenDays
     case thirtyDays
 
     var id: String { rawValue }
@@ -9,6 +10,7 @@ enum ShareCheckInPeriod: String, CaseIterable, Identifiable {
     var dayCount: Int {
         switch self {
         case .sevenDays: 7
+        case .fourteenDays: 14
         case .thirtyDays: 30
         }
     }

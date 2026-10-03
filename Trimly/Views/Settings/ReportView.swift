@@ -283,6 +283,32 @@ enum ShareAccent: String, CaseIterable, Identifiable {
     }
 }
 
+private extension ShareCheckInPeriod {
+    var label: LocalizedStringResource {
+        switch self {
+        case .sevenDays: L10n.Portability.shareSevenDays
+        case .fourteenDays: L10n.Portability.shareFourteenDays
+        case .thirtyDays: L10n.Portability.shareThirtyDays
+        }
+    }
+
+    /// Check-in indicators per row. Seven keeps weekdays aligned in columns.
+    var daysPerRow: Int { self == .thirtyDays ? 10 : 7 }
+
+    var usesCompactDays: Bool { self == .thirtyDays }
+
+    var showsWeekdayLabels: Bool { self == .sevenDays }
+
+    /// Days between chart axis labels, counted back from today so dated labels never crowd.
+    var chartLabelStride: Int {
+        switch self {
+        case .sevenDays: 1
+        case .fourteenDays: 3
+        case .thirtyDays: 7
+        }
+    }
+}
+
 /// Groups appearance/lifecycle-related modifiers for `ShareCheckInView` so the
 /// compiler doesn't have to type-check one enormous modifier chain at once.
 private struct ShareCheckInLifecycleModifiers: ViewModifier {
@@ -379,8 +405,9 @@ struct ShareCheckInView: View {
                 }
                 Section(String(localized: L10n.Portability.sharePeriod)) {
                     Picker(String(localized: L10n.Portability.sharePeriod), selection: $period) {
-                        Text(L10n.Portability.shareSevenDays).tag(ShareCheckInPeriod.sevenDays)
-                        Text(L10n.Portability.shareThirtyDays).tag(ShareCheckInPeriod.thirtyDays)
+                        ForEach(ShareCheckInPeriod.allCases) { option in
+                            Text(option.label).tag(option)
+                        }
                     }
                     .pickerStyle(.segmented)
                 }
@@ -632,7 +659,9 @@ struct ShareCheckInView: View {
     }
 }
 
-private struct ShareCardPreview: View {
+/// Shows the export canvas scaled to the available width. The height always follows
+/// the card's content, so every enabled detail stays visible.
+struct ShareCardPreview: View {
     let snapshot: WeightReport.ShareCheckInSnapshot
     let privacy: SharePrivacy
     let accent: ShareAccent
@@ -643,15 +672,10 @@ private struct ShareCardPreview: View {
     let includeCurrent: Bool
     let includeChange: Bool
     let includeGoal: Bool
-    @State private var canvasHeight: CGFloat = 800
-
-    private var exportWidth: CGFloat {
-        portrait ? 700 : 800
-    }
+    @State private var availableWidth: CGFloat = 0
 
     var body: some View {
-        GeometryReader { geometry in
-            let scale = geometry.size.width / exportWidth
+        ScaledCardLayout {
             ShareCardCanvas(
                 snapshot: snapshot,
                 privacy: privacy,
@@ -664,31 +688,39 @@ private struct ShareCardPreview: View {
                 includeChange: includeChange,
                 includeGoal: includeGoal
             )
-            .background {
-                GeometryReader { canvas in
-                    Color.clear.preference(key: ShareCardHeightKey.self, value: canvas.size.height)
-                }
-            }
-            .scaleEffect(scale, anchor: .topLeading)
+            .scaleEffect(availableWidth / ShareCardCanvas.exportWidth(portrait: portrait), anchor: .topLeading)
         }
-        .aspectRatio(exportWidth / canvasHeight, contentMode: .fit)
-        .onPreferenceChange(ShareCardHeightKey.self) { height in
-            guard height.isFinite, height > 0 else { return }
-            canvasHeight = height
+        .onGeometryChange(for: CGFloat.self) { proxy in
+            proxy.size.width
+        } action: { width in
+            availableWidth = width
         }
         .accessibilityElement(children: .contain)
     }
 }
 
-private struct ShareCardHeightKey: PreferenceKey {
-    static let defaultValue: CGFloat = 800
+/// Measures its card at natural size and reserves the footprint that card occupies
+/// once scaled to the proposed width. `scaleEffect` alone leaves layout untouched,
+/// which would clip a card taller than its container.
+private struct ScaledCardLayout: Layout {
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        guard let natural = subviews.first?.sizeThatFits(.unspecified), natural.width > 0 else {
+            return .zero
+        }
+        let width = proposal.width.flatMap { $0.isFinite ? $0 : nil } ?? natural.width
+        return CGSize(width: width, height: natural.height * width / natural.width)
+    }
 
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        subviews.first?.place(at: bounds.origin, anchor: .topLeading, proposal: .unspecified)
     }
 }
 
 struct ShareCardCanvas: View {
+    static func exportWidth(portrait: Bool) -> CGFloat {
+        portrait ? 700 : 800
+    }
+
     let snapshot: WeightReport.ShareCheckInSnapshot
     let privacy: SharePrivacy
     let accent: ShareAccent
@@ -712,7 +744,7 @@ struct ShareCardCanvas: View {
             includeGoal: includeGoal
         )
         .padding(28)
-        .frame(width: portrait ? 700 : 800, alignment: .topLeading)
+        .frame(width: Self.exportWidth(portrait: portrait), alignment: .topLeading)
         .fixedSize(horizontal: false, vertical: true)
         .background(darkAppearance ? Color.black : Color.white)
         .environment(\.colorScheme, darkAppearance ? .dark : .light)
@@ -734,6 +766,7 @@ private struct ShareCardContent: View {
     @ScaledMetric(relativeTo: .body) private var bodySize = 30
     @ScaledMetric(relativeTo: .caption) private var captionSize = 24
     @ScaledMetric(relativeTo: .title) private var valueSize = 36
+    @ScaledMetric(relativeTo: .body) private var progressBarHeight = 8
 
     private var showsValues: Bool { privacy == .detailed }
     private var normalizedGraph: Bool { privacy == .trend }
@@ -802,21 +835,15 @@ private struct ShareCardContent: View {
     }
 
     private var checkInDays: some View {
-        Group {
-            if snapshot.period == .thirtyDays {
-                Grid(horizontalSpacing: 8, verticalSpacing: 8) {
-                    ForEach(0..<3, id: \.self) { row in
-                        GridRow {
-                            ForEach(0..<10, id: \.self) { column in
-                                dayIndicator(snapshot.days[row * 10 + column], compact: true)
-                            }
-                        }
-                    }
-                }
-            } else {
-                HStack(spacing: 8) {
-                    ForEach(snapshot.days) { day in
-                        dayIndicator(day, compact: false)
+        let columns = snapshot.period.daysPerRow
+        let rows = stride(from: 0, to: snapshot.days.count, by: columns).map { start in
+            Array(snapshot.days[start..<min(start + columns, snapshot.days.count)])
+        }
+        return Grid(horizontalSpacing: 8, verticalSpacing: 8) {
+            ForEach(rows.indices, id: \.self) { row in
+                GridRow {
+                    ForEach(rows[row]) { day in
+                        dayIndicator(day, compact: snapshot.period.usesCompactDays)
                     }
                 }
             }
@@ -844,6 +871,8 @@ private struct ShareCardContent: View {
         let firstDate = snapshot.days.first?.date ?? Date()
         let lastDate = snapshot.days.last?.date ?? Date()
         let xDomain = firstDate.addingTimeInterval(-12 * 60 * 60)...lastDate.addingTimeInterval(12 * 60 * 60)
+        // Dated labels are centered on their day, so inset the plot to keep the first and last from clipping.
+        let labelInset = snapshot.period.showsWeekdayLabels ? 0 : captionSize * 2
         return Chart {
             ForEach(snapshot.graphPoints) { point in
                 LineMark(
@@ -870,15 +899,15 @@ private struct ShareCardContent: View {
                 .foregroundStyle(.orange)
             }
         }
-        .chartXScale(domain: xDomain)
+        .chartXScale(domain: xDomain, range: .plotDimension(startPadding: labelInset, endPadding: labelInset))
         .chartYScale(domain: yDomain)
         .chartXAxis {
             AxisMarks(values: trendChartAxisDates) { value in
                 AxisGridLine().foregroundStyle(.secondary.opacity(0.15))
                 AxisTick()
-                AxisValueLabel {
+                AxisValueLabel(anchor: snapshot.period.showsWeekdayLabels ? nil : .top) {
                     if let date = value.as(Date.self) {
-                        if snapshot.period == .sevenDays {
+                        if snapshot.period.showsWeekdayLabels {
                             Text(date, format: .dateTime.weekday(.narrow))
                                 .font(.system(size: captionSize))
                         } else {
@@ -918,14 +947,21 @@ private struct ShareCardContent: View {
     @ViewBuilder
     private var goalProgress: some View {
         if let progress = snapshot.goalProgress {
-            ProgressView(value: progress) {
+            // Drawn with shapes because ImageRenderer cannot export a platform-backed ProgressView.
+            VStack(alignment: .leading, spacing: 8) {
                 Text(L10n.Portability.shareGoal)
-                    .font(.system(size: bodySize))
-            } currentValueLabel: {
+                GeometryReader { proxy in
+                    Capsule().fill(Color.secondary.opacity(0.3))
+                    Capsule().fill(accent.color)
+                        .frame(width: proxy.size.width * progress)
+                }
+                .frame(height: progressBarHeight)
                 Text(progress, format: .percent.precision(.fractionLength(0)))
-                    .font(.system(size: bodySize, weight: .semibold))
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
             }
-            .tint(accent.color)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text(L10n.Portability.shareGoal))
             .accessibilityValue(Text(progress, format: .percent.precision(.fractionLength(0))))
         } else {
             Text(L10n.Portability.shareGoalUnavailable)
@@ -941,10 +977,10 @@ private struct ShareCardContent: View {
     private func dayLabel(_ day: WeightReport.ShareCheckInSnapshot.Day) -> some View {
         if day.date == snapshot.days.last?.date {
             Text(L10n.Portability.shareToday)
-        } else if snapshot.period == .thirtyDays {
-            Text(day.date, format: .dateTime.day())
-        } else {
+        } else if snapshot.period.showsWeekdayLabels {
             Text(day.date, format: .dateTime.weekday(.narrow))
+        } else {
+            Text(day.date, format: .dateTime.day())
         }
     }
 
@@ -956,9 +992,10 @@ private struct ShareCardContent: View {
     }
 
     private var trendChartAxisDates: [Date] {
-        guard snapshot.period == .thirtyDays else { return snapshot.days.map(\.date) }
+        let step = snapshot.period.chartLabelStride
+        let lastIndex = snapshot.days.count - 1
         return snapshot.days.enumerated().compactMap { index, day in
-            index.isMultiple(of: 5) || index == snapshot.days.count - 1 ? day.date : nil
+            (lastIndex - index).isMultiple(of: step) ? day.date : nil
         }
     }
 

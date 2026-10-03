@@ -99,12 +99,13 @@ struct WeightReportTests {
         #expect(snapshot.changeKg == -1)
     }
 
-    @Test func shareSnapshotUsesThirtyCalendarDays() throws {
+    @Test(arguments: [ShareCheckInPeriod.fourteenDays, .thirtyDays])
+    func shareSnapshotUsesLongerCalendarPeriods(period: ShareCheckInPeriod) throws {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = TimeZone(secondsFromGMT: 0)!
         let now = calendar.date(from: DateComponents(year: 2025, month: 3, day: 10, hour: 12))!
         let today = calendar.startOfDay(for: now)
-        let firstDay = try #require(calendar.date(byAdding: .day, value: -29, to: today))
+        let firstDay = try #require(calendar.date(byAdding: .day, value: -(period.dayCount - 1), to: today))
         let entries = [
             WeightEntry(timestamp: firstDay, weightKg: 80, displayUnitAtEntry: .kilograms),
             WeightEntry(timestamp: today, weightKg: 77, displayUnitAtEntry: .kilograms)
@@ -114,14 +115,14 @@ struct WeightReportTests {
             goal: nil,
             unit: .kilograms,
             aggregation: .latest,
-            period: .thirtyDays,
+            period: period,
             decimalPrecision: 1,
             calendar: calendar,
             now: now
         )
 
-        #expect(snapshot.period == .thirtyDays)
-        #expect(snapshot.days.count == 30)
+        #expect(snapshot.period == period)
+        #expect(snapshot.days.count == period.dayCount)
         #expect(snapshot.days.first?.date == firstDay)
         #expect(snapshot.days.last?.date == today)
         #expect(snapshot.checkedInDays == 2)
@@ -277,6 +278,90 @@ struct WeightReportTests {
 
         #expect(image.width == 1400)
         #expect(image.height > 0)
+    }
+
+    private func detailedSnapshot(period: ShareCheckInPeriod) -> WeightReport.ShareCheckInSnapshot {
+        WeightReport.ShareCheckInSnapshot(
+            entries: [entry(80, offset: 100), entry(79, offset: 86_500)],
+            goal: Goal(targetWeightKg: 70, startingWeightKg: 80),
+            unit: .kilograms,
+            aggregation: .latest,
+            period: period,
+            decimalPrecision: 1,
+            now: day.addingTimeInterval(90_000)
+        )
+    }
+
+    private func detailedCanvas(period: ShareCheckInPeriod) -> ShareCardCanvas {
+        ShareCardCanvas(
+            snapshot: detailedSnapshot(period: period),
+            privacy: .detailed,
+            accent: .blue,
+            portrait: true,
+            darkAppearance: false,
+            showFooter: true,
+            includeGraph: true,
+            includeCurrent: true,
+            includeChange: true,
+            includeGoal: true
+        )
+    }
+
+    @Test func shareCardGrowsTallerForLongerPeriods() throws {
+        let heights = try ShareCheckInPeriod.allCases.map { period in
+            try #require(ImageRenderer(content: detailedCanvas(period: period)).cgImage).height
+        }
+
+        #expect(ShareCheckInPeriod.allCases.map(\.dayCount) == [7, 14, 30])
+        #expect(heights[0] < heights[1])
+        #expect(heights[1] < heights[2])
+    }
+
+    @Test(arguments: ShareCheckInPeriod.allCases)
+    func sharePreviewHeightFollowsFullCard(period: ShareCheckInPeriod) throws {
+        let card = try #require(ImageRenderer(content: detailedCanvas(period: period)).cgImage)
+        let preview = ShareCardPreview(
+            snapshot: detailedSnapshot(period: period),
+            privacy: .detailed,
+            accent: .blue,
+            portrait: true,
+            darkAppearance: false,
+            showFooter: true,
+            includeGraph: true,
+            includeCurrent: true,
+            includeChange: true,
+            includeGoal: true
+        )
+        .frame(width: 350)
+        let image = try #require(ImageRenderer(content: preview).cgImage)
+
+        #expect(card.width == 700)
+        #expect(image.width == 350)
+        #expect(abs(image.height * 2 - card.height) <= 2)
+    }
+
+    @Test func shareCardExportDrawsEveryViewWithoutPlaceholders() throws {
+        let image = try #require(ImageRenderer(content: detailedCanvas(period: .sevenDays)).cgImage)
+        let context = try #require(CGContext(
+            data: nil,
+            width: image.width,
+            height: image.height,
+            bitsPerComponent: 8,
+            bytesPerRow: image.width * 4,
+            space: CGColorSpaceCreateDeviceRGB(),
+            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+        ))
+        context.draw(image, in: CGRect(x: 0, y: 0, width: image.width, height: image.height))
+        let pixels = UnsafeBufferPointer(
+            start: try #require(context.data).assumingMemoryBound(to: UInt8.self),
+            count: image.width * image.height * 4
+        )
+        // ImageRenderer fills any view it cannot draw, such as a platform-backed control, with solid yellow.
+        let placeholderPixels = stride(from: 0, to: pixels.count, by: 4).count { offset in
+            pixels[offset] > 240 && (190...220).contains(pixels[offset + 1]) && pixels[offset + 2] < 40
+        }
+
+        #expect(placeholderPixels == 0)
     }
 
     @Test func shareCardRendersWithoutMeasurementsOrOptionalContent() throws {

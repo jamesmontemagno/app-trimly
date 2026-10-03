@@ -151,7 +151,7 @@ xcodebuild -scheme TrimTally \
 - [x] Device-local dashboard customization and weight privacy
 - [x] CSV mapping/import review, actual file export, and PDF progress reports
 - [x] Quick-log routing, Shortcuts, macOS menu command, and accessory widgets
-- [x] Shareable check-in cards with 7-day and 30-day periods
+- [x] Shareable check-in cards with 7-day, 14-day, and 30-day periods
 
 ### Future Enhancements
 

@@ -62,6 +62,7 @@ final class DeviceSettingsStore: ObservableObject {
         var includeCurrent: Bool
         var includeChange: Bool
         var includeGoal: Bool
+        var period: String
     }
     
     private enum Keys {
@@ -90,6 +91,7 @@ final class DeviceSettingsStore: ObservableObject {
         static let shareIncludeCurrent = "device.shareCard.includeCurrent"
         static let shareIncludeChange = "device.shareCard.includeChange"
         static let shareIncludeGoal = "device.shareCard.includeGoal"
+        static let sharePeriod = "device.shareCard.period"
     }
     
     // MARK: - Published State
@@ -169,7 +171,8 @@ final class DeviceSettingsStore: ObservableObject {
             includeGraph: defaults.object(forKey: Keys.shareIncludeGraph) as? Bool ?? true,
             includeCurrent: defaults.object(forKey: Keys.shareIncludeCurrent) as? Bool ?? true,
             includeChange: defaults.object(forKey: Keys.shareIncludeChange) as? Bool ?? true,
-            includeGoal: defaults.object(forKey: Keys.shareIncludeGoal) as? Bool ?? true
+            includeGoal: defaults.object(forKey: Keys.shareIncludeGoal) as? Bool ?? true,
+            period: defaults.string(forKey: Keys.sharePeriod) ?? ShareCheckInPeriod.sevenDays.rawValue
         )
     }
     
@@ -282,5 +285,6 @@ final class DeviceSettingsStore: ObservableObject {
         defaults.set(value.includeCurrent, forKey: Keys.shareIncludeCurrent)
         defaults.set(value.includeChange, forKey: Keys.shareIncludeChange)
         defaults.set(value.includeGoal, forKey: Keys.shareIncludeGoal)
+        defaults.set(value.period, forKey: Keys.sharePeriod)
     }
 }

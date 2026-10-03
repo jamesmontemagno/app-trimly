@@ -151,6 +151,7 @@ final class DeviceSettingsStoreTests: XCTestCase {
         XCTAssertTrue(store.shareCard.includeCurrent)
         XCTAssertTrue(store.shareCard.includeChange)
         XCTAssertTrue(store.shareCard.includeGoal)
+        XCTAssertEqual(store.shareCard.period, ShareCheckInPeriod.sevenDays.rawValue)
 
         store.updateShareCard { settings in
             settings.privacy = "trend"
@@ -162,6 +163,7 @@ final class DeviceSettingsStoreTests: XCTestCase {
             settings.includeCurrent = false
             settings.includeChange = false
             settings.includeGoal = false
+            settings.period = ShareCheckInPeriod.thirtyDays.rawValue
         }
 
         let reloaded = DeviceSettingsStore(userDefaults: defaults)
@@ -174,6 +176,7 @@ final class DeviceSettingsStoreTests: XCTestCase {
         XCTAssertFalse(reloaded.shareCard.includeCurrent)
         XCTAssertFalse(reloaded.shareCard.includeChange)
         XCTAssertFalse(reloaded.shareCard.includeGoal)
+        XCTAssertEqual(reloaded.shareCard.period, ShareCheckInPeriod.thirtyDays.rawValue)
     }
     
     private func makeStore() -> (UserDefaults, DeviceSettingsStore) {

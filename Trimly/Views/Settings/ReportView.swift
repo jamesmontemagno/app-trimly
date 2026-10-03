@@ -305,6 +305,7 @@ private struct ShareCheckInLifecycleModifiers: ViewModifier {
 /// Groups the "invalidate the prepared share image when an option changes"
 /// modifiers so they type-check as their own smaller expression.
 private struct ShareCheckInOptionChangeModifiers: ViewModifier {
+    let period: ShareCheckInPeriod
     let privacy: SharePrivacy
     let accent: ShareAccent
     let portrait: Bool
@@ -314,10 +315,12 @@ private struct ShareCheckInOptionChangeModifiers: ViewModifier {
     let includeCurrent: Bool
     let includeChange: Bool
     let includeGoal: Bool
+    let onPeriodChanged: () -> Void
     let onOptionChanged: () -> Void
 
     func body(content: Content) -> some View {
         content
+            .onChange(of: period) { _, _ in onPeriodChanged() }
             .onChange(of: privacy) { _, _ in onOptionChanged() }
             .onChange(of: accent) { _, _ in onOptionChanged() }
             .onChange(of: portrait) { _, _ in onOptionChanged() }
@@ -333,6 +336,7 @@ private struct ShareCheckInOptionChangeModifiers: ViewModifier {
 struct ShareCheckInView: View {
     @EnvironmentObject private var dataManager: DataManager
     @Environment(\.dismiss) private var dismiss
+    @State private var period = ShareCheckInPeriod.sevenDays
     @State private var privacy = SharePrivacy.detailed
     @State private var accent = ShareAccent.blue
     @State private var portrait = true
@@ -372,6 +376,13 @@ struct ShareCheckInView: View {
                     }
                 } header: {
                     Text(L10n.Portability.shareCheckInSubtitle)
+                }
+                Section(String(localized: L10n.Portability.sharePeriod)) {
+                    Picker(String(localized: L10n.Portability.sharePeriod), selection: $period) {
+                        Text(L10n.Portability.shareSevenDays).tag(ShareCheckInPeriod.sevenDays)
+                        Text(L10n.Portability.shareThirtyDays).tag(ShareCheckInPeriod.thirtyDays)
+                    }
+                    .pickerStyle(.segmented)
                 }
                 Section(String(localized: L10n.Portability.sharePrivacy)) {
                     Picker(String(localized: L10n.Portability.sharePrivacy), selection: $privacy) {
@@ -450,8 +461,8 @@ struct ShareCheckInView: View {
         #endif
         .modifier(ShareCheckInLifecycleModifiers(
             onAppear: {
-                loadShareSettings()
-                refreshSnapshot()
+                let loadedPeriod = loadShareSettings()
+                refreshSnapshot(for: loadedPeriod)
             },
             onDisappear: {
                 saveShareSettings()
@@ -467,6 +478,7 @@ struct ShareCheckInView: View {
             onRefresh: refreshSnapshot
         ))
         .modifier(ShareCheckInOptionChangeModifiers(
+            period: period,
             privacy: privacy,
             accent: accent,
             portrait: portrait,
@@ -476,6 +488,7 @@ struct ShareCheckInView: View {
             includeCurrent: includeCurrent,
             includeChange: includeChange,
             includeGoal: includeGoal,
+            onPeriodChanged: refreshSnapshot,
             onOptionChanged: removeTemporaryImage
         ))
         #if canImport(UIKit)
@@ -494,11 +507,16 @@ struct ShareCheckInView: View {
     }
 
     private func refreshSnapshot() {
+        refreshSnapshot(for: period)
+    }
+
+    private func refreshSnapshot(for period: ShareCheckInPeriod) {
         let refreshed = WeightReport.ShareCheckInSnapshot(
             entries: dataManager.fetchAllEntries(),
             goal: dataManager.fetchActiveGoal(),
             unit: dataManager.settings?.preferredUnit ?? .kilograms,
             aggregation: dataManager.settings?.dailyAggregationMode ?? .latest,
+            period: period,
             decimalPrecision: dataManager.settings?.decimalPrecision ?? 1
         )
         snapshot = refreshed
@@ -572,8 +590,10 @@ struct ShareCheckInView: View {
         }
     }
 
-    private func loadShareSettings() {
+    private func loadShareSettings() -> ShareCheckInPeriod {
         let settings = dataManager.deviceSettings.shareCard
+        let loadedPeriod = ShareCheckInPeriod(rawValue: settings.period) ?? .sevenDays
+        period = loadedPeriod
         privacy = SharePrivacy(rawValue: settings.privacy) ?? .detailed
         accent = ShareAccent(rawValue: settings.accent) ?? .blue
         portrait = settings.portrait
@@ -583,10 +603,12 @@ struct ShareCheckInView: View {
         includeCurrent = settings.includeCurrent
         includeChange = settings.includeChange
         includeGoal = settings.includeGoal
+        return loadedPeriod
     }
 
     private func saveShareSettings() {
         dataManager.deviceSettings.updateShareCard { settings in
+            settings.period = period.rawValue
             settings.privacy = privacy.rawValue
             settings.accent = accent.rawValue
             settings.portrait = portrait
@@ -723,7 +745,7 @@ private struct ShareCardContent: View {
                 .font(.system(size: titleSize, weight: .bold, design: .rounded))
                 .accessibilityAddTraits(.isHeader)
             todayStatus
-            Text(L10n.Portability.sevenDayCount(snapshot.checkedInDays))
+            Text(L10n.Portability.shareCheckInCount(snapshot.checkedInDays, days: snapshot.period.dayCount))
                 .fontWeight(.semibold)
             checkInDays
             if privacy != .checkInsOnly, includeGraph {
@@ -780,23 +802,41 @@ private struct ShareCardContent: View {
     }
 
     private var checkInDays: some View {
-        HStack(spacing: 8) {
-            ForEach(snapshot.days) { day in
-                VStack(spacing: 6) {
-                    Image(systemName: day.hasCheckIn ? "checkmark.circle.fill" : "circle")
-                        .font(.system(size: valueSize))
-                        .foregroundStyle(day.hasCheckIn ? accent.color : .secondary)
-                    dayLabel(day)
-                        .font(.system(size: captionSize, weight: .medium))
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.7)
+        Group {
+            if snapshot.period == .thirtyDays {
+                Grid(horizontalSpacing: 8, verticalSpacing: 8) {
+                    ForEach(0..<3, id: \.self) { row in
+                        GridRow {
+                            ForEach(0..<10, id: \.self) { column in
+                                dayIndicator(snapshot.days[row * 10 + column], compact: true)
+                            }
+                        }
+                    }
                 }
-                .frame(maxWidth: .infinity)
-                .accessibilityElement(children: .combine)
-                .accessibilityLabel(relativeDayAccessibilityLabel(day))
-                .accessibilityValue(Text(day.hasCheckIn ? L10n.Portability.shareCheckedIn : L10n.Portability.shareNoCheckIn))
+            } else {
+                HStack(spacing: 8) {
+                    ForEach(snapshot.days) { day in
+                        dayIndicator(day, compact: false)
+                    }
+                }
             }
         }
+    }
+
+    private func dayIndicator(_ day: WeightReport.ShareCheckInSnapshot.Day, compact: Bool) -> some View {
+        VStack(spacing: 6) {
+            Image(systemName: day.hasCheckIn ? "checkmark.circle.fill" : "circle")
+                .font(.system(size: compact ? captionSize : valueSize))
+                .foregroundStyle(day.hasCheckIn ? accent.color : .secondary)
+            dayLabel(day)
+                .font(.system(size: captionSize, weight: .medium))
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+        }
+        .frame(maxWidth: .infinity)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(relativeDayAccessibilityLabel(day))
+        .accessibilityValue(Text(day.hasCheckIn ? L10n.Portability.shareCheckedIn : L10n.Portability.shareNoCheckIn))
     }
 
     private var trendChart: some View {
@@ -833,13 +873,18 @@ private struct ShareCardContent: View {
         .chartXScale(domain: xDomain)
         .chartYScale(domain: yDomain)
         .chartXAxis {
-            AxisMarks(values: snapshot.days.map(\.date)) { value in
+            AxisMarks(values: trendChartAxisDates) { value in
                 AxisGridLine().foregroundStyle(.secondary.opacity(0.15))
                 AxisTick()
                 AxisValueLabel {
                     if let date = value.as(Date.self) {
-                        Text(date, format: .dateTime.weekday(.narrow))
-                            .font(.system(size: captionSize))
+                        if snapshot.period == .sevenDays {
+                            Text(date, format: .dateTime.weekday(.narrow))
+                                .font(.system(size: captionSize))
+                        } else {
+                            Text(date, format: .dateTime.month(.abbreviated).day())
+                                .font(.system(size: captionSize))
+                        }
                     }
                 }
             }
@@ -896,6 +941,8 @@ private struct ShareCardContent: View {
     private func dayLabel(_ day: WeightReport.ShareCheckInSnapshot.Day) -> some View {
         if day.date == snapshot.days.last?.date {
             Text(L10n.Portability.shareToday)
+        } else if snapshot.period == .thirtyDays {
+            Text(day.date, format: .dateTime.day())
         } else {
             Text(day.date, format: .dateTime.weekday(.narrow))
         }
@@ -905,7 +952,14 @@ private struct ShareCardContent: View {
         if day.date == snapshot.days.last?.date {
             return String(localized: L10n.Portability.shareToday)
         }
-        return day.date.formatted(.dateTime.weekday(.wide))
+        return day.date.formatted(.dateTime.weekday(.wide).month(.wide).day())
+    }
+
+    private var trendChartAxisDates: [Date] {
+        guard snapshot.period == .thirtyDays else { return snapshot.days.map(\.date) }
+        return snapshot.days.enumerated().compactMap { index, day in
+            index.isMultiple(of: 5) || index == snapshot.days.count - 1 ? day.date : nil
+        }
     }
 
     private var chartAccessibilityValue: String {

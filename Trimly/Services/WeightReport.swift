@@ -1,5 +1,19 @@
 import Foundation
 
+enum ShareCheckInPeriod: String, CaseIterable, Identifiable {
+    case sevenDays
+    case thirtyDays
+
+    var id: String { rawValue }
+
+    var dayCount: Int {
+        switch self {
+        case .sevenDays: 7
+        case .thirtyDays: 30
+        }
+    }
+}
+
 /// An immutable, notes-free snapshot for a shareable progress report.
 struct WeightReport {
     struct Point: Identifiable {
@@ -28,6 +42,7 @@ struct WeightReport {
         let goalStartingWeightKg: Double?
         let currentWeightKg: Double?
         let changeKg: Double?
+        let period: ShareCheckInPeriod
         let unit: WeightUnit
         let decimalPrecision: Int
 
@@ -61,12 +76,15 @@ struct WeightReport {
             goal: Goal?,
             unit: WeightUnit,
             aggregation: DailyAggregationMode,
+            period: ShareCheckInPeriod = .sevenDays,
             decimalPrecision: Int,
             calendar: Calendar = .current,
             now: Date = Date()
         ) {
             let today = calendar.startOfDay(for: now)
-            let dates = (0..<7).compactMap { calendar.date(byAdding: .day, value: -6 + $0, to: today) }
+            let dates = (0..<period.dayCount).compactMap {
+                calendar.date(byAdding: .day, value: -(period.dayCount - 1) + $0, to: today)
+            }
             let visible = entries.filter {
                 !$0.isHidden && $0.weightKg.isFinite && $0.weightKg > 0
                     && $0.timestamp.timeIntervalSinceReferenceDate.isFinite
@@ -94,6 +112,7 @@ struct WeightReport {
             currentWeightKg = days.reversed().compactMap(\.weightKg).first
             let weighted = days.compactMap(\.weightKg)
             changeKg = weighted.count >= 2 ? weighted.last! - weighted.first! : nil
+            self.period = period
             self.unit = unit
             self.decimalPrecision = min(2, max(1, decimalPrecision))
         }

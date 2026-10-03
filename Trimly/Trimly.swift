@@ -10,7 +10,7 @@
 /// This module contains all the core functionality for the My Weight app,
 /// including data models, analytics, and views.
 public struct MyWeight {
-    public static let version = "1.1.0"
+    public static let version = "1.3.0"
     
     public init() {}
 }

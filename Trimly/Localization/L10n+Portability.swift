@@ -62,6 +62,7 @@ extension L10n {
         nonisolated static let shareGoal = LocalizedStringResource("share.format.goal", defaultValue: "Goal progress", table: "Portability")
         nonisolated static let sharePeriod = LocalizedStringResource("share.period", defaultValue: "Period", table: "Portability")
         nonisolated static let shareSevenDays = LocalizedStringResource("share.period.sevenDays", defaultValue: "7 days", table: "Portability")
+        nonisolated static let shareFourteenDays = LocalizedStringResource("share.period.fourteenDays", defaultValue: "14 days", table: "Portability")
         nonisolated static let shareThirtyDays = LocalizedStringResource("share.period.thirtyDays", defaultValue: "30 days", table: "Portability")
         nonisolated static let sharePrivacy = LocalizedStringResource("share.privacy", defaultValue: "Privacy", table: "Portability")
         nonisolated static let shareCheckInsOnly = LocalizedStringResource("share.privacy.checkins", defaultValue: "Check-ins only", table: "Portability")
